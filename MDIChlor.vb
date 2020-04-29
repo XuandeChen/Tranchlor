@@ -1,4 +1,5 @@
 Imports System.Drawing.Imaging
+Imports System.IO
 
 Public Class MDIChlor
     Inherits System.Windows.Forms.Form
@@ -642,6 +643,10 @@ b:      'user pressed cancel error
     End Sub
 
     Private Sub MenuItem11_Click(sender As Object, e As EventArgs) Handles MenuItem11.Click 'Thomas 28/04/2020
-
+        Dim manual As Byte() = My.Resources.ModeEmploi_v4
+        Using tmp As New FileStream("ModeEmploi_v4.pdf", FileMode.Create)
+            tmp.Write(manual, 0, manual.Length)
+        End Using
+        Process.Start("ModeEmploi_v4.pdf")
     End Sub
 End Class
