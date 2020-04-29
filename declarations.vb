@@ -2,7 +2,7 @@ Module declarations
     Dim Picture_Name As String
     Dim Picture_Number As Short
 
-    'SALUT '
+
 
     Dim frm As MDIChlor
     Public Option2d As Boolean = False
