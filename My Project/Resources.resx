@@ -119,48 +119,48 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="CIH_lunk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CIH_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\InitialCondition\CIH_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="CII_lunk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CII_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\InitialCondition\CII_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="CIT_lunk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CIT_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\InitialCondition\CIT_lunk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="INPUT_Explication" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\INPUT_Explication.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\Docs\INPUT_Explication.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_DAVOS" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_DAVOS.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_DAVOS.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_DENEVE" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_DENEVE.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_DENEVE.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_GDSTBERNARD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_GDSTBERNARD.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_GDSTBERNARD.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_GUETSCH" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_GUETSCH.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_GUETSCH.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_LOCARNOMONTI" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_LOCARNOMONTI.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_LOCARNOMONTI.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_LUGANO" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_LUGANO.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_LUGANO.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_PULLY" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_PULLY.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_PULLY.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_SION" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_SION.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_SION.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="METEO_ZUERICHKLOTEN" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\METEO_ZUERICHKLOTEN.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ModeEmploi_v4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ModeEmploi_v4.pdf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\Docs\ModeEmploi_v4.pdf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ModeEmploi_v41" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ModeEmploi_v4.ppt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\Docs\ModeEmploi_v4.ppt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
