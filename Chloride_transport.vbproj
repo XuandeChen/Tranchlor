@@ -242,57 +242,57 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="Resources\Docs\ModeEmploi_v4.pdf">
+    <Content Include="Resources\Docs\ModeEmploi_v4.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Docs\ModeEmploi_v4.ppt">
+    </Content>
+    <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="logoDC.ico" />
-    <None Include="Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT">
+    <Content Include="Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_SION.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_SION.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_PULLY.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_PULLY.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_LUGANO.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_LUGANO.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_LOCARNOMONTI.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_LOCARNOMONTI.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_GUETSCH.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_GUETSCH.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_GDSTBERNARD.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_GDSTBERNARD.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_DENEVE.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_DENEVE.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\MeteoFiles\METEO_DAVOS.TXT">
+    </Content>
+    <Content Include="Resources\MeteoFiles\METEO_DAVOS.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\InitialCondition\CIT_lunk.txt">
+    </Content>
+    <Content Include="Resources\InitialCondition\CIT_lunk.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\InitialCondition\CII_lunk.txt">
+    </Content>
+    <Content Include="Resources\InitialCondition\CII_lunk.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\InitialCondition\CIH_lunk.txt">
+    </Content>
+    <Content Include="Resources\InitialCondition\CIH_lunk.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Docs\INPUT_Explication.txt">
+    </Content>
+    <Content Include="Resources\Docs\INPUT_Explication.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Docs\Logo.png">
+    </Content>
+    <Content Include="Resources\Docs\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
