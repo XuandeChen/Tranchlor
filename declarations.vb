@@ -1,10 +1,8 @@
 Module declarations
     Dim Picture_Name As String
     Dim Picture_Number As Short
-
-
-
     Dim frm As MDIChlor
+
     Public Option2d As Boolean = False
 
     'Demarrage du programme
