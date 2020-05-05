@@ -310,12 +310,24 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\Database\PHREEQC.DAT" />
-    <None Include="Resources\Sample btFEM\btfemexample.fem" />
-    <None Include="Resources\Sample btFEM\coarse.fem" />
-    <None Include="Resources\Sample btFEM\notchedspecimen.fem" />
-    <None Include="Resources\Sample btFEM\plhole.fem" />
-    <None Include="Resources\Sample btFEM\rect.fem" />
-    <None Include="Resources\Sample btFEM\smallrect.fem" />
+    <Content Include="Resources\Sample btFEM\btfemexample.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sample btFEM\coarse.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sample btFEM\notchedspecimen.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sample btFEM\plhole.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sample btFEM\rect.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sample btFEM\smallrect.fem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT">
