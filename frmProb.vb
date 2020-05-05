@@ -1,5 +1,5 @@
-Public Class frmProb
-    Inherits System.Windows.Forms.Form
+Public Class frmProb : Inherits System.Windows.Forms.Form
+
     Dim Length As Single
     Dim Labe(1) As Object
     Dim Lambda(1, 1, 1) As Double
@@ -487,7 +487,7 @@ Public Class frmProb
         OutFile = Microsoft.VisualBasic.Right(OutFile, Len(OutFile) - iPos)
         Tprob1 = CShort(Microsoft.VisualBasic.Left(TProb, 1))
         Tprob4 = CShort(Microsoft.VisualBasic.Right(TProb, 1))
-        Tprob2 = (TProb - 1000 * Tprob1 - tprob4) / 10
+        Tprob2 = (TProb - 1000 * Tprob1 - Tprob4) / 10
         Tprob3 = CShort(Microsoft.VisualBasic.Right(Tprob2, 1))
         Tprob2 = CShort(Microsoft.VisualBasic.Left(Tprob2, 1))
         If Tprob1 = 0 Then
@@ -673,7 +673,7 @@ Public Class frmProb
                             FileClose(nFic)
 
                             If cpt2 = cpt1 And o = Files Then
-                                MsgBox(Test01, MsgBoxStyle.Information And MsgBoxStyle.OKOnly, "Avertissement")
+                                MsgBox(Test01, MsgBoxStyle.Information And MsgBoxStyle.OkOnly, "Avertissement")
                                 Button2.Visible = True
                                 GroupBox1.Enabled = False
                                 Button1.Enabled = False
@@ -1094,10 +1094,10 @@ d:
                 End If
             End If
         Else
-                Ca = True
-            End If
+            Ca = True
+        End If
 
-            If Ca = True And CheckBox8.Checked = True Then          'approche probabiliste pour la carbonatation
+        If Ca = True And CheckBox8.Checked = True Then          'approche probabiliste pour la carbonatation
             OT = "PFCa_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la carbonatation
             ''''''''''''''''''''''''''''''''''
             Filtre = "txt files (PFCa_*.txt)|PFCa_*.txt|All files (*.*)|*.*"
@@ -1245,7 +1245,7 @@ d:
 f:
         End If
 
-            Beep()
+        Beep()
 
     End Sub
 

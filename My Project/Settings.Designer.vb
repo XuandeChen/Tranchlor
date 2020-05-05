@@ -62,9 +62,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.Chloride_transport.Settings
+        Friend ReadOnly Property Settings() As Global.TransChlor.Settings
             Get
-                Return Global.Chloride_transport.Settings.Default
+                Return Global.TransChlor.Settings.Default
             End Get
         End Property
     End Module

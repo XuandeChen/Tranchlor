@@ -1,5 +1,4 @@
-Public Class frmOption1
-    Inherits System.Windows.Forms.Form
+Public Class frmOption1 : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 

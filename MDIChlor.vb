@@ -1,8 +1,7 @@
 Imports System.Drawing.Imaging
 Imports System.IO
 
-Public Class MDIChlor
-    Inherits System.Windows.Forms.Form
+Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 
@@ -48,12 +47,17 @@ Public Class MDIChlor
     Friend WithEvents MenuItem10 As MenuItem
     Friend WithEvents MenuItem11 As MenuItem
     Friend WithEvents MenuItem12 As MenuItem
+    Friend WithEvents MenuItem13 As MenuItem
+    Friend WithEvents MenuItem14 As MenuItem
+    Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.MainMenu1 = New System.Windows.Forms.MainMenu(Me.components)
         Me.mnuTop = New System.Windows.Forms.MenuItem()
         Me._MnuProject_4 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem14 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem13 = New System.Windows.Forms.MenuItem()
         Me._MnuProject_5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem1 = New System.Windows.Forms.MenuItem()
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
@@ -64,10 +68,11 @@ Public Class MDIChlor
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem9 = New System.Windows.Forms.MenuItem()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem10 = New System.Windows.Forms.MenuItem()
         Me.MenuItem11 = New System.Windows.Forms.MenuItem()
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -77,7 +82,7 @@ Public Class MDIChlor
         'mnuTop
         '
         Me.mnuTop.Index = 0
-        Me.mnuTop.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me._MnuProject_4, Me._MnuProject_5})
+        Me.mnuTop.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me._MnuProject_4, Me.MenuItem14, Me.MenuItem15, Me.MenuItem13, Me._MnuProject_5})
         Me.mnuTop.MergeType = System.Windows.Forms.MenuMerge.Remove
         Me.mnuTop.Text = "Pro&ject"
         '
@@ -87,9 +92,19 @@ Public Class MDIChlor
         Me._MnuProject_4.MergeType = System.Windows.Forms.MenuMerge.Remove
         Me._MnuProject_4.Text = "-"
         '
+        'MenuItem14
+        '
+        Me.MenuItem14.Index = 1
+        Me.MenuItem14.Text = "PhreeqC"
+        '
+        'MenuItem13
+        '
+        Me.MenuItem13.Index = 3
+        Me.MenuItem13.Text = "OpenGl"
+        '
         '_MnuProject_5
         '
-        Me._MnuProject_5.Index = 1
+        Me._MnuProject_5.Index = 4
         Me._MnuProject_5.MergeType = System.Windows.Forms.MenuMerge.Remove
         Me._MnuProject_5.Text = "E&xit"
         '
@@ -157,6 +172,11 @@ Public Class MDIChlor
         Me.MenuItem12.Index = 1
         Me.MenuItem12.Text = "Version"
         '
+        'MenuItem15
+        '
+        Me.MenuItem15.Index = 2
+        Me.MenuItem15.Text = "FEM"
+        '
         'MDIChlor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
@@ -178,17 +198,17 @@ Public Class MDIChlor
     Public CPTerase As Short = 0
     Dim Para5 As Short
     Dim frm01 As frmOption1
-    Dim frm02 As New frmChlor
+    Dim frmC As New frmChlor
 
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         Me.IsMdiContainer = True
         Me.WindowState = FormWindowState.Maximized
-        frm02.Left = 0
-        frm02.Top = 0
-        frm02.Height = (Me.Height)
-        frm02.Width = (Me.Width)
-        frm02.Hide()
+        frmC.Left = 0
+        frmC.Top = 0
+        frmC.Height = (Me.Height)
+        frmC.Width = (Me.Width)
+        frmC.Hide()
     End Sub
 
     'quitter le programme
@@ -586,12 +606,12 @@ Public Class MDIChlor
         '---------------------------------------------------------------------------------------
         Dim myThread As System.Threading.Thread
 
-        SetParameters(frm02, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC)
+        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC)
 
         myThread = New System.Threading.Thread(AddressOf Compute_All)
 
-        frm02.MdiParent = Me
-        frm02.Show()
+        frmC.MdiParent = Me
+        frmC.Show()
         If Para5 <> CShort(1) Then
             myThread.Start()
         End If
@@ -602,12 +622,11 @@ b:      'user pressed cancel error
 
     'construction de graphique
     Private Sub MenuItem8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem8.Click
-        Dim frm03 As frmScale1
-
-        frm03 = New frmScale1
-        frm02.MdiParent = Me
-        frm02.Show()
-        manage_graph(frm02, frm03)
+        Using frm03 As New frmScale1
+            frmC.MdiParent = Me
+            frmC.Show()
+            manage_graph(frmC, frm03)
+        End Using
     End Sub
 
     'traitement des données météorologiques
@@ -617,29 +636,25 @@ b:      'user pressed cancel error
 
     'lancement de l'approche probabiliste
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
-        Dim frm03 As frmProb
-
-        frm03 = New frmProb
-        frm03.MdiParent = Me
-        frm03.Show()
-
+        Using frm03 As New frmProb
+            frm03.MdiParent = Me
+            frm03.Show()
+        End Using
     End Sub
 
     'lancement du traitement graphique des probabilités
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
-        Dim frm03 As frmScale1
-
-        frm03 = New frmScale1
-        frm02.MdiParent = Me
-        frm02.Show()
-        ProbGraph(frm02, frm03)
-
+        Using frm03 As New frmScale1
+            frmC.MdiParent = Me
+            frmC.Show()
+            ProbGraph(frmC, frm03)
+        End Using
     End Sub
 
     Private Sub MenuItem12_Click(sender As Object, e As EventArgs) Handles MenuItem12.Click 'Thomas 28/04/2020
-        Dim frm04 As New frmSplash
-        frm04.ShowDialog()
-
+        Using frm04 As New frmSplash
+            frm04.ShowDialog()
+        End Using
     End Sub
 
     Private Sub MenuItem11_Click(sender As Object, e As EventArgs) Handles MenuItem11.Click 'Thomas 28/04/2020
@@ -648,5 +663,23 @@ b:      'user pressed cancel error
             tmp.Write(manual, 0, manual.Length)
         End Using
         Process.Start("ModeEmploi_v4.pdf")
+    End Sub
+
+    Private Sub MenuItem13_Click(sender As Object, e As EventArgs) Handles MenuItem13.Click
+        Using frm04 As New frmMesh
+            frm04.ShowDialog()
+        End Using
+    End Sub
+
+    Private Sub MenuItem14_Click(sender As Object, e As EventArgs) Handles MenuItem14.Click
+        Using frm04 As New frmPhreeqC
+            frm04.ShowDialog()
+        End Using
+    End Sub
+
+    Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
+        Using frm04 As New frmbtFem
+            frm04.ShowDialog()
+        End Using
     End Sub
 End Class

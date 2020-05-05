@@ -1,5 +1,4 @@
-Public Class frmSplash
-    Inherits System.Windows.Forms.Form
+Public Class frmSplash : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 

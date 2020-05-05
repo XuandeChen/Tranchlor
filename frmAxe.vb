@@ -1,5 +1,4 @@
-Public Class frmAxe
-    Inherits System.Windows.Forms.Form
+Public Class frmAxe : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 
@@ -45,22 +44,22 @@ Public Class frmAxe
     Friend WithEvents RadioButton2 As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButton1 As System.Windows.Forms.RadioButton
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.Text1 = New System.Windows.Forms.TextBox
+        Me.components = New System.ComponentModel.Container()
+        Me.Text1 = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Frame1 = New System.Windows.Forms.GroupBox
-        Me.Option1 = New System.Windows.Forms.RadioButton
-        Me.Option2 = New System.Windows.Forms.RadioButton
-        Me.Frame2 = New System.Windows.Forms.GroupBox
-        Me.Option4 = New System.Windows.Forms.RadioButton
-        Me.Option8 = New System.Windows.Forms.RadioButton
-        Me.Command2 = New System.Windows.Forms.Button
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton
+        Me.Frame1 = New System.Windows.Forms.GroupBox()
+        Me.Option1 = New System.Windows.Forms.RadioButton()
+        Me.Option2 = New System.Windows.Forms.RadioButton()
+        Me.Frame2 = New System.Windows.Forms.GroupBox()
+        Me.Option4 = New System.Windows.Forms.RadioButton()
+        Me.Option8 = New System.Windows.Forms.RadioButton()
+        Me.Command2 = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.Frame1.SuspendLayout()
         Me.Frame2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -69,7 +68,6 @@ Public Class frmAxe
         'Text1
         '
         Me.Text1.AcceptsReturn = True
-        Me.Text1.AutoSize = False
         Me.Text1.BackColor = System.Drawing.SystemColors.Window
         Me.Text1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text1.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -110,6 +108,7 @@ Public Class frmAxe
         Me.Option1.TabIndex = 11
         Me.Option1.TabStop = True
         Me.Option1.Text = "Temps"
+        Me.Option1.UseVisualStyleBackColor = False
         '
         'Option2
         '
@@ -124,6 +123,7 @@ Public Class frmAxe
         Me.Option2.TabIndex = 12
         Me.Option2.TabStop = True
         Me.Option2.Text = "Profondeur"
+        Me.Option2.UseVisualStyleBackColor = False
         '
         'Frame2
         '
@@ -152,6 +152,7 @@ Public Class frmAxe
         Me.Option4.TabIndex = 4
         Me.Option4.TabStop = True
         Me.Option4.Text = "teneur en eau cumulée"
+        Me.Option4.UseVisualStyleBackColor = False
         Me.Option4.Visible = False
         '
         'Option8
@@ -168,6 +169,7 @@ Public Class frmAxe
         Me.Option8.TabIndex = 5
         Me.Option8.TabStop = True
         Me.Option8.Text = "température"
+        Me.Option8.UseVisualStyleBackColor = False
         '
         'Command2
         '
@@ -181,6 +183,7 @@ Public Class frmAxe
         Me.Command2.Size = New System.Drawing.Size(41, 33)
         Me.Command2.TabIndex = 17
         Me.Command2.Text = "&Ok"
+        Me.Command2.UseVisualStyleBackColor = False
         '
         'Label2
         '
@@ -235,6 +238,7 @@ Public Class frmAxe
         '
         Me.RadioButton2.Location = New System.Drawing.Point(8, 32)
         Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(104, 24)
         Me.RadioButton2.TabIndex = 25
         Me.RadioButton2.Text = "Bord droit"
         '
@@ -243,6 +247,7 @@ Public Class frmAxe
         Me.RadioButton1.Checked = True
         Me.RadioButton1.Location = New System.Drawing.Point(8, 8)
         Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(104, 24)
         Me.RadioButton1.TabIndex = 24
         Me.RadioButton1.TabStop = True
         Me.RadioButton1.Text = "Bord gauche"
@@ -276,7 +281,7 @@ Public Class frmAxe
     Private Sub Command2_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Command2.Click
         If Me.Text1.Text = "" Then
             If Option4.Checked = False Then
-                MsgBox("Coordonnées x manquent", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Message")
+                MsgBox("Coordonnées x manquent", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Message")
             Else
                 Text1.Text = CStr(0)
                 Me.Hide()
@@ -370,7 +375,7 @@ Public Class frmAxe
         Dim KeyAscii As Short = CShort(Asc(eventArgs.KeyChar))
         If KeyAscii = CShort(13) Then
             If Not IsNumeric(Text1.Text) Then
-                MsgBox("Nombre non valide !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Message")
+                MsgBox("Nombre non valide !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Message")
             Else
                 Command2_Click(Command2, New System.EventArgs())
             End If
@@ -382,7 +387,7 @@ Public Class frmAxe
 
     Private Sub Text1_Validating(ByVal eventSender As System.Object, ByVal eventArgs As System.ComponentModel.CancelEventArgs) Handles Text1.Validating
         Dim Cancel As Boolean = eventArgs.Cancel
-        If Not IsNumeric(Text1.Text) Then MsgBox("Nombre non valide !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Message")
+        If Not IsNumeric(Text1.Text) Then MsgBox("Nombre non valide !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Message")
         eventArgs.Cancel = Cancel
     End Sub
 
@@ -400,4 +405,7 @@ Public Class frmAxe
         End If
     End Sub
 
+    Private Sub frmAxe_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

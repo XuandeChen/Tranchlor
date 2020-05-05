@@ -1,5 +1,4 @@
-Public Class frmScale1
-    Inherits System.Windows.Forms.Form
+Public Class frmScale1 : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 
@@ -74,7 +73,13 @@ Public Class frmScale1
         'Frame2
         '
         Me.Frame2.BackColor = System.Drawing.SystemColors.Control
-        Me.Frame2.Controls.AddRange(New System.Windows.Forms.Control() {Me.Text6, Me.Label6, Me.Text5, Me.Text4, Me.Label8, Me.Label4, Me.Label5})
+        Me.Frame2.Controls.Add(Me.Text6)
+        Me.Frame2.Controls.Add(Me.Label6)
+        Me.Frame2.Controls.Add(Me.Text5)
+        Me.Frame2.Controls.Add(Me.Text4)
+        Me.Frame2.Controls.Add(Me.Label8)
+        Me.Frame2.Controls.Add(Me.Label4)
+        Me.Frame2.Controls.Add(Me.Label5)
         Me.Frame2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Frame2.ForeColor = System.Drawing.SystemColors.ControlText
         Me.Frame2.Location = New System.Drawing.Point(8, 128)
@@ -87,7 +92,6 @@ Public Class frmScale1
         'Text6
         '
         Me.Text6.AcceptsReturn = True
-        Me.Text6.AutoSize = False
         Me.Text6.BackColor = System.Drawing.SystemColors.Window
         Me.Text6.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text6.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -116,7 +120,6 @@ Public Class frmScale1
         'Text5
         '
         Me.Text5.AcceptsReturn = True
-        Me.Text5.AutoSize = False
         Me.Text5.BackColor = System.Drawing.SystemColors.Window
         Me.Text5.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text5.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -132,7 +135,6 @@ Public Class frmScale1
         'Text4
         '
         Me.Text4.AcceptsReturn = True
-        Me.Text4.AutoSize = False
         Me.Text4.BackColor = System.Drawing.SystemColors.Window
         Me.Text4.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text4.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -187,7 +189,13 @@ Public Class frmScale1
         'Frame1
         '
         Me.Frame1.BackColor = System.Drawing.SystemColors.Control
-        Me.Frame1.Controls.AddRange(New System.Windows.Forms.Control() {Me.Text2, Me.Text3, Me.Text1, Me.Label3, Me.Label2, Me.Label1, Me.Label7})
+        Me.Frame1.Controls.Add(Me.Text2)
+        Me.Frame1.Controls.Add(Me.Text3)
+        Me.Frame1.Controls.Add(Me.Text1)
+        Me.Frame1.Controls.Add(Me.Label3)
+        Me.Frame1.Controls.Add(Me.Label2)
+        Me.Frame1.Controls.Add(Me.Label1)
+        Me.Frame1.Controls.Add(Me.Label7)
         Me.Frame1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Frame1.ForeColor = System.Drawing.SystemColors.ControlText
         Me.Frame1.Location = New System.Drawing.Point(8, 8)
@@ -200,7 +208,6 @@ Public Class frmScale1
         'Text2
         '
         Me.Text2.AcceptsReturn = True
-        Me.Text2.AutoSize = False
         Me.Text2.BackColor = System.Drawing.SystemColors.Window
         Me.Text2.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -216,7 +223,6 @@ Public Class frmScale1
         'Text3
         '
         Me.Text3.AcceptsReturn = True
-        Me.Text3.AutoSize = False
         Me.Text3.BackColor = System.Drawing.SystemColors.Window
         Me.Text3.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text3.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -232,7 +238,6 @@ Public Class frmScale1
         'Text1
         '
         Me.Text1.AcceptsReturn = True
-        Me.Text1.AutoSize = False
         Me.Text1.BackColor = System.Drawing.SystemColors.Window
         Me.Text1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -309,12 +314,15 @@ Public Class frmScale1
         Me.Command1.Size = New System.Drawing.Size(41, 33)
         Me.Command1.TabIndex = 10
         Me.Command1.Text = "&Ok"
+        Me.Command1.UseVisualStyleBackColor = False
         '
         'frmScale1
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(256, 285)
-        Me.Controls.AddRange(New System.Windows.Forms.Control() {Me.Frame1, Me.Command1, Me.Frame2})
+        Me.Controls.Add(Me.Frame1)
+        Me.Controls.Add(Me.Command1)
+        Me.Controls.Add(Me.Frame2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmScale1"
         Me.Text = "frmScale1"
@@ -338,4 +346,7 @@ Public Class frmScale1
         'Msg_noNumeric(Val, Canc)
     End Sub
 
+    Private Sub frmScale1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

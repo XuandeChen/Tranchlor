@@ -1,21 +1,4 @@
-Imports System.Drawing
-Imports System.Drawing.Drawing2D
-Imports System.Drawing.Imaging
-Imports System.Drawing.Text
-
-'Public Class Win32
-'    Public Declare Function BitBlt Lib "gdi32" Alias "BitBlt" (ByVal hDestDC As Integer, ByVal x As Integer, ByVal y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal hSrcDC As Integer, ByVal xSrc As Integer, ByVal ySrc As Integer, ByVal dwRop As Integer) As Integer
-
-'    Public Declare Function GetWindowDC Lib "user32" Alias "GetWindowDC" (ByVal hwnd As Integer) As Integer
-
-'    Public Declare Function ReleaseDC Lib "user32" Alias "ReleaseDC" (ByVal hwnd As Integer, ByVal hdc As Integer) As Integer
-
-'    Public Const SRCCOPY As Integer = &HCC0020
-'End Class
-
-Public Class frmChlor
-
-    Inherits System.Windows.Forms.Form
+Public Class frmChlor : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 

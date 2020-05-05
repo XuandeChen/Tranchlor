@@ -1,6 +1,6 @@
 Public Class CGraph
 
-    Public Sub New(ByRef frm As frmChlor, ByRef pcBox As PictureBox, ByVal position As Point, ByVal m_Longueur As Single, ByVal m_Hauteur As Single, ByVal couleur As Color, ByVal message0 As String, ByVal message1 As String, ByVal message2 As String, ByVal message3 As String, ByVal x1 As Single, ByVal x2 As Single, ByVal h1 As Single, ByVal h2 As Single, ByVal EctX As Single, ByVal EctY As Single, ByRef PosProf() As Decimal, ByRef Result() As Decimal, ByVal Dofs As Short, ByRef Gxc As Single, ByRef Dxc As Single)
+    Public Sub New(ByRef frm As FrmChlor, ByRef pcBox As PictureBox, ByVal position As Point, ByVal m_Longueur As Single, ByVal m_Hauteur As Single, ByVal couleur As Color, ByVal message0 As String, ByVal message1 As String, ByVal message2 As String, ByVal message3 As String, ByVal x1 As Single, ByVal x2 As Single, ByVal h1 As Single, ByVal h2 As Single, ByVal EctX As Single, ByVal EctY As Single, ByRef PosProf() As Decimal, ByRef Result() As Decimal, ByVal Dofs As Short, ByRef Gxc As Single, ByRef Dxc As Single)
         Dim m_Image As Bitmap
         Dim m_Position As Point
         Dim m_Gr As Graphics

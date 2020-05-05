@@ -1,7 +1,7 @@
 Module Graph1
 
     'Construction de graphique
-    Public Sub manage_graph(ByRef frm02 As Chloride_transport.frmChlor, ByRef frm03 As Chloride_transport.frmScale1)
+    Public Sub manage_graph(ByRef frm02 As frmChlor, ByRef frm03 As frmScale1)
         Dim cpteur As Short = 0
         Dim Filtre As String
         Dim Index As Short
@@ -223,7 +223,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Cherche le fichier résultat, gère le choix des axes, pointe la ligne ou la colonne de résultat et enregistre dans un fichier texte
-    Public Sub Design_graph(ByRef frm02 As Chloride_transport.frmChlor, ByRef cpteur As Short, ByRef TesGraph As Short, ByRef Data As Object, ByRef NCurve As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef RFile As String, ByRef XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single, ByRef NCol As Short, ByRef NLine As Short, ByRef x2Min As Single, ByRef x2Max As Single, ByRef x1Min As Single, ByRef x1Max As Single, ByRef yMin As Single, ByRef yMax As Single)
+    Public Sub Design_graph(ByRef frm02 As frmChlor, ByRef cpteur As Short, ByRef TesGraph As Short, ByRef Data As Object, ByRef NCurve As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef RFile As String, ByRef XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single, ByRef NCol As Short, ByRef NLine As Short, ByRef x2Min As Single, ByRef x2Max As Single, ByRef x1Min As Single, ByRef x1Max As Single, ByRef yMin As Single, ByRef yMax As Single)
         Dim CoorX As Single
         Dim TypY As String
         Dim i As Short
@@ -365,7 +365,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Cherche le fichier résultat des points et enregistre dans un fichier texte
-    Public Sub Design_point(ByRef frm02 As Chloride_transport.frmChlor, ByRef Data(,) As Object, ByRef nrofil As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef TesPoint As Short, ByVal XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single)
+    Public Sub Design_point(ByRef frm02 As frmChlor, ByRef Data(,) As Object, ByRef nrofil As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef TesPoint As Short, ByVal XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single)
         Dim Filtre As String
         Dim Index As Short
         Dim Directoire As Boolean
@@ -433,7 +433,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Ouverture de la boître de dialogue des échelles
-    Public Sub Scale_info(ByRef frm02 As Chloride_transport.frmChlor, ByRef frm03 As Chloride_transport.frmScale1, ByRef Data As Object, ByRef NTCurve As Short, ByRef nTProfil As Short, ByRef TesGraph As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef a As Single, ByRef TesPoint As Short, ByRef XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single, ByRef EctX As Single, ByRef EctY As Single)
+    Public Sub Scale_info(ByRef frm02 As frmChlor, ByRef frm03 As frmScale1, ByRef Data As Object, ByRef NTCurve As Short, ByRef nTProfil As Short, ByRef TesGraph As Short, ByRef NoAxeX As Short, ByRef NoAxeY As Short, ByRef a As Single, ByRef TesPoint As Short, ByRef XMI As Single, ByRef XMA As Single, ByRef YMI As Single, ByRef YMA As Single, ByRef EctX As Single, ByRef EctY As Single)
         EctX = (XMA - XMI) / 10
         EctY = (YMA - YMI) / 10
         frm03.Text1.Text = CStr(XMI) 'min
@@ -498,7 +498,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Dessin des points et des courbes
-    Public Sub GraphBMP(ByRef frm As frmChlor, ByRef nTprofil As Short, ByRef NTCurve As Short, ByRef Nline As Integer, ByRef CoorX As Single, ByRef kk As Short, ByRef NoAxex As Short, ByRef NoAxey As Short, ByRef x1 As Single, ByRef x2 As Single, ByRef h1 As Single, ByRef h2 As Single, ByRef EctX As Single, ByRef EctY As Single)
+    Public Sub GraphBMP(ByRef frm As FrmChlor, ByRef nTprofil As Short, ByRef NTCurve As Short, ByRef Nline As Integer, ByRef CoorX As Single, ByRef kk As Short, ByRef NoAxex As Short, ByRef NoAxey As Short, ByRef x1 As Single, ByRef x2 As Single, ByRef h1 As Single, ByRef h2 As Single, ByRef EctX As Single, ByRef EctY As Single)
         Dim m_Image As Bitmap
         Dim m_Gr As Graphics
         Dim m_Pen As Pen
@@ -747,7 +747,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Enlever les bruits du à l'approche probabiliste
-    Public Sub ProbGraph(ByRef frm02 As Chloride_transport.frmChlor, ByRef frm03 As Chloride_transport.frmScale1)
+    Public Sub ProbGraph(ByRef frm02 As frmChlor, ByRef frm03 As frmScale1)
 
         Dim Filtre As String
         Dim Index As Short
@@ -937,7 +937,7 @@ b:
     End Sub
 
     'Dessin des courbes probabilistiques
-    Public Sub Dessin(ByRef frm As frmChlor, ByRef NTCurve As Short, ByRef Nline As Integer, ByRef CoorX As Single, ByRef Message3 As String, ByRef NoAxex As Short, ByRef NoAxey As Short, ByRef x1 As Single, ByRef x2 As Single, ByRef h1 As Single, ByRef h2 As Single, ByRef EctX As Single, ByRef EctY As Single, ByRef Data(,) As Double)
+    Public Sub Dessin(ByRef frm As FrmChlor, ByRef NTCurve As Short, ByRef Nline As Integer, ByRef CoorX As Single, ByRef Message3 As String, ByRef NoAxex As Short, ByRef NoAxey As Short, ByRef x1 As Single, ByRef x2 As Single, ByRef h1 As Single, ByRef h2 As Single, ByRef EctX As Single, ByRef EctY As Single, ByRef Data(,) As Double)
         Dim m_Image As Bitmap
         Dim m_Gr As Graphics
         Dim m_Pen As Pen
