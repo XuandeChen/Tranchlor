@@ -706,6 +706,7 @@ b:
         End Try
 
         FileClose(nFic)
+
         '---------------------------------------------------------------------------------------
         Dim myThread As System.Threading.Thread
 
