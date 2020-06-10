@@ -39,7 +39,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem6 As System.Windows.Forms.MenuItem
-    Friend WithEvents MenuItem7 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem8 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem2 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem3 As System.Windows.Forms.MenuItem
@@ -50,6 +49,8 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem13 As MenuItem
     Friend WithEvents MenuItem14 As MenuItem
     Friend WithEvents MenuItem15 As MenuItem
+    Friend WithEvents MenuItem16 As MenuItem
+    Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -57,11 +58,13 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.mnuTop = New System.Windows.Forms.MenuItem()
         Me._MnuProject_4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem14 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.MenuItem13 = New System.Windows.Forms.MenuItem()
         Me._MnuProject_5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem1 = New System.Windows.Forms.MenuItem()
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.MenuItem8 = New System.Windows.Forms.MenuItem()
@@ -72,7 +75,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem11 = New System.Windows.Forms.MenuItem()
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -96,6 +98,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem14.Index = 1
         Me.MenuItem14.Text = "PhreeqC"
+        '
+        'MenuItem15
+        '
+        Me.MenuItem15.Index = 2
+        Me.MenuItem15.Text = "FEM"
         '
         'MenuItem13
         '
@@ -122,29 +129,34 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
-        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
+        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem16, Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
         Me.MenuItem5.Text = "&Transport model"
+        '
+        'MenuItem16
+        '
+        Me.MenuItem16.Index = 0
+        Me.MenuItem16.Text = "&GeometryFile"
         '
         'MenuItem6
         '
-        Me.MenuItem6.Index = 0
+        Me.MenuItem6.Index = 1
         Me.MenuItem6.Text = "In&put"
         '
         'MenuItem7
         '
-        Me.MenuItem7.Index = 1
+        Me.MenuItem7.Index = 2
         Me.MenuItem7.Text = "&Calcul"
         '
         'MenuItem8
         '
-        Me.MenuItem8.Index = 2
+        Me.MenuItem8.Index = 3
         Me.MenuItem8.Text = "&Graph"
         '
         'MenuItem3
         '
         Me.MenuItem3.Index = 3
         Me.MenuItem3.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem4, Me.MenuItem9})
-        Me.MenuItem3.Text = "Probabiliste"
+        Me.MenuItem3.Text = "Probabilistic"
         '
         'MenuItem4
         '
@@ -154,7 +166,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem9
         '
         Me.MenuItem9.Index = 1
-        Me.MenuItem9.Text = "Graphique"
+        Me.MenuItem9.Text = "Graph"
         '
         'MenuItem10
         '
@@ -172,14 +184,9 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12.Index = 1
         Me.MenuItem12.Text = "Version"
         '
-        'MenuItem15
-        '
-        Me.MenuItem15.Index = 2
-        Me.MenuItem15.Text = "FEM"
-        '
         'MDIChlor
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
         Me.BackColor = System.Drawing.SystemColors.AppWorkspace
         Me.ClientSize = New System.Drawing.Size(773, 445)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -209,6 +216,93 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         frmC.Height = (Me.Height)
         frmC.Width = (Me.Width)
         frmC.Hide()
+    End Sub
+
+    'Programme de lecture des donnees maillage D. C et Xuande  10/06/2020
+    Private Sub ReadFileMSH(ByRef NCoor(,) As Double, ByRef Bord() As Boolean)
+
+        ''''''''''''''''''''''''''''''''''''''''''''
+        'lire des fichiers maillage
+        Dim nFic As Integer = FreeFile()
+        Dim OutFile As String
+        Dim Filtre As String
+        Dim Index As Short
+        Dim Directoire As Boolean
+        Dim Titre As String
+        Dim Canc As Boolean = False
+        Dim Temp As String
+        Dim NCoorCont As Long
+        Dim NCoorTemp As Long
+        Dim NgCoor As Long
+        Dim NNoeuds As Long
+        Dim i As Long
+        Dim j As Long
+        Dim k As Long
+        Dim LnTemp(0) As Long
+        'Dim Bord(0) as Boolean false=pas bord true=bord
+        'Dim NCoor(2, 0) As Double 'x,y + + numéro de noeuds
+        ''''''''''''''''''''''''''''''''''''''''''''
+        Filtre = "Mesh files (*.msh)|*.msh"
+        Index = 1
+        Directoire = True
+        Titre = "Select mesh file"
+        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then GoTo b
+        '''''''''''''''''''''''''''''''''''''''''''''
+        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+        Do While Temp <> "$Entities"
+            Input(nFic, Temp)
+        Loop
+        Input(nFic, NCoorCont)
+        Do While Temp <> "$EndEntities"
+            Input(nFic, Temp)
+        Loop
+        Do While Temp <> "$Nodes"
+            Input(nFic, Temp)
+        Loop
+        Input(nFic, NgCoor)
+        Input(nFic, NNoeuds)
+        Input(nFic, Temp)
+        Input(nFic, Temp)
+        ReDim Bord(NNoeuds)
+        For i = 0 To NNoeuds
+            Bord(i) = False
+        Next
+        ReDim NCoor(2, NNoeuds)
+        For i = 1 To NCoorCont
+            Input(nFic, j)
+            For k = 0 To 2
+                Input(nFic, NCoor(k, j))
+            Next
+            Bord(j) = True
+            Input(nFic, Temp)
+        Next
+        For j = 0 To (NgCoor - 1) - NCoorCont
+            For i = 1 To 4
+                Input(nFic, NCoorTemp)
+            Next
+            ReDim LnTemp(NCoorTemp)
+            For i = 0 To NCoorTemp - 1
+                Input(nFic, LnTemp(i))
+            Next
+            For i = 0 To NCoorCont - 1
+                For k = 0 To 2
+                    Input(nFic, NCoor(k, LnTemp(i)))
+                Next
+                Bord(LnTemp(i)) = True  'a verifier
+            Next
+        Next
+        Do While Temp <> "$EndNodes"
+            Input(nFic, Temp)
+        Loop
+        Do While Temp <> "$Elements"
+            Input(nFic, Temp)
+        Loop
+        'continuer avec la lecture de la connectivité
+        FileClose(nFic)
+b:
+        'terminer lecture des fichiers maillage
+        ''''''''''''''''''''''''''''''''''''''''''''
     End Sub
 
     'quitter le programme
@@ -336,7 +430,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Titre = "Sélectionner le fichier d'exposition"
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then GoTo b
-        '''''''''''''''''''''''''''''''''''''''''''''
+        ''''''''''''''''''''''''''''''''''''''''''''
 
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         FilePost(OutFile, PostFile)
@@ -670,16 +764,26 @@ b:      'user pressed cancel error
             frm04.ShowDialog()
         End Using
     End Sub
-
+    'Lecture du module PhreeqC
     Private Sub MenuItem14_Click(sender As Object, e As EventArgs) Handles MenuItem14.Click
         Using frm04 As New frmPhreeqC
             frm04.ShowDialog()
         End Using
     End Sub
 
+    'Lecture du module FEM mechical analyse
     Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
         Using frm04 As New frmbtFem
             frm04.ShowDialog()
         End Using
     End Sub
+
+    'Lecture du fichier Maillage 'Xuande  10/06/2020
+    Private Sub MenuItem16_Click(sender As Object, e As EventArgs) Handles MenuItem16.Click
+        Dim NCoor(2, 0) As Double
+        Dim Bord(0) As Boolean
+        ReadFileMSH(NCoor, Bord)    'lecture du fichier MSH
+    End Sub
+
+
 End Class
