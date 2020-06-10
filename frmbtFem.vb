@@ -38,7 +38,6 @@ Public Class frmbtFem
     Private SigmaXRange, SigmaYRange, TauXYRange As Range
     Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
 
-
     Private Enum Results
         None
         SigmaX

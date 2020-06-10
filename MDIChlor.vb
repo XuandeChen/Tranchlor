@@ -423,6 +423,8 @@ b:
         Dim RoC(1) As Single
         Dim RoA(1) As Single
 
+        Dim PintermManual As Integer = 0
+
         ''''''''''''''''''''''''''''''''''''''''''''
         Filtre = "Text files (INPUT_*.txt)|INPUT_*.txt"
         Index = 1
@@ -696,11 +698,18 @@ b:
         Le(0) = CDec(1)       'couche limite
         Le(Dofs) = CDec(1)    'couche limite
 
+        Try
+            Input(nFic, PintermManual)
+            MsgBox("Information", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Le nombre de points est de" & CStr(PintermManual))
+        Catch
+            MsgBox("Information", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Attention aucun points pris en compte manuellement")
+        End Try
+
         FileClose(nFic)
         '---------------------------------------------------------------------------------------
         Dim myThread As System.Threading.Thread
 
-        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC)
+        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, PintermManual)
 
         myThread = New System.Threading.Thread(AddressOf Compute_All)
 
