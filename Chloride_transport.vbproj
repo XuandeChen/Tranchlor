@@ -360,6 +360,7 @@
     <Content Include="Resources\Sample btFEM\smallrect.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\MeshFiles\test.msh" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT">
@@ -445,9 +446,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\MeshFiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent />
