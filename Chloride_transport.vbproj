@@ -342,6 +342,28 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Database\PHREEQC.DAT" />
+    <Content Include="Resources\Exposition\EXPO_A_B_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_B_O_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_CAC_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_D_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_D_O_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_EXT_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_E_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_A_E_O_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_B_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_B_O_DAVOS.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Exposition\EXPO_M_CAC_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_CAI_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_D_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_D_O_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_EXT_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_E_E_DAVOS.txt" />
+    <Content Include="Resources\Exposition\EXPO_M_E_O_DAVOS.txt" />
+    <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO2D.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Sample btFEM\btfemexample.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -360,7 +382,9 @@
     <Content Include="Resources\Sample btFEM\smallrect.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\MeshFiles\test.msh" />
+    <Content Include="Resources\MeshFiles\test.msh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\MeteoFiles\METEO_ZUERICHKLOTEN.TXT">
@@ -399,7 +423,7 @@
     <Content Include="Resources\InitialCondition\CIH_lunk.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Docs\INPUT_Explication.txt">
+    <Content Include="Resources\Input\INPUT_Explication.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

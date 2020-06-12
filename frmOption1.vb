@@ -319,311 +319,309 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
     Public WithEvents Label149 As System.Windows.Forms.Label
     Public WithEvents Label150 As System.Windows.Forms.Label
     Public WithEvents Label151 As System.Windows.Forms.Label
+    Friend WithEvents CheckBox2D As CheckBox
     Friend WithEvents Button10 As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(frmOption1))
-        Me.Command2 = New System.Windows.Forms.Button
-        Me.SSTab1 = New System.Windows.Forms.TabControl
-        Me._SSTab1_TabPage0 = New System.Windows.Forms.TabPage
-        Me.Frame1 = New System.Windows.Forms.GroupBox
-        Me.TextBox3 = New System.Windows.Forms.TextBox
-        Me.Label100 = New System.Windows.Forms.Label
-        Me.Label98 = New System.Windows.Forms.Label
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.Label97 = New System.Windows.Forms.Label
-        Me.TextBox2 = New System.Windows.Forms.TextBox
-        Me.Label94 = New System.Windows.Forms.Label
-        Me.Label95 = New System.Windows.Forms.Label
-        Me.Label93 = New System.Windows.Forms.Label
-        Me.Label92 = New System.Windows.Forms.Label
-        Me.Label91 = New System.Windows.Forms.Label
-        Me.Label90 = New System.Windows.Forms.Label
-        Me.TextBox1 = New System.Windows.Forms.TextBox
-        Me.Label89 = New System.Windows.Forms.Label
-        Me.Combo5 = New System.Windows.Forms.ComboBox
-        Me.Text45 = New System.Windows.Forms.TextBox
-        Me.Text44 = New System.Windows.Forms.TextBox
-        Me.Text2 = New System.Windows.Forms.TextBox
-        Me.Text1 = New System.Windows.Forms.TextBox
-        Me.Label86 = New System.Windows.Forms.Label
-        Me.Label85 = New System.Windows.Forms.Label
-        Me.Label84 = New System.Windows.Forms.Label
-        Me.Label83 = New System.Windows.Forms.Label
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Frame2 = New System.Windows.Forms.GroupBox
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.Option4 = New System.Windows.Forms.RadioButton
-        Me.Option3 = New System.Windows.Forms.RadioButton
-        Me.Option2 = New System.Windows.Forms.RadioButton
-        Me.Option1 = New System.Windows.Forms.RadioButton
-        Me.Text4 = New System.Windows.Forms.TextBox
-        Me.Text3 = New System.Windows.Forms.TextBox
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.Label5 = New System.Windows.Forms.Label
-        Me._SSTab1_TabPage3 = New System.Windows.Forms.TabPage
-        Me.Frame12 = New System.Windows.Forms.GroupBox
-        Me.Label106 = New System.Windows.Forms.Label
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox
-        Me.Label101 = New System.Windows.Forms.Label
-        Me.Label96 = New System.Windows.Forms.Label
-        Me.TextBox5 = New System.Windows.Forms.TextBox
-        Me.TextBox4 = New System.Windows.Forms.TextBox
-        Me.Picture1 = New System.Windows.Forms.PictureBox
-        Me.Text32 = New System.Windows.Forms.TextBox
-        Me.Text31 = New System.Windows.Forms.TextBox
-        Me.Text30 = New System.Windows.Forms.TextBox
-        Me.Label54 = New System.Windows.Forms.Label
-        Me.Label53 = New System.Windows.Forms.Label
-        Me.Label52 = New System.Windows.Forms.Label
-        Me.Label51 = New System.Windows.Forms.Label
-        Me.Frame13 = New System.Windows.Forms.GroupBox
-        Me.Button10 = New System.Windows.Forms.Button
-        Me.RadioButton3 = New System.Windows.Forms.RadioButton
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton
-        Me.Label56 = New System.Windows.Forms.Label
-        Me.Button9 = New System.Windows.Forms.Button
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox
-        Me.TextBox21 = New System.Windows.Forms.TextBox
-        Me.TextBox22 = New System.Windows.Forms.TextBox
-        Me.Label49 = New System.Windows.Forms.Label
-        Me.Label50 = New System.Windows.Forms.Label
-        Me.Frame16 = New System.Windows.Forms.GroupBox
-        Me.Text39 = New System.Windows.Forms.TextBox
-        Me.Label66 = New System.Windows.Forms.Label
-        Me._SSTab1_TabPage1 = New System.Windows.Forms.TabPage
-        Me.Frame3 = New System.Windows.Forms.GroupBox
-        Me.Combo1 = New System.Windows.Forms.ComboBox
-        Me.Text9 = New System.Windows.Forms.TextBox
-        Me.Text8 = New System.Windows.Forms.TextBox
-        Me.Text7 = New System.Windows.Forms.TextBox
-        Me.Label32 = New System.Windows.Forms.Label
-        Me.Label31 = New System.Windows.Forms.Label
-        Me.Label10 = New System.Windows.Forms.Label
-        Me.Label9 = New System.Windows.Forms.Label
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.Frame4 = New System.Windows.Forms.GroupBox
-        Me.Text6 = New System.Windows.Forms.TextBox
-        Me.Text5 = New System.Windows.Forms.TextBox
-        Me.Label30 = New System.Windows.Forms.Label
-        Me.Label29 = New System.Windows.Forms.Label
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.Frame5 = New System.Windows.Forms.GroupBox
-        Me.Text24 = New System.Windows.Forms.TextBox
-        Me.Text23 = New System.Windows.Forms.TextBox
-        Me.Text22 = New System.Windows.Forms.TextBox
-        Me.Text21 = New System.Windows.Forms.TextBox
-        Me.Text20 = New System.Windows.Forms.TextBox
-        Me.Text19 = New System.Windows.Forms.TextBox
-        Me.Text18 = New System.Windows.Forms.TextBox
-        Me.Text17 = New System.Windows.Forms.TextBox
-        Me.Text16 = New System.Windows.Forms.TextBox
-        Me.Text15 = New System.Windows.Forms.TextBox
-        Me.Label45 = New System.Windows.Forms.Label
-        Me.Label44 = New System.Windows.Forms.Label
-        Me.Label43 = New System.Windows.Forms.Label
-        Me.Label42 = New System.Windows.Forms.Label
-        Me.Label41 = New System.Windows.Forms.Label
-        Me.Label40 = New System.Windows.Forms.Label
-        Me.Label39 = New System.Windows.Forms.Label
-        Me.Label38 = New System.Windows.Forms.Label
-        Me.Line7 = New System.Windows.Forms.Label
-        Me.Line6 = New System.Windows.Forms.Label
-        Me.Line5 = New System.Windows.Forms.Label
-        Me.Line4 = New System.Windows.Forms.Label
-        Me.Line1 = New System.Windows.Forms.Label
-        Me.Label22 = New System.Windows.Forms.Label
-        Me.Label21 = New System.Windows.Forms.Label
-        Me.Label20 = New System.Windows.Forms.Label
-        Me.Label19 = New System.Windows.Forms.Label
-        Me.Label18 = New System.Windows.Forms.Label
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.Frame6 = New System.Windows.Forms.GroupBox
-        Me.TextBox27 = New System.Windows.Forms.TextBox
-        Me.Label123 = New System.Windows.Forms.Label
-        Me.Label124 = New System.Windows.Forms.Label
-        Me.Text14 = New System.Windows.Forms.TextBox
-        Me.Text13 = New System.Windows.Forms.TextBox
-        Me.Text12 = New System.Windows.Forms.TextBox
-        Me.Text11 = New System.Windows.Forms.TextBox
-        Me.Text10 = New System.Windows.Forms.TextBox
-        Me.Label37 = New System.Windows.Forms.Label
-        Me.Label36 = New System.Windows.Forms.Label
-        Me.Label35 = New System.Windows.Forms.Label
-        Me.Label34 = New System.Windows.Forms.Label
-        Me.Label33 = New System.Windows.Forms.Label
-        Me.Label27 = New System.Windows.Forms.Label
-        Me.Label26 = New System.Windows.Forms.Label
-        Me.Label25 = New System.Windows.Forms.Label
-        Me.Label24 = New System.Windows.Forms.Label
-        Me.Label23 = New System.Windows.Forms.Label
-        Me._SSTab1_TabPage2 = New System.Windows.Forms.TabPage
-        Me.Frame7 = New System.Windows.Forms.GroupBox
-        Me.Label99 = New System.Windows.Forms.Label
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox
-        Me.Text25 = New System.Windows.Forms.TextBox
-        Me.Label28 = New System.Windows.Forms.Label
-        Me.Frame8 = New System.Windows.Forms.GroupBox
-        Me.Text26 = New System.Windows.Forms.TextBox
-        Me.Label46 = New System.Windows.Forms.Label
-        Me.TabPage2 = New System.Windows.Forms.TabPage
-        Me.GroupBox7 = New System.Windows.Forms.GroupBox
-        Me.ComboBox9 = New System.Windows.Forms.ComboBox
-        Me.ComboBox8 = New System.Windows.Forms.ComboBox
-        Me.Label68 = New System.Windows.Forms.Label
-        Me.Label65 = New System.Windows.Forms.Label
-        Me.TextBox24 = New System.Windows.Forms.TextBox
-        Me.TextBox23 = New System.Windows.Forms.TextBox
-        Me.Label62 = New System.Windows.Forms.Label
-        Me.Label61 = New System.Windows.Forms.Label
-        Me.Label60 = New System.Windows.Forms.Label
-        Me.GroupBox6 = New System.Windows.Forms.GroupBox
-        Me.ComboBox10 = New System.Windows.Forms.ComboBox
-        Me.Label88 = New System.Windows.Forms.Label
-        Me.Label72 = New System.Windows.Forms.Label
-        Me.TextBox26 = New System.Windows.Forms.TextBox
-        Me.TextBox25 = New System.Windows.Forms.TextBox
-        Me.Label58 = New System.Windows.Forms.Label
-        Me.Label57 = New System.Windows.Forms.Label
-        Me._SSTab1_TabPage4 = New System.Windows.Forms.TabPage
-        Me.Frame17 = New System.Windows.Forms.GroupBox
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox
-        Me.PictureBox5 = New System.Windows.Forms.PictureBox
-        Me.Label129 = New System.Windows.Forms.Label
-        Me.Label128 = New System.Windows.Forms.Label
-        Me.TextBox30 = New System.Windows.Forms.TextBox
-        Me.Label127 = New System.Windows.Forms.Label
-        Me.TextBox29 = New System.Windows.Forms.TextBox
-        Me.Label126 = New System.Windows.Forms.Label
-        Me.TextBox28 = New System.Windows.Forms.TextBox
-        Me.Label125 = New System.Windows.Forms.Label
-        Me.Text40 = New System.Windows.Forms.TextBox
-        Me.Label67 = New System.Windows.Forms.Label
-        Me.Frame20 = New System.Windows.Forms.GroupBox
-        Me.CheckBox6 = New System.Windows.Forms.CheckBox
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox
-        Me.Label110 = New System.Windows.Forms.Label
-        Me.Label109 = New System.Windows.Forms.Label
-        Me.Label108 = New System.Windows.Forms.Label
-        Me.TextBox9 = New System.Windows.Forms.TextBox
-        Me.TextBox8 = New System.Windows.Forms.TextBox
-        Me.Text46 = New System.Windows.Forms.TextBox
-        Me.Label78 = New System.Windows.Forms.Label
-        Me.Label74 = New System.Windows.Forms.Label
-        Me.Frame21 = New System.Windows.Forms.GroupBox
-        Me.Text49 = New System.Windows.Forms.TextBox
-        Me.Text48 = New System.Windows.Forms.TextBox
-        Me.Label82 = New System.Windows.Forms.Label
-        Me.Label81 = New System.Windows.Forms.Label
-        Me.TabPage1 = New System.Windows.Forms.TabPage
-        Me.Label64 = New System.Windows.Forms.Label
-        Me.Label69 = New System.Windows.Forms.Label
-        Me.Label48 = New System.Windows.Forms.Label
-        Me.Label70 = New System.Windows.Forms.Label
-        Me.Label63 = New System.Windows.Forms.Label
-        Me.Label47 = New System.Windows.Forms.Label
-        Me.Button8 = New System.Windows.Forms.Button
-        Me.Button7 = New System.Windows.Forms.Button
-        Me.Button6 = New System.Windows.Forms.Button
-        Me._SSTab1_TabPage5 = New System.Windows.Forms.TabPage
-        Me.GroupBox8 = New System.Windows.Forms.GroupBox
-        Me.Label141 = New System.Windows.Forms.Label
-        Me.Label142 = New System.Windows.Forms.Label
-        Me.Label143 = New System.Windows.Forms.Label
-        Me.Label144 = New System.Windows.Forms.Label
-        Me.CheckBox7 = New System.Windows.Forms.CheckBox
-        Me.Label145 = New System.Windows.Forms.Label
-        Me.Label146 = New System.Windows.Forms.Label
-        Me.Label147 = New System.Windows.Forms.Label
-        Me.TextBox6 = New System.Windows.Forms.TextBox
-        Me.Label148 = New System.Windows.Forms.Label
-        Me.ComboBox11 = New System.Windows.Forms.ComboBox
-        Me.Label149 = New System.Windows.Forms.Label
-        Me.Label150 = New System.Windows.Forms.Label
-        Me.Label151 = New System.Windows.Forms.Label
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox
-        Me.Label137 = New System.Windows.Forms.Label
-        Me.Label138 = New System.Windows.Forms.Label
-        Me.Label139 = New System.Windows.Forms.Label
-        Me.Label140 = New System.Windows.Forms.Label
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox
-        Me.Label133 = New System.Windows.Forms.Label
-        Me.Label132 = New System.Windows.Forms.Label
-        Me.Label131 = New System.Windows.Forms.Label
-        Me.TextBox19 = New System.Windows.Forms.TextBox
-        Me.Label120 = New System.Windows.Forms.Label
-        Me.ComboBox6 = New System.Windows.Forms.ComboBox
-        Me.Label122 = New System.Windows.Forms.Label
-        Me.Label119 = New System.Windows.Forms.Label
-        Me.Label121 = New System.Windows.Forms.Label
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox
-        Me.Label115 = New System.Windows.Forms.Label
-        Me.Label116 = New System.Windows.Forms.Label
-        Me.Label117 = New System.Windows.Forms.Label
-        Me.Label118 = New System.Windows.Forms.Label
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox
-        Me.Label134 = New System.Windows.Forms.Label
-        Me.Label130 = New System.Windows.Forms.Label
-        Me.Label107 = New System.Windows.Forms.Label
-        Me.Label105 = New System.Windows.Forms.Label
-        Me.TextBox15 = New System.Windows.Forms.TextBox
-        Me.Label79 = New System.Windows.Forms.Label
-        Me.ComboBox5 = New System.Windows.Forms.ComboBox
-        Me.Label112 = New System.Windows.Forms.Label
-        Me.Label77 = New System.Windows.Forms.Label
-        Me.Label80 = New System.Windows.Forms.Label
-        Me.Frame22 = New System.Windows.Forms.GroupBox
-        Me.Label135 = New System.Windows.Forms.Label
-        Me.Label136 = New System.Windows.Forms.Label
-        Me.Label104 = New System.Windows.Forms.Label
-        Me.Label59 = New System.Windows.Forms.Label
-        Me.Label55 = New System.Windows.Forms.Label
-        Me.Label114 = New System.Windows.Forms.Label
-        Me.Label113 = New System.Windows.Forms.Label
-        Me.TextBox10 = New System.Windows.Forms.TextBox
-        Me.Label76 = New System.Windows.Forms.Label
-        Me.ComboBox4 = New System.Windows.Forms.ComboBox
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox
-        Me.Label73 = New System.Windows.Forms.Label
-        Me.Label75 = New System.Windows.Forms.Label
-        Me.Label111 = New System.Windows.Forms.Label
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmOption1))
+        Me.Command2 = New System.Windows.Forms.Button()
+        Me.SSTab1 = New System.Windows.Forms.TabControl()
+        Me._SSTab1_TabPage0 = New System.Windows.Forms.TabPage()
+        Me.Frame1 = New System.Windows.Forms.GroupBox()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Label100 = New System.Windows.Forms.Label()
+        Me.Label98 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label97 = New System.Windows.Forms.Label()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.Label94 = New System.Windows.Forms.Label()
+        Me.Label95 = New System.Windows.Forms.Label()
+        Me.Label93 = New System.Windows.Forms.Label()
+        Me.Label92 = New System.Windows.Forms.Label()
+        Me.Label91 = New System.Windows.Forms.Label()
+        Me.Label90 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label89 = New System.Windows.Forms.Label()
+        Me.Combo5 = New System.Windows.Forms.ComboBox()
+        Me.Text45 = New System.Windows.Forms.TextBox()
+        Me.Text44 = New System.Windows.Forms.TextBox()
+        Me.Text2 = New System.Windows.Forms.TextBox()
+        Me.Text1 = New System.Windows.Forms.TextBox()
+        Me.Label86 = New System.Windows.Forms.Label()
+        Me.Label85 = New System.Windows.Forms.Label()
+        Me.Label84 = New System.Windows.Forms.Label()
+        Me.Label83 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Frame2 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Option4 = New System.Windows.Forms.RadioButton()
+        Me.Option3 = New System.Windows.Forms.RadioButton()
+        Me.Option2 = New System.Windows.Forms.RadioButton()
+        Me.Option1 = New System.Windows.Forms.RadioButton()
+        Me.Text4 = New System.Windows.Forms.TextBox()
+        Me.Text3 = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me._SSTab1_TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Frame3 = New System.Windows.Forms.GroupBox()
+        Me.Combo1 = New System.Windows.Forms.ComboBox()
+        Me.Text9 = New System.Windows.Forms.TextBox()
+        Me.Text8 = New System.Windows.Forms.TextBox()
+        Me.Text7 = New System.Windows.Forms.TextBox()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Frame4 = New System.Windows.Forms.GroupBox()
+        Me.Text6 = New System.Windows.Forms.TextBox()
+        Me.Text5 = New System.Windows.Forms.TextBox()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Frame5 = New System.Windows.Forms.GroupBox()
+        Me.Text24 = New System.Windows.Forms.TextBox()
+        Me.Text23 = New System.Windows.Forms.TextBox()
+        Me.Text22 = New System.Windows.Forms.TextBox()
+        Me.Text21 = New System.Windows.Forms.TextBox()
+        Me.Text20 = New System.Windows.Forms.TextBox()
+        Me.Text19 = New System.Windows.Forms.TextBox()
+        Me.Text18 = New System.Windows.Forms.TextBox()
+        Me.Text17 = New System.Windows.Forms.TextBox()
+        Me.Text16 = New System.Windows.Forms.TextBox()
+        Me.Text15 = New System.Windows.Forms.TextBox()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.Line7 = New System.Windows.Forms.Label()
+        Me.Line6 = New System.Windows.Forms.Label()
+        Me.Line5 = New System.Windows.Forms.Label()
+        Me.Line4 = New System.Windows.Forms.Label()
+        Me.Line1 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Frame6 = New System.Windows.Forms.GroupBox()
+        Me.TextBox27 = New System.Windows.Forms.TextBox()
+        Me.Label123 = New System.Windows.Forms.Label()
+        Me.Label124 = New System.Windows.Forms.Label()
+        Me.Text14 = New System.Windows.Forms.TextBox()
+        Me.Text13 = New System.Windows.Forms.TextBox()
+        Me.Text12 = New System.Windows.Forms.TextBox()
+        Me.Text11 = New System.Windows.Forms.TextBox()
+        Me.Text10 = New System.Windows.Forms.TextBox()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me._SSTab1_TabPage2 = New System.Windows.Forms.TabPage()
+        Me.Frame7 = New System.Windows.Forms.GroupBox()
+        Me.Label99 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.Text25 = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Frame8 = New System.Windows.Forms.GroupBox()
+        Me.Text26 = New System.Windows.Forms.TextBox()
+        Me.Label46 = New System.Windows.Forms.Label()
+        Me._SSTab1_TabPage3 = New System.Windows.Forms.TabPage()
+        Me.Frame12 = New System.Windows.Forms.GroupBox()
+        Me.Label106 = New System.Windows.Forms.Label()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.Label101 = New System.Windows.Forms.Label()
+        Me.Label96 = New System.Windows.Forms.Label()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
+        Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.Picture1 = New System.Windows.Forms.PictureBox()
+        Me.Text32 = New System.Windows.Forms.TextBox()
+        Me.Text31 = New System.Windows.Forms.TextBox()
+        Me.Text30 = New System.Windows.Forms.TextBox()
+        Me.Label54 = New System.Windows.Forms.Label()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.Label52 = New System.Windows.Forms.Label()
+        Me.Label51 = New System.Windows.Forms.Label()
+        Me.Frame13 = New System.Windows.Forms.GroupBox()
+        Me.Button10 = New System.Windows.Forms.Button()
+        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.Label56 = New System.Windows.Forms.Label()
+        Me.Button9 = New System.Windows.Forms.Button()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.TextBox21 = New System.Windows.Forms.TextBox()
+        Me.TextBox22 = New System.Windows.Forms.TextBox()
+        Me.Label49 = New System.Windows.Forms.Label()
+        Me.Label50 = New System.Windows.Forms.Label()
+        Me.Frame16 = New System.Windows.Forms.GroupBox()
+        Me.Text39 = New System.Windows.Forms.TextBox()
+        Me.Label66 = New System.Windows.Forms.Label()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.ComboBox9 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox8 = New System.Windows.Forms.ComboBox()
+        Me.Label68 = New System.Windows.Forms.Label()
+        Me.Label65 = New System.Windows.Forms.Label()
+        Me.TextBox24 = New System.Windows.Forms.TextBox()
+        Me.TextBox23 = New System.Windows.Forms.TextBox()
+        Me.Label62 = New System.Windows.Forms.Label()
+        Me.Label61 = New System.Windows.Forms.Label()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.ComboBox10 = New System.Windows.Forms.ComboBox()
+        Me.Label88 = New System.Windows.Forms.Label()
+        Me.Label72 = New System.Windows.Forms.Label()
+        Me.TextBox26 = New System.Windows.Forms.TextBox()
+        Me.TextBox25 = New System.Windows.Forms.TextBox()
+        Me.Label58 = New System.Windows.Forms.Label()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me._SSTab1_TabPage4 = New System.Windows.Forms.TabPage()
+        Me.Frame17 = New System.Windows.Forms.GroupBox()
+        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
+        Me.Label129 = New System.Windows.Forms.Label()
+        Me.Label128 = New System.Windows.Forms.Label()
+        Me.TextBox30 = New System.Windows.Forms.TextBox()
+        Me.Label127 = New System.Windows.Forms.Label()
+        Me.TextBox29 = New System.Windows.Forms.TextBox()
+        Me.Label126 = New System.Windows.Forms.Label()
+        Me.TextBox28 = New System.Windows.Forms.TextBox()
+        Me.Label125 = New System.Windows.Forms.Label()
+        Me.Text40 = New System.Windows.Forms.TextBox()
+        Me.Label67 = New System.Windows.Forms.Label()
+        Me.Frame20 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox6 = New System.Windows.Forms.CheckBox()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.Label110 = New System.Windows.Forms.Label()
+        Me.Label109 = New System.Windows.Forms.Label()
+        Me.Label108 = New System.Windows.Forms.Label()
+        Me.TextBox9 = New System.Windows.Forms.TextBox()
+        Me.TextBox8 = New System.Windows.Forms.TextBox()
+        Me.Text46 = New System.Windows.Forms.TextBox()
+        Me.Label78 = New System.Windows.Forms.Label()
+        Me.Label74 = New System.Windows.Forms.Label()
+        Me.Frame21 = New System.Windows.Forms.GroupBox()
+        Me.Text49 = New System.Windows.Forms.TextBox()
+        Me.Text48 = New System.Windows.Forms.TextBox()
+        Me.Label82 = New System.Windows.Forms.Label()
+        Me.Label81 = New System.Windows.Forms.Label()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Label64 = New System.Windows.Forms.Label()
+        Me.Label69 = New System.Windows.Forms.Label()
+        Me.Label48 = New System.Windows.Forms.Label()
+        Me.Label70 = New System.Windows.Forms.Label()
+        Me.Label63 = New System.Windows.Forms.Label()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.Button8 = New System.Windows.Forms.Button()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Button6 = New System.Windows.Forms.Button()
+        Me._SSTab1_TabPage5 = New System.Windows.Forms.TabPage()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.Label141 = New System.Windows.Forms.Label()
+        Me.Label142 = New System.Windows.Forms.Label()
+        Me.Label143 = New System.Windows.Forms.Label()
+        Me.Label144 = New System.Windows.Forms.Label()
+        Me.CheckBox7 = New System.Windows.Forms.CheckBox()
+        Me.Label145 = New System.Windows.Forms.Label()
+        Me.Label146 = New System.Windows.Forms.Label()
+        Me.Label147 = New System.Windows.Forms.Label()
+        Me.TextBox6 = New System.Windows.Forms.TextBox()
+        Me.Label148 = New System.Windows.Forms.Label()
+        Me.ComboBox11 = New System.Windows.Forms.ComboBox()
+        Me.Label149 = New System.Windows.Forms.Label()
+        Me.Label150 = New System.Windows.Forms.Label()
+        Me.Label151 = New System.Windows.Forms.Label()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label137 = New System.Windows.Forms.Label()
+        Me.Label138 = New System.Windows.Forms.Label()
+        Me.Label139 = New System.Windows.Forms.Label()
+        Me.Label140 = New System.Windows.Forms.Label()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.Label133 = New System.Windows.Forms.Label()
+        Me.Label132 = New System.Windows.Forms.Label()
+        Me.Label131 = New System.Windows.Forms.Label()
+        Me.TextBox19 = New System.Windows.Forms.TextBox()
+        Me.Label120 = New System.Windows.Forms.Label()
+        Me.ComboBox6 = New System.Windows.Forms.ComboBox()
+        Me.Label122 = New System.Windows.Forms.Label()
+        Me.Label119 = New System.Windows.Forms.Label()
+        Me.Label121 = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label115 = New System.Windows.Forms.Label()
+        Me.Label116 = New System.Windows.Forms.Label()
+        Me.Label117 = New System.Windows.Forms.Label()
+        Me.Label118 = New System.Windows.Forms.Label()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.Label134 = New System.Windows.Forms.Label()
+        Me.Label130 = New System.Windows.Forms.Label()
+        Me.Label107 = New System.Windows.Forms.Label()
+        Me.Label105 = New System.Windows.Forms.Label()
+        Me.TextBox15 = New System.Windows.Forms.TextBox()
+        Me.Label79 = New System.Windows.Forms.Label()
+        Me.ComboBox5 = New System.Windows.Forms.ComboBox()
+        Me.Label112 = New System.Windows.Forms.Label()
+        Me.Label77 = New System.Windows.Forms.Label()
+        Me.Label80 = New System.Windows.Forms.Label()
+        Me.Frame22 = New System.Windows.Forms.GroupBox()
+        Me.Label135 = New System.Windows.Forms.Label()
+        Me.Label136 = New System.Windows.Forms.Label()
+        Me.Label104 = New System.Windows.Forms.Label()
+        Me.Label59 = New System.Windows.Forms.Label()
+        Me.Label55 = New System.Windows.Forms.Label()
+        Me.Label114 = New System.Windows.Forms.Label()
+        Me.Label113 = New System.Windows.Forms.Label()
+        Me.TextBox10 = New System.Windows.Forms.TextBox()
+        Me.Label76 = New System.Windows.Forms.Label()
+        Me.ComboBox4 = New System.Windows.Forms.ComboBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.Label73 = New System.Windows.Forms.Label()
+        Me.Label75 = New System.Windows.Forms.Label()
+        Me.Label111 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Command1 = New System.Windows.Forms.Button
-        Me.Button2 = New System.Windows.Forms.Button
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.Label102 = New System.Windows.Forms.Label
-        Me.Button3 = New System.Windows.Forms.Button
-        Me.ComboBox2 = New System.Windows.Forms.ComboBox
-        Me.Command3 = New System.Windows.Forms.Button
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.CheckBox5 = New System.Windows.Forms.CheckBox
-        Me.Label87 = New System.Windows.Forms.Label
-        Me.Label71 = New System.Windows.Forms.Label
-        Me.ComboBox7 = New System.Windows.Forms.ComboBox
-        Me.Label103 = New System.Windows.Forms.Label
-        Me.ComboBox3 = New System.Windows.Forms.ComboBox
-        Me.Button5 = New System.Windows.Forms.Button
-        Me.Button4 = New System.Windows.Forms.Button
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox
+        Me.Command1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label102 = New System.Windows.Forms.Label()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
+        Me.Command3 = New System.Windows.Forms.Button()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
+        Me.Label87 = New System.Windows.Forms.Label()
+        Me.Label71 = New System.Windows.Forms.Label()
+        Me.ComboBox7 = New System.Windows.Forms.ComboBox()
+        Me.Label103 = New System.Windows.Forms.Label()
+        Me.ComboBox3 = New System.Windows.Forms.ComboBox()
+        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox2D = New System.Windows.Forms.CheckBox()
         Me.SSTab1.SuspendLayout()
         Me._SSTab1_TabPage0.SuspendLayout()
         Me.Frame1.SuspendLayout()
         Me.Frame2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me._SSTab1_TabPage3.SuspendLayout()
-        Me.Frame12.SuspendLayout()
-        Me.Frame13.SuspendLayout()
-        Me.Frame16.SuspendLayout()
         Me._SSTab1_TabPage1.SuspendLayout()
         Me.Frame3.SuspendLayout()
         Me.Frame4.SuspendLayout()
@@ -632,12 +630,22 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me._SSTab1_TabPage2.SuspendLayout()
         Me.Frame7.SuspendLayout()
         Me.Frame8.SuspendLayout()
+        Me._SSTab1_TabPage3.SuspendLayout()
+        Me.Frame12.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Picture1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Frame13.SuspendLayout()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Frame16.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
         Me._SSTab1_TabPage4.SuspendLayout()
         Me.Frame17.SuspendLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Frame20.SuspendLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Frame21.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me._SSTab1_TabPage5.SuspendLayout()
@@ -661,6 +669,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Command2.Size = New System.Drawing.Size(81, 33)
         Me.Command2.TabIndex = 6
         Me.Command2.Text = "&Cancel"
+        Me.Command2.UseVisualStyleBackColor = False
         '
         'SSTab1
         '
@@ -733,7 +742,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox3
         '
         Me.TextBox3.AcceptsReturn = True
-        Me.TextBox3.AutoSize = False
         Me.TextBox3.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox3.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox3.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -797,7 +805,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox2
         '
         Me.TextBox2.AcceptsReturn = True
-        Me.TextBox2.AutoSize = False
         Me.TextBox2.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox2.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -891,7 +898,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox1
         '
         Me.TextBox1.AcceptsReturn = True
-        Me.TextBox1.AutoSize = False
         Me.TextBox1.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -934,7 +940,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text45
         '
         Me.Text45.AcceptsReturn = True
-        Me.Text45.AutoSize = False
         Me.Text45.BackColor = System.Drawing.SystemColors.Window
         Me.Text45.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text45.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -950,7 +955,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text44
         '
         Me.Text44.AcceptsReturn = True
-        Me.Text44.AutoSize = False
         Me.Text44.BackColor = System.Drawing.SystemColors.Window
         Me.Text44.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text44.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -966,7 +970,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text2
         '
         Me.Text2.AcceptsReturn = True
-        Me.Text2.AutoSize = False
         Me.Text2.BackColor = System.Drawing.SystemColors.Window
         Me.Text2.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -982,7 +985,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text1
         '
         Me.Text1.AcceptsReturn = True
-        Me.Text1.AutoSize = False
         Me.Text1.BackColor = System.Drawing.SystemColors.Window
         Me.Text1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1145,6 +1147,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Option4.TabIndex = 27
         Me.Option4.TabStop = True
         Me.Option4.Text = "autre"
+        Me.Option4.UseVisualStyleBackColor = False
         '
         'Option3
         '
@@ -1159,6 +1162,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Option3.TabIndex = 26
         Me.Option3.TabStop = True
         Me.Option3.Text = "grande"
+        Me.Option3.UseVisualStyleBackColor = False
         '
         'Option2
         '
@@ -1173,6 +1177,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Option2.TabIndex = 25
         Me.Option2.TabStop = True
         Me.Option2.Text = "moyenne"
+        Me.Option2.UseVisualStyleBackColor = False
         '
         'Option1
         '
@@ -1187,11 +1192,11 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Option1.TabIndex = 24
         Me.Option1.TabStop = True
         Me.Option1.Text = "faible"
+        Me.Option1.UseVisualStyleBackColor = False
         '
         'Text4
         '
         Me.Text4.AcceptsReturn = True
-        Me.Text4.AutoSize = False
         Me.Text4.BackColor = System.Drawing.SystemColors.Window
         Me.Text4.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text4.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1202,12 +1207,10 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text4.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Text4.Size = New System.Drawing.Size(297, 19)
         Me.Text4.TabIndex = 19
-        Me.Text4.Text = ""
         '
         'Text3
         '
         Me.Text3.AcceptsReturn = True
-        Me.Text3.AutoSize = False
         Me.Text3.BackColor = System.Drawing.SystemColors.Window
         Me.Text3.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text3.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1218,7 +1221,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text3.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Text3.Size = New System.Drawing.Size(321, 19)
         Me.Text3.TabIndex = 18
-        Me.Text3.Text = ""
         '
         'Label6
         '
@@ -1245,398 +1247,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Label5.Size = New System.Drawing.Size(144, 24)
         Me.Label5.TabIndex = 16
         Me.Label5.Text = "nom dans le fichier résultat"
-        '
-        '_SSTab1_TabPage3
-        '
-        Me._SSTab1_TabPage3.Controls.Add(Me.Frame12)
-        Me._SSTab1_TabPage3.Controls.Add(Me.Frame13)
-        Me._SSTab1_TabPage3.Controls.Add(Me.Frame16)
-        Me._SSTab1_TabPage3.Location = New System.Drawing.Point(4, 22)
-        Me._SSTab1_TabPage3.Name = "_SSTab1_TabPage3"
-        Me._SSTab1_TabPage3.Size = New System.Drawing.Size(960, 414)
-        Me._SSTab1_TabPage3.TabIndex = 3
-        Me._SSTab1_TabPage3.Text = "Transport hydrique"
-        Me._SSTab1_TabPage3.Visible = False
-        '
-        'Frame12
-        '
-        Me.Frame12.BackColor = System.Drawing.SystemColors.Control
-        Me.Frame12.Controls.Add(Me.Label106)
-        Me.Frame12.Controls.Add(Me.PictureBox2)
-        Me.Frame12.Controls.Add(Me.Label101)
-        Me.Frame12.Controls.Add(Me.Label96)
-        Me.Frame12.Controls.Add(Me.TextBox5)
-        Me.Frame12.Controls.Add(Me.TextBox4)
-        Me.Frame12.Controls.Add(Me.Picture1)
-        Me.Frame12.Controls.Add(Me.Text32)
-        Me.Frame12.Controls.Add(Me.Text31)
-        Me.Frame12.Controls.Add(Me.Text30)
-        Me.Frame12.Controls.Add(Me.Label54)
-        Me.Frame12.Controls.Add(Me.Label53)
-        Me.Frame12.Controls.Add(Me.Label52)
-        Me.Frame12.Controls.Add(Me.Label51)
-        Me.Frame12.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Frame12.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Frame12.Location = New System.Drawing.Point(8, 32)
-        Me.Frame12.Name = "Frame12"
-        Me.Frame12.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Frame12.Size = New System.Drawing.Size(465, 184)
-        Me.Frame12.TabIndex = 97
-        Me.Frame12.TabStop = False
-        Me.Frame12.Text = "Diffusion hydrique :"
-        '
-        'Label106
-        '
-        Me.Label106.BackColor = System.Drawing.SystemColors.Control
-        Me.Label106.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label106.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label106.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label106.Location = New System.Drawing.Point(160, 160)
-        Me.Label106.Name = "Label106"
-        Me.Label106.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label106.Size = New System.Drawing.Size(24, 17)
-        Me.Label106.TabIndex = 127
-        Me.Label106.Text = "°K"
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(216, 120)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(240, 56)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 126
-        Me.PictureBox2.TabStop = False
-        '
-        'Label101
-        '
-        Me.Label101.Location = New System.Drawing.Point(8, 160)
-        Me.Label101.Name = "Label101"
-        Me.Label101.Size = New System.Drawing.Size(40, 16)
-        Me.Label101.TabIndex = 110
-        Me.Label101.Text = "To"
-        '
-        'Label96
-        '
-        Me.Label96.Location = New System.Drawing.Point(8, 136)
-        Me.Label96.Name = "Label96"
-        Me.Label96.Size = New System.Drawing.Size(48, 16)
-        Me.Label96.TabIndex = 109
-        Me.Label96.Text = "ED"
-        '
-        'TextBox5
-        '
-        Me.TextBox5.Location = New System.Drawing.Point(56, 152)
-        Me.TextBox5.Name = "TextBox5"
-        Me.TextBox5.TabIndex = 108
-        Me.TextBox5.Text = "293.16"
-        '
-        'TextBox4
-        '
-        Me.TextBox4.Location = New System.Drawing.Point(56, 128)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.TabIndex = 107
-        Me.TextBox4.Text = "0"
-        '
-        'Picture1
-        '
-        Me.Picture1.BackColor = System.Drawing.SystemColors.Control
-        Me.Picture1.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Picture1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Picture1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Picture1.Image = CType(resources.GetObject("Picture1.Image"), System.Drawing.Image)
-        Me.Picture1.Location = New System.Drawing.Point(216, 16)
-        Me.Picture1.Name = "Picture1"
-        Me.Picture1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Picture1.Size = New System.Drawing.Size(240, 96)
-        Me.Picture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Picture1.TabIndex = 106
-        Me.Picture1.TabStop = False
-        '
-        'Text32
-        '
-        Me.Text32.AcceptsReturn = True
-        Me.Text32.AutoSize = False
-        Me.Text32.BackColor = System.Drawing.SystemColors.Window
-        Me.Text32.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.Text32.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Text32.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.Text32.Location = New System.Drawing.Point(56, 64)
-        Me.Text32.MaxLength = 0
-        Me.Text32.Name = "Text32"
-        Me.Text32.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text32.Size = New System.Drawing.Size(97, 19)
-        Me.Text32.TabIndex = 103
-        Me.Text32.Text = "0.75"
-        '
-        'Text31
-        '
-        Me.Text31.AcceptsReturn = True
-        Me.Text31.AutoSize = False
-        Me.Text31.BackColor = System.Drawing.SystemColors.Window
-        Me.Text31.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.Text31.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Text31.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.Text31.Location = New System.Drawing.Point(56, 40)
-        Me.Text31.MaxLength = 0
-        Me.Text31.Name = "Text31"
-        Me.Text31.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text31.Size = New System.Drawing.Size(97, 19)
-        Me.Text31.TabIndex = 102
-        Me.Text31.Text = "0.05"
-        '
-        'Text30
-        '
-        Me.Text30.AcceptsReturn = True
-        Me.Text30.AutoSize = False
-        Me.Text30.BackColor = System.Drawing.SystemColors.Window
-        Me.Text30.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.Text30.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Text30.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.Text30.Location = New System.Drawing.Point(56, 16)
-        Me.Text30.MaxLength = 0
-        Me.Text30.Name = "Text30"
-        Me.Text30.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text30.Size = New System.Drawing.Size(97, 19)
-        Me.Text30.TabIndex = 101
-        Me.Text30.Text = ""
-        '
-        'Label54
-        '
-        Me.Label54.BackColor = System.Drawing.SystemColors.Control
-        Me.Label54.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label54.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label54.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label54.Location = New System.Drawing.Point(160, 24)
-        Me.Label54.Name = "Label54"
-        Me.Label54.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label54.Size = New System.Drawing.Size(57, 17)
-        Me.Label54.TabIndex = 104
-        Me.Label54.Text = "mm2/s"
-        '
-        'Label53
-        '
-        Me.Label53.BackColor = System.Drawing.SystemColors.Control
-        Me.Label53.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label53.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label53.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label53.Location = New System.Drawing.Point(8, 72)
-        Me.Label53.Name = "Label53"
-        Me.Label53.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label53.Size = New System.Drawing.Size(25, 17)
-        Me.Label53.TabIndex = 100
-        Me.Label53.Text = "hc"
-        '
-        'Label52
-        '
-        Me.Label52.BackColor = System.Drawing.SystemColors.Control
-        Me.Label52.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label52.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label52.Location = New System.Drawing.Point(8, 48)
-        Me.Label52.Name = "Label52"
-        Me.Label52.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label52.Size = New System.Drawing.Size(33, 17)
-        Me.Label52.TabIndex = 99
-        Me.Label52.Text = "ao"
-        '
-        'Label51
-        '
-        Me.Label51.BackColor = System.Drawing.SystemColors.Control
-        Me.Label51.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label51.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label51.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label51.Location = New System.Drawing.Point(8, 24)
-        Me.Label51.Name = "Label51"
-        Me.Label51.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label51.Size = New System.Drawing.Size(129, 17)
-        Me.Label51.TabIndex = 98
-        Me.Label51.Text = "D100%"
-        '
-        'Frame13
-        '
-        Me.Frame13.BackColor = System.Drawing.SystemColors.Control
-        Me.Frame13.Controls.Add(Me.Button10)
-        Me.Frame13.Controls.Add(Me.RadioButton3)
-        Me.Frame13.Controls.Add(Me.RadioButton2)
-        Me.Frame13.Controls.Add(Me.RadioButton1)
-        Me.Frame13.Controls.Add(Me.Label56)
-        Me.Frame13.Controls.Add(Me.Button9)
-        Me.Frame13.Controls.Add(Me.PictureBox4)
-        Me.Frame13.Controls.Add(Me.TextBox21)
-        Me.Frame13.Controls.Add(Me.TextBox22)
-        Me.Frame13.Controls.Add(Me.Label49)
-        Me.Frame13.Controls.Add(Me.Label50)
-        Me.Frame13.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Frame13.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Frame13.Location = New System.Drawing.Point(488, 32)
-        Me.Frame13.Name = "Frame13"
-        Me.Frame13.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Frame13.Size = New System.Drawing.Size(465, 248)
-        Me.Frame13.TabIndex = 105
-        Me.Frame13.TabStop = False
-        Me.Frame13.Text = "Capillarité :"
-        '
-        'Button10
-        '
-        Me.Button10.Location = New System.Drawing.Point(264, 192)
-        Me.Button10.Name = "Button10"
-        Me.Button10.TabIndex = 141
-        Me.Button10.Text = "kT => E / C"
-        '
-        'RadioButton3
-        '
-        Me.RadioButton3.Location = New System.Drawing.Point(16, 216)
-        Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(160, 24)
-        Me.RadioButton3.TabIndex = 140
-        Me.RadioButton3.Text = "no capillary succion"
-        '
-        'RadioButton2
-        '
-        Me.RadioButton2.Location = New System.Drawing.Point(16, 192)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(164, 24)
-        Me.RadioButton2.TabIndex = 139
-        Me.RadioButton2.Text = "hydrophobic treatment"
-        '
-        'RadioButton1
-        '
-        Me.RadioButton1.Location = New System.Drawing.Point(16, 168)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(144, 24)
-        Me.RadioButton1.TabIndex = 138
-        Me.RadioButton1.Text = "usual capillary succion"
-        '
-        'Label56
-        '
-        Me.Label56.Location = New System.Drawing.Point(104, 120)
-        Me.Label56.Name = "Label56"
-        Me.Label56.Size = New System.Drawing.Size(104, 16)
-        Me.Label56.TabIndex = 135
-        Me.Label56.Text = "Lunk"
-        '
-        'Button9
-        '
-        Me.Button9.Location = New System.Drawing.Point(16, 112)
-        Me.Button9.Name = "Button9"
-        Me.Button9.TabIndex = 134
-        Me.Button9.Text = "Change"
-        '
-        'PictureBox4
-        '
-        Me.PictureBox4.BackColor = System.Drawing.SystemColors.Control
-        Me.PictureBox4.Cursor = System.Windows.Forms.Cursors.Default
-        Me.PictureBox4.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PictureBox4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(216, 40)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.PictureBox4.Size = New System.Drawing.Size(240, 96)
-        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox4.TabIndex = 133
-        Me.PictureBox4.TabStop = False
-        '
-        'TextBox21
-        '
-        Me.TextBox21.AcceptsReturn = True
-        Me.TextBox21.AutoSize = False
-        Me.TextBox21.BackColor = System.Drawing.SystemColors.Window
-        Me.TextBox21.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox21.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox21.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.TextBox21.Location = New System.Drawing.Point(72, 64)
-        Me.TextBox21.MaxLength = 0
-        Me.TextBox21.Name = "TextBox21"
-        Me.TextBox21.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox21.Size = New System.Drawing.Size(97, 19)
-        Me.TextBox21.TabIndex = 132
-        Me.TextBox21.Text = "0.95"
-        '
-        'TextBox22
-        '
-        Me.TextBox22.AcceptsReturn = True
-        Me.TextBox22.AutoSize = False
-        Me.TextBox22.BackColor = System.Drawing.SystemColors.Window
-        Me.TextBox22.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox22.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox22.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.TextBox22.Location = New System.Drawing.Point(72, 40)
-        Me.TextBox22.MaxLength = 0
-        Me.TextBox22.Name = "TextBox22"
-        Me.TextBox22.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox22.Size = New System.Drawing.Size(97, 19)
-        Me.TextBox22.TabIndex = 131
-        Me.TextBox22.Text = "0.09"
-        '
-        'Label49
-        '
-        Me.Label49.BackColor = System.Drawing.SystemColors.Control
-        Me.Label49.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label49.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label49.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label49.Location = New System.Drawing.Point(24, 72)
-        Me.Label49.Name = "Label49"
-        Me.Label49.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label49.Size = New System.Drawing.Size(25, 17)
-        Me.Label49.TabIndex = 130
-        Me.Label49.Text = "tc"
-        '
-        'Label50
-        '
-        Me.Label50.BackColor = System.Drawing.SystemColors.Control
-        Me.Label50.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label50.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label50.Location = New System.Drawing.Point(24, 48)
-        Me.Label50.Name = "Label50"
-        Me.Label50.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label50.Size = New System.Drawing.Size(33, 17)
-        Me.Label50.TabIndex = 129
-        Me.Label50.Text = "ao"
-        '
-        'Frame16
-        '
-        Me.Frame16.BackColor = System.Drawing.SystemColors.Control
-        Me.Frame16.Controls.Add(Me.Text39)
-        Me.Frame16.Controls.Add(Me.Label66)
-        Me.Frame16.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Frame16.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Frame16.Location = New System.Drawing.Point(8, 224)
-        Me.Frame16.Name = "Frame16"
-        Me.Frame16.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Frame16.Size = New System.Drawing.Size(465, 56)
-        Me.Frame16.TabIndex = 134
-        Me.Frame16.TabStop = False
-        Me.Frame16.Text = "Transfert à la surface :"
-        '
-        'Text39
-        '
-        Me.Text39.AcceptsReturn = True
-        Me.Text39.AutoSize = False
-        Me.Text39.BackColor = System.Drawing.SystemColors.Window
-        Me.Text39.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.Text39.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Text39.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.Text39.Location = New System.Drawing.Point(184, 16)
-        Me.Text39.MaxLength = 0
-        Me.Text39.Name = "Text39"
-        Me.Text39.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text39.Size = New System.Drawing.Size(129, 19)
-        Me.Text39.TabIndex = 135
-        Me.Text39.Text = "1"
-        '
-        'Label66
-        '
-        Me.Label66.BackColor = System.Drawing.SystemColors.Control
-        Me.Label66.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label66.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label66.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label66.Location = New System.Drawing.Point(8, 24)
-        Me.Label66.Name = "Label66"
-        Me.Label66.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label66.Size = New System.Drawing.Size(201, 17)
-        Me.Label66.TabIndex = 136
-        Me.Label66.Text = "coefficient de transfert de surface"
         '
         '_SSTab1_TabPage1
         '
@@ -1691,7 +1301,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text9
         '
         Me.Text9.AcceptsReturn = True
-        Me.Text9.AutoSize = False
         Me.Text9.BackColor = System.Drawing.SystemColors.Window
         Me.Text9.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text9.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1708,7 +1317,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text8
         '
         Me.Text8.AcceptsReturn = True
-        Me.Text8.AutoSize = False
         Me.Text8.BackColor = System.Drawing.SystemColors.Window
         Me.Text8.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text8.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1724,7 +1332,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text7
         '
         Me.Text7.AcceptsReturn = True
-        Me.Text7.AutoSize = False
         Me.Text7.BackColor = System.Drawing.SystemColors.Window
         Me.Text7.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text7.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1839,7 +1446,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text6
         '
         Me.Text6.AcceptsReturn = True
-        Me.Text6.AutoSize = False
         Me.Text6.BackColor = System.Drawing.SystemColors.Window
         Me.Text6.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text6.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1855,7 +1461,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text5
         '
         Me.Text5.AcceptsReturn = True
-        Me.Text5.AutoSize = False
         Me.Text5.BackColor = System.Drawing.SystemColors.Window
         Me.Text5.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text5.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1969,7 +1574,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text24
         '
         Me.Text24.AcceptsReturn = True
-        Me.Text24.AutoSize = False
         Me.Text24.BackColor = System.Drawing.SystemColors.Window
         Me.Text24.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text24.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1985,7 +1589,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text23
         '
         Me.Text23.AcceptsReturn = True
-        Me.Text23.AutoSize = False
         Me.Text23.BackColor = System.Drawing.SystemColors.Window
         Me.Text23.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text23.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2001,7 +1604,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text22
         '
         Me.Text22.AcceptsReturn = True
-        Me.Text22.AutoSize = False
         Me.Text22.BackColor = System.Drawing.SystemColors.Window
         Me.Text22.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text22.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2017,7 +1619,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text21
         '
         Me.Text21.AcceptsReturn = True
-        Me.Text21.AutoSize = False
         Me.Text21.BackColor = System.Drawing.SystemColors.Window
         Me.Text21.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text21.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2033,7 +1634,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text20
         '
         Me.Text20.AcceptsReturn = True
-        Me.Text20.AutoSize = False
         Me.Text20.BackColor = System.Drawing.SystemColors.Window
         Me.Text20.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text20.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2049,7 +1649,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text19
         '
         Me.Text19.AcceptsReturn = True
-        Me.Text19.AutoSize = False
         Me.Text19.BackColor = System.Drawing.SystemColors.Window
         Me.Text19.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text19.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2065,7 +1664,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text18
         '
         Me.Text18.AcceptsReturn = True
-        Me.Text18.AutoSize = False
         Me.Text18.BackColor = System.Drawing.SystemColors.Window
         Me.Text18.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text18.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2081,7 +1679,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text17
         '
         Me.Text17.AcceptsReturn = True
-        Me.Text17.AutoSize = False
         Me.Text17.BackColor = System.Drawing.SystemColors.Window
         Me.Text17.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text17.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2097,7 +1694,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text16
         '
         Me.Text16.AcceptsReturn = True
-        Me.Text16.AutoSize = False
         Me.Text16.BackColor = System.Drawing.SystemColors.Window
         Me.Text16.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text16.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2113,7 +1709,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text15
         '
         Me.Text15.AcceptsReturn = True
-        Me.Text15.AutoSize = False
         Me.Text15.BackColor = System.Drawing.SystemColors.Window
         Me.Text15.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text15.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2434,7 +2029,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox27
         '
         Me.TextBox27.AcceptsReturn = True
-        Me.TextBox27.AutoSize = False
         Me.TextBox27.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox27.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox27.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2476,7 +2070,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text14
         '
         Me.Text14.AcceptsReturn = True
-        Me.Text14.AutoSize = False
         Me.Text14.BackColor = System.Drawing.SystemColors.Window
         Me.Text14.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text14.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2492,7 +2085,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text13
         '
         Me.Text13.AcceptsReturn = True
-        Me.Text13.AutoSize = False
         Me.Text13.BackColor = System.Drawing.SystemColors.Window
         Me.Text13.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text13.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2508,7 +2100,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text12
         '
         Me.Text12.AcceptsReturn = True
-        Me.Text12.AutoSize = False
         Me.Text12.BackColor = System.Drawing.SystemColors.Window
         Me.Text12.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text12.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2524,7 +2115,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text11
         '
         Me.Text11.AcceptsReturn = True
-        Me.Text11.AutoSize = False
         Me.Text11.BackColor = System.Drawing.SystemColors.Window
         Me.Text11.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text11.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2540,7 +2130,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text10
         '
         Me.Text10.AcceptsReturn = True
-        Me.Text10.AutoSize = False
         Me.Text10.BackColor = System.Drawing.SystemColors.Window
         Me.Text10.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text10.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2737,7 +2326,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text25
         '
         Me.Text25.AcceptsReturn = True
-        Me.Text25.AutoSize = False
         Me.Text25.BackColor = System.Drawing.SystemColors.Window
         Me.Text25.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text25.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2781,7 +2369,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text26
         '
         Me.Text26.AcceptsReturn = True
-        Me.Text26.AutoSize = False
         Me.Text26.BackColor = System.Drawing.SystemColors.Window
         Me.Text26.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text26.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2806,6 +2393,395 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Label46.Size = New System.Drawing.Size(201, 17)
         Me.Label46.TabIndex = 86
         Me.Label46.Text = "coefficient de transfert de surface"
+        '
+        '_SSTab1_TabPage3
+        '
+        Me._SSTab1_TabPage3.Controls.Add(Me.Frame12)
+        Me._SSTab1_TabPage3.Controls.Add(Me.Frame13)
+        Me._SSTab1_TabPage3.Controls.Add(Me.Frame16)
+        Me._SSTab1_TabPage3.Location = New System.Drawing.Point(4, 22)
+        Me._SSTab1_TabPage3.Name = "_SSTab1_TabPage3"
+        Me._SSTab1_TabPage3.Size = New System.Drawing.Size(960, 414)
+        Me._SSTab1_TabPage3.TabIndex = 3
+        Me._SSTab1_TabPage3.Text = "Transport hydrique"
+        Me._SSTab1_TabPage3.Visible = False
+        '
+        'Frame12
+        '
+        Me.Frame12.BackColor = System.Drawing.SystemColors.Control
+        Me.Frame12.Controls.Add(Me.Label106)
+        Me.Frame12.Controls.Add(Me.PictureBox2)
+        Me.Frame12.Controls.Add(Me.Label101)
+        Me.Frame12.Controls.Add(Me.Label96)
+        Me.Frame12.Controls.Add(Me.TextBox5)
+        Me.Frame12.Controls.Add(Me.TextBox4)
+        Me.Frame12.Controls.Add(Me.Picture1)
+        Me.Frame12.Controls.Add(Me.Text32)
+        Me.Frame12.Controls.Add(Me.Text31)
+        Me.Frame12.Controls.Add(Me.Text30)
+        Me.Frame12.Controls.Add(Me.Label54)
+        Me.Frame12.Controls.Add(Me.Label53)
+        Me.Frame12.Controls.Add(Me.Label52)
+        Me.Frame12.Controls.Add(Me.Label51)
+        Me.Frame12.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Frame12.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Frame12.Location = New System.Drawing.Point(8, 32)
+        Me.Frame12.Name = "Frame12"
+        Me.Frame12.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Frame12.Size = New System.Drawing.Size(465, 184)
+        Me.Frame12.TabIndex = 97
+        Me.Frame12.TabStop = False
+        Me.Frame12.Text = "Diffusion hydrique :"
+        '
+        'Label106
+        '
+        Me.Label106.BackColor = System.Drawing.SystemColors.Control
+        Me.Label106.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label106.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label106.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label106.Location = New System.Drawing.Point(160, 160)
+        Me.Label106.Name = "Label106"
+        Me.Label106.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label106.Size = New System.Drawing.Size(24, 17)
+        Me.Label106.TabIndex = 127
+        Me.Label106.Text = "°K"
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(216, 120)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(240, 56)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 126
+        Me.PictureBox2.TabStop = False
+        '
+        'Label101
+        '
+        Me.Label101.Location = New System.Drawing.Point(8, 160)
+        Me.Label101.Name = "Label101"
+        Me.Label101.Size = New System.Drawing.Size(40, 16)
+        Me.Label101.TabIndex = 110
+        Me.Label101.Text = "To"
+        '
+        'Label96
+        '
+        Me.Label96.Location = New System.Drawing.Point(8, 136)
+        Me.Label96.Name = "Label96"
+        Me.Label96.Size = New System.Drawing.Size(48, 16)
+        Me.Label96.TabIndex = 109
+        Me.Label96.Text = "ED"
+        '
+        'TextBox5
+        '
+        Me.TextBox5.Location = New System.Drawing.Point(56, 152)
+        Me.TextBox5.Name = "TextBox5"
+        Me.TextBox5.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox5.TabIndex = 108
+        Me.TextBox5.Text = "293.16"
+        '
+        'TextBox4
+        '
+        Me.TextBox4.Location = New System.Drawing.Point(56, 128)
+        Me.TextBox4.Name = "TextBox4"
+        Me.TextBox4.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox4.TabIndex = 107
+        Me.TextBox4.Text = "0"
+        '
+        'Picture1
+        '
+        Me.Picture1.BackColor = System.Drawing.SystemColors.Control
+        Me.Picture1.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Picture1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Picture1.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Picture1.Image = CType(resources.GetObject("Picture1.Image"), System.Drawing.Image)
+        Me.Picture1.Location = New System.Drawing.Point(216, 16)
+        Me.Picture1.Name = "Picture1"
+        Me.Picture1.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Picture1.Size = New System.Drawing.Size(240, 96)
+        Me.Picture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Picture1.TabIndex = 106
+        Me.Picture1.TabStop = False
+        '
+        'Text32
+        '
+        Me.Text32.AcceptsReturn = True
+        Me.Text32.BackColor = System.Drawing.SystemColors.Window
+        Me.Text32.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.Text32.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Text32.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.Text32.Location = New System.Drawing.Point(56, 64)
+        Me.Text32.MaxLength = 0
+        Me.Text32.Name = "Text32"
+        Me.Text32.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Text32.Size = New System.Drawing.Size(97, 19)
+        Me.Text32.TabIndex = 103
+        Me.Text32.Text = "0.75"
+        '
+        'Text31
+        '
+        Me.Text31.AcceptsReturn = True
+        Me.Text31.BackColor = System.Drawing.SystemColors.Window
+        Me.Text31.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.Text31.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Text31.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.Text31.Location = New System.Drawing.Point(56, 40)
+        Me.Text31.MaxLength = 0
+        Me.Text31.Name = "Text31"
+        Me.Text31.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Text31.Size = New System.Drawing.Size(97, 19)
+        Me.Text31.TabIndex = 102
+        Me.Text31.Text = "0.05"
+        '
+        'Text30
+        '
+        Me.Text30.AcceptsReturn = True
+        Me.Text30.BackColor = System.Drawing.SystemColors.Window
+        Me.Text30.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.Text30.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Text30.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.Text30.Location = New System.Drawing.Point(56, 16)
+        Me.Text30.MaxLength = 0
+        Me.Text30.Name = "Text30"
+        Me.Text30.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Text30.Size = New System.Drawing.Size(97, 19)
+        Me.Text30.TabIndex = 101
+        '
+        'Label54
+        '
+        Me.Label54.BackColor = System.Drawing.SystemColors.Control
+        Me.Label54.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label54.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label54.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label54.Location = New System.Drawing.Point(160, 24)
+        Me.Label54.Name = "Label54"
+        Me.Label54.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label54.Size = New System.Drawing.Size(57, 17)
+        Me.Label54.TabIndex = 104
+        Me.Label54.Text = "mm2/s"
+        '
+        'Label53
+        '
+        Me.Label53.BackColor = System.Drawing.SystemColors.Control
+        Me.Label53.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label53.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label53.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label53.Location = New System.Drawing.Point(8, 72)
+        Me.Label53.Name = "Label53"
+        Me.Label53.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label53.Size = New System.Drawing.Size(25, 17)
+        Me.Label53.TabIndex = 100
+        Me.Label53.Text = "hc"
+        '
+        'Label52
+        '
+        Me.Label52.BackColor = System.Drawing.SystemColors.Control
+        Me.Label52.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label52.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label52.Location = New System.Drawing.Point(8, 48)
+        Me.Label52.Name = "Label52"
+        Me.Label52.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label52.Size = New System.Drawing.Size(33, 17)
+        Me.Label52.TabIndex = 99
+        Me.Label52.Text = "ao"
+        '
+        'Label51
+        '
+        Me.Label51.BackColor = System.Drawing.SystemColors.Control
+        Me.Label51.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label51.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label51.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label51.Location = New System.Drawing.Point(8, 24)
+        Me.Label51.Name = "Label51"
+        Me.Label51.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label51.Size = New System.Drawing.Size(129, 17)
+        Me.Label51.TabIndex = 98
+        Me.Label51.Text = "D100%"
+        '
+        'Frame13
+        '
+        Me.Frame13.BackColor = System.Drawing.SystemColors.Control
+        Me.Frame13.Controls.Add(Me.Button10)
+        Me.Frame13.Controls.Add(Me.RadioButton3)
+        Me.Frame13.Controls.Add(Me.RadioButton2)
+        Me.Frame13.Controls.Add(Me.RadioButton1)
+        Me.Frame13.Controls.Add(Me.Label56)
+        Me.Frame13.Controls.Add(Me.Button9)
+        Me.Frame13.Controls.Add(Me.PictureBox4)
+        Me.Frame13.Controls.Add(Me.TextBox21)
+        Me.Frame13.Controls.Add(Me.TextBox22)
+        Me.Frame13.Controls.Add(Me.Label49)
+        Me.Frame13.Controls.Add(Me.Label50)
+        Me.Frame13.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Frame13.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Frame13.Location = New System.Drawing.Point(488, 32)
+        Me.Frame13.Name = "Frame13"
+        Me.Frame13.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Frame13.Size = New System.Drawing.Size(465, 248)
+        Me.Frame13.TabIndex = 105
+        Me.Frame13.TabStop = False
+        Me.Frame13.Text = "Capillarité :"
+        '
+        'Button10
+        '
+        Me.Button10.Location = New System.Drawing.Point(264, 192)
+        Me.Button10.Name = "Button10"
+        Me.Button10.Size = New System.Drawing.Size(75, 23)
+        Me.Button10.TabIndex = 141
+        Me.Button10.Text = "kT => E / C"
+        '
+        'RadioButton3
+        '
+        Me.RadioButton3.Location = New System.Drawing.Point(16, 216)
+        Me.RadioButton3.Name = "RadioButton3"
+        Me.RadioButton3.Size = New System.Drawing.Size(160, 24)
+        Me.RadioButton3.TabIndex = 140
+        Me.RadioButton3.Text = "no capillary succion"
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.Location = New System.Drawing.Point(16, 192)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(164, 24)
+        Me.RadioButton2.TabIndex = 139
+        Me.RadioButton2.Text = "hydrophobic treatment"
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.Location = New System.Drawing.Point(16, 168)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(144, 24)
+        Me.RadioButton1.TabIndex = 138
+        Me.RadioButton1.Text = "usual capillary succion"
+        '
+        'Label56
+        '
+        Me.Label56.Location = New System.Drawing.Point(104, 120)
+        Me.Label56.Name = "Label56"
+        Me.Label56.Size = New System.Drawing.Size(104, 16)
+        Me.Label56.TabIndex = 135
+        Me.Label56.Text = "Lunk"
+        '
+        'Button9
+        '
+        Me.Button9.Location = New System.Drawing.Point(16, 112)
+        Me.Button9.Name = "Button9"
+        Me.Button9.Size = New System.Drawing.Size(75, 23)
+        Me.Button9.TabIndex = 134
+        Me.Button9.Text = "Change"
+        '
+        'PictureBox4
+        '
+        Me.PictureBox4.BackColor = System.Drawing.SystemColors.Control
+        Me.PictureBox4.Cursor = System.Windows.Forms.Cursors.Default
+        Me.PictureBox4.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PictureBox4.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
+        Me.PictureBox4.Location = New System.Drawing.Point(216, 40)
+        Me.PictureBox4.Name = "PictureBox4"
+        Me.PictureBox4.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.PictureBox4.Size = New System.Drawing.Size(240, 96)
+        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox4.TabIndex = 133
+        Me.PictureBox4.TabStop = False
+        '
+        'TextBox21
+        '
+        Me.TextBox21.AcceptsReturn = True
+        Me.TextBox21.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox21.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBox21.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox21.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBox21.Location = New System.Drawing.Point(72, 64)
+        Me.TextBox21.MaxLength = 0
+        Me.TextBox21.Name = "TextBox21"
+        Me.TextBox21.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBox21.Size = New System.Drawing.Size(97, 19)
+        Me.TextBox21.TabIndex = 132
+        Me.TextBox21.Text = "0.95"
+        '
+        'TextBox22
+        '
+        Me.TextBox22.AcceptsReturn = True
+        Me.TextBox22.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox22.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBox22.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox22.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBox22.Location = New System.Drawing.Point(72, 40)
+        Me.TextBox22.MaxLength = 0
+        Me.TextBox22.Name = "TextBox22"
+        Me.TextBox22.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBox22.Size = New System.Drawing.Size(97, 19)
+        Me.TextBox22.TabIndex = 131
+        Me.TextBox22.Text = "0.09"
+        '
+        'Label49
+        '
+        Me.Label49.BackColor = System.Drawing.SystemColors.Control
+        Me.Label49.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label49.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label49.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label49.Location = New System.Drawing.Point(24, 72)
+        Me.Label49.Name = "Label49"
+        Me.Label49.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label49.Size = New System.Drawing.Size(25, 17)
+        Me.Label49.TabIndex = 130
+        Me.Label49.Text = "tc"
+        '
+        'Label50
+        '
+        Me.Label50.BackColor = System.Drawing.SystemColors.Control
+        Me.Label50.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label50.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label50.Location = New System.Drawing.Point(24, 48)
+        Me.Label50.Name = "Label50"
+        Me.Label50.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label50.Size = New System.Drawing.Size(33, 17)
+        Me.Label50.TabIndex = 129
+        Me.Label50.Text = "ao"
+        '
+        'Frame16
+        '
+        Me.Frame16.BackColor = System.Drawing.SystemColors.Control
+        Me.Frame16.Controls.Add(Me.Text39)
+        Me.Frame16.Controls.Add(Me.Label66)
+        Me.Frame16.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Frame16.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Frame16.Location = New System.Drawing.Point(8, 224)
+        Me.Frame16.Name = "Frame16"
+        Me.Frame16.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Frame16.Size = New System.Drawing.Size(465, 56)
+        Me.Frame16.TabIndex = 134
+        Me.Frame16.TabStop = False
+        Me.Frame16.Text = "Transfert à la surface :"
+        '
+        'Text39
+        '
+        Me.Text39.AcceptsReturn = True
+        Me.Text39.BackColor = System.Drawing.SystemColors.Window
+        Me.Text39.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.Text39.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Text39.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.Text39.Location = New System.Drawing.Point(184, 16)
+        Me.Text39.MaxLength = 0
+        Me.Text39.Name = "Text39"
+        Me.Text39.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Text39.Size = New System.Drawing.Size(129, 19)
+        Me.Text39.TabIndex = 135
+        Me.Text39.Text = "1"
+        '
+        'Label66
+        '
+        Me.Label66.BackColor = System.Drawing.SystemColors.Control
+        Me.Label66.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label66.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label66.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label66.Location = New System.Drawing.Point(8, 24)
+        Me.Label66.Name = "Label66"
+        Me.Label66.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label66.Size = New System.Drawing.Size(201, 17)
+        Me.Label66.TabIndex = 136
+        Me.Label66.Text = "coefficient de transfert de surface"
         '
         'TabPage2
         '
@@ -2874,15 +2850,15 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.TextBox24.Location = New System.Drawing.Point(128, 72)
         Me.TextBox24.Name = "TextBox24"
+        Me.TextBox24.Size = New System.Drawing.Size(100, 20)
         Me.TextBox24.TabIndex = 4
-        Me.TextBox24.Text = ""
         '
         'TextBox23
         '
         Me.TextBox23.Location = New System.Drawing.Point(128, 104)
         Me.TextBox23.Name = "TextBox23"
+        Me.TextBox23.Size = New System.Drawing.Size(100, 20)
         Me.TextBox23.TabIndex = 3
-        Me.TextBox23.Text = ""
         '
         'Label62
         '
@@ -2947,6 +2923,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Label72.Location = New System.Drawing.Point(272, 40)
         Me.Label72.Name = "Label72"
+        Me.Label72.Size = New System.Drawing.Size(100, 23)
         Me.Label72.TabIndex = 4
         Me.Label72.Text = "kg/m3"
         '
@@ -2954,6 +2931,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.TextBox26.Location = New System.Drawing.Point(168, 88)
         Me.TextBox26.Name = "TextBox26"
+        Me.TextBox26.Size = New System.Drawing.Size(100, 20)
         Me.TextBox26.TabIndex = 3
         Me.TextBox26.Text = "3150"
         '
@@ -2961,8 +2939,8 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.TextBox25.Location = New System.Drawing.Point(168, 40)
         Me.TextBox25.Name = "TextBox25"
+        Me.TextBox25.Size = New System.Drawing.Size(100, 20)
         Me.TextBox25.TabIndex = 2
-        Me.TextBox25.Text = ""
         '
         'Label58
         '
@@ -3064,7 +3042,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox30
         '
         Me.TextBox30.AcceptsReturn = True
-        Me.TextBox30.AutoSize = False
         Me.TextBox30.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox30.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox30.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3092,7 +3069,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox29
         '
         Me.TextBox29.AcceptsReturn = True
-        Me.TextBox29.AutoSize = False
         Me.TextBox29.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox29.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox29.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3120,7 +3096,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox28
         '
         Me.TextBox28.AcceptsReturn = True
-        Me.TextBox28.AutoSize = False
         Me.TextBox28.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox28.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox28.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3149,7 +3124,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text40
         '
         Me.Text40.AcceptsReturn = True
-        Me.Text40.AutoSize = False
         Me.Text40.BackColor = System.Drawing.SystemColors.Window
         Me.Text40.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text40.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3251,6 +3225,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.TextBox9.Location = New System.Drawing.Point(48, 104)
         Me.TextBox9.Name = "TextBox9"
+        Me.TextBox9.Size = New System.Drawing.Size(100, 20)
         Me.TextBox9.TabIndex = 153
         Me.TextBox9.Text = "20"
         '
@@ -3258,13 +3233,13 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.TextBox8.Location = New System.Drawing.Point(48, 72)
         Me.TextBox8.Name = "TextBox8"
+        Me.TextBox8.Size = New System.Drawing.Size(100, 20)
         Me.TextBox8.TabIndex = 152
         Me.TextBox8.Text = "0.026"
         '
         'Text46
         '
         Me.Text46.AcceptsReturn = True
-        Me.Text46.AutoSize = False
         Me.Text46.BackColor = System.Drawing.SystemColors.Window
         Me.Text46.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text46.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3275,7 +3250,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text46.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Text46.Size = New System.Drawing.Size(97, 19)
         Me.Text46.TabIndex = 149
-        Me.Text46.Text = ""
         '
         'Label78
         '
@@ -3323,7 +3297,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text49
         '
         Me.Text49.AcceptsReturn = True
-        Me.Text49.AutoSize = False
         Me.Text49.BackColor = System.Drawing.SystemColors.Window
         Me.Text49.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text49.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3339,7 +3312,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'Text48
         '
         Me.Text48.AcceptsReturn = True
-        Me.Text48.AutoSize = False
         Me.Text48.BackColor = System.Drawing.SystemColors.Window
         Me.Text48.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.Text48.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3474,6 +3446,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Button8.Location = New System.Drawing.Point(168, 120)
         Me.Button8.Name = "Button8"
+        Me.Button8.Size = New System.Drawing.Size(75, 23)
         Me.Button8.TabIndex = 147
         Me.Button8.Text = "File..."
         '
@@ -3481,6 +3454,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Button7.Location = New System.Drawing.Point(168, 72)
         Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(75, 23)
         Me.Button7.TabIndex = 146
         Me.Button7.Text = "File..."
         '
@@ -3488,6 +3462,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Button6.Location = New System.Drawing.Point(168, 24)
         Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(75, 23)
         Me.Button6.TabIndex = 145
         Me.Button6.Text = "File..."
         '
@@ -3567,6 +3542,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.CheckBox7.Location = New System.Drawing.Point(336, 120)
         Me.CheckBox7.Name = "CheckBox7"
+        Me.CheckBox7.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox7.TabIndex = 185
         Me.CheckBox7.Text = "Loi probabiliste"
         '
@@ -3610,7 +3586,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox6
         '
         Me.TextBox6.AcceptsReturn = True
-        Me.TextBox6.AutoSize = False
         Me.TextBox6.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox6.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox6.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3747,6 +3722,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.CheckBox4.Location = New System.Drawing.Point(336, 120)
         Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox4.TabIndex = 185
         Me.CheckBox4.Text = "Loi probabiliste"
         '
@@ -3790,7 +3766,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox19
         '
         Me.TextBox19.AcceptsReturn = True
-        Me.TextBox19.AutoSize = False
         Me.TextBox19.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox19.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox19.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3928,6 +3903,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.CheckBox3.Location = New System.Drawing.Point(336, 120)
         Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox3.TabIndex = 185
         Me.CheckBox3.Text = "Loi probabiliste"
         '
@@ -3984,7 +3960,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox15
         '
         Me.TextBox15.AcceptsReturn = True
-        Me.TextBox15.AutoSize = False
         Me.TextBox15.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox15.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox15.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -4157,7 +4132,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         'TextBox10
         '
         Me.TextBox10.AcceptsReturn = True
-        Me.TextBox10.AutoSize = False
         Me.TextBox10.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox10.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox10.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -4196,6 +4170,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.CheckBox2.Location = New System.Drawing.Point(336, 120)
         Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox2.TabIndex = 169
         Me.CheckBox2.Text = "Loi probabiliste"
         '
@@ -4251,6 +4226,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Command1.Size = New System.Drawing.Size(81, 33)
         Me.Command1.TabIndex = 5
         Me.Command1.Text = "&Ok"
+        Me.Command1.UseVisualStyleBackColor = False
         '
         'Button2
         '
@@ -4309,6 +4285,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Command3.Size = New System.Drawing.Size(72, 24)
         Me.Command3.TabIndex = 17
         Me.Command3.Text = "New"
+        Me.Command3.UseVisualStyleBackColor = False
         '
         'GroupBox3
         '
@@ -4379,6 +4356,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Button5.Location = New System.Drawing.Point(360, 72)
         Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(75, 23)
         Me.Button5.TabIndex = 19
         Me.Button5.Text = "Delete"
         '
@@ -4386,6 +4364,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.Button4.Location = New System.Drawing.Point(272, 72)
         Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 18
         Me.Button4.Text = "New"
         '
@@ -4393,14 +4372,24 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         '
         Me.CheckBox1.Location = New System.Drawing.Point(792, 464)
         Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox1.TabIndex = 20
         Me.CheckBox1.Text = "Field activation"
+        '
+        'CheckBox2D
+        '
+        Me.CheckBox2D.Location = New System.Drawing.Point(673, 519)
+        Me.CheckBox2D.Name = "CheckBox2D"
+        Me.CheckBox2D.Size = New System.Drawing.Size(104, 24)
+        Me.CheckBox2D.TabIndex = 21
+        Me.CheckBox2D.Text = "2D Transport"
         '
         'frmOption1
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(984, 551)
+        Me.Controls.Add(Me.CheckBox2D)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
@@ -4416,10 +4405,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Frame1.ResumeLayout(False)
         Me.Frame2.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
-        Me._SSTab1_TabPage3.ResumeLayout(False)
-        Me.Frame12.ResumeLayout(False)
-        Me.Frame13.ResumeLayout(False)
-        Me.Frame16.ResumeLayout(False)
         Me._SSTab1_TabPage1.ResumeLayout(False)
         Me.Frame3.ResumeLayout(False)
         Me.Frame4.ResumeLayout(False)
@@ -4428,12 +4413,26 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me._SSTab1_TabPage2.ResumeLayout(False)
         Me.Frame7.ResumeLayout(False)
         Me.Frame8.ResumeLayout(False)
+        Me._SSTab1_TabPage3.ResumeLayout(False)
+        Me.Frame12.ResumeLayout(False)
+        Me.Frame12.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Picture1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Frame13.ResumeLayout(False)
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Frame16.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
         Me.GroupBox7.ResumeLayout(False)
+        Me.GroupBox7.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox6.PerformLayout()
         Me._SSTab1_TabPage4.ResumeLayout(False)
         Me.Frame17.ResumeLayout(False)
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame20.ResumeLayout(False)
+        Me.Frame20.PerformLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame21.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me._SSTab1_TabPage5.ResumeLayout(False)
@@ -4664,6 +4663,9 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Dim Var As Double
         Dim Var1 As Double
         Dim ImpHydr As Boolean
+
+        Dim option2D As Boolean
+
         ''''''''''''''''''''''''''''''''''
         Filtre = "txt files (*.txt)|*.txt|All files (*.*)|*.*"
         Index = CShort(1)
@@ -4677,14 +4679,14 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         FileOnly(OutFile)
         OutFile = PostFile & "INPUT_" & CStr(OutFile)
 
-        Lecture(Length, Ne, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr)
+        Lecture(Length, Ne, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr, option2D)
 
         If Creadtherm(0, Nbre1) < Length Or Creadhydr(0, Nbre2) < Length Or Creadion(0, Nbre3) < Length Then
             MsgBox("Format de fichier des conditions initiales invalide", MsgBoxStyle.Information, "Avertissement")
             Exit Sub
         End If
 
-        Ecriture(nFic, OutFile, Length, Ne, Le, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr)
+        Ecriture(nFic, OutFile, Length, Ne, Le, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr, option2D)
 
         Me.Hide()
 b:
@@ -5116,7 +5118,7 @@ b:
         Dim canc As Boolean
         Dim Can As Short
         UserInput = InputBox("Paramètre kT [10-16m2] :", "Essai de perméabilité à l'air Torrent, valeur corrigée", CStr(0))
-        Msg_noEntry(UserInput, Canc)
+        Msg_noEntry(UserInput, canc)
         If canc = False Then Msg_noNumeric(UserInput, canc)
         If canc = True Then Exit Sub
         UserInput = CSng(0.0866383424571846 * System.Math.Log(UserInput) + 0.72509628011073)
@@ -5584,7 +5586,7 @@ b:                  frm01.ShowDialog()
     End Sub
 
     'Lecture du formulaire
-    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
+    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean, ByRef option2d As Boolean)
         Length = CSng(Text7.Text)
         Ne = CShort(Text8.Text)
         TimeMax = CSng(Text5.Text)
@@ -5626,10 +5628,17 @@ b:                  frm01.ShowDialog()
         Else
             ImpHydr = False
         End If
+
+        If CheckBox2D.Checked = True Then
+            option2d = True
+        Else
+            option2d = False
+        End If
+
     End Sub
 
     'Sauvegarde du formulaire dans un fichier
-    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
+    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean, ByRef option2D As Boolean)
         nFic = CShort(FreeFile())
         FileOpen(CInt(nFic), OutFile, OpenMode.Output)
         PrintLine(CInt(nFic), Length)
@@ -5722,6 +5731,8 @@ b:                  frm01.ShowDialog()
             PrintLine(CInt(nFic), Creadion(1, i))
         Next
 
+        PrintLine(CInt(nFic), option2D)
+
         FileClose(CInt(nFic))
 
     End Sub
@@ -5790,15 +5801,15 @@ b:                  frm01.ShowDialog()
 
             'Transport thermique ... Capacité calorifique
             If Text25.Text < 0.7 Or Text25.Text > 0.9 Or Not IsNumeric(Text25.Text) Or Text25.Text = "" Then Message = "La capacité calorifique des " & Label28.Text & " est non valide !"
-            If CSng(Text25.Text) = CSng(0) Then MsgBox("pas de tranport thermique !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If CSng(Text25.Text) = CSng(0) Then MsgBox("pas de tranport thermique !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Transport thermique ... Transfert à la surface
             If Text26.Text < 0 Or Text26.Text > 1 Or Not IsNumeric(Text26.Text) Or Text26.Text = "" Then Message = "La " & Label46.Text & " thermique est non valide !"
-            If CSng(Text26.Text) = CSng(0) Then MsgBox("pas de transport thermique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If CSng(Text26.Text) = CSng(0) Then MsgBox("pas de transport thermique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Transport hydrique ... Diffusion hydrique
             If Text30.Text < 0 Or Not IsNumeric(Text30.Text) Or Text30.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label51.Text & " est non valide !"
-            If CSng(Text30.Text) = CSng(0) Then MsgBox("pas de transport de vapeur d'eau !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If CSng(Text30.Text) = CSng(0) Then MsgBox("pas de transport de vapeur d'eau !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
             If Not IsNumeric(Text31.Text) Or Text31.Text = "" Then Message = "Le paramètre de diffusion hydrique, " & Label52.Text & " est non valide !"
             If Text32.Text < 0 Or Text32.Text = 1 Or Not IsNumeric(Text32.Text) Or Text32.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label53.Text & " est non valide !"
             If Not IsNumeric(TextBox4.Text) Or TextBox4.Text = "" Then Message = "Le coefficient Ed dans la partie diffusion hydrique"
@@ -5806,7 +5817,7 @@ b:                  frm01.ShowDialog()
 
             'Transport hydrique ... Transfert à la surface
             If Text39.Text < 0 Or Text39.Text > 1 Or Not IsNumeric(Text39.Text) Or Text39.Text = "" Then Message = "Le " & Label66.Text & " hydrique est non valide !"
-            If CSng(Text39.Text) = CSng(0) Then MsgBox("pas de transport hydrique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If CSng(Text39.Text) = CSng(0) Then MsgBox("pas de transport hydrique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Carbonatation ...  Masse volumique des composants du béton
             If TextBox25.Text <= 0 Or Not IsNumeric(TextBox25.Text) Or TextBox25.Text = "" Then Message = "La " & Label57.Text & " est non valide !"
@@ -5821,7 +5832,7 @@ b:                  frm01.ShowDialog()
 
             'Transport ionique chlorures ... Diffusion dans l'eau
             If Text46.Text < 0 Or Not IsNumeric(Text46.Text) Or Text46.Text = "" Then Message = "Le " & Label78.Text & " des ions chlorures dans l'eau est non valide !"
-            If CSng(Text46.Text) = CSng(0) Then MsgBox("pas de tranport des ions de chlorures par diffusion dans l'eau !", MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If CSng(Text46.Text) = CSng(0) Then MsgBox("pas de tranport des ions de chlorures par diffusion dans l'eau !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
             If Not IsNumeric(TextBox8.Text) Or TextBox8.Text = "" Then Message = "Le coefficient Ed dans la partie diffusion hydrique"
             If TextBox9.Text < 0 Or Not IsNumeric(TextBox9.Text) Or TextBox9.Text = "" Then Message = "La température To dans la partie diffusion hydrique"
 
@@ -5836,7 +5847,7 @@ b:                  frm01.ShowDialog()
         Catch e As Exception
             Message = "Manque une donnée !"
         Finally
-            If Message <> "0" Then MsgBox(Message, MsgBoxStyle.OKOnly And MsgBoxStyle.Exclamation, "Avertissement")
+            If Message <> "0" Then MsgBox(Message, MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
         End Try
 
     End Sub
@@ -6097,7 +6108,7 @@ b:                  frm01.ShowDialog()
         TextBox10.Text = 0.0002308
         TextBox15.Text = 0.00005962
         TextBox19.Text = 0.000005772
-        MsgBox("Les écarts-types ont été réinitialisé", MsgBoxStyle.Information And MsgBoxStyle.OKOnly, "Avertissement")
+        MsgBox("Les écarts-types ont été réinitialisé", MsgBoxStyle.Information And MsgBoxStyle.OkOnly, "Avertissement")
     End Sub
 
     'activation ou désactivation des champs

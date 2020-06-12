@@ -112,6 +112,8 @@ Nbre3	2		nbre de coordonnées pour les fichiers de conditions initiales, transpor
 		0		y1
 		100
 		0
+Option2D False
+Nombre de points de discretisation(Optionnel)
 
 	
 
