@@ -8,7 +8,6 @@ Public Class Mesh 'Cubic
     Public Dy As Single
     Public Dz As Single
 
-
     Public Sub PlotTriangle()
 
         GL.Begin(BeginMode.Points)

@@ -6,6 +6,7 @@ Public Class Element
     Public Property Node1 As Integer
     Public Property Node2 As Integer
     Public Property Node3 As Integer
+
     Public Stresses(2) As Double
     Public Strains(2) As Double
 
