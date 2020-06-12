@@ -334,13 +334,14 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <Content Include="LogoTrans.ico" />
+    <Content Include="Resources\Docs\LogoTrans.ico" />
     <Content Include="Resources\Docs\ModeEmploi_v4.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\Database\PHREEQC.DAT" />
+    <Content Include="Resources\Database\PHREEQC.DAT" />
     <Content Include="Resources\Sample btFEM\btfemexample.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -398,9 +399,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Docs\INPUT_Explication.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Docs\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
