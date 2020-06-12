@@ -162,6 +162,7 @@
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -341,7 +342,9 @@
     <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Database\PHREEQC.DAT" />
+    <Content Include="Resources\Database\phreeqc.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Exposition\EXPO_A_B_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_O_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_CAC_DAVOS.txt" />
@@ -364,6 +367,9 @@
     <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO2D.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\PhreeqC\NaClReaction.phr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\Sample btFEM\btfemexample.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

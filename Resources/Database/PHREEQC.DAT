@@ -1235,6 +1235,18 @@ Pb(OH)2	389
 	Pb(OH)2 + 2H+ = Pb+2 + 2H2O
 	-log_k	8.15
 	-delta_h -13.99	kcal
+Monosulfoaluminate
+Ca4Al2(SO4)(OH)12:6H2O     = 4.000Ca+2     + 2.000Al+3     - 12.000H+     + 1.000SO4-2     + 18.000H2O
+     log_k    73.070     #10BLA/BOU
+     delta_h -539.400    #kJ/mol        
+     # Enthalpy of formation:           -8763.68        #kJ/mol        #10BLA/BOU
+     -analytic -2.14287E+1 0E+0 2.81748E+4 0E+0 0E+0 
+Friedel-salt
+Ca4Al2(OH)12Cl2:4H2O      = 4.000Ca+2     + 2.000Al+3     - 12.000H+     + 2.000Cl-     + 16.000H2O
+     log_k    73.750     #10BLA/BOU
+     delta_h -486.200    #kJ/mol        
+     # Enthalpy of formation:           -7670.04        #kJ/mol        #76HOU/STE
+     -analytic -1.02485E+1 0E+0 2.5396E+4 0E+0 0E+0     
 
 EXCHANGE_MASTER_SPECIES
 	X	X-
