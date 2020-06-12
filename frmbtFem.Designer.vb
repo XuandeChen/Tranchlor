@@ -36,6 +36,8 @@ Partial Class frmbtFem
         Me.SetDeformationZoomToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowModelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowDeformationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowElementsOnDeformedShapeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem5 = New System.Windows.Forms.ToolStripSeparator()
         Me.ShowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NoneToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
@@ -46,22 +48,21 @@ Partial Class frmbtFem
         Me.EpsilonXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EpsilonYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GammaXYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShowElementsOnDeformedShapeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pbModel = New System.Windows.Forms.PictureBox()
         Me.hs = New System.Windows.Forms.HScrollBar()
         Me.vs = New System.Windows.Forms.VScrollBar()
         Me.btnResetZoom = New System.Windows.Forms.Button()
-        Me.ToolStripMenuItem5 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.pbModel, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
+        Me.MenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ModelToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(708, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(944, 28)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -69,72 +70,72 @@ Partial Class frmbtFem
         '
         Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem, Me.SaveImageAsToolStripMenuItem, Me.ToolStripMenuItem1, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(46, 24)
         Me.FileToolStripMenuItem.Text = "&File"
         '
         'OpenToolStripMenuItem
         '
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.OpenToolStripMenuItem.Text = "&Open..."
         '
         'SaveImageAsToolStripMenuItem
         '
         Me.SaveImageAsToolStripMenuItem.Name = "SaveImageAsToolStripMenuItem"
-        Me.SaveImageAsToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
+        Me.SaveImageAsToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.SaveImageAsToolStripMenuItem.Text = "Save &Image As..."
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(156, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(221, 6)
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'ModelToolStripMenuItem
         '
         Me.ModelToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnalyseToolStripMenuItem, Me.ToolStripMenuItem2, Me.ResultsToolStripMenuItem, Me.ShowNodeNumbersToolStripMenuItem, Me.SetDeformationZoomToolStripMenuItem, Me.ShowModelToolStripMenuItem, Me.ShowDeformationsToolStripMenuItem, Me.ShowElementsOnDeformedShapeToolStripMenuItem, Me.ToolStripMenuItem5, Me.ShowToolStripMenuItem})
         Me.ModelToolStripMenuItem.Name = "ModelToolStripMenuItem"
-        Me.ModelToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
+        Me.ModelToolStripMenuItem.Size = New System.Drawing.Size(66, 24)
         Me.ModelToolStripMenuItem.Text = "&Model"
         '
         'AnalyseToolStripMenuItem
         '
         Me.AnalyseToolStripMenuItem.Name = "AnalyseToolStripMenuItem"
-        Me.AnalyseToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.AnalyseToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.AnalyseToolStripMenuItem.Text = "&Analyse"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(259, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(327, 6)
         '
         'ResultsToolStripMenuItem
         '
         Me.ResultsToolStripMenuItem.Name = "ResultsToolStripMenuItem"
-        Me.ResultsToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ResultsToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.ResultsToolStripMenuItem.Text = "&Results..."
         '
         'ShowNodeNumbersToolStripMenuItem
         '
         Me.ShowNodeNumbersToolStripMenuItem.Name = "ShowNodeNumbersToolStripMenuItem"
-        Me.ShowNodeNumbersToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ShowNodeNumbersToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.ShowNodeNumbersToolStripMenuItem.Text = "Show Node Numbers"
         '
         'SetDeformationZoomToolStripMenuItem
         '
         Me.SetDeformationZoomToolStripMenuItem.Name = "SetDeformationZoomToolStripMenuItem"
-        Me.SetDeformationZoomToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.SetDeformationZoomToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.SetDeformationZoomToolStripMenuItem.Text = "Set Deformation Zoom..."
         '
         'ShowModelToolStripMenuItem
         '
         Me.ShowModelToolStripMenuItem.Name = "ShowModelToolStripMenuItem"
-        Me.ShowModelToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ShowModelToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.ShowModelToolStripMenuItem.Text = "Show Model"
         '
         'ShowDeformationsToolStripMenuItem
@@ -142,73 +143,78 @@ Partial Class frmbtFem
         Me.ShowDeformationsToolStripMenuItem.Checked = True
         Me.ShowDeformationsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.ShowDeformationsToolStripMenuItem.Name = "ShowDeformationsToolStripMenuItem"
-        Me.ShowDeformationsToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ShowDeformationsToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.ShowDeformationsToolStripMenuItem.Text = "Show Deformations"
+        '
+        'ShowElementsOnDeformedShapeToolStripMenuItem
+        '
+        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Name = "ShowElementsOnDeformedShapeToolStripMenuItem"
+        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
+        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Text = "Show Elements on Deformed Shape"
+        '
+        'ToolStripMenuItem5
+        '
+        Me.ToolStripMenuItem5.Name = "ToolStripMenuItem5"
+        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(327, 6)
         '
         'ShowToolStripMenuItem
         '
         Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NoneToolStripMenuItem, Me.ToolStripMenuItem4, Me.SigmaXToolStripMenuItem, Me.SigmaYToolStripMenuItem, Me.TauXYToolStripMenuItem, Me.ToolStripMenuItem3, Me.EpsilonXToolStripMenuItem, Me.EpsilonYToolStripMenuItem, Me.GammaXYToolStripMenuItem})
         Me.ShowToolStripMenuItem.Name = "ShowToolStripMenuItem"
-        Me.ShowToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ShowToolStripMenuItem.Size = New System.Drawing.Size(330, 26)
         Me.ShowToolStripMenuItem.Text = "Show Results"
         '
         'NoneToolStripMenuItem
         '
         Me.NoneToolStripMenuItem.Name = "NoneToolStripMenuItem"
-        Me.NoneToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.NoneToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.NoneToolStripMenuItem.Text = "None"
         '
         'ToolStripMenuItem4
         '
         Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(130, 6)
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(162, 6)
         '
         'SigmaXToolStripMenuItem
         '
         Me.SigmaXToolStripMenuItem.Name = "SigmaXToolStripMenuItem"
-        Me.SigmaXToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.SigmaXToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.SigmaXToolStripMenuItem.Text = "Sigma X"
         '
         'SigmaYToolStripMenuItem
         '
         Me.SigmaYToolStripMenuItem.Name = "SigmaYToolStripMenuItem"
-        Me.SigmaYToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.SigmaYToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.SigmaYToolStripMenuItem.Text = "Sigma Y"
         '
         'TauXYToolStripMenuItem
         '
         Me.TauXYToolStripMenuItem.Name = "TauXYToolStripMenuItem"
-        Me.TauXYToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.TauXYToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.TauXYToolStripMenuItem.Text = "Tau XY"
         '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(130, 6)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(162, 6)
         '
         'EpsilonXToolStripMenuItem
         '
         Me.EpsilonXToolStripMenuItem.Name = "EpsilonXToolStripMenuItem"
-        Me.EpsilonXToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.EpsilonXToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.EpsilonXToolStripMenuItem.Text = "Epsilon X"
         '
         'EpsilonYToolStripMenuItem
         '
         Me.EpsilonYToolStripMenuItem.Name = "EpsilonYToolStripMenuItem"
-        Me.EpsilonYToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.EpsilonYToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.EpsilonYToolStripMenuItem.Text = "Epsilon Y"
         '
         'GammaXYToolStripMenuItem
         '
         Me.GammaXYToolStripMenuItem.Name = "GammaXYToolStripMenuItem"
-        Me.GammaXYToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.GammaXYToolStripMenuItem.Size = New System.Drawing.Size(165, 26)
         Me.GammaXYToolStripMenuItem.Text = "Gamma XY"
-        '
-        'ShowElementsOnDeformedShapeToolStripMenuItem
-        '
-        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Name = "ShowElementsOnDeformedShapeToolStripMenuItem"
-        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
-        Me.ShowElementsOnDeformedShapeToolStripMenuItem.Text = "Show Elements on Deformed Shape"
         '
         'pbModel
         '
@@ -217,9 +223,10 @@ Partial Class frmbtFem
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pbModel.BackColor = System.Drawing.Color.White
         Me.pbModel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.pbModel.Location = New System.Drawing.Point(12, 27)
+        Me.pbModel.Location = New System.Drawing.Point(16, 33)
+        Me.pbModel.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.pbModel.Name = "pbModel"
-        Me.pbModel.Size = New System.Drawing.Size(665, 384)
+        Me.pbModel.Size = New System.Drawing.Size(886, 472)
         Me.pbModel.TabIndex = 1
         Me.pbModel.TabStop = False
         '
@@ -227,44 +234,40 @@ Partial Class frmbtFem
         '
         Me.hs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.hs.Location = New System.Drawing.Point(12, 414)
+        Me.hs.Location = New System.Drawing.Point(16, 510)
         Me.hs.Maximum = 100000
         Me.hs.Minimum = -100000
         Me.hs.Name = "hs"
-        Me.hs.Size = New System.Drawing.Size(665, 19)
+        Me.hs.Size = New System.Drawing.Size(887, 19)
         Me.hs.TabIndex = 2
         '
         'vs
         '
         Me.vs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.vs.Location = New System.Drawing.Point(680, 27)
+        Me.vs.Location = New System.Drawing.Point(907, 33)
         Me.vs.Maximum = 100000
         Me.vs.Minimum = -100000
         Me.vs.Name = "vs"
-        Me.vs.Size = New System.Drawing.Size(19, 384)
+        Me.vs.Size = New System.Drawing.Size(19, 473)
         Me.vs.TabIndex = 3
         '
         'btnResetZoom
         '
         Me.btnResetZoom.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnResetZoom.BackColor = System.Drawing.Color.Black
-        Me.btnResetZoom.Location = New System.Drawing.Point(680, 414)
+        Me.btnResetZoom.Location = New System.Drawing.Point(907, 510)
+        Me.btnResetZoom.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnResetZoom.Name = "btnResetZoom"
-        Me.btnResetZoom.Size = New System.Drawing.Size(19, 19)
+        Me.btnResetZoom.Size = New System.Drawing.Size(25, 23)
         Me.btnResetZoom.TabIndex = 4
         Me.btnResetZoom.UseVisualStyleBackColor = False
         '
-        'ToolStripMenuItem5
-        '
-        Me.ToolStripMenuItem5.Name = "ToolStripMenuItem5"
-        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(259, 6)
-        '
         'frmbtFem
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(708, 442)
+        Me.ClientSize = New System.Drawing.Size(944, 544)
         Me.Controls.Add(Me.btnResetZoom)
         Me.Controls.Add(Me.vs)
         Me.Controls.Add(Me.hs)
@@ -272,6 +275,7 @@ Partial Class frmbtFem
         Me.Controls.Add(Me.MenuStrip1)
         Me.DoubleBuffered = True
         Me.MainMenuStrip = Me.MenuStrip1
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "frmbtFem"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.Text = "Finite Element Method Framework"

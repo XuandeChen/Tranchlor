@@ -1,6 +1,8 @@
+
+Imports System
+Imports System.ComponentModel
 Imports System.Drawing.Imaging
 Imports System.IO
-
 Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
@@ -207,6 +209,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Dim frm01 As frmOption1
     Dim frmC As New frmChlor
 
+    ' Xuande 10/06/2020
+    Private Nodes() As NodeTrans
+    Private Elements() As ElementTrans
+    Private NNodes, NElements, Nbloc As Integer
+
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         Me.IsMdiContainer = True
@@ -219,91 +226,96 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     End Sub
 
     'Programme de lecture des donnees maillage D. C et Xuande  10/06/2020
-    Private Sub ReadFileMSH(ByRef NCoor(,) As Double, ByRef Bord() As Boolean)
+    '    Private Sub ReadFileMSH()
 
-        ''''''''''''''''''''''''''''''''''''''''''''
-        'lire des fichiers maillage
-        Dim nFic As Integer = FreeFile()
-        Dim OutFile As String
-        Dim Filtre As String
-        Dim Index As Short
-        Dim Directoire As Boolean
-        Dim Titre As String
-        Dim Canc As Boolean = False
-        Dim Temp As String
-        Dim NCoorCont As Long
-        Dim NCoorTemp As Long
-        Dim NgCoor As Long
-        Dim NNoeuds As Long
-        Dim i As Long
-        Dim j As Long
-        Dim k As Long
-        Dim LnTemp(0) As Long
-        'Dim Bord(0) as Boolean false=pas bord true=bord
-        'Dim NCoor(2, 0) As Double 'x,y + + numéro de noeuds
-        ''''''''''''''''''''''''''''''''''''''''''''
-        Filtre = "Mesh files (*.msh)|*.msh"
-        Index = 1
-        Directoire = True
-        Titre = "Select mesh file"
-        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then GoTo b
-        '''''''''''''''''''''''''''''''''''''''''''''
-        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        Do While Temp <> "$Entities"
-            Input(nFic, Temp)
-        Loop
-        Input(nFic, NCoorCont)
-        Do While Temp <> "$EndEntities"
-            Input(nFic, Temp)
-        Loop
-        Do While Temp <> "$Nodes"
-            Input(nFic, Temp)
-        Loop
-        Input(nFic, NgCoor)
-        Input(nFic, NNoeuds)
-        Input(nFic, Temp)
-        Input(nFic, Temp)
-        ReDim Bord(NNoeuds)
-        For i = 0 To NNoeuds
-            Bord(i) = False
-        Next
-        ReDim NCoor(2, NNoeuds)
-        For i = 1 To NCoorCont
-            Input(nFic, j)
-            For k = 0 To 2
-                Input(nFic, NCoor(k, j))
-            Next
-            Bord(j) = True
-            Input(nFic, Temp)
-        Next
-        For j = 0 To (NgCoor - 1) - NCoorCont
-            For i = 1 To 4
-                Input(nFic, NCoorTemp)
-            Next
-            ReDim LnTemp(NCoorTemp)
-            For i = 0 To NCoorTemp - 1
-                Input(nFic, LnTemp(i))
-            Next
-            For i = 0 To NCoorCont - 1
-                For k = 0 To 2
-                    Input(nFic, NCoor(k, LnTemp(i)))
-                Next
-                Bord(LnTemp(i)) = True  'a verifier
-            Next
-        Next
-        Do While Temp <> "$EndNodes"
-            Input(nFic, Temp)
-        Loop
-        Do While Temp <> "$Elements"
-            Input(nFic, Temp)
-        Loop
-        'continuer avec la lecture de la connectivité
-        FileClose(nFic)
-b:
-        'terminer lecture des fichiers maillage
-        ''''''''''''''''''''''''''''''''''''''''''''
-    End Sub
+    '        ''''''''''''''''''''''''''''''''''''''''''''
+    '        'lire des fichiers maillage
+    '        Dim nFic As Integer = FreeFile()
+    '        Dim OutFile As String
+    '        Dim Filtre As String
+    '        Dim Index As Short
+    '        Dim Directoire As Boolean
+    '        Dim Titre As String
+    '        Dim Canc As Boolean = False
+    '        Dim Temp As String
+    '        Dim NCoorCont As Long
+    '        Dim NCoorTemp As Long
+    '        Dim NgCoor As Long
+    '        Dim NNoeuds As Long
+    '        Dim i As Long
+    '        Dim j As Long
+    '        Dim k As Long
+    '        Dim LnTemp(0) As Long
+    '        'Dim Bord(0) as Boolean false=pas bord true=bord
+    '        'Dim NCoor(2, 0) As Double 'x,y + + numéro de noeuds
+    '        ''''''''''''''''''''''''''''''''''''''''''''
+    '        Filtre = "Mesh files (*.msh)|*.msh"
+    '        Index = 1
+    '        Directoire = True
+    '        Titre = "Select mesh file"
+    '        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+    '        If Canc = True Then GoTo b
+    '        '''''''''''''''''''''''''''''''''''''''''''''
+    '        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+    '        Do While Temp <> "$Entities"
+    '            Input(nFic, Temp)
+    '        Loop
+    '        Input(nFic, NCoorCont)
+    '        Do While Temp <> "$EndEntities"
+    '            Input(nFic, Temp)
+    '        Loop
+    '        Do While Temp <> "$Nodes"
+    '            Input(nFic, Temp)
+    '        Loop
+
+
+    '        Input(nFic, NgCoor)
+    '        Input(nFic, NNoeuds)
+    '        Input(nFic, Temp)
+    '        Input(nFic, Temp)
+
+    '        ReDim Bord(NNoeuds)
+
+    '        For i = 0 To NNoeuds - 1
+    '            Bord(i) = False
+    '        Next
+    '        ReDim NCoor(2, NNoeuds)
+    '        For i = 1 To NCoorCont
+    '            Input(nFic, j)
+    '            For k = 0 To 2
+    '                Input(nFic, NCoor(k, j))
+    '            Next
+    '            Bord(j) = True
+    '            Input(nFic, Temp)
+    '        Next
+    '        For j = 0 To (NgCoor - 1) - NCoorCont
+    '            For i = 1 To 4
+    '                Input(nFic, NCoorTemp)
+    '            Next
+    '            ReDim LnTemp(NCoorTemp)
+    '            For i = 0 To NCoorTemp - 1
+    '                Input(nFic, LnTemp(i))
+    '            Next
+    '            For i = 0 To NCoorCont - 1
+    '                For k = 0 To 2
+    '                    Input(nFic, NCoor(k, LnTemp(i)))
+    '                Next
+    '                Bord(LnTemp(i)) = True  'a verifier
+    '            Next
+    '        Next
+    '        Do While Temp <> "$EndNodes"
+    '            Input(nFic, Temp)
+    '        Loop
+    '        Do While Temp <> "$Elements"
+    '            Input(nFic, Temp)
+    '        Loop
+    '        'continuer avec la lecture de la connectivité
+
+    '        FileClose(nFic)
+    'b:
+    'terminer lecture des fichiers maillage
+    ''''''''''''''''''''''''''''''''''''''''''''
+    'End Sub
 
     'quitter le programme
     Private Sub _MnuProject_5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _MnuProject_5.Click
@@ -788,12 +800,392 @@ b:      'user pressed cancel error
         End Using
     End Sub
 
-    'Lecture du fichier Maillage 'Xuande  10/06/2020
+    'Lecture du fichier Maillage dans le menu 'Xuande  10/06/2020
     Private Sub MenuItem16_Click(sender As Object, e As EventArgs) Handles MenuItem16.Click
-        Dim NCoor(2, 0) As Double
-        Dim Bord(0) As Boolean
-        ReadFileMSH(NCoor, Bord)    'lecture du fichier MSH
+        Dim d As New OpenFileDialog
+        d.Title = "Open Mesh file"
+        d.Filter = "Mesh files (*.msh)|*.msh"
+        If d.ShowDialog = DialogResult.OK Then
+            If ReadFile(d.FileName) = False Then Return
+            'DrawModel()
+        End If
     End Sub
+    'Fonction de lecture des donnees geometrie 'Xuande  10/06/2020
+    Private Function ReadFile(f As String) As Boolean
+        Try
+
+            Dim sr As New StreamReader(f)
+            Dim s As String
+            Dim Arr(0) As String
+            Dim Temp As String
+            Dim i As Integer
+            Dim j As Integer
+            Dim k As Integer
+            Dim NN(0), XX(0), YY(0), ZZ(0) As Integer
+            Dim n0 As Integer
+            Dim n, n1, n2, n3, n4 As Integer
+            Dim x, y, z As Double
+            Dim brd As Boolean
+            Dim bloc_node As Integer
+            Dim bloc_type As Integer
+            Dim bloc_element As Integer
+
+            'Skip the version data
+            Temp = readLine(sr)
+
+            'Skip the unnecessary first few lines
+            Do While Temp <> "$Nodes"
+                Temp = sr.ReadLine.Trim
+            Loop
+
+            'Read total number of nodes and blocks 
+            s = readLine(sr)
+            Arr = Split(s, " "c)
+            Try
+                Nbloc = Integer.Parse(Arr(0))
+                NNodes = Integer.Parse(Arr(1))
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                Return False
+            End Try
+
+            'Read node coordinates block by block
+            ReDim Nodes(NNodes - 1)
+            For i = 0 To Nbloc - 1
+                'read bloc information for how many nodes should be read inside
+                s = readLine(sr)
+                Arr = Split(s, " "c)
+                bloc_type = Integer.Parse(Arr(0))
+                bloc_node = Integer.Parse(Arr(3))
+                ReDim NN(bloc_node - 1)
+                ReDim XX(bloc_node - 1)
+                ReDim YY(bloc_node - 1)
+                ReDim ZZ(bloc_node - 1)
+                For j = 0 To bloc_node - 1
+                    'read first lines of node number
+                    s = readLine(sr)
+                    Arr = Split(s, " "c)
+                    n = Integer.Parse(Arr(0))
+                    NN(j) = n
+                Next
+                'read corresponding lines of coordinates
+                For k = 0 To bloc_node - 1
+                    'judging wether points of current block belongs to the boundary
+                    If bloc_type <= 1 Then
+                        brd = True
+                    Else
+                        brd = False
+                    End If
+                    'read corresponding lines of coordinates
+                    s = readLine(sr)
+                    Arr = Split(s, " "c)
+                    x = Double.Parse(Arr(0))
+                    XX(k) = x
+                    y = Double.Parse(Arr(1))
+                    YY(k) = y
+                    z = Double.Parse(Arr(2))
+                    ZZ(k) = z
+                    Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), brd)
+                Next
+            Next
+
+            'Read total number of elements and blocks 
+            s = readLine(sr)
+            Arr = Split(s, " "c)
+            Try
+                Nbloc = Integer.Parse(Arr(0))
+                NElements = Integer.Parse(Arr(1))
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                Return False
+            End Try
+
+            'Read element connectivity block by block
+            ReDim Elements(NElements - 1)
+            For i = 0 To Nbloc - 1
+                'read bloc information for how many nodes should be read inside
+                s = readLine(sr)
+                Arr = Split(s, " "c)
+                bloc_type = Integer.Parse(Arr(0))
+                bloc_element = Integer.Parse(Arr(3))
+                For j = 0 To bloc_element - 1
+                    If bloc_type <= 1 Then
+                        Temp = readLine(sr)
+                    Else
+                        'read first lines of element number
+                        If j = 0 Then
+                            s = readLine(sr)
+                            Arr = Split(s, " "c)
+                            n0 = Integer.Parse(Arr(0))
+                            n = 1
+                            n1 = Integer.Parse(Arr(1))
+                            n2 = Integer.Parse(Arr(2))
+                            n3 = Integer.Parse(Arr(3))
+                            n4 = Integer.Parse(Arr(4))
+                            n = 1
+                        Else
+                            s = readLine(sr)
+                            Arr = Split(s, " "c)
+                            n = Integer.Parse(Arr(0)) - n0
+                            n1 = Integer.Parse(Arr(1))
+                            n2 = Integer.Parse(Arr(2))
+                            n3 = Integer.Parse(Arr(3))
+                            n4 = Integer.Parse(Arr(4))
+                        End If
+                        Elements(j) = New ElementTrans(n, n1, n2, n3, n4)
+                    End If
+
+                Next
+
+            Next
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Return False
+        End Try
+        Return True
+    End Function
+
+    'Routine pour tracer la geometrie et le maillage 'Xuande  10/06/2020
+    'Private Sub DrawModel()
+    '    gr.Clear(Color.White)
+
+    '    Dim eleColor As Color = Color.Lavender
+    '    Dim eleColorDeformed As Color = Color.Turquoise
+    '    Dim supportColor As Color = Color.Black
+    '    Dim pointLoadColor As Color = Color.Red
+
+    '    Dim MarginX, MarginY As Integer
+    '    MarginX = 50
+    '    MarginY = 50
+
+    '    'Draw the triangles.
+    '    Dim shiftx As Integer = MarginX - hs.Value
+    '    Dim shifty As Integer = pbModel.Height - MarginY - vs.Value
+
+    '    Dim i As Integer
+    '    Dim n1, n2, n3 As Integer
+
+    '    Dim ptsf(2) As PointF
 
 
+    '    'Draw the undeformed model
+
+    '    If ShowModel = True Then
+    '        'Draw the elements .
+    '        For i = 0 To NElements - 1
+
+    '            n1 = Elements(i).Node1 - 1
+    '            n2 = Elements(i).Node2 - 1
+    '            n3 = Elements(i).Node3 - 1
+
+    '            ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
+    '            ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
+    '            ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
+
+    '            'Draw the element
+    '            gr.FillPolygon(New SolidBrush(eleColor), ptsf)
+    '            gr.DrawPolygon(New Pen(Color.Black), ptsf)
+
+    '        Next
+
+    '        'Draw the node numbers
+    '        If ShowNodeNumbers = True Then
+    '            Dim p As New Pen(Color.Black)
+    '            Dim nx, ny As Integer
+    '            Dim fnt As New Font("Arial", 8)
+    '            Dim brsh As New SolidBrush(Color.Red)
+    '            For i = 0 To NNodes - 1
+    '                nx = CInt(Nodes(i).x * zoom + shiftx)
+    '                ny = CInt(-Nodes(i).y * zoom + shifty)
+    '                Dim r As New Rectangle(nx - 3, ny - 3, 6, 6)
+    '                gr.DrawEllipse(p, r)
+
+    '                gr.DrawString((i + 1).ToString, fnt, brsh, New PointF(nx + 5, ny + 5))
+
+    '            Next
+    '        End If
+
+    '        'Draw the supports
+    '        'we draw squares for supports
+    '        ReDim ptsf(3)
+    '        Dim squareHalfSize As Integer = 5
+    '        For i = 0 To NSupports - 1
+    '            n1 = Supports(i).Node - 1
+    '            ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx - squareHalfSize),
+    '                                 CSng(-Nodes(n1).y * zoom + shifty - squareHalfSize))
+    '            ptsf(1) = New PointF(CSng(Nodes(n1).x * zoom + shiftx + squareHalfSize),
+    '                                 CSng(-Nodes(n1).y * zoom + shifty - squareHalfSize))
+    '            ptsf(2) = New PointF(CSng(Nodes(n1).x * zoom + shiftx + squareHalfSize),
+    '                                 CSng(-Nodes(n1).y * zoom + shifty + squareHalfSize))
+    '            ptsf(3) = New PointF(CSng(Nodes(n1).x * zoom + shiftx - squareHalfSize),
+    '                                 CSng(-Nodes(n1).y * zoom + shifty + squareHalfSize))
+    '            gr.FillPolygon(New SolidBrush(supportColor), ptsf)
+
+    '        Next
+
+    '        'draw the loads
+    '        Dim px, py As Integer
+    '        For i = 0 To NPointLoads - 1
+    '            n1 = PointLoads(i).Node - 1
+    '            If Math.Abs(PointLoads(i).Fx) > 0.0001 Then
+    '                'if the pointload is significant
+    '                'draw the arrow
+    '                px = CInt(Nodes(n1).x * zoom + shiftx)
+    '                py = CInt(-Nodes(n1).y * zoom + shifty)
+    '                If PointLoads(i).Fx > 0 Then
+    '                    DrawHArrow(px, py, pointLoadColor, False)
+    '                Else
+    '                    DrawHArrow(px, py, pointLoadColor, True)
+    '                End If
+    '            End If
+
+    '            If Math.Abs(PointLoads(i).Fy) > 0.0001 Then
+    '                px = CInt(Nodes(n1).x * zoom + shiftx)
+    '                py = CInt(-Nodes(n1).y * zoom + shifty)
+    '                If PointLoads(i).Fy > 0 Then
+    '                    DrawVArrow(px, py, pointLoadColor, False)
+    '                Else
+    '                    DrawVArrow(px, py, pointLoadColor, True)
+    '                End If
+
+    '            End If
+
+
+    '        Next
+    '    End If
+    '    'Now, plot results if available
+    '    If Deformations IsNot Nothing AndAlso Deformations.Length > 0 Then
+    '        Dim eColor As Color
+    '        'we can plot now.
+    '        If ShowDeformations = True Then
+    '            ReDim ptsf(2)
+
+    '            'compute the colormap
+
+    '            'set the colormap if required
+    '            Select Case ShowResult
+    '                Case Results.None
+    '                    'create a dummy colormap
+    '                    ColorMap = New ColorMap(1, 0)
+    '                Case Results.SigmaX
+    '                    ColorMap = New ColorMap(SigmaXRange.Max, SigmaXRange.Min)
+    '                Case Results.SigmaY
+    '                    ColorMap = New ColorMap(SigmaYRange.Max, SigmaYRange.Min)
+    '                Case Results.TauXY
+    '                    ColorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
+    '                Case Results.EpsilonX
+    '                    ColorMap = New ColorMap(EpsilonXRange.Max, EpsilonXRange.Min)
+    '                Case Results.EpsilonY
+    '                    ColorMap = New ColorMap(EpsilonYRange.Max, EpsilonYRange.Min)
+    '                Case Results.GammaXY
+    '                    ColorMap = New ColorMap(GammaXYRange.Max, GammaXYRange.Min)
+    '                Case Else
+    '                    'just for completeness.. otherwise this block wont ever execute
+    '                    'create a dummy colormap
+    '                    ColorMap = New ColorMap(1, 0)
+    '            End Select
+
+    '            For i = 0 To NElements - 1
+
+    '                'ecolor depends on the value of result to be shown
+
+    '                Select Case ShowResult
+    '                    Case Results.None
+    '                        eColor = eleColorDeformed
+    '                    Case Results.SigmaX
+    '                        eColor = ColorMap.getColor(Elements(i).Stresses(0))
+    '                    Case Results.SigmaY
+    '                        eColor = ColorMap.getColor(Elements(i).Stresses(1))
+    '                    Case Results.TauXY
+    '                        eColor = ColorMap.getColor(Elements(i).Stresses(2))
+    '                    Case Results.EpsilonX
+    '                        eColor = ColorMap.getColor(Elements(i).Strains(0))
+    '                    Case Results.EpsilonY
+    '                        eColor = ColorMap.getColor(Elements(i).Strains(1))
+    '                    Case Results.GammaXY
+    '                        eColor = ColorMap.getColor(Elements(i).Strains(2))
+    '                    Case Else
+    '                        eColor = eleColor
+    '                End Select
+
+
+    '                n1 = Elements(i).Node1 - 1
+    '                n2 = Elements(i).Node2 - 1
+    '                n3 = Elements(i).Node3 - 1
+
+    '                ptsf(0) = New PointF(CSng((Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx),
+    '                                     CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
+    '                ptsf(1) = New PointF(CSng((Nodes(n2).x * zoom + getDeformationX(n2) * DeformationZoom) + shiftx),
+    '                                     CSng((-Nodes(n2).y * zoom - getDeformationY(n2) * DeformationZoom) + shifty))
+    '                ptsf(2) = New PointF(CSng((Nodes(n3).x * zoom + getDeformationX(n3) * DeformationZoom) + shiftx),
+    '                                     CSng((-Nodes(n3).y * zoom - getDeformationY(n3) * DeformationZoom) + shifty))
+
+    '                'Draw the element
+    '                gr.FillPolygon(New SolidBrush(eColor), ptsf)
+    '                If ShowElementsOnDeformedShape = True Then
+    '                    gr.DrawPolygon(New Pen(Color.Black), ptsf)
+    '                End If
+
+    '            Next
+
+    '            'Draw Colormap at right top of the picturebox
+    '            'only if required
+    '            If ShowResult <> Results.None Then
+    '                Dim cmap As New ColorMap(250, 0)
+    '                Dim c As Color
+    '                Dim x1, x2, y As Integer
+    '                y = 50
+    '                x1 = bmp.Width - 100
+    '                x2 = x1 + 50
+    '                For i = 250 To 0 Step -1
+    '                    c = cmap.getColor(i)
+    '                    y += 1
+    '                    gr.DrawLine(New Pen(c), New Point(x1, y), New Point(x2, y))
+    '                Next
+    '                'write the max, min and mid values
+    '                'max
+
+    '                Dim strWidth As Integer
+    '                Dim MaxWidth, MinWidth, AvgWidth As Single
+    '                Dim Max, Min, Avg As String
+    '                Dim barFont As New Font("Arial", 9)
+    '                Dim barBrush As New SolidBrush(Color.Black)
+    '                Max = ColorMap.Max.ToString
+    '                Min = ColorMap.Min.ToString
+    '                Avg = ((ColorMap.Max + ColorMap.Min) / 2).ToString
+    '                MaxWidth = gr.MeasureString(Max, barFont).Width
+    '                MinWidth = gr.MeasureString(Min, barFont).Width
+    '                AvgWidth = gr.MeasureString(Avg, barFont).Width
+
+    '                strWidth = CInt(Math.Max(Math.Max(MaxWidth, MinWidth), AvgWidth)) + 10
+
+    '                gr.DrawLine(Pens.Black, x1, 50, x1 - 5, 50)
+    '                gr.DrawString(Max, barFont, barBrush, New PointF(x1 - strWidth, 30))
+
+    '                gr.DrawLine(Pens.Black, x1, 175, x1 - 5, 175)
+    '                gr.DrawString(Avg, barFont, barBrush, New PointF(x1 - strWidth, 155))
+
+    '                gr.DrawLine(Pens.Black, x1, 300, x1 - 5, 300)
+    '                gr.DrawString(Min, barFont, barBrush, New PointF(x1 - strWidth, 320))
+    '            End If
+
+
+    '        End If
+    '    End If
+    '    pbModel.Refresh()
+    'End Sub
+    'Fonction readline  'Xuande  10/06/2020
+    Private Function readLine(ByRef sr As StreamReader) As String
+        Dim s As String
+        If sr.EndOfStream = True Then Return ""
+        While sr.EndOfStream = False
+            s = sr.ReadLine.Trim
+            If s.Length > 0 Then
+                If s.Substring(0, 1) <> "$" Then
+                    Return s
+                End If
+            End If
+        End While
+        Return ""
+    End Function
 End Class

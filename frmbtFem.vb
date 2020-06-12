@@ -50,7 +50,6 @@ Public Class frmbtFem
     Private ShowResult As Results = Results.None
 
 
-
     'Graphics
     Private zoom As Double = 1.0
     Private DeformationZoom As Double = 50.0
@@ -866,6 +865,7 @@ Public Class frmbtFem
             End Try
         End If
     End Sub
+
 
     Private Sub ShowDeformationsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowDeformationsToolStripMenuItem.Click
         ShowDeformations = Not ShowDeformations

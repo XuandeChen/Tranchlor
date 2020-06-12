@@ -7,9 +7,6 @@ Public Class Node
     Public Property y As Double
 
 
-    Public Sub New()
-
-    End Sub
 
     Public Sub New(nn As Integer, x As Double, y As Double)
         _NodeNumber = nn
