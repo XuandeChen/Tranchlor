@@ -213,6 +213,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Private NNodes, NElements, Nbloc As Integer
+    Private MeshFileOk = False
 
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
@@ -434,6 +435,8 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Dim DyCO2 As Single
         Dim RoC(1) As Single
         Dim RoA(1) As Single
+
+        Dim Option2d As Boolean
 
         Dim PintermManual As Integer = 0
 
@@ -710,11 +713,21 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Le(0) = CDec(1)       'couche limite
         Le(Dofs) = CDec(1)    'couche limite
 
+        Input(nFic, Option2d)
+        If Option2d = True And MeshFileOk = False Then
+            Dim result As DialogResult = MsgBox("MeshFile doesn't found for 2D transport. Transport will be in 1D. Do you want to continue ?", MsgBoxStyle.YesNo, "Error with Mesh File")
+            If result = DialogResult.Yes Then
+                Option2d = False
+            ElseIf result = DialogResult.No Then
+                GoTo b
+            End If
+        End If
+
         Try
             Input(nFic, PintermManual)
-            MsgBox("Information", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Le nombre de points est de" & CStr(PintermManual))
+            MsgBox("Le nombre de points est de" & CStr(PintermManual), MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
         Catch
-            MsgBox("Information", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Attention aucun points pris en compte manuellement")
+            MsgBox("Attention aucun points pris en compte manuellement", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
         End Try
 
         FileClose(nFic)
@@ -722,7 +735,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '---------------------------------------------------------------------------------------
         Dim myThread As System.Threading.Thread
 
-        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, PintermManual)
+        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, Option2d, PintermManual)
 
         myThread = New System.Threading.Thread(AddressOf Compute_All)
 
@@ -805,8 +818,15 @@ b:      'user pressed cancel error
         Dim d As New OpenFileDialog
         d.Title = "Open Mesh file"
         d.Filter = "Mesh files (*.msh)|*.msh"
+
         If d.ShowDialog = DialogResult.OK Then
-            If ReadFile(d.FileName) = False Then Return
+            If ReadFile(d.FileName) = False Then
+                MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+                MeshFileOk = False
+            ElseIf ReadFile(d.FileName) = True Then
+                MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+                MeshFileOk = True
+            End If
             'DrawModel()
         End If
     End Sub
