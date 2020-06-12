@@ -80,7 +80,12 @@ Module Compute
     Dim m_DyCO2 As Single
     Dim m_RoA(1) As Single
     Dim m_RoC(1) As Single
-
+    'Xuande 10/06
+    'Structure StrctMesh 'colonnes de la matrice à partir du fichier Mesh_*.msh
+    '    Public NCoor(,) As Double
+    '    Public Bord() As Boolean
+    '    Public Nelem(,) As Double
+    'End Structure
     Public Sub SetParameters(ByRef frm02 As frmChlor, ByRef Length As Single, ByRef Ne As Short, ByRef ChoixRep As Short, ByRef Le() As Decimal, ByRef PosProf() As Decimal, ByRef nChmt As Short, ByRef Nbreel() As Short, ByRef LenApp() As Single, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef Carbsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef ImpHydr As Boolean, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef FileGexpo() As String, ByRef FileDexpo() As String, ByRef NQUAL As Short, ByRef Filebeton() As String, ByRef Fileres() As String, ByRef PD() As Single, ByRef Dcl() As Single, ByRef capCal As Single, ByRef LambdaH() As Single, ByRef LambdaT() As Single, ByRef SAT() As Single, ByRef ciment() As Single, ByRef EC() As Single, ByRef tProt() As Single, ByRef Vct() As Single, ByRef Nct() As Single, ByRef proba(,) As Single, ByRef Dofs As Short, ByRef qGran() As Single, ByRef Hydr() As Single, ByRef ED() As Single, ByRef ToHydr() As Single, ByRef Ecl() As Single, ByRef ToCl() As Single, ByRef PostFile As String, ByRef Ctherm() As Double, ByRef Chydr() As Double, ByRef Cion() As Double, ByRef GyCO2 As Single, ByRef DyCO2 As Single, ByRef RoA() As Single, ByRef RoC() As Single)
 
         m_frm02 = frm02

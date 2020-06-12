@@ -9,9 +9,6 @@ Public Class Element
     Public Stresses(2) As Double
     Public Strains(2) As Double
 
-    Public Sub New()
-
-    End Sub
 
     Public Sub New(n As Integer, n1 As Integer, n2 As Integer, n3 As Integer)
         _ElementNumber = n
