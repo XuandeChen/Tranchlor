@@ -217,8 +217,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+        My.Application.ChangeCulture("en-US")
         Me.IsMdiContainer = True
         Me.WindowState = FormWindowState.Maximized
+
         frmC.Left = 0
         frmC.Top = 0
         frmC.Height = (Me.Height)
