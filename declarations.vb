@@ -1,4 +1,5 @@
 Module declarations
+
     Dim Picture_Name As String
     Dim Picture_Number As Short
     Dim frm As MDIChlor
@@ -20,6 +21,7 @@ Module declarations
         Picture_Name = "Guido & David"
         Picture_Number = CShort(0)
     End Sub
+
     Public Sub Localize()
         My.Application.ChangeCulture("en-US")
     End Sub

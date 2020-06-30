@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("TransChlor_alpha")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("")>
-<Assembly: AssemblyCopyright("")>
+<Assembly: AssemblyTitle("TransChlor Alpha")>
+<Assembly: AssemblyDescription("Chloride transport into cementitious materials")>
+<Assembly: AssemblyCompany("ULaval")>
+<Assembly: AssemblyProduct("TransChlor Alpha")>
+<Assembly: AssemblyCopyright("Copyright ©  2020")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)>
 
@@ -29,5 +29,6 @@ Imports System.Runtime.InteropServices
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("2.0.*")>
+<Assembly: AssemblyVersion("2.0.0.0")>
 <Assembly: NeutralResourcesLanguage("en")>
+<Assembly: ComVisible(True)>
