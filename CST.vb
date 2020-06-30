@@ -55,7 +55,6 @@ Public Class CST
 
     End Sub
 
-
     ''' <summary>
     ''' Returns the determinant of the Jacobian
     ''' </summary>

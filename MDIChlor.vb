@@ -813,7 +813,7 @@ b:      'user pressed cancel error
         End Using
     End Sub
 
-    'Lecture du fichier Maillage dans le menu 'Xuande  10/06/2020
+    'Lecture du fichier Maillage dans le menu 'Xuande 10/06/2020
     Private Sub MenuItem16_Click(sender As Object, e As EventArgs) Handles MenuItem16.Click
         Dim d As New OpenFileDialog
         d.Title = "Open Mesh file"

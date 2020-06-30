@@ -3033,7 +3033,7 @@ Again2:                                 If jj = 1 Then
 
         Beep()
 
-        MsgBox("Fin du calcul", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
+        MsgBox("Fin du calcul 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
 
         frm02.ModifyCommand1(False)
         'frm02.Command1..Enabled = False

@@ -188,6 +188,7 @@
     <Compile Include="Compute.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DiffusionXC.vb" />
     <Compile Include="CST.vb" />
     <Compile Include="declarations.vb">
       <SubType>Code</SubType>
@@ -242,6 +243,7 @@
     <Compile Include="Graph1.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HETrans.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -266,6 +268,8 @@
     <Compile Include="NodeTrans.vb" />
     <Compile Include="PointLoad.vb" />
     <Compile Include="Range.vb" />
+    <Compile Include="Reject.vb" />
+    <Compile Include="CIETrans.vb" />
     <Compile Include="Support.vb" />
     <Compile Include="TempSeuil.vb">
       <SubType>Form</SubType>
