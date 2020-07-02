@@ -382,12 +382,6 @@
     <Content Include="Resources\Exposition\EXPO_M_EXT_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_O_DAVOS.txt" />
-    <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO1D.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO2D.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

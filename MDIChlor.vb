@@ -768,8 +768,7 @@ b:      'user pressed cancel error
     'lancement de l'approche probabiliste
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
         Using frm03 As New frmProb
-            frm03.MdiParent = Me
-            frm03.Show()
+            frm03.ShowDialog()
         End Using
     End Sub
 

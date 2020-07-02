@@ -739,7 +739,7 @@ b:
     'changement de la moyenne et écart-type dans le type d'acier
     Private Sub AcierChange(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextBox3.TextChanged, TextBox4.TextChanged
         If TextBox3.Text = "" Or TextBox4.Text = "" Then Exit Sub
-        Label12.Text = System.Math.Log(CDbl(TextBox3.Text) ^ 2 * (CDbl(TextBox3.Text) ^ 2 + CDbl(TextBox4.Text) ^ 2) ^ 0.5)
+        Label12.Text = System.Math.Log(CDbl(TextBox3.Text) ^ 2 / (CDbl(TextBox3.Text) ^ 2 + CDbl(TextBox4.Text) ^ 2) ^ 0.5)
         Label13.Text = (System.Math.Log(CDbl(TextBox4.Text) ^ 2 / CDbl(TextBox3.Text) ^ 2 + 1)) ^ 0.5
     End Sub
 
