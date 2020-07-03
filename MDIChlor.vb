@@ -53,6 +53,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem16 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
+    Friend WithEvents Diff2D As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -67,6 +68,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem16 = New System.Windows.Forms.MenuItem()
+        Me.Diff2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.MenuItem8 = New System.Windows.Forms.MenuItem()
@@ -131,7 +133,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
-        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem16, Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
+        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem16, Me.Diff2D, Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
         Me.MenuItem5.Text = "&Transport model"
         '
         'MenuItem16
@@ -139,19 +141,24 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem16.Index = 0
         Me.MenuItem16.Text = "&GeometryFile"
         '
+        'Diff2D
+        '
+        Me.Diff2D.Index = 1
+        Me.Diff2D.Text = "2DDiff"
+        '
         'MenuItem6
         '
-        Me.MenuItem6.Index = 1
+        Me.MenuItem6.Index = 2
         Me.MenuItem6.Text = "In&put"
         '
         'MenuItem7
         '
-        Me.MenuItem7.Index = 2
+        Me.MenuItem7.Index = 3
         Me.MenuItem7.Text = "&Calcul"
         '
         'MenuItem8
         '
-        Me.MenuItem8.Index = 3
+        Me.MenuItem8.Index = 4
         Me.MenuItem8.Text = "&Graph"
         '
         'MenuItem3
@@ -208,6 +215,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Dim Para5 As Short
     Dim frm01 As frmOption1
     Dim frmC As New frmChlor
+    Dim diff As New DiffusionXC
 
     ' Xuande 10/06/2020
     Private Nodes() As NodeTrans
@@ -832,8 +840,19 @@ b:      'user pressed cancel error
             'DrawModel()
         End If
     End Sub
+    'Calcul diffusion 2D dans le menu 'Xuande 30/06/2020
+    Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
+        'check if there is a proper model
+        If NElements <= 0 OrElse NNodes <= 0 Then
+            'there are no elements defined
+            MsgBox("Please open a proper finite element model")
+            Return
+        End If
+        'perform analysis using the 2D finite element diffusion 
+        diff.Analyse(NNodes, NElements, Nodes, Elements)
+    End Sub
     'Fonction de lecture des donnees geometrie 'Xuande  10/06/2020
-    Private Function ReadFile(f As String) As Boolean
+    Public Function ReadFile(f As String) As Boolean
         Try
 
             Dim sr As New StreamReader(f)
