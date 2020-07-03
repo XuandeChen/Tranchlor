@@ -54,8 +54,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>TransChlor.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>2.1.0.0</ApplicationVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -382,12 +382,6 @@
     <Content Include="Resources\Exposition\EXPO_M_EXT_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_O_DAVOS.txt" />
-    <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO1D.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Input\INPUT_ExampleDavosMoyenMBO2D.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
