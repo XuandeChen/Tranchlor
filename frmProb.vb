@@ -71,38 +71,38 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
     Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.CheckBox7 = New System.Windows.Forms.CheckBox
-        Me.CheckBox6 = New System.Windows.Forms.CheckBox
-        Me.CheckBox5 = New System.Windows.Forms.CheckBox
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.Label10 = New System.Windows.Forms.Label
-        Me.TextBox4 = New System.Windows.Forms.TextBox
-        Me.TextBox3 = New System.Windows.Forms.TextBox
-        Me.Label9 = New System.Windows.Forms.Label
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.TextBox2 = New System.Windows.Forms.TextBox
-        Me.TextBox1 = New System.Windows.Forms.TextBox
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.CheckBox8 = New System.Windows.Forms.CheckBox
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.Button2 = New System.Windows.Forms.Button
-        Me.Button3 = New System.Windows.Forms.Button
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox7 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox6 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.CheckBox8 = New System.Windows.Forms.CheckBox()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -119,7 +119,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.GroupBox1.Controls.Add(Me.CheckBox1)
         Me.GroupBox1.Location = New System.Drawing.Point(8, 8)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(184, 248)
+        Me.GroupBox1.Size = New System.Drawing.Size(172, 248)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Traitement probabiliste"
@@ -140,6 +140,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.CheckBox6.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox6.Location = New System.Drawing.Point(8, 184)
         Me.CheckBox6.Name = "CheckBox6"
+        Me.CheckBox6.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox6.TabIndex = 5
         Me.CheckBox6.Text = "Chlorures libres"
         '
@@ -159,6 +160,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.CheckBox4.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox4.Location = New System.Drawing.Point(8, 120)
         Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox4.TabIndex = 3
         Me.CheckBox4.Text = "PH"
         '
@@ -168,6 +170,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.CheckBox3.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox3.Location = New System.Drawing.Point(8, 88)
         Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox3.TabIndex = 2
         Me.CheckBox3.Text = "Teneur en eau"
         '
@@ -187,6 +190,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.CheckBox1.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox1.Location = New System.Drawing.Point(8, 24)
         Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(104, 24)
         Me.CheckBox1.TabIndex = 0
         Me.CheckBox1.Text = "Température"
         '
@@ -249,15 +253,15 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.TextBox4.Location = New System.Drawing.Point(216, 48)
         Me.TextBox4.Name = "TextBox4"
+        Me.TextBox4.Size = New System.Drawing.Size(100, 20)
         Me.TextBox4.TabIndex = 7
-        Me.TextBox4.Text = ""
         '
         'TextBox3
         '
         Me.TextBox3.Location = New System.Drawing.Point(216, 24)
         Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(100, 20)
         Me.TextBox3.TabIndex = 6
-        Me.TextBox3.Text = ""
         '
         'Label9
         '
@@ -281,7 +285,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(224, 16)
         Me.Label7.TabIndex = 3
-        Me.Label7.Text = "teneur en ions chlorures libres (écart-type)"
+        Me.Label7.Text = "Teneur en ions chlorures libres (écart-type)"
         '
         'Label6
         '
@@ -289,11 +293,11 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(216, 16)
         Me.Label6.TabIndex = 2
-        Me.Label6.Text = "teneur en ions chlorures libres (moyenne)"
+        Me.Label6.Text = "Teneur en ions chlorures libres (moyenne)"
         '
         'Label5
         '
-        Me.Label5.Location = New System.Drawing.Point(200, 96)
+        Me.Label5.Location = New System.Drawing.Point(267, 77)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(96, 16)
         Me.Label5.TabIndex = 1
@@ -302,10 +306,10 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         'ComboBox1
         '
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.Items.AddRange(New Object() {"acier usuel", "acier Top12", "acier inoxydable", "autres"})
-        Me.ComboBox1.Location = New System.Drawing.Point(312, 88)
+        Me.ComboBox1.Items.AddRange(New Object() {"Acier Usuel (D. Conciatori)", "Ordinary Steel (G. Roelfstra)", "Acier Top12 (D. Conciatori)", "Steel ICR (grade 1.4003)", "Acier Inox (D. Conciatori)", "Stainless Steel (grade 1.4031)", "Autres Acier"})
+        Me.ComboBox1.Location = New System.Drawing.Point(270, 96)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.Size = New System.Drawing.Size(170, 21)
         Me.ComboBox1.TabIndex = 0
         '
         'GroupBox2
@@ -328,6 +332,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.TextBox2.Location = New System.Drawing.Point(192, 56)
         Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(100, 20)
         Me.TextBox2.TabIndex = 6
         Me.TextBox2.Text = "23"
         '
@@ -335,6 +340,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.TextBox1.Location = New System.Drawing.Point(192, 32)
         Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(100, 20)
         Me.TextBox1.TabIndex = 5
         Me.TextBox1.Text = "35"
         '
@@ -360,7 +366,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(152, 16)
         Me.Label2.TabIndex = 2
-        Me.Label2.Text = "position de l'acier (écart-type)"
+        Me.Label2.Text = "Position de l'acier (écart-type)"
         '
         'Label1
         '
@@ -368,7 +374,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(152, 16)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "position de l'acier (moyenne)"
+        Me.Label1.Text = "Position de l'acier (moyenne)"
         '
         'CheckBox8
         '
@@ -384,6 +390,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.Button1.Location = New System.Drawing.Point(8, 264)
         Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 3
         Me.Button1.Text = "Traitement"
         '
@@ -391,6 +398,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.Button2.Location = New System.Drawing.Point(200, 264)
         Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 4
         Me.Button2.Text = "Analyse"
         '
@@ -398,6 +406,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         '
         Me.Button3.Location = New System.Drawing.Point(568, 264)
         Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 5
         Me.Button3.Text = "Sortir"
         '
@@ -417,7 +426,9 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.Text = "Approche probabiliste"
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -711,22 +722,37 @@ b:
         Dim a As Decimal
         Dim b As Decimal
         Select Case ComboBox1.Text
-            Case "acier usuel"
+            Case "Acier Usuel (D. Conciatori)"
                 TextBox3.Text = CStr(0.536239738583839)
                 TextBox4.Text = CStr(0.761717254531377)
                 TextBox3.Enabled = False
                 TextBox4.Enabled = False
-            Case "acier Top12"
+            Case "Ordinary Steel (G. Roelfstra)"
+                TextBox3.Text = CStr(0.4)
+                TextBox4.Text = CStr(0.15)
+                TextBox3.Enabled = False
+                TextBox4.Enabled = False
+            Case "Acier Top12 (D. Conciatori)"
                 TextBox3.Text = CStr(1.3405993464596)
                 TextBox4.Text = CStr(0.761717254531377)
                 TextBox3.Enabled = False
                 TextBox4.Enabled = False
-            Case "acier inoxydable"
+            Case "Steel ICR (grade 1.4003)"
+                TextBox3.Text = CStr(1.0)
+                TextBox4.Text = CStr(0.15)
+                TextBox3.Enabled = False
+                TextBox4.Enabled = False
+            Case "Acier Inox (D. Conciatori)"
                 TextBox3.Text = CStr(2.68119869291919)
                 TextBox4.Text = CStr(0.761717254531377)
                 TextBox3.Enabled = False
                 TextBox4.Enabled = False
-            Case "autres"
+            Case "Stainless Steel (grade 1.4031)"
+                TextBox3.Text = CStr(2.0)
+                TextBox4.Text = CStr(0.225)
+                TextBox3.Enabled = False
+                TextBox4.Enabled = False
+            Case "Autres Acier"
                 TextBox3.Text = ""
                 TextBox4.Text = ""
                 Label12.Text = ""
