@@ -7,7 +7,6 @@ Public Class DiffusionXC
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
-
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
         'Computational parameter control
         NNodes = _NNodes
@@ -21,26 +20,33 @@ Public Class DiffusionXC
         Dim dt As Double = 1 'time interval (days)
         Dim tmax As Double = 100 'end time (days)
         Dim ind As Double = tmax / dt
+        Dim T(ind) As Double 'time vector (days)
+        Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim Hold(NNodes - 1) As Double
         Dim Hnew(NNodes - 1) As Double
-        Dim T(ind) As Double 'time vector (days)
-        Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days)
-
         'Initalization
         Dim ti As Integer
         For ti = 0 To ind
+            Dim i, j As Integer
             T(ti) = 0 + dt * (ti - 0)
-            'Matrix constructions
+            ' step 1 initialisation
+            If ti = 0 Then
+                For i = 0 To nDof
+                    Hold(nDof - 1) = H_int
+                Next
+            Else
+                Hold = Hnew
+            End If
+
+            'elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
             Dim RHS() As Double
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-            Dim Hg_old(nDof - 1) As Double 'Global H_old vector
+            Dim Hg(nDof - 1) As Double 'Global H vector
             Dim cie As CIETrans
             Dim he As HETrans
-            Dim i As Integer
-            Dim j As Integer
             For i = 0 To NElements - 1
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
@@ -54,22 +60,24 @@ Public Class DiffusionXC
                           )
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
-                AssembleVg(he.getHe, Hg_old, i)
-                'apply boundary conditions
+                AssembleVg(he.getHe, Hg, i)
+
+                'apply boundary conditions /needs to be completed
             Next
             'now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
             LHS = getLHS(Ag, bg, dt)
             R = getRHS(Ag, bg, dt)
             'matrix & vector mulplification 
-            RHS = MultiplyMatrixWithVector(R, Hg_old)
+            RHS = MultiplyMatrixWithVector(R, Hg)
             'now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
             Hnew = getX(LHS, RHS)
+            'result update
+
             'data stockage
             For j = 0 To NNodes - 1
                 Hm(ti, j) = Hnew(j)
             Next
         Next
-
     End Sub
 
     'Getting the LHS matrix for Gauss matrix resolution
@@ -94,7 +102,6 @@ Public Class DiffusionXC
         Next
         Return RHS
     End Function
-
 
     'Get degree of freedom /water diffusion
     Private Function getDOF(NodeNo As Integer) As Integer

@@ -25,183 +25,39 @@
         Me.x4 = x4 : Me.y4 = y4
         Me.DiffCoeff = DiffCoeff
     End Sub
-    ''' Returns the determinant of Jacobian matrix for integration point 1(-1/ Math.sqrt(3),-1/ Math.sqrt(3)) //(zeta,yita)
-    Private Function getJ1() As Double
-        Dim J1(1, 1) As Double
-        Dim Det1 As Double
-        J1(0, 0) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * x1 + (1 - (-1 / Math.Sqrt(3))) * x2 + (1 + (-1 / Math.Sqrt(3))) * x3 - (1 + (-1 / Math.Sqrt(3))) * x4)
-        J1(1, 0) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * x1 - (1 + (-1 / Math.Sqrt(3))) * x2 + (1 + (-1 / Math.Sqrt(3))) * x3 + (1 - (-1 / Math.Sqrt(3))) * x4)
-        J1(0, 1) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * y1 + (1 - (-1 / Math.Sqrt(3))) * y2 + (1 + (-1 / Math.Sqrt(3))) * y3 - (1 + (-1 / Math.Sqrt(3))) * y4)
-        J1(1, 1) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * y1 - (1 + (-1 / Math.Sqrt(3))) * y2 + (1 + (-1 / Math.Sqrt(3))) * y3 - (1 - (-1 / Math.Sqrt(3))) * y4)
-        Det1 = J1(0, 0) * J1(1, 1) - J1(1, 0) * J1(0, 1)
-        Return Det1
-    End Function
-    ''' Returns the integration for integration point 1(-1/ Math.sqrt(3),-1/ Math.sqrt(3)) //(zeta,yita)
-    Private Function getNTN1() As Double(,)
-        Dim NTN1(3, 3) As Double
-
-        NTN1(0, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(0, 1) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(0, 2) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(0, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-
-        NTN1(1, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(1, 1) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(1, 2) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(1, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-
-        NTN1(2, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(2, 1) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(2, 2) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(2, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 + (-1 / Math.Sqrt(3))) ^ 2
-
-        NTN1(3, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(3, 1) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN1(3, 2) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        NTN1(3, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        Return NTN1
-    End Function
-    ''' Returns the determinant of Jacobian matrix for integration point 2 (1/ Math.sqrt(3),-1/ Math.sqrt(3))
-    Private Function getJ2() As Double
-        Dim J2(1, 1) As Double
-        Dim Det2 As Double
-        J2(0, 0) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * x1 + (1 - (-1 / Math.Sqrt(3))) * x2 + (1 + (-1 / Math.Sqrt(3))) * x3 - (1 + (-1 / Math.Sqrt(3))) * x4)
-        J2(1, 0) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * x1 - (1 + (1 / Math.Sqrt(3))) * x2 + (1 + (1 / Math.Sqrt(3))) * x3 + (1 - (1 / Math.Sqrt(3))) * x4)
-        J2(0, 1) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * y1 + (1 - (-1 / Math.Sqrt(3))) * y2 + (1 + (-1 / Math.Sqrt(3))) * y3 - (1 + (-1 / Math.Sqrt(3))) * y4)
-        J2(1, 1) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * y1 - (1 + (1 / Math.Sqrt(3))) * y2 + (1 + (1 / Math.Sqrt(3))) * y3 - (1 - (1 / Math.Sqrt(3))) * y4)
-        Det2 = J2(0, 0) * J2(1, 1) - J2(1, 0) * J2(0, 1)
-        Return Det2
-    End Function
-    ''' Returns the  the integration for integration point 2 (1/ Math.sqrt(3),-1/ Math.sqrt(3))
-    Private Function getNTN2() As Double(,)
-        Dim NTN2(3, 3) As Double
-
-        NTN2(0, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(0, 1) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(0, 2) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(0, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-
-        NTN2(1, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(1, 1) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(1, 2) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(1, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-
-        NTN2(2, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(2, 1) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(2, 2) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(2, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 + (-1 / Math.Sqrt(3))) ^ 2
-
-        NTN2(3, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(3, 1) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (-1 / Math.Sqrt(3)) ^ 2)
-        NTN2(3, 2) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        NTN2(3, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 + (-1 / Math.Sqrt(3))) ^ 2
-        Return NTN2
-    End Function
-    ''' Returns the determinant of Jacobian matrix for integration point 3 (1/Math.sqrt(3),1/Math.sqrt(3))
-    Private Function getJ3() As Double
-        Dim J3(1, 1) As Double
-        Dim Det3 As Double
-        J3(0, 0) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * x1 + (1 - (1 / Math.Sqrt(3))) * x2 + (1 + (1 / Math.Sqrt(3))) * x3 - (1 + (1 / Math.Sqrt(3))) * x4)
-        J3(1, 0) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * x1 - (1 + (1 / Math.Sqrt(3))) * x2 + (1 + (1 / Math.Sqrt(3))) * x3 + (1 - (1 / Math.Sqrt(3))) * x4)
-        J3(0, 1) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * y1 + (1 - (1 / Math.Sqrt(3))) * y2 + (1 + (1 / Math.Sqrt(3))) * y3 - (1 + (1 / Math.Sqrt(3))) * y4)
-        J3(1, 1) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * y1 - (1 + (1 / Math.Sqrt(3))) * y2 + (1 + (1 / Math.Sqrt(3))) * y3 - (1 - (1 / Math.Sqrt(3))) * y4)
-        Det3 = J3(0, 0) * J3(1, 1) - J3(1, 0) * J3(0, 1)
-        Return Det3
-    End Function
-    ''' Returns the integration for integration point 3 (1/ Math.sqrt(3),1/ Math.sqrt(3))
-    Private Function getNTN3() As Double(,)
-        Dim NTN3(3, 3) As Double
-
-        NTN3(0, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN3(0, 1) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN3(0, 2) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(0, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-
-        NTN3(1, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN3(1, 1) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN3(1, 2) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(1, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-
-        NTN3(2, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(2, 1) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(2, 2) = 1 / 16 * (1 + (1 / Math.Sqrt(3))) ^ 2 * (1 + (1 / Math.Sqrt(3))) ^ 2
-        NTN3(2, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 + (1 / Math.Sqrt(3))) ^ 2
-
-        NTN3(3, 0) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(3, 1) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN3(3, 2) = 1 / 16 * (1 - (1 / Math.Sqrt(3)) ^ 2) * (1 + (1 / Math.Sqrt(3))) ^ 2
-        NTN3(3, 3) = 1 / 16 * (1 - (1 / Math.Sqrt(3))) ^ 2 * (1 + (1 / Math.Sqrt(3))) ^ 2
-        Return NTN3
-    End Function
-    ''' Returns the determinant of Jacobian matrix for integration point 4 (-1/Math.sqrt(3),1/Math.sqrt(3))
-    Private Function getJ4() As Double
-        Dim J4(1, 1) As Double
-        Dim Det4 As Double
-        J4(0, 0) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * x1 + (1 - (1 / Math.Sqrt(3))) * x2 + (1 + (1 / Math.Sqrt(3))) * x3 - (1 + (1 / Math.Sqrt(3))) * x4)
-        J4(1, 0) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * x1 - (1 + (-1 / Math.Sqrt(3))) * x2 + (1 + (-1 / Math.Sqrt(3))) * x3 + (1 - (-1 / Math.Sqrt(3))) * x4)
-        J4(0, 1) = 1 / 4 * (-(1 - (1 / Math.Sqrt(3))) * y1 + (1 - (1 / Math.Sqrt(3))) * y2 + (1 + (1 / Math.Sqrt(3))) * y3 - (1 + (1 / Math.Sqrt(3))) * y4)
-        J4(1, 1) = 1 / 4 * (-(1 - (-1 / Math.Sqrt(3))) * y1 - (1 + (-1 / Math.Sqrt(3))) * y2 + (1 + (-1 / Math.Sqrt(3))) * y3 - (1 - (-1 / Math.Sqrt(3))) * y4)
-        Det4 = J4(0, 0) * J4(1, 1) - J4(1, 0) * J4(0, 1)
-        Return Det4
-    End Function
-    ''' Returns the integration for integration point 4 (-1/ Math.sqrt(3),1/ Math.sqrt(3))
-    Private Function getNTN4() As Double(,)
-        Dim NTN4(3, 3) As Double
-
-        NTN4(0, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN4(0, 1) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN4(0, 2) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(0, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-
-        NTN4(1, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN4(1, 1) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3))) ^ 2
-        NTN4(1, 2) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(1, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-
-        NTN4(2, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(2, 1) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(2, 2) = 1 / 16 * (1 + (-1 / Math.Sqrt(3))) ^ 2 * (1 + (1 / Math.Sqrt(3))) ^ 2
-        NTN4(2, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 + (1 / Math.Sqrt(3))) ^ 2
-
-        NTN4(3, 0) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(3, 1) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 - (1 / Math.Sqrt(3)) ^ 2)
-        NTN4(3, 2) = 1 / 16 * (1 - (-1 / Math.Sqrt(3)) ^ 2) * (1 + (1 / Math.Sqrt(3))) ^ 2
-        NTN4(3, 3) = 1 / 16 * (1 - (-1 / Math.Sqrt(3))) ^ 2 * (1 + (1 / Math.Sqrt(3))) ^ 2
-        Return NTN4
-    End Function
 
     ''' Returns the integrated [be] matrix by Gauss sommation method
     Public Function getbe() As Double(,)
         Dim be(3, 3) As Double 'initialize a 4x4 vector
         'Compute be now
-        Dim J1 As Double = getJ1()
-        Dim J2 As Double = getJ2()
-        Dim J3 As Double = getJ3()
-        Dim J4 As Double = getJ4()
-        Dim NTN1(,) As Double = getNTN1()
-        Dim NTN2(,) As Double = getNTN2()
-        Dim NTN3(,) As Double = getNTN3()
-        Dim NTN4(,) As Double = getNTN4()
+        Dim DetJ1 As Double = getDetJ(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim DetJ2 As Double = getDetJ(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim DetJ3 As Double = getDetJ(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+        Dim DetJ4 As Double = getDetJ(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+        Dim NTN1(,) As Double = getNTN(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim NTN2(,) As Double = getNTN(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim NTN3(,) As Double = getNTN(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+        Dim NTN4(,) As Double = getNTN(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
 
-        be(0, 0) = NTN1(0, 0) * J1 + NTN2(0, 0) * J2 + NTN3(0, 0) * J3 + NTN4(0, 0) * J4
-        be(0, 1) = NTN1(0, 1) * J1 + NTN2(0, 1) * J2 + NTN3(0, 1) * J3 + NTN4(0, 1) * J4
-        be(0, 2) = NTN1(0, 2) * J1 + NTN2(0, 2) * J2 + NTN3(0, 2) * J3 + NTN4(0, 2) * J4
-        be(0, 3) = NTN1(0, 3) * J1 + NTN2(0, 3) * J2 + NTN3(0, 3) * J3 + NTN4(0, 3) * J4
+        be(0, 0) = NTN1(0, 0) * DetJ1 + NTN2(0, 0) * DetJ2 + NTN3(0, 0) * DetJ3 + NTN4(0, 0) * DetJ4
+        be(0, 1) = NTN1(0, 1) * DetJ1 + NTN2(0, 1) * DetJ2 + NTN3(0, 1) * DetJ3 + NTN4(0, 1) * DetJ4
+        be(0, 2) = NTN1(0, 2) * DetJ1 + NTN2(0, 2) * DetJ2 + NTN3(0, 2) * DetJ3 + NTN4(0, 2) * DetJ4
+        be(0, 3) = NTN1(0, 3) * DetJ1 + NTN2(0, 3) * DetJ2 + NTN3(0, 3) * DetJ3 + NTN4(0, 3) * DetJ4
 
-        be(1, 0) = NTN1(1, 0) * J1 + NTN2(1, 0) * J2 + NTN3(1, 0) * J3 + NTN4(1, 0) * J4
-        be(1, 1) = NTN1(1, 1) * J1 + NTN2(1, 1) * J2 + NTN3(1, 1) * J3 + NTN4(1, 1) * J4
-        be(1, 2) = NTN1(1, 2) * J1 + NTN2(1, 2) * J2 + NTN3(1, 2) * J3 + NTN4(1, 2) * J4
-        be(1, 3) = NTN1(1, 3) * J1 + NTN2(1, 3) * J2 + NTN3(1, 3) * J3 + NTN4(1, 3) * J4
+        be(1, 0) = NTN1(1, 0) * DetJ1 + NTN2(1, 0) * DetJ2 + NTN3(1, 0) * DetJ3 + NTN4(1, 0) * DetJ4
+        be(1, 1) = NTN1(1, 1) * DetJ1 + NTN2(1, 1) * DetJ2 + NTN3(1, 1) * DetJ3 + NTN4(1, 1) * DetJ4
+        be(1, 2) = NTN1(1, 2) * DetJ1 + NTN2(1, 2) * DetJ2 + NTN3(1, 2) * DetJ3 + NTN4(1, 2) * DetJ4
+        be(1, 3) = NTN1(1, 3) * DetJ1 + NTN2(1, 3) * DetJ2 + NTN3(1, 3) * DetJ3 + NTN4(1, 3) * DetJ4
 
-        be(2, 0) = NTN1(2, 0) * J1 + NTN2(2, 0) * J2 + NTN3(2, 0) * J3 + NTN4(2, 0) * J4
-        be(2, 1) = NTN1(2, 1) * J1 + NTN2(2, 1) * J2 + NTN3(2, 1) * J3 + NTN4(2, 1) * J4
-        be(2, 2) = NTN1(2, 2) * J1 + NTN2(2, 2) * J2 + NTN3(2, 2) * J3 + NTN4(2, 2) * J4
-        be(2, 3) = NTN1(2, 3) * J1 + NTN2(2, 3) * J2 + NTN3(2, 3) * J3 + NTN4(2, 3) * J4
+        be(2, 0) = NTN1(2, 0) * DetJ1 + NTN2(2, 0) * DetJ2 + NTN3(2, 0) * DetJ3 + NTN4(2, 0) * DetJ4
+        be(2, 1) = NTN1(2, 1) * DetJ1 + NTN2(2, 1) * DetJ2 + NTN3(2, 1) * DetJ3 + NTN4(2, 1) * DetJ4
+        be(2, 2) = NTN1(2, 2) * DetJ1 + NTN2(2, 2) * DetJ2 + NTN3(2, 2) * DetJ3 + NTN4(2, 2) * DetJ4
+        be(2, 3) = NTN1(2, 3) * DetJ1 + NTN2(2, 3) * DetJ2 + NTN3(2, 3) * DetJ3 + NTN4(2, 3) * DetJ4
 
-        be(3, 0) = NTN1(3, 0) * J1 + NTN2(3, 0) * J2 + NTN3(3, 0) * J3 + NTN4(3, 0) * J4
-        be(3, 1) = NTN1(3, 1) * J1 + NTN2(3, 1) * J2 + NTN3(3, 1) * J3 + NTN4(3, 1) * J4
-        be(3, 2) = NTN1(3, 2) * J1 + NTN2(3, 2) * J2 + NTN3(3, 2) * J3 + NTN4(3, 2) * J4
-        be(3, 3) = NTN1(3, 3) * J1 + NTN2(3, 3) * J2 + NTN3(3, 3) * J3 + NTN4(3, 3) * J4
+        be(3, 0) = NTN1(3, 0) * DetJ1 + NTN2(3, 0) * DetJ2 + NTN3(3, 0) * DetJ3 + NTN4(3, 0) * DetJ4
+        be(3, 1) = NTN1(3, 1) * DetJ1 + NTN2(3, 1) * DetJ2 + NTN3(3, 1) * DetJ3 + NTN4(3, 1) * DetJ4
+        be(3, 2) = NTN1(3, 2) * DetJ1 + NTN2(3, 2) * DetJ2 + NTN3(3, 2) * DetJ3 + NTN4(3, 2) * DetJ4
+        be(3, 3) = NTN1(3, 3) * DetJ1 + NTN2(3, 3) * DetJ2 + NTN3(3, 3) * DetJ3 + NTN4(3, 3) * DetJ4
 
         Return be
     End Function
@@ -212,10 +68,10 @@
         Dim B2(,) As Double = getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
         Dim B3(,) As Double = getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
         Dim B4(,) As Double = getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
-        Dim J1 As Double = getJ1()
-        Dim J2 As Double = getJ2()
-        Dim J3 As Double = getJ3()
-        Dim J4 As Double = getJ4()
+        Dim DetJ1 As Double = getDetJ(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim DetJ2 As Double = getDetJ(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+        Dim DetJ3 As Double = getDetJ(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+        Dim DetJ4 As Double = getDetJ(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
 
         Dim D As Double = DiffCoeff
 
@@ -232,12 +88,12 @@
         Dim i, j As Integer
         For i = 0 To 3
             For j = 0 To 3
-                Ae(i, j) = Ae1(i, j) * D * J1 + Ae2(i, j) * D * J2 + Ae3(i, j) * D * J3 + Ae4(i, j) * D * J4
+                Ae(i, j) = Ae1(i, j) * D * DetJ1 + Ae2(i, j) * D * DetJ2 + Ae3(i, j) * D * DetJ3 + Ae4(i, j) * D * DetJ4
             Next
         Next
         Return Ae
     End Function
-    Public Function getB(ByRef aa As Double, ByRef bb As Double) As Double(,)
+    Private Function getB(ByRef aa As Double, ByRef bb As Double) As Double(,)
         Dim B(1, 3) As Double
         Dim zeta As Double = aa
         Dim yita As Double = bb
@@ -253,6 +109,47 @@
         B(1, 3) = 1 / 4 * (1 - zeta)
 
         Return B
+    End Function
+    Private Function getNTN(ByRef aa As Double, ByRef bb As Double) As Double(,)
+        Dim NTN(3, 3) As Double
+        Dim zeta As Double = aa
+        Dim yita As Double = bb
+
+        NTN(0, 0) = 1 / 16 * (1 - zeta) ^ 2 * (1 - yita) ^ 2
+        NTN(0, 1) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita) ^ 2
+        NTN(0, 2) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita ^ 2)
+        NTN(0, 3) = 1 / 16 * (1 - zeta) ^ 2 * (1 - yita ^ 2)
+
+        NTN(1, 0) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita) ^ 2
+        NTN(1, 1) = 1 / 16 * (1 + zeta) ^ 2 * (1 - yita) ^ 2
+        NTN(1, 2) = 1 / 16 * (1 + zeta) ^ 2 * (1 - yita ^ 2)
+        NTN(1, 3) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita ^ 2)
+
+        NTN(2, 0) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita ^ 2)
+        NTN(2, 1) = 1 / 16 * (1 + zeta) ^ 2 * (1 - yita ^ 2)
+        NTN(2, 2) = 1 / 16 * (1 + zeta) ^ 2 * (1 + yita) ^ 2
+        NTN(2, 3) = 1 / 16 * (1 - zeta ^ 2) * (1 + yita) ^ 2
+
+        NTN(3, 0) = 1 / 16 * (1 - zeta) ^ 2 * (1 - yita ^ 2)
+        NTN(3, 1) = 1 / 16 * (1 - zeta ^ 2) * (1 - yita ^ 2)
+        NTN(3, 2) = 1 / 16 * (1 - zeta ^ 2) * (1 + yita) ^ 2
+        NTN(3, 3) = 1 / 16 * (1 - zeta) ^ 2 * (1 + yita) ^ 2
+
+        Return NTN
+    End Function
+    ' get determinant of Jacobien
+    Private Function getDetJ(ByRef coorx As Double, ByRef coory As Double) As Double
+        Dim J(1, 1) As Double
+        Dim DetJ As Double
+        Dim zeta As Double = coorx
+        Dim yita As Double = coory
+
+        J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 + (1 - zeta) * x2 + (1 + zeta) * x3 - (1 + zeta) * x4)
+        J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 + (1 - zeta) * y2 + (1 + zeta) * y3 - (1 + zeta) * y4)
+        DetJ = J(0, 0) * J(1, 1) - J(1, 0) * J(0, 1)
+        Return DetJ
     End Function
     Private Function getBT(ByRef B(,) As Double) As Double(,)
         'returns the transpose of [B]
@@ -284,8 +181,6 @@
 
         Return ab
     End Function
-
-
 
 End Class
 
