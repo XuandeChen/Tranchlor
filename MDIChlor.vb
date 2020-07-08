@@ -959,7 +959,7 @@ b:      'user pressed cancel error
                         n0 = Integer.Parse(Arr(0))
                     Next
                 End If
-                s
+                s = readLine(sr)
                 If bloc_type = 2 Then
                     NElements = bloc_element
                     ReDim Elements(NElements - 1)
