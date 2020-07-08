@@ -306,7 +306,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         'ComboBox1
         '
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.Items.AddRange(New Object() {"Acier Usuel (D. Conciatori)", "Ordinary Steel (G. Roelfstra)", "Acier Top12 (D. Conciatori)", "Steel ICR (grade 1.4003)", "Acier Inox (D. Conciatori)", "Stainless Steel (grade 1.4031)", "Autres Acier"})
+        Me.ComboBox1.Items.AddRange(New Object() {"Acier MTQ 50 ans (A.S. Bah)", "Acier Usuel (D. Conciatori)", "Ordinary Steel (G. Roelfstra)", "Acier Top12 (D. Conciatori)", "Steel ICR (grade 1.4003)", "Acier Inox (D. Conciatori)", "Stainless Steel (grade 1.4031)", "Autres Acier"})
         Me.ComboBox1.Location = New System.Drawing.Point(270, 96)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(170, 21)
@@ -722,6 +722,11 @@ b:
         Dim a As Decimal
         Dim b As Decimal
         Select Case ComboBox1.Text
+            Case "Acier MTQ 50 ans (A.S. Bah)"
+                TextBox3.Text = CStr(0.59)
+                TextBox4.Text = CStr(0.16)
+                TextBox3.Enabled = False
+                TextBox4.Enabled = False
             Case "Acier Usuel (D. Conciatori)"
                 TextBox3.Text = CStr(0.536239738583839)
                 TextBox4.Text = CStr(0.761717254531377)
