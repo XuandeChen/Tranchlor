@@ -3,6 +3,7 @@ Imports System
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Linq
+' Xuande module de calcul diffusion 2D
 Public Class DiffusionXC
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
@@ -17,8 +18,8 @@ Public Class DiffusionXC
         Dim H_int As Double = 1 'initial relative humidity
         Dim H_bound As Double = 0.25 'boundary relative humidity
         Dim DiffCoeff As Double = 0.0002
-        Dim dt As Double = 1 'time interval (days)
-        Dim tmax As Double = 100 'end time (days)
+        Dim dt As Double = 1 'time interval (s)
+        Dim tmax As Double = 100 'end time (s)
         Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
@@ -31,8 +32,8 @@ Public Class DiffusionXC
             T(ti) = 0 + dt * (ti - 0)
             ' step 1 initialisation
             If ti = 0 Then
-                For i = 0 To nDof
-                    Hold(nDof - 1) = H_int
+                For i = 0 To nDof - 1
+                    Hold(i) = H_int
                 Next
             Else
                 Hold = Hnew
@@ -44,10 +45,12 @@ Public Class DiffusionXC
             Dim RHS() As Double
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-            Dim Hg(nDof - 1) As Double 'Global H vector
+            Dim Hg() As Double = Hold 'Global H vector
             Dim cie As CIETrans
             Dim he As HETrans
+            Dim k As Integer
             For i = 0 To NElements - 1
+                Dim Hele() As Double
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
@@ -60,24 +63,51 @@ Public Class DiffusionXC
                           )
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
-                AssembleVg(he.getHe, Hg, i)
+                'check boundary conditions on noeuds then construct elemental humidity vector
+                Hele = he.getHe
+                If Nodes(Elements(i).Node1 - 1).Bord = True Then
+                    Hele(0) = H_bound
+                Else
+                    Hele(0) = Hele(0)
+                End If
+                If Nodes(Elements(i).Node2 - 1).Bord = True Then
+                    Hele(1) = H_bound
+                Else
+                    Hele(1) = Hele(1)
+                End If
+                If Nodes(Elements(i).Node3 - 1).Bord = True Then
+                    Hele(2) = H_bound
+                Else
+                    Hele(2) = Hele(2)
+                End If
+                If Nodes(Elements(i).Node4 - 1).Bord = True Then
+                    Hele(3) = H_bound
+                Else
+                    Hele(3) = Hele(3)
+                End If
 
-                'apply boundary conditions /needs to be completed
+                ' AssembleVg(he.getHe, Hg, i)
+
+
+
+
+
+
             Next
             'now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
             LHS = getLHS(Ag, bg, dt)
             R = getRHS(Ag, bg, dt)
             'matrix & vector mulplification 
-            RHS = MultiplyMatrixWithVector(R, Hg)
+            RHS = MultiplyMatrixWithVector(R, Hold)
             'now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
             Hnew = getX(LHS, RHS)
             'result update
 
             'data stockage
             For j = 0 To NNodes - 1
-                Hm(ti, j) = Hnew(j)
+                    Hm(ti, j) = Hnew(j)
+                Next
             Next
-        Next
     End Sub
 
     'Getting the LHS matrix for Gauss matrix resolution
@@ -102,13 +132,11 @@ Public Class DiffusionXC
         Next
         Return RHS
     End Function
-
     'Get degree of freedom /water diffusion
     Private Function getDOF(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 1
         Return (NodeNo) * nDofsPerNode
     End Function
-
     'Assembling global matrix /water diffusion
     Private Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
         Dim i, j As Integer
@@ -120,10 +148,8 @@ Public Class DiffusionXC
         For i = 0 To 3 'each dof of the Se
             dofi = dofs(i)
             For j = 0 To 3
-                dofj = dofs(j) - dofi
-                If dofj >= 0 Then
-                    Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
-                End If
+                dofj = dofs(j)
+                Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
             Next
         Next
     End Sub
@@ -156,31 +182,35 @@ Public Class DiffusionXC
         Return ab
     End Function
     Private Function getX(ByRef A(,) As Double, ByRef b() As Double)
-        Dim X() As Double
-        Dim s As Integer
-        Dim m As Integer
-        Dim i, j As Integer
+        Dim aRows As Integer = A.GetLength(0)
+        Dim aCols As Integer = A.GetLength(1)
+        Dim bRows As Integer = b.GetLength(0)
+        Dim m As Double
+        Dim i, j, k As Integer
         Dim sum As Double
-        s = A.Length
+        Dim s As Integer = bRows
+        Dim X(s - 1) As Double
 
-        For j = 0 To s - 2
-            For i = s - 1 To j + 1
+        For j = 0 To s - 2 Step 1
+            For i = s - 1 To j + 1 Step -1
                 m = A(i, j) / A(j, j)
-                'A(i,) = A(i,) - m * A(j,)
+                For k = 0 To s - 1 Step 1
+                    A(i, k) = A(i, k) - m * A(j, k)
+                Next
+                'A(i, j) = A(i, j) - m * A(j, j)
                 b(i) = b(i) - m * b(j)
             Next
-
         Next
 
-        X(s) = b(s) / A(s, s)
-        For i = s - 2 To 0
+        X(s - 1) = b(s - 1) / A(s - 1, s - 1)
+
+        For i = s - 2 To 0 Step -1
             sum = 0
-            For j = s - 1 To i
+            For j = s - 1 To i Step -1
                 sum = sum + A(i, j) * X(j)
             Next
             X(i) = (b(i) - sum) / A(i, i)
         Next
-
         Return X
     End Function
 End Class
