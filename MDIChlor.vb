@@ -845,10 +845,13 @@ b:      'user pressed cancel error
         If NElements <= 0 OrElse NNodes <= 0 Then
             'there are no elements defined
             MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+        Else
+            MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+            'perform analysis using the 2D finite element diffusion module 
+            diff.Analyse(NNodes, NElements, Nodes, Elements)
             Return
+
         End If
-        'perform analysis using the 2D finite element diffusion 
-        diff.Analyse(NNodes, NElements, Nodes, Elements)
     End Sub
     'Lecture de fichier .msh 'Xuande  10/06/2020
     Public Function ReadFile(f As String) As Boolean
@@ -862,7 +865,8 @@ b:      'user pressed cancel error
             Dim j As Integer
             Dim jj As Integer
             Dim k As Integer
-            Dim NN(0), XX(0), YY(0), ZZ(0) As Integer
+            Dim NN(0) As Integer
+            Dim XX(0), YY(0), ZZ(0) As Double
             Dim n0 As Integer
             Dim n, n1, n2, n3, n4 As Integer
             Dim x, y, z As Double
@@ -920,11 +924,11 @@ b:      'user pressed cancel error
                     'read corresponding lines of coordinates
                     s = readLine(sr)
                     Arr = Split(s, " "c)
-                    x = Double.Parse(Arr(0))
+                    x = Arr(0)
                     XX(k) = x
-                    y = Double.Parse(Arr(1))
+                    y = Arr(1)
                     YY(k) = y
-                    z = Double.Parse(Arr(2))
+                    z = Arr(2)
                     ZZ(k) = z
                     Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), brd)
                 Next
@@ -959,7 +963,7 @@ b:      'user pressed cancel error
                         n0 = Integer.Parse(Arr(0))
                     Next
                 End If
-                s
+
                 If bloc_type = 2 Then
                     NElements = bloc_element
                     ReDim Elements(NElements - 1)

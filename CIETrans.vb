@@ -39,26 +39,12 @@
         Dim NTN3(,) As Double = getNTN(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
         Dim NTN4(,) As Double = getNTN(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
 
-        be(0, 0) = NTN1(0, 0) * DetJ1 + NTN2(0, 0) * DetJ2 + NTN3(0, 0) * DetJ3 + NTN4(0, 0) * DetJ4
-        be(0, 1) = NTN1(0, 1) * DetJ1 + NTN2(0, 1) * DetJ2 + NTN3(0, 1) * DetJ3 + NTN4(0, 1) * DetJ4
-        be(0, 2) = NTN1(0, 2) * DetJ1 + NTN2(0, 2) * DetJ2 + NTN3(0, 2) * DetJ3 + NTN4(0, 2) * DetJ4
-        be(0, 3) = NTN1(0, 3) * DetJ1 + NTN2(0, 3) * DetJ2 + NTN3(0, 3) * DetJ3 + NTN4(0, 3) * DetJ4
-
-        be(1, 0) = NTN1(1, 0) * DetJ1 + NTN2(1, 0) * DetJ2 + NTN3(1, 0) * DetJ3 + NTN4(1, 0) * DetJ4
-        be(1, 1) = NTN1(1, 1) * DetJ1 + NTN2(1, 1) * DetJ2 + NTN3(1, 1) * DetJ3 + NTN4(1, 1) * DetJ4
-        be(1, 2) = NTN1(1, 2) * DetJ1 + NTN2(1, 2) * DetJ2 + NTN3(1, 2) * DetJ3 + NTN4(1, 2) * DetJ4
-        be(1, 3) = NTN1(1, 3) * DetJ1 + NTN2(1, 3) * DetJ2 + NTN3(1, 3) * DetJ3 + NTN4(1, 3) * DetJ4
-
-        be(2, 0) = NTN1(2, 0) * DetJ1 + NTN2(2, 0) * DetJ2 + NTN3(2, 0) * DetJ3 + NTN4(2, 0) * DetJ4
-        be(2, 1) = NTN1(2, 1) * DetJ1 + NTN2(2, 1) * DetJ2 + NTN3(2, 1) * DetJ3 + NTN4(2, 1) * DetJ4
-        be(2, 2) = NTN1(2, 2) * DetJ1 + NTN2(2, 2) * DetJ2 + NTN3(2, 2) * DetJ3 + NTN4(2, 2) * DetJ4
-        be(2, 3) = NTN1(2, 3) * DetJ1 + NTN2(2, 3) * DetJ2 + NTN3(2, 3) * DetJ3 + NTN4(2, 3) * DetJ4
-
-        be(3, 0) = NTN1(3, 0) * DetJ1 + NTN2(3, 0) * DetJ2 + NTN3(3, 0) * DetJ3 + NTN4(3, 0) * DetJ4
-        be(3, 1) = NTN1(3, 1) * DetJ1 + NTN2(3, 1) * DetJ2 + NTN3(3, 1) * DetJ3 + NTN4(3, 1) * DetJ4
-        be(3, 2) = NTN1(3, 2) * DetJ1 + NTN2(3, 2) * DetJ2 + NTN3(3, 2) * DetJ3 + NTN4(3, 2) * DetJ4
-        be(3, 3) = NTN1(3, 3) * DetJ1 + NTN2(3, 3) * DetJ2 + NTN3(3, 3) * DetJ3 + NTN4(3, 3) * DetJ4
-
+        Dim i, j As Integer
+        For i = 0 To 3
+            For j = 0 To 3
+                be(i, j) = NTN1(i, j) * DetJ1 + NTN2(i, j) * DetJ2 + NTN3(i, j) * DetJ3 + NTN4(i, j) * DetJ4
+            Next
+        Next
         Return be
     End Function
     ''' Returns the integrated [Ae] matrix by Gauss sommation method
@@ -84,7 +70,7 @@
         Dim Ae2(,) As Double = MultiplyMatrices(BT2, B2)
         Dim Ae3(,) As Double = MultiplyMatrices(BT3, B3)
         Dim Ae4(,) As Double = MultiplyMatrices(BT4, B4)
-        Dim Ae(4, 4) As Double
+        Dim Ae(3, 3) As Double
         Dim i, j As Integer
         For i = 0 To 3
             For j = 0 To 3
@@ -145,9 +131,9 @@
         Dim yita As Double = coory
 
         J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
-        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 + (1 - zeta) * x2 + (1 + zeta) * x3 - (1 + zeta) * x4)
+        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
         J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
-        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 + (1 - zeta) * y2 + (1 + zeta) * y3 - (1 + zeta) * y4)
+        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
         DetJ = J(0, 0) * J(1, 1) - J(1, 0) * J(0, 1)
         Return DetJ
     End Function
@@ -178,7 +164,6 @@
                 ab(i, j) += sum
             Next
         Next
-
         Return ab
     End Function
 
