@@ -9,6 +9,9 @@ Public Class DiffusionXC
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
+
+        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information)
+
         'Computational parameter control
         NNodes = _NNodes
         NElements = _NElements
@@ -45,10 +48,11 @@ Public Class DiffusionXC
             Dim RHS() As Double
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-            Dim Hg() As Double = Hold 'Global H vector
             Dim cie As CIETrans
             Dim he As HETrans
             Dim k As Integer
+            Dim ie As Integer
+            'Matrix assembling
             For i = 0 To NElements - 1
                 Dim Hele() As Double
                 cie = New CIETrans(
@@ -63,40 +67,20 @@ Public Class DiffusionXC
                           )
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
-                'check boundary conditions on noeuds then construct elemental humidity vector
-                Hele = he.getHe
-                If Nodes(Elements(i).Node1 - 1).Bord = True Then
-                    Hele(0) = H_bound
-                Else
-                    Hele(0) = Hele(0)
-                End If
-                If Nodes(Elements(i).Node2 - 1).Bord = True Then
-                    Hele(1) = H_bound
-                Else
-                    Hele(1) = Hele(1)
-                End If
-                If Nodes(Elements(i).Node3 - 1).Bord = True Then
-                    Hele(2) = H_bound
-                Else
-                    Hele(2) = Hele(2)
-                End If
-                If Nodes(Elements(i).Node4 - 1).Bord = True Then
-                    Hele(3) = H_bound
-                Else
-                    Hele(3) = Hele(3)
-                End If
-
-                ' AssembleVg(he.getHe, Hg, i)
-
-
-
-
-
 
             Next
+
+            'check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.10
+            For ie = 0 To NNodes - 1
+                If Nodes(ie).Bord = True Then
+                    Hold(ie) = H_bound
+                End If
+            Next
+
             'now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
             LHS = getLHS(Ag, bg, dt)
             R = getRHS(Ag, bg, dt)
+
             'matrix & vector mulplification 
             RHS = MultiplyMatrixWithVector(R, Hold)
             'now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
@@ -105,9 +89,16 @@ Public Class DiffusionXC
 
             'data stockage
             For j = 0 To NNodes - 1
-                    Hm(ti, j) = Hnew(j)
-                Next
+                Hm(ti, j) = Hnew(j)
             Next
+        Next
+
+
+        Beep()
+
+        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
+
+
     End Sub
 
     'Getting the LHS matrix for Gauss matrix resolution
@@ -154,8 +145,9 @@ Public Class DiffusionXC
         Next
     End Sub
     'Assembling global vector /water diffusion
-    Private Sub AssembleVg(ByRef ve() As Double, ByRef Vg() As Double, ElementNo As Integer)
+    Private Function AssembleVg(ByRef ve() As Double, ByRef H() As Double, ElementNo As Integer)
         Dim i As Integer
+        Dim Vg() As Double = H
         Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
                                  getDOF(Elements(ElementNo).Node2 - 1),
                                  getDOF(Elements(ElementNo).Node3 - 1),
@@ -165,8 +157,8 @@ Public Class DiffusionXC
             dofi = dofs(i)
             Vg(dofi) = Vg(dofi) + ve(i)
         Next
-
-    End Sub
+        Return Vg
+    End Function
     Private Function MultiplyMatrixWithVector(ByRef a(,) As Double, ByRef b() As Double) As Double()
 
         Dim aRows As Integer = a.GetLength(0)
@@ -213,4 +205,15 @@ Public Class DiffusionXC
         Next
         Return X
     End Function
+
+
+    'Enregistrement des données dans les fichiers d'output
+    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Decimal)
+        Dim j As Short
+        'Register values
+        Print(CInt(nFic1), Temps / 365, ",", Temps, ",", TAB)
+        For j = CShort(1) To Dofs
+            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
+        Next j
+    End Sub
 End Class
