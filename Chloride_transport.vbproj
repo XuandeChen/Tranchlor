@@ -245,10 +245,12 @@
     <Compile Include="Functions.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FunctionsXC.vb" />
     <Compile Include="Graph1.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HETrans.vb" />
+    <Compile Include="HydriqueXC.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
     </Compile>

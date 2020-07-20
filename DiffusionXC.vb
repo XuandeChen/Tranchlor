@@ -9,9 +9,8 @@ Public Class DiffusionXC
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
-
+        ' start of computations
         MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information)
-
         'Computational parameter control
         NNodes = _NNodes
         NElements = _NElements
@@ -28,12 +27,37 @@ Public Class DiffusionXC
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim Hold(NNodes - 1) As Double
         Dim Hnew(NNodes - 1) As Double
-        'Initalization
+        Dim jj As Long
+        Dim nFic1 As Short
+        Dim outfile(1) As String
+        Dim Hsauv As Single = 20 'ouput time inteval (s)
+        Dim PosNode() As Decimal
+        Dim Hteller As Double
+        Hteller = CDbl(0)
+        'Globlal time loop
         Dim ti As Integer
+        Dim i, j As Integer
         For ti = 0 To ind
-            Dim i, j As Integer
+
+            'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
+            outfile(1) = "R_H_" & ".txt"
+            nFic1 = CShort(FreeFile())
+            FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
+            'step 0: Initialize output titres for result .txt files
+            Print(nFic1, "Relative Humidity Field,", Int(tmax / Hsauv), "_", nDof, TAB)
+            For jj = 0 To nDof - 1
+                PosNode(jj) = jj + 1
+                Print(CInt(nFic1), PosNode(jj), ",", TAB)
+            Next jj
+            PrintLine(CInt(nFic1), " ")
+            Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+            For jj = 0 To nDof - 1
+                Print(CInt(nFic1), Hnew(jj), ",", TAB)
+            Next jj
+            PrintLine(CInt(nFic1), " ")
+
+            ' step 1: initialisation
             T(ti) = 0 + dt * (ti - 0)
-            ' step 1 initialisation
             If ti = 0 Then
                 For i = 0 To nDof - 1
                     Hold(i) = H_int
@@ -42,7 +66,7 @@ Public Class DiffusionXC
                 Hold = Hnew
             End If
 
-            'elemental and global Matrix constructions
+            'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
             Dim RHS() As Double
@@ -70,64 +94,41 @@ Public Class DiffusionXC
 
             Next
 
-            'check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.10
+            'step 3: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.10
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
                     Hold(ie) = H_bound
                 End If
             Next
 
-            'now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
-            LHS = getLHS(Ag, bg, dt)
-            R = getRHS(Ag, bg, dt)
+            'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+            LHS = getLHS(NNodes, Ag, bg, dt)
+            R = getRHS(NNodes, Ag, bg, dt)
 
-            'matrix & vector mulplification 
+            'step 5: matrix & vector mulplification 
             RHS = MultiplyMatrixWithVector(R, Hold)
-            'now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            Hnew = getX(LHS, RHS)
-            'result update
+            'step 6: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            Hnew = GetX(LHS, RHS)
 
-            'data stockage
+            'step 7: data stockage
             For j = 0 To NNodes - 1
                 Hm(ti, j) = Hnew(j)
             Next
+            'step 7: result .txt file update
+
+            If ti >= CLng(Hteller) Then '1 an ou 365 jours
+                Hteller = Hteller + CDbl(Hsauv)
+                RegisterH(nFic1, ti, nDof, Hnew)
+                PrintLine(CInt(nFic1), " ")
+            End If
+
+            FileClose(CInt(nFic1))
         Next
-
-
         Beep()
-
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
-
 
     End Sub
 
-    'Getting the LHS matrix for Gauss matrix resolution
-    Private Function getLHS(ByRef A(,) As Double, ByRef b(,) As Double, dt As Double)
-        Dim LHS(NNodes - 1, NNodes - 1) As Double
-        Dim i, j As Integer
-        For i = 0 To NNodes - 1
-            For j = 0 To NNodes - 1
-                LHS(i, j) = A(i, j) / 2 + b(i, j) / dt
-            Next
-        Next
-        Return LHS
-    End Function
-    'Getting the RHS matrix for Gauss matrix resolution
-    Private Function getRHS(ByRef A(,) As Double, ByRef b(,) As Double, dt As Double)
-        Dim RHS(NNodes - 1, NNodes - 1) As Double
-        Dim i, j As Integer
-        For i = 0 To NNodes - 1
-            For j = 0 To NNodes - 1
-                RHS(i, j) = b(i, j) / dt - A(i, j) / 2
-            Next
-        Next
-        Return RHS
-    End Function
-    'Get degree of freedom /water diffusion
-    Private Function getDOF(NodeNo As Integer) As Integer
-        Dim nDofsPerNode As Integer = 1
-        Return (NodeNo) * nDofsPerNode
-    End Function
     'Assembling global matrix /water diffusion
     Private Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
         Dim i, j As Integer
@@ -159,60 +160,13 @@ Public Class DiffusionXC
         Next
         Return Vg
     End Function
-    Private Function MultiplyMatrixWithVector(ByRef a(,) As Double, ByRef b() As Double) As Double()
-
-        Dim aRows As Integer = a.GetLength(0)
-        Dim aCols As Integer = a.GetLength(1)
-        Dim ab(aRows - 1) As Double 'output will be a vector
-        For i As Integer = 0 To aRows - 1
-            ab(i) = 0.0
-            For j As Integer = 0 To aCols - 1
-                ab(i) += a(i, j) * b(j)
-            Next
-        Next
-
-        Return ab
-    End Function
-    Private Function getX(ByRef A(,) As Double, ByRef b() As Double)
-        Dim aRows As Integer = A.GetLength(0)
-        Dim aCols As Integer = A.GetLength(1)
-        Dim bRows As Integer = b.GetLength(0)
-        Dim m As Double
-        Dim i, j, k As Integer
-        Dim sum As Double
-        Dim s As Integer = bRows
-        Dim X(s - 1) As Double
-
-        For j = 0 To s - 2 Step 1
-            For i = s - 1 To j + 1 Step -1
-                m = A(i, j) / A(j, j)
-                For k = 0 To s - 1 Step 1
-                    A(i, k) = A(i, k) - m * A(j, k)
-                Next
-                'A(i, j) = A(i, j) - m * A(j, j)
-                b(i) = b(i) - m * b(j)
-            Next
-        Next
-
-        X(s - 1) = b(s - 1) / A(s - 1, s - 1)
-
-        For i = s - 2 To 0 Step -1
-            sum = 0
-            For j = s - 1 To i Step -1
-                sum = sum + A(i, j) * X(j)
-            Next
-            X(i) = (b(i) - sum) / A(i, i)
-        Next
-        Return X
-    End Function
-
 
     'Enregistrement des données dans les fichiers d'output
-    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Decimal)
+    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Double)
         Dim j As Short
         'Register values
         Print(CInt(nFic1), Temps / 365, ",", Temps, ",", TAB)
-        For j = CShort(1) To Dofs
+        For j = 0 To Dofs - 1
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
