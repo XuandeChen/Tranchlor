@@ -3,7 +3,7 @@ Imports System
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Linq
-' Xuande module de calcul diffusion 2D
+' Module de calcul diffusion 2D Xuande.2020.07.20
 Public Class DiffusionXC
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
@@ -31,7 +31,7 @@ Public Class DiffusionXC
         Dim nFic1 As Short
         Dim outfile(1) As String
         Dim Hsauv As Single = 20 'ouput time inteval (s)
-        Dim PosNode() As Decimal
+        Dim PosNode() As Integer
         Dim Hteller As Double
         Hteller = CDbl(0)
         'Globlal time loop
@@ -46,8 +46,7 @@ Public Class DiffusionXC
             'step 0: Initialize output titres for result .txt files
             Print(nFic1, "Relative Humidity Field,", Int(tmax / Hsauv), "_", nDof, TAB)
             For jj = 0 To nDof - 1
-                PosNode(jj) = jj + 1
-                Print(CInt(nFic1), PosNode(jj), ",", TAB)
+                Print(CInt(nFic1), jj + CShort(1), ",", TAB)
             Next jj
             PrintLine(CInt(nFic1), " ")
             Print(CInt(nFic1), "0", ",", "0", ",", TAB)

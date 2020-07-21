@@ -1,4 +1,6 @@
-﻿Module FunctionsXC
+﻿Imports System.Linq
+
+Module FunctionsXC
     'get the LHS matrix for Gauss matrix resolution
     Public Function getLHS(ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         Dim LHS(NNodes - 1, NNodes - 1) As Double
@@ -6,6 +8,16 @@
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
                 LHS(i, j) = A(i, j) / 2 + b(i, j) / dt
+            Next
+        Next
+        Return LHS
+    End Function
+    Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        Dim LHS(NNodes - 1, NNodes - 1) As Double
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                LHS(i, j) = phi * A(i, j) / 2 + b(i, j) / dt
             Next
         Next
         Return LHS
@@ -20,6 +32,16 @@
             Next
         Next
         Return RHS
+    End Function
+    Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        Dim R(NNodes - 1, NNodes - 1) As Double
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                R(i, j) = -b(i, j) / dt - phi * A(i, j) / 2
+            Next
+        Next
+        Return R
     End Function
     'get degree of freedom /water diffusion
     Public Function getDOF(NodeNo As Integer) As Integer
@@ -134,5 +156,16 @@
         Dim f As Double
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
+    End Function
+    'isotherm function 'to analyse and complet 2020.07.20
+    Public Function GetHtoS(ByRef H As Double)
+        Dim S As Double
+        Return S
+    End Function
+    'get average of humidity on an element 
+    Public Function GetAvgH(ByRef He() As Double)
+        Dim H_avg As Double
+        H_avg = He.Average()
+        Return H_avg
     End Function
 End Module
