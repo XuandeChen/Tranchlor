@@ -829,6 +829,9 @@ b:      'user pressed cancel error
         d.Filter = "Mesh files (*.msh)|*.msh"
 
         If d.ShowDialog = DialogResult.OK Then
+
+            Dim directoryPath As String = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
+
             If ReadFile(d.FileName) = False Then
                 MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
                 MeshFileOk = False
@@ -837,6 +840,7 @@ b:      'user pressed cancel error
                 MeshFileOk = True
             End If
             'DrawModel()
+
         End If
     End Sub
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
