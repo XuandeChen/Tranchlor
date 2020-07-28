@@ -281,6 +281,7 @@
     <Compile Include="PointLoad.vb" />
     <Compile Include="Range.vb" />
     <Compile Include="CIETrans.vb" />
+    <Compile Include="SETrans.vb" />
     <Compile Include="Support.vb" />
     <Compile Include="TempSeuil.vb">
       <SubType>Form</SubType>

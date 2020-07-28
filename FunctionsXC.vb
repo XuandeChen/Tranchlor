@@ -38,7 +38,7 @@ Module FunctionsXC
         Dim i, j As Integer
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
-                R(i, j) = -b(i, j) / dt - phi * A(i, j) / 2
+                R(i, j) = b(i, j) / dt - phi * A(i, j) / 2
             Next
         Next
         Return R
@@ -98,36 +98,40 @@ Module FunctionsXC
     End Function
 
     ''liquid water transport functions: (Equation and formula from Marc Mainguy, 2001)
-    'relative permeability function (Equation and formula from Marc Mainguy, 2001 & derived from VanGnuchten, 1980)
+    'relative permeability function (Equation and formula from Marc Mainguy, 2001 & derived from VanGnuchten, 1980) 
     Public Function Getkr(ByRef saturation As Double, ByRef beta As Double)
         Dim S As Double = saturation
-        Dim m As Double = 1 / beta
-        Dim kr As Double
-        kr = Math.Sqrt(1 - S) * (1 - S ^ (1 / m)) ^ (2 * m)
+        Dim sa_irr As Double = 0.00001
+        Dim sb_irr As Double = 0.00001
+        Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
+        Dim kr_b_max As Double = 1
+        Dim kr As Double = kr_b_max * s_eff ^ beta
         Return kr
     End Function
 
     'liquid capillary pressure function (Equation and formula from Marc Mainguy, 2001)
-    Public Function Getpc(ByRef saturation As Double, ByRef alpha As Double, ByRef beta As Double)
+    Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double)
         Dim S As Double = saturation
-        'Dim alpha As Double = 18.6237 'BO, for CO alpha = 37.5479
-        'Dim beta As Double = 2.2748 'BO, for CO beta = 2.1684
-        Dim pc As Double
-        pc = alpha * (S ^ (-beta) - 1) ^ (1 - 1 / beta)
+        Dim n As Double = 1 / (1 - m)
+        Dim s_pc_irr As Double = 0.00001
+        Dim s_pc_max As Double = 1
+        Dim Sb_pc As Double = (S - s_pc_irr) / (s_pc_max - s_pc_irr)
+        Dim pc As Double = pc_0 * ((Sb_pc ^ (-1 / m) - 1) ^ (1 / n))
         Return pc
     End Function
     'derivation of the capillary pressure function 
-    Public Function GetdpcdS(ByRef saturation As Double, ByRef alpha As Double, ByRef beta As Double)
+    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double)
         Dim dpcdS As Double
         Dim S As Double = saturation
-        dpcdS = alpha * (S ^ (-beta) - 1) ^ (1 - 1 / beta)
+        Dim n As Double = 1 / (1 - m)
+        dpcdS = (pc_0 * (1 / S ^ (1 / m) - 1) ^ (1 / n)) / (m * n * S * (S ^ (1 / m) - 1))
         Return dpcdS
     End Function
 
     'liquid-water contribution to the moisture diffusivity [cm2/s] 
     Public Function GetDl(ByRef K As Double, ByRef yita_l As Double, ByRef dpcdS As Double, ByRef kr As Double)
         Dim Dl As Double
-        Dl = dpcdS * K * kr / yita_l
+        Dl = -dpcdS * K * kr / yita_l
         Return Dl
     End Function
 
@@ -157,9 +161,11 @@ Module FunctionsXC
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
     End Function
-    'isotherm function 'to analyse and complet 2020.07.20
+    'isotherm function 
+    'need to analyse and complet Xuande 2020.07.20
     Public Function GetHtoS(ByRef H As Double)
         Dim S As Double
+        S = H
         Return S
     End Function
     'get average of humidity on an element 
