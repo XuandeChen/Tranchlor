@@ -837,9 +837,6 @@ b:      'user pressed cancel error
         d.Title = "Open Mesh file"
         d.Filter = "Mesh files (*.msh)|*.msh"
         If d.ShowDialog = DialogResult.OK Then
-
-            Dim directoryPath As String = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
-
             If ReadFile(d.FileName) = False Then
                 MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
                 MeshFileOk = False
@@ -866,7 +863,7 @@ b:      'user pressed cancel error
 
         End If
     End Sub
-
+    'Operation pour transport diffusion 2D  'Xuande 27/07/2020
     Private Sub MenuItem17_Click(sender As Object, e As EventArgs) Handles MenuItem17.Click
         'check if there is a proper model
         If NElements <= 0 OrElse NNodes <= 0 Then

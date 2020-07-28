@@ -37,7 +37,7 @@ Public Class DiffusionXC
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
 
-        ' step 0: Initialize output titres for result .txt files
+        'step 0: Initialize output titres for result .txt files
         Print(nFic1, "RH", ",", nDof, ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
@@ -62,7 +62,16 @@ Public Class DiffusionXC
                 H_old = H_new
             End If
 
-            'step 2: elemental and global Matrix constructions
+
+            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
+            Dim ie As Integer
+            For ie = 0 To NNodes - 1
+                If Nodes(ie).Bord = True Then
+                    H_old(ie) = H_bound
+                End If
+            Next
+
+            'step 3: elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
             Dim RHS() As Double
@@ -70,7 +79,6 @@ Public Class DiffusionXC
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim he As HETrans
-            Dim ie As Integer
             'Matrix assembling
             For i = 0 To NElements - 1
                 cie = New CIETrans(
@@ -86,13 +94,6 @@ Public Class DiffusionXC
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
 
-            Next
-
-            'step 3: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.10
-            For ie = 0 To NNodes - 1
-                If Nodes(ie).Bord = True Then
-                    H_old(ie) = H_bound
-                End If
             Next
 
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS

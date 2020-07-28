@@ -35,7 +35,7 @@ Public Class HydriqueXC
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
         Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
-        Dim beta As Double = 2.1684 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
         Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
         Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
         Dim phi As Double = 0.05 'porosity (-)
