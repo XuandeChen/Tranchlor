@@ -21,11 +21,13 @@ Public Class frmbtFem
     'Halifax, NS
     'Canada
 
-    Private NNodes, NElements, NPointLoads, NSupports As Integer
+    Private NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
     Private ElasticityModulus, Thickness, PoissonRatio As Double
 
-    Private Nodes() As Node
-    Private Elements() As Element
+    Private Nodes() As NodeTrans
+    Private Elements() As ElementTrans
+    Private MeshFileOk As Boolean = False
+
     Private PointLoads() As PointLoad
     Private Supports() As Support
     Private Deformations() As Double 'the deformation vector
@@ -33,6 +35,8 @@ Public Class frmbtFem
     Private ShowModel As Boolean = True
     Private ShowNodeNumbers As Boolean = False
     Private ShowElementsOnDeformedShape As Boolean = True
+
+    Dim diff As New DiffusionXC
 
     Private colorMap As ColorMap
     Private SigmaXRange, SigmaYRange, TauXYRange As Range
@@ -64,12 +68,22 @@ Public Class frmbtFem
 
 
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
+
         Dim d As New OpenFileDialog
-        d.Title = "Open FEM file"
-        d.Filter = "FEm Files (*.fem)|*.fem|All Files|*.*"
+        'd.Title = "Open FEM file"
+        d.Title = "Open Mesh file"
+        'd.Filter = "FEm Files (*.fem)|*.fem|All Files|*.*"
+        d.Filter = "Mesh Files (*.msh)|*.msh"
+
         If d.ShowDialog = DialogResult.OK Then
             ClearAnalysisOutput()
-            If ReadFile(d.FileName) = False Then Return
+            If ReadFile(d.FileName) = False Then
+                MeshFileOk = False
+                MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+                Return
+            End If
+            '        MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+            MeshFileOk = True
             DrawModel()
         End If
     End Sub
@@ -314,118 +328,253 @@ Public Class frmbtFem
         Return hbw
     End Function
 
-
-    Private Function ReadFile(f As String) As Boolean
+    Public Function ReadFile(f As String) As Boolean
         Try
+
             Dim sr As New StreamReader(f)
             Dim s As String
-            Dim Arr() As String
+            Dim Arr(0) As String
+            Dim Temp As String
+            Dim i As Integer
+            Dim j As Integer
+            Dim jj As Integer
+            Dim k As Integer
+            Dim NN(0) As Integer
+            Dim XX(0), YY(0), ZZ(0) As Double
+            Dim n0 As Integer
+            Dim n, n1, n2, n3, n4 As Integer
+            Dim x, y, z As Double
+            Dim brd As Boolean
+            Dim bloc_node As Integer
+            Dim bloc_type As Integer
+            Dim bloc_element As Integer
+
+            'Skip the version data
+            Temp = readLine(sr)
+
+            'Skip the unnecessary first few lines
+            Do While Temp <> "$Nodes"
+                Temp = sr.ReadLine.Trim
+            Loop
+
+            'Read total number of nodes and blocks 
             s = readLine(sr)
-            Arr = Split(s, ","c)
-
+            Arr = Split(s, " "c)
             Try
-                NNodes = Integer.Parse(Arr(0))
-                NElements = Integer.Parse(Arr(1))
-                NPointLoads = Integer.Parse(Arr(2))
-                NSupports = Integer.Parse(Arr(3))
-
-                ElasticityModulus = Double.Parse(Arr(4))
-                PoissonRatio = Double.Parse(Arr(5))
-                Thickness = Double.Parse(Arr(6))
+                Nbloc = Integer.Parse(Arr(0))
+                NNodes = Integer.Parse(Arr(1))
             Catch ex As Exception
                 MsgBox(ex.Message)
                 Return False
             End Try
 
-            'got the basics.. now, lets read each entity
+            'Read node coordinates block by block
             ReDim Nodes(NNodes - 1)
-            ReDim Elements(NElements - 1)
-
-            Dim i As Integer
-            Dim n, n1, n2, n3 As Integer
-            Dim x, y As Double
-            For i = 0 To NNodes - 1
+            For i = 0 To Nbloc - 1
+                'read bloc information for how many nodes should be read inside
                 s = readLine(sr)
-                s = s.Replace(vbTab, "")
-
-                Try
-                    Arr = Split(s, ","c)
+                Arr = Split(s, " "c)
+                bloc_type = Integer.Parse(Arr(0))
+                bloc_node = Integer.Parse(Arr(3))
+                ReDim NN(bloc_node - 1)
+                ReDim XX(bloc_node - 1)
+                ReDim YY(bloc_node - 1)
+                ReDim ZZ(bloc_node - 1)
+                For j = 0 To bloc_node - 1
+                    'read first lines of node number
+                    s = readLine(sr)
+                    Arr = Split(s, " "c)
                     n = Integer.Parse(Arr(0))
-                    x = Double.Parse(Arr(1))
-                    y = Double.Parse(Arr(2))
-                    Nodes(i) = New Node(n, x, y)
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                    Return False
-                End Try
+                    NN(j) = n
+                Next
+                'read corresponding lines of coordinates
+                For k = 0 To bloc_node - 1
+                    'judging wether points of current block belongs to the boundary
+                    If bloc_type <= 1 Then
+                        brd = True
+                    Else
+                        brd = False
+                    End If
+                    'read corresponding lines of coordinates
+                    s = readLine(sr)
+                    Arr = Split(s, " "c)
+                    x = CDbl(Arr(0))
+                    XX(k) = x
+                    y = CDbl(Arr(1))
+                    YY(k) = y
+                    z = CDbl(Arr(2))
+                    ZZ(k) = z
+                    Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), brd)
+                Next
             Next
 
-            'read elements
-            For i = 0 To NElements - 1
+            s = readLine(sr)
+            s = readLine(sr)
+
+            'Read total number of elements and blocks 
+            s = readLine(sr)
+            Arr = Split(s, " "c)
+            Try
+                Nbloc = Integer.Parse(Arr(0))
+                NElements = Integer.Parse(Arr(1))
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                Return False
+            End Try
+
+            'Read element connectivity block by block
+            For i = 0 To Nbloc - 1
+                'read bloc information for how many nodes should be read inside
                 s = readLine(sr)
-                Try
-                    Arr = Split(s, ","c)
-                    n = Integer.Parse(Arr(0))
-                    n1 = Integer.Parse(Arr(1))
-                    n2 = Integer.Parse(Arr(2))
-                    n3 = Integer.Parse(Arr(3))
+                Arr = Split(s, " "c)
+                bloc_type = Integer.Parse(Arr(0))
+                bloc_element = Integer.Parse(Arr(3))
+                If bloc_type = 0 Then
+                    Temp = readLine(sr)
+                End If
 
-                    Elements(i) = New Element(n, n1, n2, n3)
+                If bloc_type = 1 Then
+                    For j = 0 To bloc_element - 1
+                        Temp = readLine(sr)
+                        Arr = Split(Temp, " "c)
+                        n0 = Integer.Parse(Arr(0))
+                    Next
+                End If
 
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                    Return False
-                End Try
+                If bloc_type = 2 Then
+                    NElements = bloc_element
+                    ReDim Elements(NElements - 1)
+                    For jj = 0 To bloc_element - 1
+                        s = readLine(sr)
+                        Arr = Split(s, " "c)
+                        n = Integer.Parse(Arr(0)) - n0
+                        n1 = Integer.Parse(Arr(1))
+                        n2 = Integer.Parse(Arr(2))
+                        n3 = Integer.Parse(Arr(3))
+                        n4 = Integer.Parse(Arr(4))
+                        Elements(jj) = New ElementTrans(n, n1, n2, n3, n4)
+                    Next
+                End If
+
             Next
-
-            'Read Point Loads
-            ReDim PointLoads(NPointLoads - 1)
-            Dim Fx, Fy As Double
-            Dim ln As Integer
-            For i = 0 To NPointLoads - 1
-                s = readLine(sr)
-                Try
-                    Arr = Split(s, ","c)
-                    ln = Integer.Parse(Arr(0))
-                    n = Integer.Parse(Arr(1))
-                    Fx = Double.Parse(Arr(2))
-                    Fy = Double.Parse(Arr(3))
-
-                    PointLoads(i) = New PointLoad(ln, n, Fx, Fy)
-
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                    Return False
-                End Try
-            Next
-
-            'Read supports
-            ReDim Supports(NSupports - 1)
-            Dim sn, Rx, Ry As Integer
-            For i = 0 To NSupports - 1
-                s = readLine(sr)
-                Try
-                    Arr = Split(s, ","c)
-                    sn = Integer.Parse(Arr(0))
-                    n = Integer.Parse(Arr(1))
-                    Rx = Integer.Parse(Arr(2))
-                    Ry = Integer.Parse(Arr(3))
-
-                    Supports(i) = New Support(sn, n, Rx, Ry)
-
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                    Return False
-                End Try
-            Next
-
-
         Catch ex As Exception
             MsgBox(ex.Message)
             Return False
         End Try
         Return True
     End Function
+
+    'Private Function ReadFile(f As String) As Boolean
+    '    Try
+    '        Dim sr As New StreamReader(f)
+    '        Dim s As String
+    '        Dim Arr() As String
+    '        s = readLine(sr)
+    '        Arr = Split(s, ","c)
+
+    '        Try
+    '            NNodes = Integer.Parse(Arr(0))
+    '            NElements = Integer.Parse(Arr(1))
+    '            NPointLoads = Integer.Parse(Arr(2))
+    '            NSupports = Integer.Parse(Arr(3))
+
+    '            ElasticityModulus = Double.Parse(Arr(4))
+    '            PoissonRatio = Double.Parse(Arr(5))
+    '            Thickness = Double.Parse(Arr(6))
+    '        Catch ex As Exception
+    '            MsgBox(ex.Message)
+    '            Return False
+    '        End Try
+
+    '        'got the basics.. now, lets read each entity
+    '        ReDim Nodes(NNodes - 1)
+    '        ReDim Elements(NElements - 1)
+
+    '        Dim i As Integer
+    '        Dim n, n1, n2, n3 As Integer
+    '        Dim x, y As Double
+    '        For i = 0 To NNodes - 1
+    '            s = readLine(sr)
+    '            s = s.Replace(vbTab, "")
+
+    '            Try
+    '                Arr = Split(s, ","c)
+    '                n = Integer.Parse(Arr(0))
+    '                x = Double.Parse(Arr(1))
+    '                y = Double.Parse(Arr(2))
+    '                Nodes(i) = New Node(n, x, y)
+    '            Catch ex As Exception
+    '                MsgBox(ex.Message)
+    '                Return False
+    '            End Try
+    '        Next
+
+    '        'read elements
+    '        For i = 0 To NElements - 1
+    '            s = readLine(sr)
+    '            Try
+    '                Arr = Split(s, ","c)
+    '                n = Integer.Parse(Arr(0))
+    '                n1 = Integer.Parse(Arr(1))
+    '                n2 = Integer.Parse(Arr(2))
+    '                n3 = Integer.Parse(Arr(3))
+
+    '                Elements(i) = New Element(n, n1, n2, n3)
+
+    '            Catch ex As Exception
+    '                MsgBox(ex.Message)
+    '                Return False
+    '            End Try
+    '        Next
+
+    '        'Read Point Loads
+    '        ReDim PointLoads(NPointLoads - 1)
+    '        Dim Fx, Fy As Double
+    '        Dim ln As Integer
+    '        For i = 0 To NPointLoads - 1
+    '            s = readLine(sr)
+    '            Try
+    '                Arr = Split(s, ","c)
+    '                ln = Integer.Parse(Arr(0))
+    '                n = Integer.Parse(Arr(1))
+    '                Fx = Double.Parse(Arr(2))
+    '                Fy = Double.Parse(Arr(3))
+
+    '                PointLoads(i) = New PointLoad(ln, n, Fx, Fy)
+
+    '            Catch ex As Exception
+    '                MsgBox(ex.Message)
+    '                Return False
+    '            End Try
+    '        Next
+
+    '        'Read supports
+    '        ReDim Supports(NSupports - 1)
+    '        Dim sn, Rx, Ry As Integer
+    '        For i = 0 To NSupports - 1
+    '            s = readLine(sr)
+    '            Try
+    '                Arr = Split(s, ","c)
+    '                sn = Integer.Parse(Arr(0))
+    '                n = Integer.Parse(Arr(1))
+    '                Rx = Integer.Parse(Arr(2))
+    '                Ry = Integer.Parse(Arr(3))
+
+    '                Supports(i) = New Support(sn, n, Rx, Ry)
+
+    '            Catch ex As Exception
+    '                MsgBox(ex.Message)
+    '                Return False
+    '            End Try
+    '        Next
+
+
+    '    Catch ex As Exception
+    '        MsgBox(ex.Message)
+    '        Return False
+    '    End Try
+    '    Return True
+    'End Function
 
     Private Sub btnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
         zoom = 1
@@ -473,9 +622,9 @@ Public Class frmbtFem
         Dim shifty As Integer = pbModel.Height - MarginY - vs.Value
 
         Dim i As Integer
-        Dim n1, n2, n3 As Integer
+        Dim n1, n2, n3, n4 As Integer
 
-        Dim ptsf(2) As PointF
+        Dim ptsf(3) As PointF
 
 
         'Draw the undeformed model
@@ -488,9 +637,14 @@ Public Class frmbtFem
                 n2 = Elements(i).Node2 - 1
                 n3 = Elements(i).Node3 - 1
 
+                n4 = Elements(i).Node4 - 1
+
                 ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
                 ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
                 ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
+
+                ptsf(3) = New PointF(CSng(Nodes(n4).x * zoom + shiftx), CSng(-Nodes(n4).y * zoom + shifty))
+
 
                 'Draw the element
                 gr.FillPolygon(New SolidBrush(eleColor), ptsf)
@@ -696,7 +850,7 @@ Public Class frmbtFem
     End Function
 
 
-    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs)
         If MsgBox("Are you sure you want to exit?", MsgBoxStyle.OkCancel) = MsgBoxResult.Ok Then
             End
         End If
@@ -725,12 +879,14 @@ Public Class frmbtFem
         'check if there is a proper model
         If NElements <= 0 OrElse NNodes <= 0 Then
             'there are no elements defined
-            MsgBox("Please open a proper finite element model")
+            'MsgBox("Please open a proper finite element model")
+            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
             Return
         End If
 
         'perform analysis using the finite elemeent method
-        Analyse()
+        'Analyse()
+        diff.Analyse(NNodes, NElements, Nodes, Elements)
 
         'show the output
         DrawModel()

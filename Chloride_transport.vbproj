@@ -383,6 +383,11 @@
     <Content Include="Resources\Exposition\EXPO_M_EXT_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_O_DAVOS.txt" />
+    <None Include="Resources\MeshFiles\test1ele.msh" />
+    <None Include="Resources\MeshFiles\test2ele.msh" />
+    <None Include="Resources\MeshFiles\test3eleL.msh" />
+    <None Include="Resources\MeshFiles\test4ele.msh" />
+    <None Include="Resources\MeshFiles\test8ele.msh" />
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

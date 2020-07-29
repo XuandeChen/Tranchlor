@@ -75,6 +75,7 @@ Public Class DiffusionXC
             Dim he As HETrans
             Dim k As Integer
             Dim ie As Integer
+
             'Matrix assembling
             For i = 0 To NElements - 1
                 Dim Hele() As Double
@@ -123,6 +124,13 @@ Public Class DiffusionXC
 
             FileClose(CInt(nFic1))
         Next
+
+        For i = 0 To NElements - 1
+
+            Elements(i).Stresses(0) = (Hm(ind - 1, 0) + Hm(ind - 1, 1) + Hm(ind - 1, 2) + Hm(ind - 1, 3)) / 4
+
+        Next
+
         Beep()
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
 
