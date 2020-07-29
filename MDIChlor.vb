@@ -51,7 +51,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem13 As MenuItem
     Friend WithEvents MenuItem14 As MenuItem
     Friend WithEvents MenuItem15 As MenuItem
-    Friend WithEvents MenuItem16 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents Diff2D As MenuItem
     Friend WithEvents MenuItem17 As MenuItem
@@ -68,7 +67,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem1 = New System.Windows.Forms.MenuItem()
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.Diff2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuItem7 = New System.Windows.Forms.MenuItem()
@@ -135,32 +133,27 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
-        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem16, Me.Diff2D, Me.MenuItem17, Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
+        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8, Me.Diff2D})
         Me.MenuItem5.Text = "&Transport model"
-        '
-        'MenuItem16
-        '
-        Me.MenuItem16.Index = 0
-        Me.MenuItem16.Text = "&GeometryFile"
         '
         'Diff2D
         '
-        Me.Diff2D.Index = 1
-        Me.Diff2D.Text = "2DDiff"
+        Me.Diff2D.Index = 3
+        Me.Diff2D.Text = "Calcul 2D"
         '
         'MenuItem6
         '
-        Me.MenuItem6.Index = 3
+        Me.MenuItem6.Index = 0
         Me.MenuItem6.Text = "In&put"
         '
         'MenuItem7
         '
-        Me.MenuItem7.Index = 4
+        Me.MenuItem7.Index = 1
         Me.MenuItem7.Text = "&Calcul"
         '
         'MenuItem8
         '
-        Me.MenuItem8.Index = 5
+        Me.MenuItem8.Index = 2
         Me.MenuItem8.Text = "&Graph"
         '
         'MenuItem3
@@ -831,23 +824,46 @@ b:      'user pressed cancel error
         End Using
     End Sub
 
-    'Lecture du fichier Maillage dans le menu 'Xuande 10/06/2020
-    Private Sub MenuItem16_Click(sender As Object, e As EventArgs) Handles MenuItem16.Click
-        Dim d As New OpenFileDialog
-        d.Title = "Open Mesh file"
-        d.Filter = "Mesh files (*.msh)|*.msh"
-        If d.ShowDialog = DialogResult.OK Then
-            If ReadFile(d.FileName) = False Then
-                MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
-                MeshFileOk = False
-            ElseIf ReadFile(d.FileName) = True Then
-                MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
-                MeshFileOk = True
-                directoryPath = Path.GetDirectoryName(d.FileName)
-            End If
-            'DrawModel()
+    'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
+    Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
 
-        End If
+        ''Lecture du fichier Maillage dans le menu 'Xuande 10/06/2020
+        'Dim d As New OpenFileDialog
+        'Dim directoryPath As String
+        'd.Title = "Open Mesh file"
+        'd.Filter = "Mesh files (*.msh)|*.msh"
+
+        'If d.ShowDialog = DialogResult.OK Then
+
+        '    If ReadFile(d.FileName) = False Then
+        '        MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+        '        MeshFileOk = False
+        '    ElseIf ReadFile(d.FileName) = True Then
+        '        MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+        '        MeshFileOk = True
+        '    End If
+        '    'DrawModel()
+
+        'End If
+
+        'directoryPath = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
+
+        ''check if there is a proper model
+        'If NElements <= 0 OrElse NNodes <= 0 Then
+        '    'there are no elements defined
+        '    MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+        'Else
+        '    MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+        '    'perform analysis using the 2D finite element diffusion module 
+        '    diff.Analyse(NNodes, NElements, Nodes, Elements)
+        '    Return
+
+        'End If
+
+        Using frm04 As New frmbtFem
+            frm04.ShowDialog()
+        End Using
+
     End Sub
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
     Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click

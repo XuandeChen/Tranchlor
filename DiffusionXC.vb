@@ -79,6 +79,9 @@ Public Class DiffusionXC
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim he As HETrans
+            Dim k As Integer
+            Dim ie As Integer
+
             'Matrix assembling
             For i = 0 To NElements - 1
                 cie = New CIETrans(
@@ -115,8 +118,8 @@ Public Class DiffusionXC
                 PrintLine(CInt(nFic1), " ")
             End If
 
+            FileClose(CInt(nFic1))
         Next
-        FileClose(CInt(nFic1))
         Beep()
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
