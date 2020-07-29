@@ -8,64 +8,70 @@ Public Class DiffusionXC
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
-    Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
+    Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans, ByRef directory As String)
         ' start of computations
-        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information)
+        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
         'Computational parameter control
         NNodes = _NNodes
         NElements = _NElements
         Nodes = _Nodes
         Elements = _Elements
         Dim nDof As Integer = NNodes
-        Dim H_int As Double = 1 'initial relative humidity
+        Dim H_int As Double = 0.999 'initial relative humidity
         Dim H_bound As Double = 0.25 'boundary relative humidity
-        Dim DiffCoeff As Double = 0.0002
-        Dim dt As Double = 1 'time interval (s)
-        Dim tmax As Double = 100 'end time (s)
+        Dim DiffCoeff As Double = 0.000217
+        Dim dt As Double = 3600 'time interval (s)
+        Dim tmax As Double = 86400 'end time (s) 24h
         Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim Hold(NNodes - 1) As Double
-        Dim Hnew(NNodes - 1) As Double
+        Dim H_old(NNodes - 1) As Double
+        Dim H_new(NNodes - 1) As Double
         Dim jj As Long
         Dim nFic1 As Short
         Dim outfile(1) As String
-        Dim Hsauv As Single = 20 'ouput time inteval (s)
-        Dim PosNode() As Integer
-        Dim Hteller As Double
-        Hteller = CDbl(0)
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
+
+        'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
+        outfile(1) = directory & "\" & "R_H" & ".txt"
+        nFic1 = CShort(FreeFile())
+        FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
+
+        'step 0: Initialize output titres for result .txt files
+        Print(nFic1, "RH", ",", nDof, ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
+        Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), H_int, ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
         'Globlal time loop
         Dim ti As Integer
-        Dim i, j As Integer
+        Dim i, j, k As Integer
         For ti = 0 To ind
-
-            'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
-            outfile(1) = "R_H_" & ".txt"
-            nFic1 = CShort(FreeFile())
-            FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
-            'step 0: Initialize output titres for result .txt files
-            Print(nFic1, "Relative Humidity Field,", Int(tmax / Hsauv), "_", nDof, TAB)
-            For jj = 0 To nDof - 1
-                Print(CInt(nFic1), jj + CShort(1), ",", TAB)
-            Next jj
-            PrintLine(CInt(nFic1), " ")
-            Print(CInt(nFic1), "0", ",", "0", ",", TAB)
-            For jj = 0 To nDof - 1
-                Print(CInt(nFic1), Hnew(jj), ",", TAB)
-            Next jj
-            PrintLine(CInt(nFic1), " ")
-
             ' step 1: initialisation
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
                 For i = 0 To nDof - 1
-                    Hold(i) = H_int
+                    H_old(i) = H_int
                 Next
             Else
-                Hold = Hnew
+                H_old = H_new
             End If
 
-            'step 2: elemental and global Matrix constructions
+
+            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
+            Dim ie As Integer
+            For ie = 0 To NNodes - 1
+                If Nodes(ie).Bord = True Then
+                    H_old(ie) = H_bound
+                End If
+            Next
+
+            'step 3: elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
             Dim RHS() As Double
@@ -78,7 +84,6 @@ Public Class DiffusionXC
 
             'Matrix assembling
             For i = 0 To NElements - 1
-                Dim Hele() As Double
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
@@ -86,53 +91,37 @@ Public Class DiffusionXC
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
                           DiffCoeff)
                 he = New HETrans(
-                          Hold(Elements(i).Node1 - 1), Hold(Elements(i).Node2 - 1),
-                          Hold(Elements(i).Node3 - 1), Hold(Elements(i).Node4 - 1)
+                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
                           )
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
 
             Next
 
-            'step 3: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.10
-            For ie = 0 To NNodes - 1
-                If Nodes(ie).Bord = True Then
-                    Hold(ie) = H_bound
-                End If
-            Next
-
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
             LHS = getLHS(NNodes, Ag, bg, dt)
             R = getRHS(NNodes, Ag, bg, dt)
+            RHS = MultiplyMatrixWithVector(R, H_old)
 
-            'step 5: matrix & vector mulplification 
-            RHS = MultiplyMatrixWithVector(R, Hold)
-            'step 6: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            Hnew = GetX(LHS, RHS)
+            'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            H_new = GetX(LHS, RHS)
 
-            'step 7: data stockage
+            'step 6: data stockage
             For j = 0 To NNodes - 1
-                Hm(ti, j) = Hnew(j)
+                Hm(ti, j) = H_new(j)
             Next
-            'step 7: result .txt file update
 
-            If ti >= CLng(Hteller) Then '1 an ou 365 jours
-                Hteller = Hteller + CDbl(Hsauv)
-                RegisterH(nFic1, ti, nDof, Hnew)
+            'step 7: result .txt file update
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time 
+                RegisterH(nFic1, ti * dt, nDof, H_new)
                 PrintLine(CInt(nFic1), " ")
             End If
 
             FileClose(CInt(nFic1))
         Next
-
-        For i = 0 To NElements - 1
-
-            Elements(i).Stresses(0) = (Hm(ind - 1, 0) + Hm(ind - 1, 1) + Hm(ind - 1, 2) + Hm(ind - 1, 3)) / 4
-
-        Next
-
         Beep()
-        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
+        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
     End Sub
 
@@ -172,7 +161,7 @@ Public Class DiffusionXC
     Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Double)
         Dim j As Short
         'Register values
-        Print(CInt(nFic1), Temps / 365, ",", Temps, ",", TAB)
+        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
         For j = 0 To Dofs - 1
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j

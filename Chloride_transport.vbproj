@@ -281,6 +281,7 @@
     <Compile Include="PointLoad.vb" />
     <Compile Include="Range.vb" />
     <Compile Include="CIETrans.vb" />
+    <Compile Include="SETrans.vb" />
     <Compile Include="Support.vb" />
     <Compile Include="TempSeuil.vb">
       <SubType>Form</SubType>
@@ -387,6 +388,8 @@
     <None Include="Resources\MeshFiles\test2ele.msh" />
     <None Include="Resources\MeshFiles\test3eleL.msh" />
     <None Include="Resources\MeshFiles\test4ele.msh" />
+    <None Include="Resources\MeshFiles\test50ele.msh" />
+    <None Include="Resources\MeshFiles\test800ele.msh" />
     <None Include="Resources\MeshFiles\test8ele.msh" />
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -53,6 +53,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents Diff2D As MenuItem
+    Friend WithEvents MenuItem17 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -77,6 +78,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem11 = New System.Windows.Forms.MenuItem()
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.MenuItem17 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -186,6 +188,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12.Index = 1
         Me.MenuItem12.Text = "Version"
         '
+        'MenuItem17
+        '
+        Me.MenuItem17.Index = 2
+        Me.MenuItem17.Text = "2DTransport"
+        '
         'MDIChlor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
@@ -209,6 +216,8 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Dim frm01 As frmOption1
     Dim frmC As New frmChlor
     Dim diff As New DiffusionXC
+    Dim transport As New HydriqueXC
+    Dim directoryPath As String
 
     ' Xuande 10/06/2020
     Private Nodes() As NodeTrans
@@ -856,8 +865,33 @@ b:      'user pressed cancel error
         End Using
 
     End Sub
+    'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
+    Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
+        'check if there is a proper model
+        If NElements <= 0 OrElse NNodes <= 0 Then
+            'there are no elements defined
+            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+        Else
+            MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+            'perform analysis using the 2D finite element diffusion module 
+            diff.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
+            Return
 
-
+        End If
+    End Sub
+    'Operation pour transport diffusion 2D  'Xuande 27/07/2020
+    Private Sub MenuItem17_Click(sender As Object, e As EventArgs) Handles MenuItem17.Click
+        'check if there is a proper model
+        If NElements <= 0 OrElse NNodes <= 0 Then
+            'there are no elements defined
+            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+        Else
+            MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+            'perform analysis using the 2D finite element transport module 
+            transport.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
+            Return
+        End If
+    End Sub
     'Lecture de fichier .msh 'Xuande  10/06/2020
     Public Function ReadFile(f As String) As Boolean
         Try

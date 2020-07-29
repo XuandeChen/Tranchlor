@@ -12,7 +12,7 @@
                h1 As Double, h2 As Double,
                h3 As Double, h4 As Double)
         Me.h1 = h1 : Me.h2 = h2
-        Me.h2 = h3 : Me.h4 = h4
+        Me.h3 = h3 : Me.h4 = h4
     End Sub
     'Construct the elemental vector
     Public Function getHe() As Double()
