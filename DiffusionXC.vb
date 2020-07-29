@@ -79,8 +79,6 @@ Public Class DiffusionXC
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim he As HETrans
-            Dim k As Integer
-            Dim ie As Integer
 
             'Matrix assembling
             For i = 0 To NElements - 1
