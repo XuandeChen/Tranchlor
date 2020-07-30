@@ -185,8 +185,11 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="btGauss.vb" />
-    <Compile Include="CGraph.vb">
+    <Compile Include="frmInput2D.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Old\btGauss.vb" />
+    <Compile Include="Old\CGraph.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ColorMap.vb" />
@@ -194,28 +197,28 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DiffusionXC.vb" />
-    <Compile Include="CST.vb" />
-    <Compile Include="dlgResults.Designer.vb">
+    <Compile Include="Old\CST.vb" />
+    <Compile Include="Old\dlgResults.Designer.vb">
       <DependentUpon>dlgResults.vb</DependentUpon>
     </Compile>
-    <Compile Include="dlgResults.vb">
+    <Compile Include="Old\dlgResults.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Element.vb" />
+    <Compile Include="Old\Element.vb" />
     <Compile Include="ElementTrans.vb" />
-    <Compile Include="frmAxe.vb">
+    <Compile Include="frmGraph1DAxe.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmbtFem.Designer.vb">
-      <DependentUpon>frmbtFem.vb</DependentUpon>
+    <Compile Include="frmTrans2D.Designer.vb">
+      <DependentUpon>frmTrans2D.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmbtFem.vb">
+    <Compile Include="frmTrans2D.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmChlor.vb">
+    <Compile Include="frmGraph1D.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmOption1.vb">
+    <Compile Include="frmInput1D.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmPhreeqC.Designer.vb">
@@ -227,7 +230,7 @@
     <Compile Include="frmProb.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmScale1.vb">
+    <Compile Include="frmGraph1DScale.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmSplash.vb">
@@ -236,8 +239,8 @@
     <Compile Include="Functions.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FunctionsXC.vb" />
-    <Compile Include="Graph1.vb">
+    <Compile Include="Functions2D.vb" />
+    <Compile Include="Graph1D.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HETrans.vb" />
@@ -266,30 +269,33 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Node.vb" />
+    <Compile Include="Old\Node.vb" />
     <Compile Include="NodeTrans.vb" />
-    <Compile Include="PointLoad.vb" />
+    <Compile Include="Old\PointLoad.vb" />
     <Compile Include="Range.vb" />
     <Compile Include="CIETrans.vb" />
     <Compile Include="SETrans.vb" />
-    <Compile Include="Support.vb" />
-    <Compile Include="TempSeuil.vb">
+    <Compile Include="Old\Support.vb" />
+    <Compile Include="frmMeteo.vb">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="dlgResults.resx">
+    <EmbeddedResource Include="frmInput2D.resx">
+      <DependentUpon>frmInput2D.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Old\dlgResults.resx">
       <DependentUpon>dlgResults.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAxe.resx">
-      <DependentUpon>frmAxe.vb</DependentUpon>
+    <EmbeddedResource Include="frmGraph1DAxe.resx">
+      <DependentUpon>frmGraph1DAxe.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmbtFem.resx">
-      <DependentUpon>frmbtFem.vb</DependentUpon>
+    <EmbeddedResource Include="frmTrans2D.resx">
+      <DependentUpon>frmTrans2D.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmChlor.resx">
-      <DependentUpon>frmChlor.vb</DependentUpon>
+    <EmbeddedResource Include="frmGraph1D.resx">
+      <DependentUpon>frmGraph1D.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOption1.resx">
-      <DependentUpon>frmOption1.vb</DependentUpon>
+    <EmbeddedResource Include="frmInput1D.resx">
+      <DependentUpon>frmInput1D.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPhreeqC.resx">
       <DependentUpon>frmPhreeqC.vb</DependentUpon>
@@ -297,8 +303,8 @@
     <EmbeddedResource Include="frmProb.resx">
       <DependentUpon>frmProb.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmScale1.resx">
-      <DependentUpon>frmScale1.vb</DependentUpon>
+    <EmbeddedResource Include="frmGraph1DScale.resx">
+      <DependentUpon>frmGraph1DScale.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSplash.resx">
       <DependentUpon>frmSplash.vb</DependentUpon>
@@ -312,8 +318,8 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TempSeuil.resx">
-      <DependentUpon>TempSeuil.vb</DependentUpon>
+    <EmbeddedResource Include="frmMeteo.resx">
+      <DependentUpon>frmMeteo.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +386,9 @@
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Resources\Input\INPUT2D_Explication.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Sample btFEM\btfemexample.fem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

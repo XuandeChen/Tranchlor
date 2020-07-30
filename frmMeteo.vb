@@ -1,4 +1,4 @@
-Public Class TempSeuil : Inherits System.Windows.Forms.Form
+Public Class frmMeteo : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 

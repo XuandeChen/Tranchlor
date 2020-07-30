@@ -163,9 +163,9 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         Me.lblCompany.Location = New System.Drawing.Point(360, 224)
         Me.lblCompany.Name = "lblCompany"
         Me.lblCompany.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblCompany.Size = New System.Drawing.Size(96, 17)
+        Me.lblCompany.Size = New System.Drawing.Size(222, 17)
         Me.lblCompany.TabIndex = 2
-        Me.lblCompany.Text = "University  EPFL  "
+        Me.lblCompany.Text = "EPFL and Laval University"
         '
         'lblWarning
         '
@@ -206,9 +206,9 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         Me.lblPlatform.Location = New System.Drawing.Point(352, 80)
         Me.lblPlatform.Name = "lblPlatform"
         Me.lblPlatform.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblPlatform.Size = New System.Drawing.Size(212, 24)
+        Me.lblPlatform.Size = New System.Drawing.Size(230, 24)
         Me.lblPlatform.TabIndex = 5
-        Me.lblPlatform.Text = "Visual Basic .net 7.0"
+        Me.lblPlatform.Text = "Visual Basic .net 2019"
         Me.lblPlatform.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'lblProductName
@@ -221,9 +221,9 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         Me.lblProductName.Location = New System.Drawing.Point(304, 16)
         Me.lblProductName.Name = "lblProductName"
         Me.lblProductName.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblProductName.Size = New System.Drawing.Size(184, 51)
+        Me.lblProductName.Size = New System.Drawing.Size(379, 51)
         Me.lblProductName.TabIndex = 6
-        Me.lblProductName.Text = "Product"
+        Me.lblProductName.Text = "TransChlor Alpha"
         '
         'Label6
         '
@@ -266,7 +266,7 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
     Public Sub frmSplash_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
 
         lblVersion.Text = "Version " & System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly.Location).FileMajorPart & "." & System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly.Location).FileMinorPart & "." '& App.Revision
-        lblProductName.Text = "CIP-Model"
+        lblProductName.Text = "TransChlor Alpha"
 
     End Sub
 
@@ -282,9 +282,9 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
 
     'Gestion de la fenêtre
     Private Sub Run()
-        'Timer1.Enabled = False
-        'Me.Visible = False
-        'Me.Close()
+        Timer1.Enabled = False
+        Me.Visible = False
+        Me.Close()
     End Sub
 
 End Class

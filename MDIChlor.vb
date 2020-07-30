@@ -14,7 +14,8 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
-        frm01 = New frmOption1
+        'frm01 = New frmInput1D
+
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -50,8 +51,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem12 As MenuItem
     Friend WithEvents MenuItem14 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
-    Friend WithEvents Diff2D As MenuItem
+    Friend WithEvents Calcul2D As MenuItem
     Friend WithEvents MenuItem17 As MenuItem
+    Friend WithEvents MenuItem13 As MenuItem
+    Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -66,7 +69,8 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.MenuItem8 = New System.Windows.Forms.MenuItem()
-        Me.Diff2D = New System.Windows.Forms.MenuItem()
+        Me.MenuItem13 = New System.Windows.Forms.MenuItem()
+        Me.Calcul2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem9 = New System.Windows.Forms.MenuItem()
@@ -75,18 +79,19 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
         '
-        Me.MainMenu1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuTop, Me.MenuItem1, Me.MenuItem5, Me.MenuItem3, Me.MenuItem10})
+        Me.MainMenu1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuTop, Me.MenuItem1, Me.MenuItem5, Me.MenuItem13, Me.MenuItem3, Me.MenuItem10})
         '
         'mnuTop
         '
         Me.mnuTop.Index = 0
         Me.mnuTop.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me._MnuProject_4, Me.MenuItem14, Me._MnuProject_5})
         Me.mnuTop.MergeType = System.Windows.Forms.MenuMerge.Remove
-        Me.mnuTop.Text = "Pro&ject"
+        Me.mnuTop.Text = "Project"
         '
         '_MnuProject_4
         '
@@ -109,7 +114,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem1.Index = 1
         Me.MenuItem1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem2})
-        Me.MenuItem1.Text = "C&limat"
+        Me.MenuItem1.Text = "Climat"
         '
         'MenuItem2
         '
@@ -119,32 +124,38 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
-        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8, Me.Diff2D})
-        Me.MenuItem5.Text = "&Transport model"
+        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
+        Me.MenuItem5.Text = "Transport 1D"
         '
         'MenuItem6
         '
         Me.MenuItem6.Index = 0
-        Me.MenuItem6.Text = "In&put"
+        Me.MenuItem6.Text = "Input 1D"
         '
         'MenuItem7
         '
         Me.MenuItem7.Index = 1
-        Me.MenuItem7.Text = "&Calcul"
+        Me.MenuItem7.Text = "Calcul 1D"
         '
         'MenuItem8
         '
         Me.MenuItem8.Index = 2
-        Me.MenuItem8.Text = "&Graph"
+        Me.MenuItem8.Text = "Graph 1D"
         '
-        'Diff2D
+        'MenuItem13
         '
-        Me.Diff2D.Index = 3
-        Me.Diff2D.Text = "Calcul 2D"
+        Me.MenuItem13.Index = 3
+        Me.MenuItem13.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem15, Me.Calcul2D})
+        Me.MenuItem13.Text = "Transport 2D "
+        '
+        'Calcul2D
+        '
+        Me.Calcul2D.Index = 1
+        Me.Calcul2D.Text = "Calcul 2D"
         '
         'MenuItem3
         '
-        Me.MenuItem3.Index = 3
+        Me.MenuItem3.Index = 4
         Me.MenuItem3.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem4, Me.MenuItem9})
         Me.MenuItem3.Text = "Probabilistic"
         '
@@ -160,7 +171,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         'MenuItem10
         '
-        Me.MenuItem10.Index = 4
+        Me.MenuItem10.Index = 5
         Me.MenuItem10.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem11, Me.MenuItem12})
         Me.MenuItem10.Text = "?"
         '
@@ -178,6 +189,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
+        '
+        'MenuItem15
+        '
+        Me.MenuItem15.Index = 0
+        Me.MenuItem15.Text = "Input 2D"
         '
         'MDIChlor
         '
@@ -197,20 +213,20 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
 #End Region
 
-    Public CPTerase As Short = 0
-    Dim Para5 As Short
-    Dim frm01 As frmOption1
-    Dim frmC As New frmChlor
-    Dim frm2D As New frmbtFem
-    Dim diff As New DiffusionXC
-    Dim transport As New HydriqueXC
-    Dim directoryPath As String
+    'Public CPTerase As Short = 0
+    Dim Para5 As Short = 0
+
+    Dim frmC As New frmGraph1D
+    Dim frm2D As New frmTrans2D
+    'Dim diff As New DiffusionXC
+    'Dim transport As New HydriqueXC
+    'Dim directoryPath As String
 
     ' Xuande 10/06/2020
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Private NNodes, NElements, Nbloc As Integer
-    Private MeshFileOk = False
+    'Private MeshFileOk = False
 
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
@@ -336,9 +352,9 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     'Ouverture de Input dans le menu déroulant
     Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
 
-        frm01.ShowDialog()
-        frm01.Hide()
-        frm01.Close()
+        Using frm As New frmInput1D
+            frm.ShowDialog()
+        End Using
 
     End Sub
 
@@ -724,16 +740,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Le(0) = CDec(1)       'couche limite
         Le(Dofs) = CDec(1)    'couche limite
 
-        Input(nFic, Option2d)
-        If Option2d = True And MeshFileOk = False Then
-            Dim result As DialogResult = MsgBox("MeshFile doesn't found for 2D transport. Transport will be in 1D. Do you want to continue ?", MsgBoxStyle.YesNo, "Error with Mesh File")
-            If result = DialogResult.Yes Then
-                Option2d = False
-            ElseIf result = DialogResult.No Then
-                GoTo b
-            End If
-        End If
-
         Try
             Input(nFic, PintermManual)
             MsgBox("Le nombre de points est de" & CStr(PintermManual), MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
@@ -746,7 +752,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '---------------------------------------------------------------------------------------
         Dim myThread As System.Threading.Thread
 
-        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, Option2d, PintermManual)
+        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, PintermManual)
 
         myThread = New System.Threading.Thread(AddressOf Compute_All)
 
@@ -763,7 +769,7 @@ b:      'user pressed cancel error
     'construction de graphique
     Private Sub MenuItem8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem8.Click
 
-        Using frm03 As New frmScale1
+        Using frm03 As New frmGraph1DScale
             frmC.MdiParent = Me
             frmC.Show()
             manage_graph(frmC, frm03)
@@ -790,7 +796,7 @@ b:      'user pressed cancel error
     'lancement du traitement graphique des probabilités
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
 
-        Using frm03 As New frmScale1
+        Using frm03 As New frmGraph1DScale
             frmC.MdiParent = Me
             frmC.Show()
             ProbGraph(frmC, frm03)
@@ -823,8 +829,8 @@ b:      'user pressed cancel error
     'End Sub
     'Lecture du module PhreeqC
     Private Sub MenuItem14_Click(sender As Object, e As EventArgs) Handles MenuItem14.Click
-        Using frm04 As New frmPhreeqC
-            frm04.ShowDialog()
+        Using frm As New frmPhreeqC
+            frm.ShowDialog()
         End Using
     End Sub
 
@@ -836,7 +842,7 @@ b:      'user pressed cancel error
     'End Sub
 
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
-    Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
+    Private Sub Calcul2DMenuItem_Click(sender As Object, e As EventArgs) Handles Calcul2D.Click
 
         ''Lecture du fichier Maillage dans le menu 'Xuande 10/06/2020
         'Dim d As New OpenFileDialog
@@ -879,6 +885,15 @@ b:      'user pressed cancel error
         'End Using
 
     End Sub
+
+    Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
+
+        Using frm As New frmInput2D
+            frm.ShowDialog()
+        End Using
+
+    End Sub
+
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
     'Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
     '    'check if there is a proper model

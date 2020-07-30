@@ -6,7 +6,7 @@ Imports System.ComponentModel
 Imports System.IO
 Imports System.Linq
 
-Public Class frmbtFem
+Public Class frmTrans2D
     'This program shows the complete implementation
     'of a finite element program. Constant strain
     'triangular element has been chosen for
@@ -21,12 +21,14 @@ Public Class frmbtFem
     'Halifax, NS
     'Canada
 
+    Private Para As Short
+
     Private NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
-    Private ElasticityModulus, Thickness, PoissonRatio As Double
+    'Private ElasticityModulus, Thickness, PoissonRatio As Double
 
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
-    Private Time() As Double
+    Private Time() As Double ' heure
 
     Private MeshFileOk As Boolean = False
 
@@ -42,6 +44,8 @@ Public Class frmbtFem
 
     Private colorMap As ColorMap
     Private HRRange As Range
+
+    Private Directory As String
 
 
     'Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
@@ -92,7 +96,9 @@ Public Class frmbtFem
             End If
             '        MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
             MeshFileOk = True
+            Directory = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
             DrawModel()
+
         End If
     End Sub
 
@@ -237,15 +243,15 @@ Public Class frmbtFem
 
     'End Sub
 
-    Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
+    Public Sub Analyse()
 
         ' start of computations
         'MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
         'Computational parameter control
-        NNodes = _NNodes
-        NElements = _NElements
-        Nodes = _Nodes
-        Elements = _Elements
+        'NNodes = _NNodes
+        'NElements = _NElements
+        'Nodes = _Nodes
+        'Elements = _Elements
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
         Dim H_bound As Double = 0.25 'boundary relative humidity
@@ -259,26 +265,27 @@ Public Class frmbtFem
         Dim H_new(NNodes - 1) As Double
         Dim jj As Long
         Dim nFic1 As Short
-        'Dim outfile(1) As String
+        Dim outfile(1) As String
         Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
         Dim i, j, k As Integer
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
-        'outfile(1) = Directory & "\" & "R_H" & ".txt"
-        'nFic1 = CShort(FreeFile())
-        'FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
 
-        'step 0: Initialize output titres for result .txt files
+        outfile(1) = Directory & "\" & "R_H" & ".txt"
+        nFic1 = CShort(FreeFile())
+        FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
 
-        'Print(nFic1, "RH", ",", nDof, ",", TAB)
-        'For jj = 0 To nDof - 1
-        '    Print(CInt(nFic1), jj + CShort(1), ",", TAB)
-        'Next jj
-        'PrintLine(CInt(nFic1), " ")
-        'Print(CInt(nFic1), "0", ",", "0", ",", TAB)
-        'For jj = 0 To nDof - 1
-        '    Print(CInt(nFic1), H_int, ",", TAB)
-        'Next jj
+        'step 0 Initialize output titres for result .txt files
+
+        Print(nFic1, "RH", ",", nDof, ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
+        Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), H_int, ",", TAB)
+        Next jj
 
         HRRange = New Range
 
@@ -291,17 +298,23 @@ Public Class frmbtFem
             Time(0) = 0
         Next
 
-        LabelProgress.Visible = True
 
-        'PrintLine(CInt(nFic1), " ")
+        Me.Invoke(Sub()
+                      LabelProgress.Visible = True
+                  End Sub)
+
+
+        PrintLine(CInt(nFic1), " ")
         'Globlal time loop
 
         Dim ti As Integer
 
         For ti = 0 To ind
 
-            LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
-            Me.Refresh()
+            Me.Invoke(Sub()
+                          LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
+                          Me.Refresh()
+                      End Sub)
 
             ' step 1: initialisation
             T(ti) = 0 + dt * (ti - 0)
@@ -362,8 +375,6 @@ Public Class frmbtFem
             Next
 
             'step 7: result .txt file update
-            'If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
-
             For i = 0 To NElements - 1
 
                 Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
@@ -373,16 +384,22 @@ Public Class frmbtFem
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
-            'RegisterH(nFic1, ti * dt, nDof, H_new)
-            'PrintLine(CInt(nFic1), " ")
-            'End If
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+                RegisterH(nFic1, ti * dt, nDof, H_new)
+                PrintLine(CInt(nFic1), " ")
+            End If
 
-            FileClose(CInt(nFic1))
+
         Next
+
+        FileClose(CInt(nFic1))
 
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
-        LabelProgress.Visible = False
+
+        Me.Invoke(Sub()
+                      LabelProgress.Visible = False
+                  End Sub)
 
     End Sub
 
@@ -1089,10 +1106,22 @@ Public Class frmbtFem
 
         'perform analysis using the finite elemeent method
         'Analyse()
-        Analyse(NNodes, NElements, Nodes, Elements)
+        Dim myThread As System.Threading.Thread
+
+        myThread = New System.Threading.Thread(AddressOf Analyse)
+
+        'frmC.MdiParent = Me
+        'frmC.Show()
+
+        If Para <> CShort(1) Then
+            myThread.Start()
+        End If
+
+        'Analyse(NNodes, NElements, Nodes, Elements, Directory)
 
         'show the output
         DrawModel()
+
     End Sub
 
     Private Sub SetDeformationZoomToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SetDeformationZoomToolStripMenuItem.Click
@@ -1312,15 +1341,6 @@ Public Class frmbtFem
             zoom = zoom / 1.1
         End If
         DrawModel()
-    End Sub
-
-
-
-
-    Private Sub frmbtFem_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If MsgBox("Are you sure you want to exit?", MsgBoxStyle.OkCancel) = MsgBoxResult.Cancel Then
-            e.Cancel = True
-        End If
     End Sub
 
     Private Sub ShowToolStripMenuItem_DropDownOpening(sender As Object, e As EventArgs) Handles ShowToolStripMenuItem.DropDownOpening

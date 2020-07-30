@@ -1,22 +1,5 @@
 Il ne faut pas utiliser ce file pour le modèle, il sert simplement à expliquer les différentes valeurs utilisés dans le modèle de Lausanne.
 
-Length	100		épaisseur totale de la paroi en mm, arrondir à 10 près
-Ne	100 		nbre d'éléments, pour la résolution par éléments finis (paire)
-ChoixRep	1 	1: écart constant
-			2: écart proportionnel
-			3: écart exponentiel
-			4: plusieurs écart constant
-*si 1:			il n'y a aucun paramètre à ajouter
-*si 2:
-Le(1)	1		longeur du premier élément du bord
-*si 3:
-Le(1)	1		longeur du premier élément du bord
-*si 4:
-Nchmt	2		nbre de domaines à écart constant
-NbreEl	4		nbre d'éléments sur le premier domaine
-LenApp	40		longeur du premier domaine
-			!! il n'est pas nécessaire d'introduire le dernier domaine
-
 TimeMax	73000	temps max en jours arrivé à l'échéance le calcul s'arrête
 DeltaT	3600	pas de temps utilisé en s (il ne faut pas changer cette valeur)
 taff	720		pas de temps d'affichage des graphiques en heure durant le calcul, ici ça correspond à 30 jours
@@ -97,24 +80,20 @@ RoC		3150	masse volumique du ciment
 		.5		poids selon la méthode de Rosenblueth
 		.5		poids selon la méthode de Rosenblueth	
 		
-Nbre1	2		nbre de coordonnées pour les fichiers de conditions initiales, transport thermique [°C]
-		0		x1
-		20		y1
-		100
-		20
-Nbre2	2		nbre de coordonnées pour les fichiers de conditions initiales, transport hydrique, humidité relative [%]
-		0		x1
-		80		y1
-		100
-		80
-Nbre3	2		nbre de coordonnées pour les fichiers de conditions initiales, transport ionique, chlorure totale [kg/m3]
-		0		x1
-		0		y1
-		100
-		0
-Nombre de points de discretisation (Optionnel)
+Nbre1	2		nbre de Temperatures pour les conditions initiales, transport thermique [°C]
+		20		Temperature Interne
+		0		Temperature Externe 1
+		...		Temperature Externe 2
 
-	
+Nbre2	2		nbre d'Humidité Relative pour les conditions initiales, transport hydrique, humidité relative [%]
+		99		Humidité Relative Interne
+		25		Humidité Relative Externe 1
+		...		Humidité Relative Externe 1
+
+Nbre3	2		nbre de Concentrations de Cl- pour les conditions initiales, transport ionique, chlorure totale [kg/m3]
+		0		Concentration de Chlore Interne
+		0		Concentration de Chlore Externe 1
+		...		Concentration de Chlore Externe 2
 
 
 Voilà bon courage... et amuse-toi bien avec ce logiciel.                      David Conciatori

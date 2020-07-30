@@ -1,4 +1,4 @@
-Public Class frmOption1 : Inherits System.Windows.Forms.Form
+Public Class frmInput1D : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 
@@ -319,11 +319,10 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
     Public WithEvents Label149 As System.Windows.Forms.Label
     Public WithEvents Label150 As System.Windows.Forms.Label
     Public WithEvents Label151 As System.Windows.Forms.Label
-    Friend WithEvents CheckBox2D As CheckBox
     Friend WithEvents Button10 As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmOption1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInput1D))
         Me.Command2 = New System.Windows.Forms.Button()
         Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me._SSTab1_TabPage0 = New System.Windows.Forms.TabPage()
@@ -616,7 +615,6 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox2D = New System.Windows.Forms.CheckBox()
         Me.SSTab1.SuspendLayout()
         Me._SSTab1_TabPage0.SuspendLayout()
         Me.Frame1.SuspendLayout()
@@ -750,7 +748,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox3.MaxLength = 0
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox3.Size = New System.Drawing.Size(73, 19)
+        Me.TextBox3.Size = New System.Drawing.Size(73, 20)
         Me.TextBox3.TabIndex = 189
         Me.TextBox3.Text = "0"
         '
@@ -813,7 +811,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox2.MaxLength = 0
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox2.Size = New System.Drawing.Size(73, 19)
+        Me.TextBox2.Size = New System.Drawing.Size(73, 20)
         Me.TextBox2.TabIndex = 182
         Me.TextBox2.Text = "0"
         '
@@ -906,7 +904,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox1.MaxLength = 0
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox1.Size = New System.Drawing.Size(73, 19)
+        Me.TextBox1.Size = New System.Drawing.Size(73, 20)
         Me.TextBox1.TabIndex = 176
         Me.TextBox1.Text = "0"
         '
@@ -948,7 +946,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text45.MaxLength = 0
         Me.Text45.Name = "Text45"
         Me.Text45.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text45.Size = New System.Drawing.Size(73, 19)
+        Me.Text45.Size = New System.Drawing.Size(73, 20)
         Me.Text45.TabIndex = 171
         Me.Text45.Text = "0"
         '
@@ -963,7 +961,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text44.MaxLength = 0
         Me.Text44.Name = "Text44"
         Me.Text44.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text44.Size = New System.Drawing.Size(73, 19)
+        Me.Text44.Size = New System.Drawing.Size(73, 20)
         Me.Text44.TabIndex = 169
         Me.Text44.Text = "0"
         '
@@ -978,7 +976,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text2.MaxLength = 0
         Me.Text2.Name = "Text2"
         Me.Text2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text2.Size = New System.Drawing.Size(73, 19)
+        Me.Text2.Size = New System.Drawing.Size(73, 20)
         Me.Text2.TabIndex = 9
         Me.Text2.Text = "0"
         '
@@ -993,7 +991,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text1.MaxLength = 0
         Me.Text1.Name = "Text1"
         Me.Text1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text1.Size = New System.Drawing.Size(73, 19)
+        Me.Text1.Size = New System.Drawing.Size(73, 20)
         Me.Text1.TabIndex = 6
         Me.Text1.Text = "0"
         '
@@ -1205,7 +1203,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text4.MaxLength = 0
         Me.Text4.Name = "Text4"
         Me.Text4.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text4.Size = New System.Drawing.Size(297, 19)
+        Me.Text4.Size = New System.Drawing.Size(297, 20)
         Me.Text4.TabIndex = 19
         '
         'Text3
@@ -1219,7 +1217,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text3.MaxLength = 0
         Me.Text3.Name = "Text3"
         Me.Text3.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text3.Size = New System.Drawing.Size(321, 19)
+        Me.Text3.Size = New System.Drawing.Size(321, 20)
         Me.Text3.TabIndex = 18
         '
         'Label6
@@ -1309,7 +1307,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text9.MaxLength = 0
         Me.Text9.Name = "Text9"
         Me.Text9.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text9.Size = New System.Drawing.Size(113, 19)
+        Me.Text9.Size = New System.Drawing.Size(113, 20)
         Me.Text9.TabIndex = 49
         Me.Text9.Text = "1"
         Me.Text9.Visible = False
@@ -1325,7 +1323,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text8.MaxLength = 0
         Me.Text8.Name = "Text8"
         Me.Text8.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text8.Size = New System.Drawing.Size(129, 19)
+        Me.Text8.Size = New System.Drawing.Size(129, 20)
         Me.Text8.TabIndex = 48
         Me.Text8.Text = "100"
         '
@@ -1340,7 +1338,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text7.MaxLength = 0
         Me.Text7.Name = "Text7"
         Me.Text7.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text7.Size = New System.Drawing.Size(129, 19)
+        Me.Text7.Size = New System.Drawing.Size(129, 20)
         Me.Text7.TabIndex = 47
         Me.Text7.Text = "100"
         '
@@ -1454,7 +1452,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text6.MaxLength = 0
         Me.Text6.Name = "Text6"
         Me.Text6.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text6.Size = New System.Drawing.Size(129, 19)
+        Me.Text6.Size = New System.Drawing.Size(129, 20)
         Me.Text6.TabIndex = 46
         Me.Text6.Text = "3600"
         '
@@ -1469,7 +1467,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text5.MaxLength = 0
         Me.Text5.Name = "Text5"
         Me.Text5.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text5.Size = New System.Drawing.Size(129, 19)
+        Me.Text5.Size = New System.Drawing.Size(129, 20)
         Me.Text5.TabIndex = 45
         Me.Text5.Text = "73000"
         '
@@ -1582,7 +1580,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text24.MaxLength = 0
         Me.Text24.Name = "Text24"
         Me.Text24.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text24.Size = New System.Drawing.Size(113, 19)
+        Me.Text24.Size = New System.Drawing.Size(113, 20)
         Me.Text24.TabIndex = 65
         Me.Text24.Text = "5"
         '
@@ -1597,7 +1595,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text23.MaxLength = 0
         Me.Text23.Name = "Text23"
         Me.Text23.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text23.Size = New System.Drawing.Size(113, 19)
+        Me.Text23.Size = New System.Drawing.Size(113, 20)
         Me.Text23.TabIndex = 64
         Me.Text23.Text = "0"
         '
@@ -1612,7 +1610,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text22.MaxLength = 0
         Me.Text22.Name = "Text22"
         Me.Text22.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text22.Size = New System.Drawing.Size(113, 19)
+        Me.Text22.Size = New System.Drawing.Size(113, 20)
         Me.Text22.TabIndex = 63
         Me.Text22.Text = "1"
         '
@@ -1627,7 +1625,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text21.MaxLength = 0
         Me.Text21.Name = "Text21"
         Me.Text21.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text21.Size = New System.Drawing.Size(113, 19)
+        Me.Text21.Size = New System.Drawing.Size(113, 20)
         Me.Text21.TabIndex = 62
         Me.Text21.Text = "0"
         '
@@ -1642,7 +1640,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text20.MaxLength = 0
         Me.Text20.Name = "Text20"
         Me.Text20.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text20.Size = New System.Drawing.Size(113, 19)
+        Me.Text20.Size = New System.Drawing.Size(113, 20)
         Me.Text20.TabIndex = 61
         Me.Text20.Text = "10"
         '
@@ -1657,7 +1655,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text19.MaxLength = 0
         Me.Text19.Name = "Text19"
         Me.Text19.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text19.Size = New System.Drawing.Size(113, 19)
+        Me.Text19.Size = New System.Drawing.Size(113, 20)
         Me.Text19.TabIndex = 60
         Me.Text19.Text = "50"
         '
@@ -1672,7 +1670,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text18.MaxLength = 0
         Me.Text18.Name = "Text18"
         Me.Text18.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text18.Size = New System.Drawing.Size(113, 19)
+        Me.Text18.Size = New System.Drawing.Size(113, 20)
         Me.Text18.TabIndex = 59
         Me.Text18.Text = "0.1"
         '
@@ -1687,7 +1685,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text17.MaxLength = 0
         Me.Text17.Name = "Text17"
         Me.Text17.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text17.Size = New System.Drawing.Size(113, 19)
+        Me.Text17.Size = New System.Drawing.Size(113, 20)
         Me.Text17.TabIndex = 58
         Me.Text17.Text = "0.4"
         '
@@ -1702,7 +1700,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text16.MaxLength = 0
         Me.Text16.Name = "Text16"
         Me.Text16.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text16.Size = New System.Drawing.Size(113, 19)
+        Me.Text16.Size = New System.Drawing.Size(113, 20)
         Me.Text16.TabIndex = 57
         Me.Text16.Text = "5"
         '
@@ -1717,7 +1715,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text15.MaxLength = 0
         Me.Text15.Name = "Text15"
         Me.Text15.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text15.Size = New System.Drawing.Size(113, 19)
+        Me.Text15.Size = New System.Drawing.Size(113, 20)
         Me.Text15.TabIndex = 56
         Me.Text15.Text = "720"
         '
@@ -2037,7 +2035,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox27.MaxLength = 0
         Me.TextBox27.Name = "TextBox27"
         Me.TextBox27.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox27.Size = New System.Drawing.Size(121, 19)
+        Me.TextBox27.Size = New System.Drawing.Size(121, 20)
         Me.TextBox27.TabIndex = 78
         Me.TextBox27.Text = "8760"
         '
@@ -2078,7 +2076,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text14.MaxLength = 0
         Me.Text14.Name = "Text14"
         Me.Text14.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text14.Size = New System.Drawing.Size(121, 19)
+        Me.Text14.Size = New System.Drawing.Size(121, 20)
         Me.Text14.TabIndex = 55
         Me.Text14.Text = "8760"
         '
@@ -2093,7 +2091,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text13.MaxLength = 0
         Me.Text13.Name = "Text13"
         Me.Text13.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text13.Size = New System.Drawing.Size(121, 19)
+        Me.Text13.Size = New System.Drawing.Size(121, 20)
         Me.Text13.TabIndex = 54
         Me.Text13.Text = "8760"
         '
@@ -2108,7 +2106,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text12.MaxLength = 0
         Me.Text12.Name = "Text12"
         Me.Text12.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text12.Size = New System.Drawing.Size(121, 19)
+        Me.Text12.Size = New System.Drawing.Size(121, 20)
         Me.Text12.TabIndex = 53
         Me.Text12.Text = "8760"
         '
@@ -2123,7 +2121,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text11.MaxLength = 0
         Me.Text11.Name = "Text11"
         Me.Text11.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text11.Size = New System.Drawing.Size(121, 19)
+        Me.Text11.Size = New System.Drawing.Size(121, 20)
         Me.Text11.TabIndex = 52
         Me.Text11.Text = "8760"
         '
@@ -2138,7 +2136,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text10.MaxLength = 0
         Me.Text10.Name = "Text10"
         Me.Text10.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text10.Size = New System.Drawing.Size(121, 19)
+        Me.Text10.Size = New System.Drawing.Size(121, 20)
         Me.Text10.TabIndex = 51
         Me.Text10.Text = "8760"
         '
@@ -2334,7 +2332,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text25.MaxLength = 0
         Me.Text25.Name = "Text25"
         Me.Text25.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text25.Size = New System.Drawing.Size(64, 19)
+        Me.Text25.Size = New System.Drawing.Size(64, 20)
         Me.Text25.TabIndex = 92
         Me.Text25.Text = "0.7"
         '
@@ -2377,7 +2375,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text26.MaxLength = 0
         Me.Text26.Name = "Text26"
         Me.Text26.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text26.Size = New System.Drawing.Size(129, 19)
+        Me.Text26.Size = New System.Drawing.Size(129, 20)
         Me.Text26.TabIndex = 93
         Me.Text26.Text = "1"
         '
@@ -2514,7 +2512,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text32.MaxLength = 0
         Me.Text32.Name = "Text32"
         Me.Text32.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text32.Size = New System.Drawing.Size(97, 19)
+        Me.Text32.Size = New System.Drawing.Size(97, 20)
         Me.Text32.TabIndex = 103
         Me.Text32.Text = "0.75"
         '
@@ -2529,7 +2527,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text31.MaxLength = 0
         Me.Text31.Name = "Text31"
         Me.Text31.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text31.Size = New System.Drawing.Size(97, 19)
+        Me.Text31.Size = New System.Drawing.Size(97, 20)
         Me.Text31.TabIndex = 102
         Me.Text31.Text = "0.05"
         '
@@ -2544,7 +2542,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text30.MaxLength = 0
         Me.Text30.Name = "Text30"
         Me.Text30.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text30.Size = New System.Drawing.Size(97, 19)
+        Me.Text30.Size = New System.Drawing.Size(97, 20)
         Me.Text30.TabIndex = 101
         '
         'Label54
@@ -2696,7 +2694,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox21.MaxLength = 0
         Me.TextBox21.Name = "TextBox21"
         Me.TextBox21.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox21.Size = New System.Drawing.Size(97, 19)
+        Me.TextBox21.Size = New System.Drawing.Size(97, 20)
         Me.TextBox21.TabIndex = 132
         Me.TextBox21.Text = "0.95"
         '
@@ -2711,7 +2709,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox22.MaxLength = 0
         Me.TextBox22.Name = "TextBox22"
         Me.TextBox22.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox22.Size = New System.Drawing.Size(97, 19)
+        Me.TextBox22.Size = New System.Drawing.Size(97, 20)
         Me.TextBox22.TabIndex = 131
         Me.TextBox22.Text = "0.09"
         '
@@ -2766,7 +2764,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text39.MaxLength = 0
         Me.Text39.Name = "Text39"
         Me.Text39.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text39.Size = New System.Drawing.Size(129, 19)
+        Me.Text39.Size = New System.Drawing.Size(129, 20)
         Me.Text39.TabIndex = 135
         Me.Text39.Text = "1"
         '
@@ -3050,7 +3048,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox30.MaxLength = 0
         Me.TextBox30.Name = "TextBox30"
         Me.TextBox30.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox30.Size = New System.Drawing.Size(129, 19)
+        Me.TextBox30.Size = New System.Drawing.Size(129, 20)
         Me.TextBox30.TabIndex = 144
         Me.TextBox30.Text = "293.16"
         '
@@ -3077,7 +3075,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox29.MaxLength = 0
         Me.TextBox29.Name = "TextBox29"
         Me.TextBox29.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox29.Size = New System.Drawing.Size(129, 19)
+        Me.TextBox29.Size = New System.Drawing.Size(129, 20)
         Me.TextBox29.TabIndex = 142
         Me.TextBox29.Text = "0"
         '
@@ -3104,7 +3102,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox28.MaxLength = 0
         Me.TextBox28.Name = "TextBox28"
         Me.TextBox28.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox28.Size = New System.Drawing.Size(129, 19)
+        Me.TextBox28.Size = New System.Drawing.Size(129, 20)
         Me.TextBox28.TabIndex = 140
         Me.TextBox28.Text = "0.56"
         '
@@ -3132,7 +3130,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text40.MaxLength = 0
         Me.Text40.Name = "Text40"
         Me.Text40.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text40.Size = New System.Drawing.Size(129, 19)
+        Me.Text40.Size = New System.Drawing.Size(129, 20)
         Me.Text40.TabIndex = 138
         Me.Text40.Text = "3.57"
         '
@@ -3248,7 +3246,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text46.MaxLength = 0
         Me.Text46.Name = "Text46"
         Me.Text46.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text46.Size = New System.Drawing.Size(97, 19)
+        Me.Text46.Size = New System.Drawing.Size(97, 20)
         Me.Text46.TabIndex = 149
         '
         'Label78
@@ -3305,7 +3303,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text49.MaxLength = 0
         Me.Text49.Name = "Text49"
         Me.Text49.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text49.Size = New System.Drawing.Size(97, 19)
+        Me.Text49.Size = New System.Drawing.Size(97, 20)
         Me.Text49.TabIndex = 154
         Me.Text49.Text = "0.7"
         '
@@ -3320,7 +3318,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.Text48.MaxLength = 0
         Me.Text48.Name = "Text48"
         Me.Text48.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text48.Size = New System.Drawing.Size(97, 19)
+        Me.Text48.Size = New System.Drawing.Size(97, 20)
         Me.Text48.TabIndex = 153
         Me.Text48.Text = "0.8"
         '
@@ -3594,7 +3592,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox6.MaxLength = 0
         Me.TextBox6.Name = "TextBox6"
         Me.TextBox6.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox6.Size = New System.Drawing.Size(96, 19)
+        Me.TextBox6.Size = New System.Drawing.Size(96, 20)
         Me.TextBox6.TabIndex = 174
         Me.TextBox6.Text = "0.000005772"
         '
@@ -3774,7 +3772,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox19.MaxLength = 0
         Me.TextBox19.Name = "TextBox19"
         Me.TextBox19.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox19.Size = New System.Drawing.Size(96, 19)
+        Me.TextBox19.Size = New System.Drawing.Size(96, 20)
         Me.TextBox19.TabIndex = 174
         Me.TextBox19.Text = "0.000005772"
         '
@@ -3968,7 +3966,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox15.MaxLength = 0
         Me.TextBox15.Name = "TextBox15"
         Me.TextBox15.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox15.Size = New System.Drawing.Size(104, 19)
+        Me.TextBox15.Size = New System.Drawing.Size(104, 20)
         Me.TextBox15.TabIndex = 174
         Me.TextBox15.Text = "0.00005962"
         '
@@ -4140,7 +4138,7 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.TextBox10.MaxLength = 0
         Me.TextBox10.Name = "TextBox10"
         Me.TextBox10.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox10.Size = New System.Drawing.Size(112, 19)
+        Me.TextBox10.Size = New System.Drawing.Size(112, 20)
         Me.TextBox10.TabIndex = 174
         Me.TextBox10.Text = "0.0002308"
         '
@@ -4376,20 +4374,11 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.CheckBox1.TabIndex = 20
         Me.CheckBox1.Text = "Field activation"
         '
-        'CheckBox2D
-        '
-        Me.CheckBox2D.Location = New System.Drawing.Point(673, 519)
-        Me.CheckBox2D.Name = "CheckBox2D"
-        Me.CheckBox2D.Size = New System.Drawing.Size(104, 24)
-        Me.CheckBox2D.TabIndex = 21
-        Me.CheckBox2D.Text = "2D Transport"
-        '
         'frmOption1
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(984, 551)
-        Me.Controls.Add(Me.CheckBox2D)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
@@ -4403,24 +4392,34 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.SSTab1.ResumeLayout(False)
         Me._SSTab1_TabPage0.ResumeLayout(False)
         Me.Frame1.ResumeLayout(False)
+        Me.Frame1.PerformLayout()
         Me.Frame2.ResumeLayout(False)
+        Me.Frame2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me._SSTab1_TabPage1.ResumeLayout(False)
         Me.Frame3.ResumeLayout(False)
+        Me.Frame3.PerformLayout()
         Me.Frame4.ResumeLayout(False)
+        Me.Frame4.PerformLayout()
         Me.Frame5.ResumeLayout(False)
+        Me.Frame5.PerformLayout()
         Me.Frame6.ResumeLayout(False)
+        Me.Frame6.PerformLayout()
         Me._SSTab1_TabPage2.ResumeLayout(False)
         Me.Frame7.ResumeLayout(False)
+        Me.Frame7.PerformLayout()
         Me.Frame8.ResumeLayout(False)
+        Me.Frame8.PerformLayout()
         Me._SSTab1_TabPage3.ResumeLayout(False)
         Me.Frame12.ResumeLayout(False)
         Me.Frame12.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Picture1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame13.ResumeLayout(False)
+        Me.Frame13.PerformLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame16.ResumeLayout(False)
+        Me.Frame16.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
@@ -4428,18 +4427,24 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         Me.GroupBox6.PerformLayout()
         Me._SSTab1_TabPage4.ResumeLayout(False)
         Me.Frame17.ResumeLayout(False)
+        Me.Frame17.PerformLayout()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame20.ResumeLayout(False)
         Me.Frame20.PerformLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Frame21.ResumeLayout(False)
+        Me.Frame21.PerformLayout()
         Me.TabPage1.ResumeLayout(False)
         Me._SSTab1_TabPage5.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
+        Me.GroupBox8.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
         Me.Frame22.ResumeLayout(False)
+        Me.Frame22.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox3.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -4679,16 +4684,18 @@ Public Class frmOption1 : Inherits System.Windows.Forms.Form
         FileOnly(OutFile)
         OutFile = PostFile & "INPUT_" & CStr(OutFile)
 
-        Lecture(Length, Ne, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr, option2D)
+        Lecture(Length, Ne, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr)
 
         If Creadtherm(0, Nbre1) < Length Or Creadhydr(0, Nbre2) < Length Or Creadion(0, Nbre3) < Length Then
             MsgBox("Format de fichier des conditions initiales invalide", MsgBoxStyle.Information, "Avertissement")
             Exit Sub
         End If
 
-        Ecriture(nFic, OutFile, Length, Ne, Le, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr, option2D)
+        Ecriture(nFic, OutFile, Length, Ne, Le, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CLmin, CLecart, Tecart, aa, Hc, ab, tc, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, capCal, GyCO2, DyCO2, Carbsauv, ImpHydr)
 
         Me.Hide()
+        Me.Close()
+
 b:
     End Sub
 
@@ -5086,6 +5093,7 @@ b:
         Button5.Enabled = True
         Command1.Enabled = True
 b:
+        FileClose(nFic)
     End Sub
 
     'Click sur défaut
@@ -5147,8 +5155,8 @@ b:
         Dim nFic As Single
         Dim Canc As Boolean
 
-        Dim frm01 As frmScale1
-        frm01 = New frmScale1
+        Dim frm01 As frmGraph1DScale
+        frm01 = New frmGraph1DScale
 
         Select Case Combo1.Text
             Case "1: écart constant"
@@ -5586,7 +5594,7 @@ b:                  frm01.ShowDialog()
     End Sub
 
     'Lecture du formulaire
-    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean, ByRef option2d As Boolean)
+    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
         Length = CSng(Text7.Text)
         Ne = CShort(Text8.Text)
         TimeMax = CSng(Text5.Text)
@@ -5629,16 +5637,10 @@ b:                  frm01.ShowDialog()
             ImpHydr = False
         End If
 
-        If CheckBox2D.Checked = True Then
-            option2d = True
-        Else
-            option2d = False
-        End If
-
     End Sub
 
     'Sauvegarde du formulaire dans un fichier
-    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean, ByRef option2D As Boolean)
+    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
         nFic = CShort(FreeFile())
         FileOpen(CInt(nFic), OutFile, OpenMode.Output)
         PrintLine(CInt(nFic), Length)
@@ -5730,8 +5732,6 @@ b:                  frm01.ShowDialog()
             PrintLine(CInt(nFic), Creadion(0, i))
             PrintLine(CInt(nFic), Creadion(1, i))
         Next
-
-        PrintLine(CInt(nFic), option2D)
 
         FileClose(CInt(nFic))
 

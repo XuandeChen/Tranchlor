@@ -2,7 +2,7 @@ Module Meteo
     Dim arrPanne(440000) As StrctPanne 'matrice d'analyse des pannes, conçu pour 50ans mesure chaque heure
     Dim arrMatrice(440000) As StrctCalc 'matrice de calcul, conçu pour 50ans mesure chaque heure
     Dim arrDaten(440000) As StrctMeteo 'matrice input météo, conçu pour 50ans mesure chaque heure
-    Dim frmTempSeuil As New TempSeuil
+    Dim frmTempSeuil As New frmMeteo
     Dim iAnzahl As Integer 'nombre de ligne
     Dim CasInput As Integer '[-]
 

@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Chloride transport into cementitious materials")>
 <Assembly: AssemblyCompany("ULaval")>
 <Assembly: AssemblyProduct("TransChlor Alpha")>
-<Assembly: AssemblyCopyright("Copyright ©  2020")>
+<Assembly: AssemblyCopyright("Copyright ©2020")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)>
 

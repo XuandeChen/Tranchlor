@@ -1,4 +1,4 @@
-Public Class frmChlor : Inherits System.Windows.Forms.Form
+Public Class frmGraph1D : Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
 
