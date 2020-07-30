@@ -17,18 +17,7 @@ Public Class HydriqueXC
         NElements = _NElements
         Nodes = _Nodes
         Elements = _Elements
-        Dim nDof As Integer = NNodes
-        Dim H_int As Double = 0.25 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int) 'initial relative humidity
-        Dim H_bound As Double = 0.999 'boundary relative humidity
-        Dim dt As Double = 3600 'time interval (s)
-        Dim tmax As Double = 259200 'end time (s) 72h
-        Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector (days)
-        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim Hold(NNodes - 1) As Double
-        Dim Hnew(NNodes - 1) As Double
-
+        'Material parameters, can be converted from user defined input
         Dim temperature As Double = 273 '(K)
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
@@ -40,6 +29,23 @@ Public Class HydriqueXC
         Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
         Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
         Dim phi As Double = 0.05 'porosity (-)
+        Dim type As Integer = 3 'cement type (-)
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim day As Double = 0 'porosity (-)
+        Dim Tempetrature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+
+        Dim nDof As Integer = NNodes
+        Dim H_int As Double = 0.25 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Tempetrature, day, rho_l, rho_c) 'initial relative humidity
+        Dim H_bound As Double = 0.999 'boundary relative humidity
+        Dim dt As Double = 3600 'time interval (s)
+        Dim tmax As Double = 259200 'end time (s) 72h
+        Dim ind As Double = tmax / dt
+        Dim T(ind) As Double 'time vector (days)
+        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim Hold(NNodes - 1) As Double
+        Dim Hnew(NNodes - 1) As Double
+
 
         Dim S_old(NNodes - 1) As Double
         Dim S_new(NNodes - 1) As Double
@@ -85,7 +91,7 @@ Public Class HydriqueXC
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    S_old(ie) = GetHtoS(H_bound)
+                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Tempetrature, day, rho_l, rho_c)
                 End If
             Next
 
