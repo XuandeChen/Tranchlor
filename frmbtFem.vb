@@ -36,8 +36,6 @@ Public Class frmbtFem
     Private ShowNodeNumbers As Boolean = False
     Private ShowElementsOnDeformedShape As Boolean = True
 
-    Dim diff As New DiffusionXC
-
     Private colorMap As ColorMap
     Private SigmaXRange, SigmaYRange, TauXYRange As Range
     Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
@@ -92,136 +90,274 @@ Public Class frmbtFem
         Erase Deformations 'Clear the earlier analysis output
     End Sub
 
-    Private Sub Analyse()
-        'Calculate statistics
-        Dim nDof As Integer = NNodes * 2
+    'Private Sub Analyse()
+    '    'Calculate statistics
+    '    Dim nDof As Integer = NNodes * 2
 
 
-        'make global stiffness matrix
-        'we create elemental stiffness matrix and place it in proper position
-        'in the global stiffness matrix
-        'saving as a square matrix would be too taxing on ram.
-        'hence, we save the stiffness matrix in half band form
+    '    'make global stiffness matrix
+    '    'we create elemental stiffness matrix and place it in proper position
+    '    'in the global stiffness matrix
+    '    'saving as a square matrix would be too taxing on ram.
+    '    'hence, we save the stiffness matrix in half band form
 
-        Dim HalfBandWidth As Integer = getHalfBandWidth()
-        Dim Kg(nDof - 1, HalfBandWidth - 1) As Double 'Global stiffness matrix
+    '    Dim HalfBandWidth As Integer = getHalfBandWidth()
+    '    Dim Kg(nDof - 1, HalfBandWidth - 1) As Double 'Global stiffness matrix
 
-        Dim cst As CST
-        Dim i As Integer
+    '    Dim cst As CST
+    '    Dim i As Integer
+    '    For i = 0 To NElements - 1
+    '        cst = New CST(Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+    '                      Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+    '                      Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+    '                      Thickness, ElasticityModulus, PoissonRatio)
+
+
+    '        If testKe(cst.getKe) = False Then
+    '            MsgBox("ke test failed")
+    '        End If
+
+    '        AssembleKg(cst.getKe, Kg, i)
+
+    '    Next
+    '    'now, we have assembled Kg in banded form
+
+    '    'make the load vector
+    '    Dim r(nDof - 1) As Double
+    '    Dim dof As Integer 'dof
+    '    For i = 0 To NPointLoads - 1
+    '        dof = getDOFx(PointLoads(i).Node - 1)
+    '        r(dof) += PointLoads(i).Fx
+
+    '        dof = getDOFy(PointLoads(i).Node - 1)
+    '        r(dof) += PointLoads(i).Fy
+
+    '    Next
+
+
+    '    'Apply boundary conditions by penalty approach
+    '    Dim Large As Double
+    '    Dim pow As Double = MaxKgiiPower(Kg)
+    '    Large = 10 ^ (Math.Ceiling(pow) + 10)
+    '    For i = 0 To NSupports - 1
+    '        If Supports(i).RestraintX = 1 Then
+    '            dof = getDOFx(Supports(i).Node - 1)
+    '            Kg(dof, 0) = Kg(dof, 0) * Large
+    '        End If
+    '        If Supports(i).RestraintY = 1 Then
+    '            dof = getDOFy(Supports(i).Node - 1)
+    '            Kg(dof, 0) = Kg(dof, 0) * Large
+    '        End If
+
+    '    Next
+
+
+    '    'Solve the set of equations to get displacements.
+
+    '    'Deformations = SolveWithPivoting(Kg, r)
+
+
+    '    Dim bs As New btGauss(Kg)
+    '    bs.SolveSerial(r)
+    '    Deformations = r
+
+    '    'Now that we have deformations, lets calculate stresses and strains..
+    '    SigmaXRange = New Range : SigmaYRange = New Range : TauXYRange = New Range
+    '    EpsilonXRange = New Range : EpsilonYRange = New Range : GammaXYRange = New Range
+
+    '    'first is to calculate strains
+    '    'strain = [B] * d.
+    '    'since the element is a constant strain triangle, the strain value will be 
+    '    'constant for each element
+
+    '    Dim B(2, 5) As Double
+    '    Dim n1, n2, n3 As Integer
+    '    Dim dofs(5) As Integer
+    '    Dim disp(5) As Double
+    '    Dim DMatrix(,) As Double
+    '    Dim j As Integer
+    '    For i = 0 To NElements - 1
+    '        cst = New CST(Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+    '                      Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+    '                      Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+    '                      Thickness, ElasticityModulus, PoissonRatio)
+    '        B = cst.getB
+
+    '        'extract the connectivity nodes
+    '        n1 = Elements(i).Node1 - 1
+    '        n2 = Elements(i).Node2 - 1
+    '        n3 = Elements(i).Node3 - 1
+
+    '        'find the degree of freedoms associated
+    '        dofs(0) = getDOFx(n1) : dofs(1) = getDOFy(n1)
+    '        dofs(2) = getDOFx(n2) : dofs(3) = getDOFy(n2)
+    '        dofs(4) = getDOFx(n3) : dofs(5) = getDOFy(n3)
+
+    '        'extract the displacements
+    '        For j = 0 To 5
+    '            disp(j) = Deformations(dofs(j))
+    '        Next
+
+    '        'Calculate the strain vector
+    '        'epsilon = {ex, ey, gamma xy}T
+    '        Elements(i).Strains = MultiplyMatrixWithVector(B, disp)
+
+    '        'Calculate stresses
+    '        'Sigma = D * Epsilon
+    '        DMatrix = cst.getD
+
+    '        Elements(i).Stresses = MultiplyMatrixWithVector(DMatrix, Elements(i).Strains)
+    '        SigmaXRange.AddValue(Elements(i).Stresses(0))
+    '        SigmaYRange.AddValue(Elements(i).Stresses(1))
+    '        TauXYRange.AddValue(Elements(i).Stresses(2))
+
+    '        EpsilonXRange.AddValue(Elements(i).Strains(0))
+    '        EpsilonYRange.AddValue(Elements(i).Strains(1))
+    '        GammaXYRange.AddValue(Elements(i).Strains(2))
+
+    '    Next
+
+    '    'now, we have all results
+    '    'enjoy! :o)
+
+    'End Sub
+
+    Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
+        ' start of computations
+        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
+        'Computational parameter control
+        NNodes = _NNodes
+        NElements = _NElements
+        Nodes = _Nodes
+        Elements = _Elements
+        Dim nDof As Integer = NNodes
+        Dim H_int As Double = 0.999 'initial relative humidity
+        Dim H_bound As Double = 0.25 'boundary relative humidity
+        Dim DiffCoeff As Double = 0.000217
+        Dim dt As Double = 3600 'time interval (s)
+        Dim tmax As Double = 86400 'end time (s) 24h
+        Dim ind As Integer = CInt(tmax / dt)
+        Dim T(ind) As Double 'time vector (days)
+        Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim H_old(NNodes - 1) As Double
+        Dim H_new(NNodes - 1) As Double
+        Dim jj As Long
+        Dim nFic1 As Short
+        'Dim outfile(1) As String
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
+        Dim i, j, k As Integer
+
+        'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
+        'outfile(1) = Directory & "\" & "R_H" & ".txt"
+        'nFic1 = CShort(FreeFile())
+        'FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
+
+        'step 0: Initialize output titres for result .txt files
+
+        'Print(nFic1, "RH", ",", nDof, ",", TAB)
+        'For jj = 0 To nDof - 1
+        '    Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+        'Next jj
+        'PrintLine(CInt(nFic1), " ")
+        'Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+        'For jj = 0 To nDof - 1
+        '    Print(CInt(nFic1), H_int, ",", TAB)
+        'Next jj
+
+        SigmaXRange = New Range
+
         For i = 0 To NElements - 1
-            cst = New CST(Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-                          Thickness, ElasticityModulus, PoissonRatio)
-
-
-            If testKe(cst.getKe) = False Then
-                MsgBox("ke test failed")
-            End If
-
-            AssembleKg(cst.getKe, Kg, i)
-
-        Next
-        'now, we have assembled Kg in banded form
-
-        'make the load vector
-        Dim r(nDof - 1) As Double
-        Dim dof As Integer 'dof
-        For i = 0 To NPointLoads - 1
-            dof = getDOFx(PointLoads(i).Node - 1)
-            r(dof) += PointLoads(i).Fx
-
-            dof = getDOFy(PointLoads(i).Node - 1)
-            r(dof) += PointLoads(i).Fy
-
+            ReDim Elements(i).Stresses(ind + 1)
+            Elements(i).Stresses(0) = H_int * 100
+            SigmaXRange.AddValue(Elements(i).Stresses(0))
         Next
 
-
-        'Apply boundary conditions by penalty approach
-        Dim Large As Double
-        Dim pow As Double = MaxKgiiPower(Kg)
-        Large = 10 ^ (Math.Ceiling(pow) + 10)
-        For i = 0 To NSupports - 1
-            If Supports(i).RestraintX = 1 Then
-                dof = getDOFx(Supports(i).Node - 1)
-                Kg(dof, 0) = Kg(dof, 0) * Large
+        'PrintLine(CInt(nFic1), " ")
+        'Globlal time loop
+        Dim ti As Integer
+        For ti = 0 To ind
+            ' step 1: initialisation
+            T(ti) = 0 + dt * (ti - 0)
+            If ti = 0 Then
+                For i = 0 To nDof - 1
+                    H_old(i) = H_int
+                Next
+            Else
+                H_old = H_new
             End If
-            If Supports(i).RestraintY = 1 Then
-                dof = getDOFy(Supports(i).Node - 1)
-                Kg(dof, 0) = Kg(dof, 0) * Large
-            End If
-
-        Next
 
 
-        'Solve the set of equations to get displacements.
-
-        'Deformations = SolveWithPivoting(Kg, r)
-
-
-        Dim bs As New btGauss(Kg)
-        bs.SolveSerial(r)
-        Deformations = r
-
-        'Now that we have deformations, lets calculate stresses and strains..
-        SigmaXRange = New Range : SigmaYRange = New Range : TauXYRange = New Range
-        EpsilonXRange = New Range : EpsilonYRange = New Range : GammaXYRange = New Range
-
-        'first is to calculate strains
-        'strain = [B] * d.
-        'since the element is a constant strain triangle, the strain value will be 
-        'constant for each element
-
-        Dim B(2, 5) As Double
-        Dim n1, n2, n3 As Integer
-        Dim dofs(5) As Integer
-        Dim disp(5) As Double
-        Dim DMatrix(,) As Double
-        Dim j As Integer
-        For i = 0 To NElements - 1
-            cst = New CST(Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-                          Thickness, ElasticityModulus, PoissonRatio)
-            B = cst.getB
-
-            'extract the connectivity nodes
-            n1 = Elements(i).Node1 - 1
-            n2 = Elements(i).Node2 - 1
-            n3 = Elements(i).Node3 - 1
-
-            'find the degree of freedoms associated
-            dofs(0) = getDOFx(n1) : dofs(1) = getDOFy(n1)
-            dofs(2) = getDOFx(n2) : dofs(3) = getDOFy(n2)
-            dofs(4) = getDOFx(n3) : dofs(5) = getDOFy(n3)
-
-            'extract the displacements
-            For j = 0 To 5
-                disp(j) = Deformations(dofs(j))
+            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
+            Dim ie As Integer
+            For ie = 0 To NNodes - 1
+                If Nodes(ie).Bord = True Then
+                    H_old(ie) = H_bound
+                End If
             Next
 
-            'Calculate the strain vector
-            'epsilon = {ex, ey, gamma xy}T
-            Elements(i).Strains = MultiplyMatrixWithVector(B, disp)
+            'step 3: elemental and global Matrix constructions
+            Dim LHS(,) As Double
+            Dim R(,) As Double
+            Dim RHS() As Double
+            Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+            Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+            Dim cie As CIETrans
+            Dim he As HETrans
 
-            'Calculate stresses
-            'Sigma = D * Epsilon
-            DMatrix = cst.getD
+            'Matrix assembling
+            For i = 0 To NElements - 1
+                cie = New CIETrans(
+                          Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                          Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                          DiffCoeff)
+                he = New HETrans(
+                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                          )
+                AssembleKg(cie.getbe, bg, i)
+                AssembleKg(cie.getAe, Ag, i)
 
-            Elements(i).Stresses = MultiplyMatrixWithVector(DMatrix, Elements(i).Strains)
-            SigmaXRange.AddValue(Elements(i).Stresses(0))
-            SigmaYRange.AddValue(Elements(i).Stresses(1))
-            TauXYRange.AddValue(Elements(i).Stresses(2))
+            Next
 
-            EpsilonXRange.AddValue(Elements(i).Strains(0))
-            EpsilonYRange.AddValue(Elements(i).Strains(1))
-            GammaXYRange.AddValue(Elements(i).Strains(2))
+            'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+            getLHS(LHS, NNodes, Ag, bg, dt)
+            getRHS(R, NNodes, Ag, bg, dt)
+            RHS = MultiplyMatrixWithVector(R, H_old)
 
+            'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            GetX(H_new, LHS, RHS)
+
+            'step 6: data stockage
+            For j = 0 To NNodes - 1
+                Hm(ti, j) = H_new(j)
+            Next
+
+            'step 7: result .txt file update
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+
+                For i = 0 To NElements - 1
+                    Elements(i).Stresses(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
+                    SigmaXRange.AddValue(Elements(i).Stresses(ti + 1))
+                Next
+                'RegisterH(nFic1, ti * dt, nDof, H_new)
+                'PrintLine(CInt(nFic1), " ")
+            End If
+
+            FileClose(CInt(nFic1))
         Next
+        Beep()
+        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
-        'now, we have all results
-        'enjoy! :o)
+    End Sub
 
+    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef H_new() As Double)
+        'Register values
+        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
+        Next j
     End Sub
 
     Private Function MaxKgiiPower(ByRef Kg(,) As Double) As Double
@@ -273,29 +409,45 @@ Public Class frmbtFem
 
 
 
-    Private Sub AssembleKg(ByRef Ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
-        Dim i, j As Integer
-        Dim dofs() As Integer = {getDOFx(Elements(ElementNo).Node1 - 1),
-                                 getDOFy(Elements(ElementNo).Node1 - 1),
-                                 getDOFx(Elements(ElementNo).Node2 - 1),
-                                 getDOFy(Elements(ElementNo).Node2 - 1),
-                                 getDOFx(Elements(ElementNo).Node3 - 1),
-                                 getDOFy(Elements(ElementNo).Node3 - 1)}
+    'Private Sub AssembleKg(ByRef Ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
+    '    Dim i, j As Integer
+    '    Dim dofs() As Integer = {getDOFx(Elements(ElementNo).Node1 - 1),
+    '                             getDOFy(Elements(ElementNo).Node1 - 1),
+    '                             getDOFx(Elements(ElementNo).Node2 - 1),
+    '                             getDOFy(Elements(ElementNo).Node2 - 1),
+    '                             getDOFx(Elements(ElementNo).Node3 - 1),
+    '                             getDOFy(Elements(ElementNo).Node3 - 1)}
 
-        'Place the upper triangle of the elemental stiffness matrix in the global
-        'matrix in proper position
+    '    'Place the upper triangle of the elemental stiffness matrix in the global
+    '    'matrix in proper position
+    '    Dim dofi, dofj As Integer
+    '    For i = 0 To 5 'each dof of the ke
+    '        dofi = dofs(i)
+    '        For j = 0 To 5
+    '            dofj = dofs(j) - dofi
+    '            If dofj >= 0 Then
+    '                Kg(dofi, dofj) = Kg(dofi, dofj) + Ke(i, j)
+    '            End If
+    '        Next
+    '    Next
+
+    'End Sub
+    Private Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
+        Dim i, j As Integer
+        Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
+                                 getDOF(Elements(ElementNo).Node2 - 1),
+                                 getDOF(Elements(ElementNo).Node3 - 1),
+                                 getDOF(Elements(ElementNo).Node4 - 1)}
         Dim dofi, dofj As Integer
-        For i = 0 To 5 'each dof of the ke
+        For i = 0 To 3 'each dof of the Se
             dofi = dofs(i)
-            For j = 0 To 5
-                dofj = dofs(j) - dofi
-                If dofj >= 0 Then
-                    Kg(dofi, dofj) = Kg(dofi, dofj) + Ke(i, j)
-                End If
+            For j = 0 To 3
+                dofj = dofs(j)
+                Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
             Next
         Next
-
     End Sub
+
 
     Private Function getDOFx(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 2
@@ -718,25 +870,26 @@ Public Class frmbtFem
             Next
         End If
         'Now, plot results if available
-        If Deformations IsNot Nothing AndAlso Deformations.Length > 0 Then
-            Dim eColor As Color
+        'If Deformations IsNot Nothing AndAlso Deformations.Length > 0 Then
+
+        Dim eColor As Color
             'we can plot now.
             If ShowDeformations = True Then
-                ReDim ptsf(2)
+            ReDim ptsf(3)
 
-                'compute the colormap
+            'compute the colormap
 
-                'set the colormap if required
-                Select Case ShowResult
+            'set the colormap if required
+            Select Case ShowResult
                     Case Results.None
                         'create a dummy colormap
                         colorMap = New ColorMap(1, 0)
                     Case Results.SigmaX
                         colorMap = New ColorMap(SigmaXRange.Max, SigmaXRange.Min)
-                    Case Results.SigmaY
-                        colorMap = New ColorMap(SigmaYRange.Max, SigmaYRange.Min)
-                    Case Results.TauXY
-                        colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
+                Case Results.SigmaY
+                    colorMap = New ColorMap(SigmaXRange.Max, SigmaXRange.Min)
+                Case Results.TauXY
+                    colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
                     Case Results.EpsilonX
                         colorMap = New ColorMap(EpsilonXRange.Max, EpsilonXRange.Min)
                     Case Results.EpsilonY
@@ -773,19 +926,24 @@ Public Class frmbtFem
                     End Select
 
 
-                    n1 = Elements(i).Node1 - 1
-                    n2 = Elements(i).Node2 - 1
-                    n3 = Elements(i).Node3 - 1
+                n1 = Elements(i).Node1 - 1
+                n2 = Elements(i).Node2 - 1
+                n3 = Elements(i).Node3 - 1
 
-                    ptsf(0) = New PointF(CSng((Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx),
-                                         CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
-                    ptsf(1) = New PointF(CSng((Nodes(n2).x * zoom + getDeformationX(n2) * DeformationZoom) + shiftx),
-                                         CSng((-Nodes(n2).y * zoom - getDeformationY(n2) * DeformationZoom) + shifty))
-                    ptsf(2) = New PointF(CSng((Nodes(n3).x * zoom + getDeformationX(n3) * DeformationZoom) + shiftx),
-                                         CSng((-Nodes(n3).y * zoom - getDeformationY(n3) * DeformationZoom) + shifty))
+                n4 = Elements(i).Node4 - 1
 
-                    'Draw the element
-                    gr.FillPolygon(New SolidBrush(eColor), ptsf)
+                'ptsf(0) = New PointF((CSng(Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx), CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
+                'ptsf(1) = New PointF((CSng(Nodes(n2).x * zoom + getDeformationX(n2) * DeformationZoom) + shiftx), CSng((-Nodes(n2).y * zoom - getDeformationY(n2) * DeformationZoom) + shifty))
+                'ptsf(2) = New PointF((CSng(Nodes(n3).x * zoom + getDeformationX(n3) * DeformationZoom) + shiftx), CSng((-Nodes(n3).y * zoom - getDeformationY(n3) * DeformationZoom) + shifty))
+                'ptsf(3) = New PointF((CSng(Nodes(n4).x * zoom + getDeformationX(n4) * DeformationZoom) + shiftx), CSng((-Nodes(n4).y * zoom - getDeformationY(n4) * DeformationZoom) + shifty))
+
+                ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
+                ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
+                ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
+                ptsf(3) = New PointF(CSng(Nodes(n4).x * zoom + shiftx), CSng(-Nodes(n4).y * zoom + shifty))
+
+                'Draw the element
+                gr.FillPolygon(New SolidBrush(eColor), ptsf)
                     If ShowElementsOnDeformedShape = True Then
                         gr.DrawPolygon(New Pen(Color.Black), ptsf)
                     End If
@@ -835,7 +993,7 @@ Public Class frmbtFem
 
 
             End If
-        End If
+        'End If
         pbModel.Refresh()
     End Sub
 
@@ -886,7 +1044,7 @@ Public Class frmbtFem
 
         'perform analysis using the finite elemeent method
         'Analyse()
-        diff.Analyse(NNodes, NElements, Nodes, Elements)
+        Analyse(NNodes, NElements, Nodes, Elements)
 
         'show the output
         DrawModel()

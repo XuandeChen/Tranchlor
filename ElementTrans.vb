@@ -6,8 +6,8 @@ Public Class ElementTrans
     Public Property Node3 As Integer
     Public Property Node4 As Integer
 
-    Public Stresses(2) As Double
-    Public Strains(2) As Double
+    Public Stresses(1) As Double
+    Public Strains(1) As Double
 
     Public Sub New(n As Integer, n1 As Integer, n2 As Integer, n3 As Integer, n4 As Integer)
         _ElementNumber = n

@@ -48,9 +48,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem10 As MenuItem
     Friend WithEvents MenuItem11 As MenuItem
     Friend WithEvents MenuItem12 As MenuItem
-    Friend WithEvents MenuItem13 As MenuItem
     Friend WithEvents MenuItem14 As MenuItem
-    Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents Diff2D As MenuItem
     Friend WithEvents MenuItem17 As MenuItem
@@ -61,16 +59,14 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.mnuTop = New System.Windows.Forms.MenuItem()
         Me._MnuProject_4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem14 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem13 = New System.Windows.Forms.MenuItem()
         Me._MnuProject_5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem1 = New System.Windows.Forms.MenuItem()
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
-        Me.Diff2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.MenuItem8 = New System.Windows.Forms.MenuItem()
+        Me.Diff2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem9 = New System.Windows.Forms.MenuItem()
@@ -88,7 +84,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'mnuTop
         '
         Me.mnuTop.Index = 0
-        Me.mnuTop.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me._MnuProject_4, Me.MenuItem14, Me.MenuItem15, Me.MenuItem13, Me._MnuProject_5})
+        Me.mnuTop.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me._MnuProject_4, Me.MenuItem14, Me._MnuProject_5})
         Me.mnuTop.MergeType = System.Windows.Forms.MenuMerge.Remove
         Me.mnuTop.Text = "Pro&ject"
         '
@@ -103,19 +99,9 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem14.Index = 1
         Me.MenuItem14.Text = "PhreeqC"
         '
-        'MenuItem15
-        '
-        Me.MenuItem15.Index = 2
-        Me.MenuItem15.Text = "FEM"
-        '
-        'MenuItem13
-        '
-        Me.MenuItem13.Index = 3
-        Me.MenuItem13.Text = "OpenGl"
-        '
         '_MnuProject_5
         '
-        Me._MnuProject_5.Index = 4
+        Me._MnuProject_5.Index = 2
         Me._MnuProject_5.MergeType = System.Windows.Forms.MenuMerge.Remove
         Me._MnuProject_5.Text = "E&xit"
         '
@@ -136,11 +122,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8, Me.Diff2D})
         Me.MenuItem5.Text = "&Transport model"
         '
-        'Diff2D
-        '
-        Me.Diff2D.Index = 3
-        Me.Diff2D.Text = "Calcul 2D"
-        '
         'MenuItem6
         '
         Me.MenuItem6.Index = 0
@@ -155,6 +136,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem8.Index = 2
         Me.MenuItem8.Text = "&Graph"
+        '
+        'Diff2D
+        '
+        Me.Diff2D.Index = 3
+        Me.Diff2D.Text = "Calcul 2D"
         '
         'MenuItem3
         '
@@ -190,7 +176,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         'MenuItem17
         '
-        Me.MenuItem17.Index = 2
+        Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
         '
         'MDIChlor
@@ -805,11 +791,11 @@ b:      'user pressed cancel error
         Process.Start("ModeEmploi_v4.pdf")
     End Sub
 
-    Private Sub MenuItem13_Click(sender As Object, e As EventArgs) Handles MenuItem13.Click
-        Using frm04 As New frmMesh
-            frm04.ShowDialog()
-        End Using
-    End Sub
+    'Private Sub MenuItem13_Click(sender As Object, e As EventArgs) Handles MenuItem13.Click
+    '    Using frm04 As New frmMesh
+    '        frm04.ShowDialog()
+    '    End Using
+    'End Sub
     'Lecture du module PhreeqC
     Private Sub MenuItem14_Click(sender As Object, e As EventArgs) Handles MenuItem14.Click
         Using frm04 As New frmPhreeqC
@@ -818,11 +804,11 @@ b:      'user pressed cancel error
     End Sub
 
     'Lecture du module FEM mechical analyse
-    Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
-        Using frm04 As New frmbtFem
-            frm04.ShowDialog()
-        End Using
-    End Sub
+    'Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
+    '    Using frm04 As New frmbtFem
+    '        frm04.ShowDialog()
+    '    End Using
+    'End Sub
 
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
     Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
@@ -866,32 +852,32 @@ b:      'user pressed cancel error
 
     End Sub
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
-    Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
-        'check if there is a proper model
-        If NElements <= 0 OrElse NNodes <= 0 Then
-            'there are no elements defined
-            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
-        Else
-            MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
-            'perform analysis using the 2D finite element diffusion module 
-            diff.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
-            Return
+    'Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
+    '    'check if there is a proper model
+    '    If NElements <= 0 OrElse NNodes <= 0 Then
+    '        'there are no elements defined
+    '        MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+    '    Else
+    '        MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+    '        'perform analysis using the 2D finite element diffusion module 
+    '        diff.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
+    '        Return
 
-        End If
-    End Sub
+    '    End If
+    'End Sub
     'Operation pour transport diffusion 2D  'Xuande 27/07/2020
-    Private Sub MenuItem17_Click(sender As Object, e As EventArgs) Handles MenuItem17.Click
-        'check if there is a proper model
-        If NElements <= 0 OrElse NNodes <= 0 Then
-            'there are no elements defined
-            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
-        Else
-            MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
-            'perform analysis using the 2D finite element transport module 
-            transport.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
-            Return
-        End If
-    End Sub
+    'Private Sub MenuItem17_Click(sender As Object, e As EventArgs) Handles MenuItem17.Click
+    '    'check if there is a proper model
+    '    If NElements <= 0 OrElse NNodes <= 0 Then
+    '        'there are no elements defined
+    '        MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+    '    Else
+    '        MsgBox("Mesh file ready for simulation!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
+    '        'perform analysis using the 2D finite element transport module 
+    '        transport.Analyse(NNodes, NElements, Nodes, Elements, directoryPath)
+    '        Return
+    '    End If
+    'End Sub
     'Lecture de fichier .msh 'Xuande  10/06/2020
     Public Function ReadFile(f As String) As Boolean
         Try
