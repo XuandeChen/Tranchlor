@@ -8,27 +8,24 @@ Imports System.Linq
 
 Public Class frmTrans2D
     'This program shows the complete implementation
-    'of a finite element program. Constant strain
-    'triangular element has been chosen for
-    'demonstration purpose. Any other element may
-    'be used with suitable modifications. Please
-    'note that Constant Strain Triangles (CST) are
-    'not recommended for stress analysis of practical
-    'real time problems.
+    'of a finite element program to analyse water diffusion problems in 2D.
+    '
 
-    'Written by Dr. Bhairav Thakkar
-    '23rd September 2017
-    'Halifax, NS
+    'Written by Xuande Chen, Thomas Sanchez, David Conciatori
+    '20nd July 2020
+    'Quebec, QC
     'Canada
 
     Private Para As Short
 
     Private NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
-    'Private ElasticityModulus, Thickness, PoissonRatio As Double
+    Private ElasticityModulus, Thickness, PoissonRatio As Double
 
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Private Time() As Double ' heure
+    Private diffusion As DiffusionXC
+    Private transport As TransportXC
 
     Private MeshFileOk As Boolean = False
 
@@ -47,9 +44,7 @@ Public Class frmTrans2D
 
     Private Directory As String
 
-
     'Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
-
     Private Enum Results
         None
         HR
@@ -60,7 +55,6 @@ Public Class frmTrans2D
         GammaXY
     End Enum
     Private ShowResult As Results = Results.None
-
 
     'Graphics
     Private zoom As Double = 1.0
@@ -78,8 +72,7 @@ Public Class frmTrans2D
 
     Private bmp As Bitmap
 
-
-    Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
+    Private Sub OpenMeshFile_Click(sender As Object, e As EventArgs) Handles OpenMeshFile.Click
 
         Dim d As New OpenFileDialog
         'd.Title = "Open FEM file"
@@ -98,7 +91,6 @@ Public Class frmTrans2D
             MeshFileOk = True
             Directory = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
             DrawModel()
-
         End If
     End Sub
 
@@ -110,7 +102,7 @@ Public Class frmTrans2D
         LabelProgress.Visible = False
         Analysed = False
     End Sub
-
+    ' mechanical computations
     'Private Sub Analyse()
     '    'Calculate statistics
     '    Dim nDof As Integer = NNodes * 2
@@ -242,16 +234,8 @@ Public Class frmTrans2D
     '    'enjoy! :o)
 
     'End Sub
-
+    ' Program for computation 2D diffusion 
     Public Sub Analyse()
-
-        ' start of computations
-        'MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
-        'Computational parameter control
-        'NNodes = _NNodes
-        'NElements = _NElements
-        'Nodes = _Nodes
-        'Elements = _Elements
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
         Dim H_bound As Double = 0.25 'boundary relative humidity
@@ -305,6 +289,7 @@ Public Class frmTrans2D
 
 
         PrintLine(CInt(nFic1), " ")
+
         'Globlal time loop
 
         Dim ti As Integer
@@ -411,15 +396,15 @@ Public Class frmTrans2D
         Next j
     End Sub
 
-    Private Function MaxKgiiPower(ByRef Kg(,) As Double) As Double
-        Dim Max As Double = Double.MinValue
-        Dim i As Integer
-        For i = 0 To Kg.GetLength(0) - 1
-            If Kg(i, 0) > Max Then Max = Kg(i, 0)
-        Next
-        Dim p As Double = Math.Log10(Max)
-        Return p
-    End Function
+    'Private Function MaxKgiiPower(ByRef Kg(,) As Double) As Double
+    '    Dim Max As Double = Double.MinValue
+    '    Dim i As Integer
+    '    For i = 0 To Kg.GetLength(0) - 1
+    '        If Kg(i, 0) > Max Then Max = Kg(i, 0)
+    '    Next
+    '    Dim p As Double = Math.Log10(Max)
+    '    Return p
+    'End Function
 
     ''' <summary>
     ''' Multiplies matrix a by vector b and returns the product
@@ -442,20 +427,19 @@ Public Class frmTrans2D
         Return ab
     End Function
 
+    'Private Function testKe(ByRef Ke(,) As Double) As Boolean
+    '    Dim i, j As Integer
+    '    For i = 0 To 5
+    '        If Ke(i, i) < 0.0000001 Then Return False
+    '    Next
+    '    For i = 0 To 5
+    '        For j = 0 To 5
+    '            If Math.Abs(Ke(i, j) - Ke(j, i)) > 0.00001 Then Return False
+    '        Next
+    '    Next
 
-    Private Function testKe(ByRef Ke(,) As Double) As Boolean
-        Dim i, j As Integer
-        For i = 0 To 5
-            If Ke(i, i) < 0.0000001 Then Return False
-        Next
-        For i = 0 To 5
-            For j = 0 To 5
-                If Math.Abs(Ke(i, j) - Ke(j, i)) > 0.00001 Then Return False
-            Next
-        Next
-
-        Return True
-    End Function
+    '    Return True
+    'End Function
 
 
 
@@ -499,37 +483,36 @@ Public Class frmTrans2D
         Next
     End Sub
 
+    'Private Function getDOFx(NodeNo As Integer) As Integer
+    '    Dim nDofsPerNode As Integer = 2
+    '    Return (NodeNo) * nDofsPerNode
+    'End Function
+    'Private Function getDOFy(NodeNo As Integer) As Integer
+    '    Dim nDofsPerNode As Integer = 2
+    '    Return NodeNo * nDofsPerNode + 1
+    'End Function
 
-    Private Function getDOFx(NodeNo As Integer) As Integer
-        Dim nDofsPerNode As Integer = 2
-        Return (NodeNo) * nDofsPerNode
-    End Function
-    Private Function getDOFy(NodeNo As Integer) As Integer
-        Dim nDofsPerNode As Integer = 2
-        Return NodeNo * nDofsPerNode + 1
-    End Function
+    'Private Function getHalfBandWidth() As Integer
+    '    Dim i As Integer
+    '    Dim n(2) As Integer
+    '    Dim MaxDiff As Integer = 0
+    '    Dim diff As Integer
+    '    For i = 0 To NElements - 1
+    '        n(0) = Elements(i).Node1
+    '        n(1) = Elements(i).Node2
+    '        n(2) = Elements(i).Node3
+    '        diff = n.Max - n.Min
+    '        If MaxDiff < diff Then MaxDiff = diff
+    '    Next
 
-    Private Function getHalfBandWidth() As Integer
-        Dim i As Integer
-        Dim n(2) As Integer
-        Dim MaxDiff As Integer = 0
-        Dim diff As Integer
-        For i = 0 To NElements - 1
-            n(0) = Elements(i).Node1
-            n(1) = Elements(i).Node2
-            n(2) = Elements(i).Node3
-            diff = n.Max - n.Min
-            If MaxDiff < diff Then MaxDiff = diff
-        Next
+    '    'now we have maxdiff
+    '    'half band width is maxdiff * 2. 2 because there are 2 dofs per node
 
-        'now we have maxdiff
-        'half band width is maxdiff * 2. 2 because there are 2 dofs per node
+    '    Dim hbw As Integer = (MaxDiff + 1) * 2
+    '    If hbw > NNodes * 2 Then hbw = NNodes * 2
 
-        Dim hbw As Integer = (MaxDiff + 1) * 2
-        If hbw > NNodes * 2 Then hbw = NNodes * 2
-
-        Return hbw
-    End Function
+    '    Return hbw
+    'End Function
 
     Public Function ReadFile(f As String) As Boolean
         Try
@@ -778,7 +761,6 @@ Public Class frmTrans2D
     '    End Try
     '    Return True
     'End Function
-
     Private Sub btnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
         zoom = 1
         hs.Value = 0
@@ -1059,16 +1041,14 @@ Public Class frmTrans2D
         pbModel.Refresh()
     End Sub
 
-
-    Private Function getDeformationX(Node As Integer) As Double
-        Dim dof As Integer = getDOFx(Node)
-        Return Deformations(dof)
-    End Function
-    Private Function getDeformationY(Node As Integer) As Double
-        Dim dof As Integer = getDOFy(Node)
-        Return Deformations(dof)
-    End Function
-
+    'Private Function getDeformationX(Node As Integer) As Double
+    '    Dim dof As Integer = getDOFx(Node)
+    '    Return Deformations(dof)
+    'End Function
+    'Private Function getDeformationY(Node As Integer) As Double
+    '    Dim dof As Integer = getDOFy(Node)
+    '    Return Deformations(dof)
+    'End Function
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs)
         If MsgBox("Are you sure you want to exit?", MsgBoxStyle.OkCancel) = MsgBoxResult.Ok Then
@@ -1090,37 +1070,9 @@ Public Class frmTrans2D
             gr.DrawLine(p, New Point(px, py), New Point(CInt(px + size / 4), CInt(py - size / 4)))
             gr.DrawLine(p, New Point(px, py), New Point(CInt(px + size / 4), CInt(py + size / 4)))
         End If
-
-
     End Sub
 
     Private Sub AnalyseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnalyseToolStripMenuItem.Click
-
-        'check if there is a proper model
-        If NElements <= 0 OrElse NNodes <= 0 Then
-            'there are no elements defined
-            'MsgBox("Please open a proper finite element model")
-            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
-            Return
-        End If
-
-        'perform analysis using the finite elemeent method
-        'Analyse()
-        Dim myThread As System.Threading.Thread
-
-        myThread = New System.Threading.Thread(AddressOf Analyse)
-
-        'frmC.MdiParent = Me
-        'frmC.Show()
-
-        If Para <> CShort(1) Then
-            myThread.Start()
-        End If
-
-        'Analyse(NNodes, NElements, Nodes, Elements, Directory)
-
-        'show the output
-        DrawModel()
 
     End Sub
 
@@ -1137,86 +1089,84 @@ Public Class frmTrans2D
         DrawModel()
     End Sub
 
-
-
     Private Sub ShowNodeNumbersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowNodeNumbersToolStripMenuItem.Click
         ShowNodeNumbers = Not ShowNodeNumbers
         DrawModel()
     End Sub
 
-    Private Sub ResultsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResultsToolStripMenuItem.Click
-        Dim d As New dlgResults
-        Dim sb As New System.Text.StringBuilder
-        Dim s As String
-        Dim dof As Integer
-        Dim i As Integer
+    'Private Sub ResultsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResultsToolStripMenuItem.Click
+    '    Dim d As New dlgResults
+    '    Dim sb As New System.Text.StringBuilder
+    '    Dim s As String
+    '    Dim dof As Integer
+    '    Dim i As Integer
 
 
-        sb.AppendLine("Model Statistics:")
-        sb.AppendLine("Number of Nodes: " & NNodes.ToString)
-        sb.AppendLine("Number of Elements: " & NElements.ToString)
-        sb.AppendLine("Number of Variables: " & (NNodes * 2).ToString)
-        sb.AppendLine("")
+    '    sb.AppendLine("Model Statistics:")
+    '    sb.AppendLine("Number of Nodes: " & NNodes.ToString)
+    '    sb.AppendLine("Number of Elements: " & NElements.ToString)
+    '    sb.AppendLine("Number of Variables: " & (NNodes * 2).ToString)
+    '    sb.AppendLine("")
 
-        'Deformations
-        sb.AppendLine("Deformations:")
-        sb.AppendLine("Node" & vbTab & vbTab & "Ux" & vbTab & vbTab & "Uy")
-        For i = 0 To NNodes - 1
-            s = (i + 1).ToString & vbTab & vbTab
-            dof = getDOFx(i)
-            s = s & Deformations(dof).ToString & vbTab & vbTab
-            s = s & Deformations(dof + 1).ToString
+    '    'Deformations
+    '    sb.AppendLine("Deformations:")
+    '    sb.AppendLine("Node" & vbTab & vbTab & "Ux" & vbTab & vbTab & "Uy")
+    '    For i = 0 To NNodes - 1
+    '        s = (i + 1).ToString & vbTab & vbTab
+    '        dof = getDOFx(i)
+    '        s = s & Deformations(dof).ToString & vbTab & vbTab
+    '        s = s & Deformations(dof + 1).ToString
 
-            sb.AppendLine(s)
-        Next
+    '        sb.AppendLine(s)
+    '    Next
 
-        'Element Stresses and Strains
-        sb.AppendLine("Stresses and Strains:")
-        sb.AppendLine("Element" & vbTab & vbTab & "sx" & vbTab & vbTab & "sy" & vbTab & vbTab & "txy" &
-        vbTab & vbTab & "ex" & vbTab & vbTab & "ey" & vbTab & vbTab & "gamma_xy")
-        For i = 0 To NElements - 1
-            s = (i + 1).ToString & vbTab & vbTab
+    '    'Element Stresses and Strains
+    '    sb.AppendLine("Stresses and Strains:")
+    '    sb.AppendLine("Element" & vbTab & vbTab & "sx" & vbTab & vbTab & "sy" & vbTab & vbTab & "txy" &
+    '    vbTab & vbTab & "ex" & vbTab & vbTab & "ey" & vbTab & vbTab & "gamma_xy")
+    '    For i = 0 To NElements - 1
+    '        s = (i + 1).ToString & vbTab & vbTab
 
-            s = s & Elements(i).HR(0).ToString & vbTab & vbTab
-            s = s & Elements(i).HR(1).ToString & vbTab & vbTab
-            s = s & Elements(i).HR(2).ToString & vbTab & vbTab
+    '        s = s & Elements(i).HR(0).ToString & vbTab & vbTab
+    '        s = s & Elements(i).HR(1).ToString & vbTab & vbTab
+    '        s = s & Elements(i).HR(2).ToString & vbTab & vbTab
 
-            's = s & Elements(i).Strains(0).ToString & vbTab & vbTab
-            's = s & Elements(i).Strains(1).ToString & vbTab & vbTab
-            's = s & Elements(i).Strains(2).ToString
+    '        's = s & Elements(i).Strains(0).ToString & vbTab & vbTab
+    '        's = s & Elements(i).Strains(1).ToString & vbTab & vbTab
+    '        's = s & Elements(i).Strains(2).ToString
 
-            sb.AppendLine(s)
-        Next
+    '        sb.AppendLine(s)
+    '    Next
 
-        'Write maximum displacements
-        Dim uxMax As Double = Double.MinValue
-        Dim uyMax As Double = Double.MinValue
-        Dim uxMin As Double = Double.MaxValue
-        Dim uyMin As Double = Double.MaxValue
+    '    'Write maximum displacements
+    '    Dim uxMax As Double = Double.MinValue
+    '    Dim uyMax As Double = Double.MinValue
+    '    Dim uxMin As Double = Double.MaxValue
+    '    Dim uyMin As Double = Double.MaxValue
 
-        For i = 0 To Deformations.Length - 1 Step 2
-            If uxMax < Deformations(i) Then uxMax = Deformations(i)
-            If uxMin > Deformations(i) Then uxMin = Deformations(i)
-            If uyMax < Deformations(i + 1) Then uyMax = Deformations(i + 1)
-            If uyMin > Deformations(i + 1) Then uyMin = Deformations(i + 1)
-        Next
+    '    For i = 0 To Deformations.Length - 1 Step 2
+    '        If uxMax < Deformations(i) Then uxMax = Deformations(i)
+    '        If uxMin > Deformations(i) Then uxMin = Deformations(i)
+    '        If uyMax < Deformations(i + 1) Then uyMax = Deformations(i + 1)
+    '        If uyMin > Deformations(i + 1) Then uyMin = Deformations(i + 1)
+    '    Next
 
-        sb.AppendLine("")
-        sb.AppendLine("Maximum Displacement in X direction = " & uxMax.ToString)
-        sb.AppendLine("Minimum Displacement in X direction = " & uxMin.ToString)
-        sb.AppendLine("Maximum Displacement in Y direction = " & uyMax.ToString)
-        sb.AppendLine("Minimum Displacement in Y direction = " & uyMin.ToString)
+    '    sb.AppendLine("")
+    '    sb.AppendLine("Maximum Displacement in X direction = " & uxMax.ToString)
+    '    sb.AppendLine("Minimum Displacement in X direction = " & uxMin.ToString)
+    '    sb.AppendLine("Maximum Displacement in Y direction = " & uyMax.ToString)
+    '    sb.AppendLine("Minimum Displacement in Y direction = " & uyMin.ToString)
 
-        sb.AppendLine("")
-        sb.AppendLine("Output generated by btFEM at " & DateTime.Now.ToLongDateString)
-
-
-        d.txtResults.Text = sb.ToString
+    '    sb.AppendLine("")
+    '    sb.AppendLine("Output generated by btFEM at " & DateTime.Now.ToLongDateString)
 
 
-        d.ShowDialog()
+    '    d.txtResults.Text = sb.ToString
 
-    End Sub
+
+    '    d.ShowDialog()
+
+    'End Sub
 
     Private Sub ShowModelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowModelToolStripMenuItem.Click
         ShowModel = Not ShowModel
@@ -1254,7 +1204,6 @@ Public Class frmTrans2D
         End If
     End Sub
 
-
     Private Sub ShowDeformationsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowDeformationsToolStripMenuItem.Click
         ShowDeformations = Not ShowDeformations
         DrawModel()
@@ -1277,8 +1226,6 @@ Public Class frmTrans2D
 
 
     End Sub
-
-
 
     Private Sub HandleShowResultClick(sender As Object, e As EventArgs) Handles NoneToolStripMenuItem.Click,
             HRToolStripMenuItem.Click, SigmaYToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
@@ -1312,14 +1259,72 @@ Public Class frmTrans2D
     Private Sub ExitToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Me.Close()
     End Sub
+    ' add two labels to distinguish diffusion and capillary transport process 30.07.2020 Xuande
+    Private Sub Diffusion2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diffusion2DToolStripMenuItem.Click
+        'check if there is a proper model
+        If NElements <= 0 OrElse NNodes <= 0 Then
+            'there are no elements defined
+            'MsgBox("Please open a proper finite element model")
+            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+            Return
+        End If
+
+        'perform analysis using the finite elemeent method
+        'diffusion.Analyse(NNodes, NElements, Nodes, Elements, Directory)
+        'Return
+
+        Dim myThread As System.Threading.Thread
+
+        myThread = New System.Threading.Thread(AddressOf Analyse)
+
+        'frmC.MdiParent = Me
+        'frmC.Show()
+
+        If Para <> CShort(1) Then
+            myThread.Start()
+        End If
+
+        'Analyse(NNodes, NElements, Nodes, Elements, Directory)
+
+        'show the output
+        DrawModel()
+    End Sub
+
+    Private Sub Transport2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Transport2DToolStripMenuItem.Click
+        'check if there is a proper model
+        If NElements <= 0 OrElse NNodes <= 0 Then
+            'there are no elements defined
+            'MsgBox("Please open a proper finite element model")
+            MsgBox("Error reading number of elements and nodes, please open a proper mesh file")
+            Return
+        End If
+
+        'perform analysis using the finite elemeent method
+        'diffusion.Analyse(NNodes, NElements, Nodes, Elements, Directory)
+        'Return
+
+        Dim myThread As System.Threading.Thread
+
+        myThread = New System.Threading.Thread(AddressOf Analyse)
+
+        'frmC.MdiParent = Me
+        'frmC.Show()
+
+        If Para <> CShort(1) Then
+            myThread.Start()
+        End If
+
+        'Analyse(NNodes, NElements, Nodes, Elements, Directory)
+
+        'show the output
+        DrawModel()
+    End Sub
 
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then
             e.Graphics.DrawImage(bmp, 0, 0)
         End If
     End Sub
-
-
 
     Private Sub pbModel_Resize(sender As Object, e As EventArgs) Handles pbModel.Resize
         If bmp IsNot Nothing Then
@@ -1352,7 +1357,6 @@ Public Class frmTrans2D
         EpsilonXToolStripMenuItem.Checked = False
         EpsilonYToolStripMenuItem.Checked = False
         GammaXYToolStripMenuItem.Checked = False
-
 
         Select Case ShowResult
             Case Results.None
@@ -1411,7 +1415,5 @@ Public Class frmTrans2D
         DrawModel()
 
     End Sub
-
-
 
 End Class

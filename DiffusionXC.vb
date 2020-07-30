@@ -9,8 +9,6 @@ Public Class DiffusionXC
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans, ByRef directory As String)
-        ' start of computations
-        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
         'Computational parameter control
         NNodes = _NNodes
         NElements = _NElements

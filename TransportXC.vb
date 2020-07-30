@@ -5,13 +5,11 @@ Imports System.IO
 Imports System.Linq
 ' Module pour calcul Transport Hydrique 2D Xuande.2020.07.15
 ' implémentation des équations de capillarité, de perméabilité et d'isotherme de adsorption/désorption
-Public Class HydriqueXC
+Public Class TransportXC
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans, ByRef directory As String)
-        ' start of computations
-        MsgBox("Calcul Transport Hydrique 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
         ' computational parameter control
         NNodes = _NNodes
         NElements = _NElements
@@ -45,7 +43,6 @@ Public Class HydriqueXC
         Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim Hold(NNodes - 1) As Double
         Dim Hnew(NNodes - 1) As Double
-
 
         Dim S_old(NNodes - 1) As Double
         Dim S_new(NNodes - 1) As Double

@@ -158,9 +158,19 @@ Module Functions2D
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
     End Function
+
+    'Diffusion coefficient function 
+    Public Function GetDh(ByRef DT0 As Double, ByRef alpha As Double, ByRef Hc As Double, ByRef T As Double, ByRef H As Double)
+        Dim n As Integer = 4
+        Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
+        Dim R As Double = 8.31451
+        Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
+
+        Dim Dh As Double = DT0 * ((alpha + (1 - alpha) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
+        Return Dh
+    End Function
     'isotherm function 
-    'need to analyse and complet Xuande 2020.07.20
-    Public Function GetHtoS(ByRef H As Double)
+    Public Function GetHtoS(H, type, W_C_ratio, Tempetrature, day, rho_l, rho_c)
         Dim S As Double
         S = H
         Return S
