@@ -116,8 +116,8 @@ Public Class DiffusionXC
                 PrintLine(CInt(nFic1), " ")
             End If
 
-            FileClose(CInt(nFic1))
         Next
+        FileClose(CInt(nFic1))
         Beep()
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 

@@ -33,6 +33,7 @@ Public Class HydriqueXC
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+        Dim rho_c As Double = 2500 'density of concrete (kg/m3)
         Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
         Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
         Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
