@@ -18,10 +18,10 @@ Public Class DiffusionXC
         Elements = _Elements
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
-        Dim H_bound As Double = 0.25 'boundary relative humidity
-        Dim DiffCoeff As Double = 0.000217
-        Dim dt As Double = 3600 'time interval (s)
-        Dim tmax As Double = 86400 'end time (s) 24h
+        Dim H_bound As Double = 0.6 'boundary relative humidity
+        Dim DiffCoeff As Double = 0.000217  ' m2/s
+        Dim dt As Double = 3600 'time interval (day)
+        Dim tmax As Double = 259200 'end time (s) = 3 days
         Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
@@ -30,7 +30,7 @@ Public Class DiffusionXC
         Dim jj As Long
         Dim nFic1 As Short
         Dim outfile(1) As String
-        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) = 3 hours
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = directory & "\" & "R_H" & ".txt"
@@ -59,7 +59,7 @@ Public Class DiffusionXC
                     H_old(i) = H_int
                 Next
             Else
-                H_old = H_new
+                H_old = H_new ' H_t  = H_t-1
             End If
 
 
@@ -67,7 +67,7 @@ Public Class DiffusionXC
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    H_old(ie) = H_bound
+                    H_new(ie) = H_bound
                 End If
             Next
 
