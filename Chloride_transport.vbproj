@@ -245,7 +245,7 @@
     <Compile Include="Functions.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FunctionsXC.vb" />
+    <Compile Include="Functions2D.vb" />
     <Compile Include="Graph1.vb">
       <SubType>Code</SubType>
     </Compile>

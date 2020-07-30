@@ -1,6 +1,6 @@
 ﻿Imports System.Linq
 
-Module FunctionsXC
+Module Functions2D
     'get the LHS matrix for Gauss matrix resolution
     Public Function getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim LHS(NNodes - 1, NNodes - 1)
