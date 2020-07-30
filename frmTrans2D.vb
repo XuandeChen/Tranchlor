@@ -1,6 +1,4 @@
 ﻿Option Explicit On
-Option Strict On
-
 Imports System
 Imports System.ComponentModel
 Imports System.IO
@@ -41,6 +39,7 @@ Public Class frmTrans2D
 
     Private colorMap As ColorMap
     Private HRRange As Range
+    Private SRange As Range
 
     Private Directory As String
 
@@ -270,11 +269,11 @@ Public Class frmTrans2D
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), H_int, ",", TAB)
         Next jj
+        PrintLine(CInt(nFic1), " ")
 
         HRRange = New Range
 
         For i = 0 To NElements - 1
-
             ReDim Elements(i).HR(ind + 1)
             Elements(i).HR(0) = H_int * 100
             HRRange.AddValue(Elements(i).HR(0))
@@ -282,13 +281,9 @@ Public Class frmTrans2D
             Time(0) = 0
         Next
 
-
         Me.Invoke(Sub()
                       LabelProgress.Visible = True
                   End Sub)
-
-
-        PrintLine(CInt(nFic1), " ")
 
         'Globlal time loop
 
@@ -312,7 +307,7 @@ Public Class frmTrans2D
             End If
 
 
-            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
+            'step 2: check boundary conditions on each node then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
@@ -359,7 +354,7 @@ Public Class frmTrans2D
                 Hm(ti, j) = H_new(j)
             Next
 
-            'step 7: result .txt file update
+            'step 7: plot 2D image and export result .txt file 
             For i = 0 To NElements - 1
 
                 Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
@@ -373,13 +368,189 @@ Public Class frmTrans2D
                 RegisterH(nFic1, ti * dt, nDof, H_new)
                 PrintLine(CInt(nFic1), " ")
             End If
-
-
         Next
 
         FileClose(CInt(nFic1))
 
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        Analysed = True
+
+        Me.Invoke(Sub()
+                      LabelProgress.Visible = False
+                  End Sub)
+
+    End Sub
+    Public Sub AnalyseTransport()
+        'Material parameters, can be converted from user defined input
+        Dim temperature As Double = 273 '(K)
+        Dim pg As Double = 101325 'atmosphere pressure(pa)
+        Dim rho_v As Double = 1 'density of vapor (kg/m3)
+        Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+        Dim rho_c As Double = 2500 'density of concrete (kg/m3)
+        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
+        Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
+        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
+        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+        Dim phi As Double = 0.05 'porosity (-)
+        Dim type As Integer = 3 'cement type (-)
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim day As Double = 0 'porosity (-)
+        Dim Tempetrature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et d'espace, XC 2020.07.30
+
+        Dim nDof As Integer = NNodes
+        Dim H_int As Double = 0.25 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Tempetrature, day, rho_l, rho_c) 'initial relative humidity
+        Dim H_bound As Double = 0.999 'boundary relative humidity
+        Dim dt As Double = 3600 'time interval (s)
+        Dim tmax As Double = 259200 'end time (s) 72h
+        Dim ind As Double = tmax / dt
+        Dim T(ind) As Double 'time vector (days)
+        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim Hold(NNodes - 1) As Double
+        Dim Hnew(NNodes - 1) As Double
+        Dim S_old(NNodes - 1) As Double
+        Dim S_new(NNodes - 1) As Double
+        Dim jj As Long
+        Dim nFic1 As Short
+        Dim outfile(1) As String
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
+        Dim i, j, k As Integer
+        'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
+        outfile(1) = Directory & "\" & "R_S" & ".txt"
+        nFic1 = CShort(FreeFile())
+        FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
+
+        'step 0: Initialize output titres for result .txt files
+        Print(nFic1, "S", ",", nDof, ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
+        Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+        For jj = 0 To nDof - 1
+            Print(CInt(nFic1), S_int, ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
+
+        SRange = New Range
+
+        For i = 0 To NElements - 1
+            ReDim Elements(i).S(ind + 1)
+            Elements(i).S(0) = S_int * 100
+            SRange.AddValue(Elements(i).S(0))
+            ReDim Time(ind + 1)
+            Time(0) = 0
+        Next
+        'Globlal time loop
+        Dim ti As Integer
+
+        For ti = 0 To ind
+
+            Me.Invoke(Sub()
+                          LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
+                          Me.Refresh()
+                      End Sub)
+
+            ' step 1: initialisation saturation field
+            T(ti) = 0 + dt * (ti - 0)
+            If ti = 0 Then
+                For i = 0 To nDof - 1
+                    Hold(i) = H_int
+                    S_old(i) = S_int
+                Next
+            Else
+                Hold = Hnew
+                S_old = S_new
+            End If
+            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.20
+            Dim ie As Integer
+            For ie = 0 To NNodes - 1
+                If Nodes(ie).Bord = True Then
+                    day = CDbl(ti * dt / 3600 / 24)
+                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Tempetrature, day, rho_l, rho_c)
+                End If
+            Next
+
+            'step 3: elemental and global Matrix constructions
+            Dim LHS(,) As Double
+            Dim R(,) As Double
+            Dim RHS() As Double
+            Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+            Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+
+            Dim cie As CIETrans
+            Dim se As SETrans 'element saturation vector
+            Dim D As Double = GetD(temperature, pg)
+            Dim Dv As Double
+            Dim Dl As Double
+            Dim S_avg As Double 'element average saturation
+            Dim H_avg As Double
+            Dim kr As Double
+            Dim pc As Double
+            Dim dpcdS As Double
+            Dim f As Double
+            'Matrix assembling
+            For i = 0 To NElements - 1
+                Dim S_ele() As Double
+                se = New SETrans(
+                          S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
+                          S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
+                          )
+                S_ele = se.getSe
+                S_avg = GetAvgH(S_ele)
+                kr = Getkr(S_avg, beta)
+                pc = Getpc(S_avg, pc_0, m)
+                dpcdS = GetdpcdS(S_avg, pc_0, m)
+                Dl = GetDl(KK, yita_l, dpcdS, kr)
+                f = Getf(phi, S_avg)
+                Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
+                Dim De As Double = (Dv + Dl) / phi
+                cie = New CIETrans(
+                          Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                          Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                          De)
+                AssembleKg(cie.getbe, bg, i)
+                AssembleKg(cie.getAe, Ag, i)
+            Next
+
+            'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+            'LHS = getNewLHS(NNodes, phi, Ag, bg, dt)
+            'R = getNewR(NNodes, phi, Ag, bg, dt)
+            getLHS(LHS, NNodes, Ag, bg, dt)
+            getRHS(R, NNodes, Ag, bg, dt)
+            RHS = MultiplyMatrixWithVector(R, S_old)
+
+            'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            GetX(S_new, LHS, RHS)
+            ' compute Hnew as well
+            'Hnew = S_new.GetHtoS
+
+            'step 6: data stockage
+            For j = 0 To NNodes - 1
+                S_mat(ti, j) = S_new(j)
+            Next
+
+            'step 7: plot 2D image and export result .txt file 
+            For i = 0 To NElements - 1
+
+                Elements(i).S(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                SRange.AddValue(Elements(i).S(ti + 1))
+
+            Next
+
+            Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
+
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time 
+                RegisterS(nFic1, ti * dt, nDof, S_new)
+                PrintLine(CInt(nFic1), " ")
+            End If
+        Next
+        FileClose(CInt(nFic1))
+
+        MsgBox("Fin du calcul transport 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
 
         Me.Invoke(Sub()
@@ -395,7 +566,13 @@ Public Class frmTrans2D
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
-
+    Private Sub RegisterS(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef S_new() As Double)
+        'Register values
+        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic1), S_new(j), ",", TAB)
+        Next j
+    End Sub
     'Private Function MaxKgiiPower(ByRef Kg(,) As Double) As Double
     '    Dim Max As Double = Double.MinValue
     '    Dim i As Integer
@@ -1305,7 +1482,7 @@ Public Class frmTrans2D
 
         Dim myThread As System.Threading.Thread
 
-        myThread = New System.Threading.Thread(AddressOf Analyse)
+        myThread = New System.Threading.Thread(AddressOf AnalyseTransport)
 
         'frmC.MdiParent = Me
         'frmC.Show()

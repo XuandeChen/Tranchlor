@@ -110,9 +110,6 @@ Public Class TransportXC
             Dim pc As Double
             Dim dpcdS As Double
             Dim f As Double
-
-            Dim be(,) As Double
-            Dim Ae(,) As Double
             'Matrix assembling
             For i = 0 To NElements - 1
                 Dim S_ele() As Double
