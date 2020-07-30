@@ -236,7 +236,7 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         'Timer1
         '
         Me.Timer1.Enabled = True
-        Me.Timer1.Interval = 8000
+        Me.Timer1.Interval = 5000
         '
         'frmSplash
         '
@@ -264,8 +264,10 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
 
     'Lors de l'ouverture de la fenêtre
     Public Sub frmSplash_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+
         lblVersion.Text = "Version " & System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly.Location).FileMajorPart & "." & System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly.Location).FileMinorPart & "." '& App.Revision
         lblProductName.Text = "CIP-Model"
+
     End Sub
 
     'Lorsqu'une touche est frappée
@@ -280,12 +282,9 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
 
     'Gestion de la fenêtre
     Private Sub Run()
-        Timer1.Enabled = False
-        Me.Visible = False
-        Me.Close()
+        'Timer1.Enabled = False
+        'Me.Visible = False
+        'Me.Close()
     End Sub
 
-    Private Sub lblVersion_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles lblVersion.Click
-
-    End Sub
 End Class

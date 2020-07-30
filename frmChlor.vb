@@ -141,7 +141,7 @@ Public Class frmChlor : Inherits System.Windows.Forms.Form
         Me.Controls.Add(Me.PictureBox6)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmChlor"
-        Me.Text = "frmChlor"
+        Me.Text = "Transport 1D"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()

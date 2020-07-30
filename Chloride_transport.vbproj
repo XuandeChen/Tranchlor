@@ -195,9 +195,6 @@
     </Compile>
     <Compile Include="DiffusionXC.vb" />
     <Compile Include="CST.vb" />
-    <Compile Include="declarations.vb">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="dlgResults.Designer.vb">
       <DependentUpon>dlgResults.vb</DependentUpon>
     </Compile>
@@ -216,12 +213,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmChlor.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMesh.Designer.vb">
-      <DependentUpon>frmMesh.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmMesh.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmOption1.vb">
@@ -254,7 +245,6 @@
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Mesh.vb" />
     <Compile Include="Meteo.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -297,9 +287,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmChlor.resx">
       <DependentUpon>frmChlor.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMesh.resx">
-      <DependentUpon>frmMesh.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmOption1.resx">
       <DependentUpon>frmOption1.vb</DependentUpon>
@@ -348,7 +335,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <Content Include="LogoTrans.ico" />
     <None Include="My Project\Application.myapp">

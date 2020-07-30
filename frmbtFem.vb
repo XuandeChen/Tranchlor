@@ -26,23 +26,29 @@ Public Class frmbtFem
 
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
+    Private Time() As Double
+
     Private MeshFileOk As Boolean = False
 
     Private PointLoads() As PointLoad
     Private Supports() As Support
     Private Deformations() As Double 'the deformation vector
+    Private Analysed As Boolean = False
+
     Private ShowDeformations As Boolean = True
     Private ShowModel As Boolean = True
     Private ShowNodeNumbers As Boolean = False
     Private ShowElementsOnDeformedShape As Boolean = True
 
     Private colorMap As ColorMap
-    Private SigmaXRange, SigmaYRange, TauXYRange As Range
-    Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
+    Private HRRange As Range
+
+
+    'Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
 
     Private Enum Results
         None
-        SigmaX
+        HR
         SigmaY
         TauXY
         EpsilonX
@@ -60,6 +66,10 @@ Public Class frmbtFem
     Private Sub frmbtFem_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         bmp = New Bitmap(pbModel.Width, pbModel.Height, pbModel.CreateGraphics)
         gr = Graphics.FromImage(bmp)
+        TimeScrollBar.Visible = False
+        LabelT1.Visible = False
+        LabelTVal.Visible = False
+        LabelProgress.Visible = False
     End Sub
 
     Private bmp As Bitmap
@@ -88,6 +98,11 @@ Public Class frmbtFem
 
     Private Sub ClearAnalysisOutput()
         Erase Deformations 'Clear the earlier analysis output
+        TimeScrollBar.Visible = False
+        LabelT1.Visible = False
+        LabelTVal.Visible = False
+        LabelProgress.Visible = False
+        Analysed = False
     End Sub
 
     'Private Sub Analyse()
@@ -223,8 +238,9 @@ Public Class frmbtFem
     'End Sub
 
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans)
+
         ' start of computations
-        MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
+        'MsgBox("Calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Start")
         'Computational parameter control
         NNodes = _NNodes
         NElements = _NElements
@@ -264,18 +280,29 @@ Public Class frmbtFem
         '    Print(CInt(nFic1), H_int, ",", TAB)
         'Next jj
 
-        SigmaXRange = New Range
+        HRRange = New Range
 
         For i = 0 To NElements - 1
-            ReDim Elements(i).Stresses(ind + 1)
-            Elements(i).Stresses(0) = H_int * 100
-            SigmaXRange.AddValue(Elements(i).Stresses(0))
+
+            ReDim Elements(i).HR(ind + 1)
+            Elements(i).HR(0) = H_int * 100
+            HRRange.AddValue(Elements(i).HR(0))
+            ReDim Time(ind + 1)
+            Time(0) = 0
         Next
+
+        LabelProgress.Visible = True
 
         'PrintLine(CInt(nFic1), " ")
         'Globlal time loop
+
         Dim ti As Integer
+
         For ti = 0 To ind
+
+            LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
+            Me.Refresh()
+
             ' step 1: initialisation
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
@@ -335,20 +362,27 @@ Public Class frmbtFem
             Next
 
             'step 7: result .txt file update
-            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+            'If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
 
-                For i = 0 To NElements - 1
-                    Elements(i).Stresses(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
-                    SigmaXRange.AddValue(Elements(i).Stresses(ti + 1))
-                Next
-                'RegisterH(nFic1, ti * dt, nDof, H_new)
-                'PrintLine(CInt(nFic1), " ")
-            End If
+            For i = 0 To NElements - 1
+
+                Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
+                HRRange.AddValue(Elements(i).HR(ti + 1))
+
+            Next
+
+            Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
+
+            'RegisterH(nFic1, ti * dt, nDof, H_new)
+            'PrintLine(CInt(nFic1), " ")
+            'End If
 
             FileClose(CInt(nFic1))
         Next
-        Beep()
+
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        Analysed = True
+        LabelProgress.Visible = False
 
     End Sub
 
@@ -872,30 +906,37 @@ Public Class frmbtFem
         'Now, plot results if available
         'If Deformations IsNot Nothing AndAlso Deformations.Length > 0 Then
 
-        Dim eColor As Color
+        If Analysed = True Then
+
+            Dim eColor As Color
             'we can plot now.
             If ShowDeformations = True Then
-            ReDim ptsf(3)
+                ReDim ptsf(3)
 
-            'compute the colormap
+                'compute the colormap
 
-            'set the colormap if required
-            Select Case ShowResult
+                'set the colormap if required
+                Select Case ShowResult
                     Case Results.None
                         'create a dummy colormap
                         colorMap = New ColorMap(1, 0)
-                    Case Results.SigmaX
-                        colorMap = New ColorMap(SigmaXRange.Max, SigmaXRange.Min)
-                Case Results.SigmaY
-                    colorMap = New ColorMap(SigmaXRange.Max, SigmaXRange.Min)
-                Case Results.TauXY
-                    colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
-                    Case Results.EpsilonX
-                        colorMap = New ColorMap(EpsilonXRange.Max, EpsilonXRange.Min)
-                    Case Results.EpsilonY
-                        colorMap = New ColorMap(EpsilonYRange.Max, EpsilonYRange.Min)
-                    Case Results.GammaXY
-                        colorMap = New ColorMap(GammaXYRange.Max, GammaXYRange.Min)
+                    Case Results.HR
+                        colorMap = New ColorMap(Math.Round(HRRange.Max, 2), Math.Round(HRRange.Min, 2))
+                        'TimeScrollBar
+                        TimeScrollBar.Maximum = Time.Length()
+                        TimeScrollBar.Visible = True
+                        LabelT1.Visible = True
+                        LabelTVal.Visible = True
+                        'Case Results.SigmaY
+                        'colorMap = New ColorMap(HRRange.Max, HRRange.Min)
+                        'Case Results.TauXY
+                        'colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
+                        'Case Results.EpsilonX
+                        'colorMap = New ColorMap(EpsilonXRange.Max, EpsilonXRange.Min)
+                        'Case Results.EpsilonY
+                        'colorMap = New ColorMap(EpsilonYRange.Max, EpsilonYRange.Min)
+                        'Case Results.GammaXY
+                        'colorMap = New ColorMap(GammaXYRange.Max, GammaXYRange.Min)
                     Case Else
                         'just for completeness.. otherwise this block wont ever execute
                         'create a dummy colormap
@@ -909,41 +950,45 @@ Public Class frmbtFem
                     Select Case ShowResult
                         Case Results.None
                             eColor = eleColorDeformed
-                        Case Results.SigmaX
-                            eColor = colorMap.getColor(Elements(i).Stresses(0))
-                        Case Results.SigmaY
-                            eColor = colorMap.getColor(Elements(i).Stresses(1))
-                        Case Results.TauXY
-                            eColor = colorMap.getColor(Elements(i).Stresses(2))
-                        Case Results.EpsilonX
-                            eColor = colorMap.getColor(Elements(i).Strains(0))
-                        Case Results.EpsilonY
-                            eColor = colorMap.getColor(Elements(i).Strains(1))
-                        Case Results.GammaXY
-                            eColor = colorMap.getColor(Elements(i).Strains(2))
+                        Case Results.HR
+                            'eColor = colorMap.getColor(Elements(i).Stresses(0))
+
+                            eColor = colorMap.getColor(Elements(i).HR(TimeScrollBar.Value))
+                            LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
+                            'Case Results.SigmaY
+                            'eColor = colorMap.getColor(Elements(i).Stresses(1))
+                            'eColor = colorMap.getColor(Elements(i).HR(1))
+                            'Case Results.TauXY
+                            'eColor = colorMap.getColor(Elements(i).Stresses(2))
+                            'Case Results.EpsilonX
+                            'eColor = colorMap.getColor(Elements(i).Strains(0))
+                            'Case Results.EpsilonY
+                            'eColor = colorMap.getColor(Elements(i).Strains(1))
+                            'Case Results.GammaXY
+                            'eColor = colorMap.getColor(Elements(i).Strains(2))
                         Case Else
                             eColor = eleColor
                     End Select
 
 
-                n1 = Elements(i).Node1 - 1
-                n2 = Elements(i).Node2 - 1
-                n3 = Elements(i).Node3 - 1
+                    n1 = Elements(i).Node1 - 1
+                    n2 = Elements(i).Node2 - 1
+                    n3 = Elements(i).Node3 - 1
 
-                n4 = Elements(i).Node4 - 1
+                    n4 = Elements(i).Node4 - 1
 
-                'ptsf(0) = New PointF((CSng(Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx), CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
-                'ptsf(1) = New PointF((CSng(Nodes(n2).x * zoom + getDeformationX(n2) * DeformationZoom) + shiftx), CSng((-Nodes(n2).y * zoom - getDeformationY(n2) * DeformationZoom) + shifty))
-                'ptsf(2) = New PointF((CSng(Nodes(n3).x * zoom + getDeformationX(n3) * DeformationZoom) + shiftx), CSng((-Nodes(n3).y * zoom - getDeformationY(n3) * DeformationZoom) + shifty))
-                'ptsf(3) = New PointF((CSng(Nodes(n4).x * zoom + getDeformationX(n4) * DeformationZoom) + shiftx), CSng((-Nodes(n4).y * zoom - getDeformationY(n4) * DeformationZoom) + shifty))
+                    'ptsf(0) = New PointF((CSng(Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx), CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
+                    'ptsf(1) = New PointF((CSng(Nodes(n2).x * zoom + getDeformationX(n2) * DeformationZoom) + shiftx), CSng((-Nodes(n2).y * zoom - getDeformationY(n2) * DeformationZoom) + shifty))
+                    'ptsf(2) = New PointF((CSng(Nodes(n3).x * zoom + getDeformationX(n3) * DeformationZoom) + shiftx), CSng((-Nodes(n3).y * zoom - getDeformationY(n3) * DeformationZoom) + shifty))
+                    'ptsf(3) = New PointF((CSng(Nodes(n4).x * zoom + getDeformationX(n4) * DeformationZoom) + shiftx), CSng((-Nodes(n4).y * zoom - getDeformationY(n4) * DeformationZoom) + shifty))
 
-                ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
-                ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
-                ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
-                ptsf(3) = New PointF(CSng(Nodes(n4).x * zoom + shiftx), CSng(-Nodes(n4).y * zoom + shifty))
+                    ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
+                    ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
+                    ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
+                    ptsf(3) = New PointF(CSng(Nodes(n4).x * zoom + shiftx), CSng(-Nodes(n4).y * zoom + shifty))
 
-                'Draw the element
-                gr.FillPolygon(New SolidBrush(eColor), ptsf)
+                    'Draw the element
+                    gr.FillPolygon(New SolidBrush(eColor), ptsf)
                     If ShowElementsOnDeformedShape = True Then
                         gr.DrawPolygon(New Pen(Color.Black), ptsf)
                     End If
@@ -993,7 +1038,7 @@ Public Class frmbtFem
 
 
             End If
-        'End If
+        End If
         pbModel.Refresh()
     End Sub
 
@@ -1103,13 +1148,13 @@ Public Class frmbtFem
         For i = 0 To NElements - 1
             s = (i + 1).ToString & vbTab & vbTab
 
-            s = s & Elements(i).Stresses(0).ToString & vbTab & vbTab
-            s = s & Elements(i).Stresses(1).ToString & vbTab & vbTab
-            s = s & Elements(i).Stresses(2).ToString & vbTab & vbTab
+            s = s & Elements(i).HR(0).ToString & vbTab & vbTab
+            s = s & Elements(i).HR(1).ToString & vbTab & vbTab
+            s = s & Elements(i).HR(2).ToString & vbTab & vbTab
 
-            s = s & Elements(i).Strains(0).ToString & vbTab & vbTab
-            s = s & Elements(i).Strains(1).ToString & vbTab & vbTab
-            s = s & Elements(i).Strains(2).ToString
+            's = s & Elements(i).Strains(0).ToString & vbTab & vbTab
+            's = s & Elements(i).Strains(1).ToString & vbTab & vbTab
+            's = s & Elements(i).Strains(2).ToString
 
             sb.AppendLine(s)
         Next
@@ -1207,15 +1252,15 @@ Public Class frmbtFem
 
 
     Private Sub HandleShowResultClick(sender As Object, e As EventArgs) Handles NoneToolStripMenuItem.Click,
-            SigmaXToolStripMenuItem.Click, SigmaYToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
+            HRToolStripMenuItem.Click, SigmaYToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
             EpsilonXToolStripMenuItem.Click, EpsilonYToolStripMenuItem.Click, GammaXYToolStripMenuItem.Click
 
         ShowResult = Results.None
 
         If sender.Equals(NoneToolStripMenuItem) Then
             ShowResult = Results.None
-        ElseIf sender.Equals(SigmaXToolStripMenuItem) Then
-            ShowResult = Results.SigmaX
+        ElseIf sender.Equals(HRToolStripMenuItem) Then
+            ShowResult = Results.HR
         ElseIf sender.Equals(SigmaYToolStripMenuItem) Then
             ShowResult = Results.SigmaY
         ElseIf sender.Equals(TauXYToolStripMenuItem) Then
@@ -1229,6 +1274,14 @@ Public Class frmbtFem
         End If
 
         DrawModel()
+    End Sub
+
+    Private Sub TimeScrollBar_Scroll(sender As Object, e As ScrollEventArgs) Handles TimeScrollBar.Scroll
+        DrawModel()
+    End Sub
+
+    Private Sub ExitToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Me.Close()
     End Sub
 
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
@@ -1261,6 +1314,9 @@ Public Class frmbtFem
         DrawModel()
     End Sub
 
+
+
+
     Private Sub frmbtFem_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         If MsgBox("Are you sure you want to exit?", MsgBoxStyle.OkCancel) = MsgBoxResult.Cancel Then
             e.Cancel = True
@@ -1270,7 +1326,7 @@ Public Class frmbtFem
     Private Sub ShowToolStripMenuItem_DropDownOpening(sender As Object, e As EventArgs) Handles ShowToolStripMenuItem.DropDownOpening
 
         NoneToolStripMenuItem.Checked = False
-        SigmaXToolStripMenuItem.Checked = False
+        HRToolStripMenuItem.Checked = False
         SigmaYToolStripMenuItem.Checked = False
         TauXYToolStripMenuItem.Checked = False
         EpsilonXToolStripMenuItem.Checked = False
@@ -1281,8 +1337,8 @@ Public Class frmbtFem
         Select Case ShowResult
             Case Results.None
                 NoneToolStripMenuItem.Checked = True
-            Case Results.SigmaX
-                SigmaXToolStripMenuItem.Checked = True
+            Case Results.HR
+                HRToolStripMenuItem.Checked = True
             Case Results.SigmaY
                 SigmaYToolStripMenuItem.Checked = True
             Case Results.TauXY
@@ -1303,4 +1359,39 @@ Public Class frmbtFem
         ShowNodeNumbersToolStripMenuItem.Checked = ShowNodeNumbers
         ShowElementsOnDeformedShapeToolStripMenuItem.Checked = ShowElementsOnDeformedShape
     End Sub
+
+    Private Sub pbModel_MouseWheel(sender As Object, e As MouseEventArgs) Handles pbModel.MouseWheel
+
+        If e.Delta = 120 Then
+
+            If vs.Value - vs.LargeChange >= 0 Then
+
+                vs.Value -= vs.LargeChange
+
+            ElseIf vs.Value - 1 >= 0 Then
+
+                vs.Value -= 1
+
+            End If
+
+        Else
+
+            If vs.Value + vs.LargeChange <= vs.Maximum Then
+
+                vs.Value += vs.LargeChange
+
+            ElseIf vs.Value + 1 <= vs.Maximum Then
+
+                vs.Value += 1
+
+            End If
+
+        End If
+
+        DrawModel()
+
+    End Sub
+
+
+
 End Class

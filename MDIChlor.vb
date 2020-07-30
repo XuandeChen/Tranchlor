@@ -201,6 +201,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Dim Para5 As Short
     Dim frm01 As frmOption1
     Dim frmC As New frmChlor
+    Dim frm2D As New frmbtFem
     Dim diff As New DiffusionXC
     Dim transport As New HydriqueXC
     Dim directoryPath As String
@@ -213,6 +214,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
     'Lorsque la fenêtre est activée
     Private Sub MDIChlor_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+
         My.Application.ChangeCulture("en-US")
         Me.IsMdiContainer = True
         Me.WindowState = FormWindowState.Maximized
@@ -222,6 +224,13 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         frmC.Height = (Me.Height)
         frmC.Width = (Me.Width)
         frmC.Hide()
+
+        frm2D.Left = 0
+        frm2D.Top = 0
+        frm2D.Height = (Me.Height)
+        frm2D.Width = (Me.Width)
+        frm2D.Hide()
+
     End Sub
 
     'Programme de lecture des donnees maillage D. C et Xuande  10/06/2020
@@ -318,15 +327,19 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
     'quitter le programme
     Private Sub _MnuProject_5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _MnuProject_5.Click
+
         Me.Close()
         End
+
     End Sub
 
     'Ouverture de Input dans le menu déroulant
     Private Sub MenuItem6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem6.Click
+
         frm01.ShowDialog()
         frm01.Hide()
         frm01.Close()
+
     End Sub
 
     'Lancement de Open dans le menu déroulant
@@ -749,46 +762,58 @@ b:      'user pressed cancel error
 
     'construction de graphique
     Private Sub MenuItem8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem8.Click
+
         Using frm03 As New frmScale1
             frmC.MdiParent = Me
             frmC.Show()
             manage_graph(frmC, frm03)
         End Using
+
     End Sub
 
     'traitement des données météorologiques
     Private Sub MenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem2.Click
+
         MeteoTreatment()
+
     End Sub
 
     'lancement de l'approche probabiliste
     Private Sub MenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem4.Click
+
         Using frm03 As New frmProb
             frm03.ShowDialog()
         End Using
+
     End Sub
 
     'lancement du traitement graphique des probabilités
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
+
         Using frm03 As New frmScale1
             frmC.MdiParent = Me
             frmC.Show()
             ProbGraph(frmC, frm03)
         End Using
+
     End Sub
 
     Private Sub MenuItem12_Click(sender As Object, e As EventArgs) Handles MenuItem12.Click 'Thomas 28/04/2020
+
         Using frm04 As New frmSplash
             frm04.ShowDialog()
         End Using
+
     End Sub
 
     Private Sub MenuItem11_Click(sender As Object, e As EventArgs) Handles MenuItem11.Click 'Thomas 28/04/2020
+
         Dim manual As Byte() = My.Resources.ModeEmploi_v4
         Using tmp As New FileStream("ModeEmploi_v4.pdf", FileMode.Create)
             tmp.Write(manual, 0, manual.Length)
         End Using
         Process.Start("ModeEmploi_v4.pdf")
+
     End Sub
 
     'Private Sub MenuItem13_Click(sender As Object, e As EventArgs) Handles MenuItem13.Click
@@ -846,9 +871,12 @@ b:      'user pressed cancel error
 
         'End If
 
-        Using frm04 As New frmbtFem
-            frm04.ShowDialog()
-        End Using
+        frm2D.MdiParent = Me
+        frm2D.Show()
+
+        'Using frm04 As New frmbtFem
+        'frm04.ShowDialog()
+        'End Using
 
     End Sub
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
