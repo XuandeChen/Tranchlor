@@ -98,12 +98,12 @@ Public Class DiffusionXC
             Next
 
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
-            LHS = getLHS(NNodes, Ag, bg, dt)
-            R = getRHS(NNodes, Ag, bg, dt)
+            getLHS(LHS, NNodes, Ag, bg, dt)
+            getRHS(R, NNodes, Ag, bg, dt)
             RHS = MultiplyMatrixWithVector(R, H_old)
 
             'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            H_new = GetX(LHS, RHS)
+            GetX(H_new, LHS, RHS)
 
             'step 6: data stockage
             For j = 0 To NNodes - 1

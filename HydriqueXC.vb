@@ -139,12 +139,12 @@ Public Class HydriqueXC
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
             'LHS = getNewLHS(NNodes, phi, Ag, bg, dt)
             'R = getNewR(NNodes, phi, Ag, bg, dt)
-            LHS = getLHS(NNodes, Ag, bg, dt)
-            R = getRHS(NNodes, Ag, bg, dt)
+            getLHS(LHS, NNodes, Ag, bg, dt)
+            getRHS(R, NNodes, Ag, bg, dt)
             RHS = MultiplyMatrixWithVector(R, S_old)
 
             'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            S_new = GetX(LHS, RHS)
+            GetX(S_new, LHS, RHS)
             ' compute Hnew as well
             'Hnew = S_new.GetHtoS
 

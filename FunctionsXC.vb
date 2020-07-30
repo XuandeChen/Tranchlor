@@ -2,47 +2,45 @@
 
 Module FunctionsXC
     'get the LHS matrix for Gauss matrix resolution
-    Public Function getLHS(ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-        Dim LHS(NNodes - 1, NNodes - 1) As Double
+    Public Function getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim LHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
                 LHS(i, j) = A(i, j) / 2 + b(i, j) / dt
             Next
         Next
-        Return LHS
     End Function
-    Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-        Dim LHS(NNodes - 1, NNodes - 1) As Double
-        Dim i, j As Integer
-        For i = 0 To NNodes - 1
-            For j = 0 To NNodes - 1
-                LHS(i, j) = phi * A(i, j) / 2 + b(i, j) / dt
-            Next
-        Next
-        Return LHS
-    End Function
+    'Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    '    Dim LHS(NNodes - 1, NNodes - 1) As Double
+    '    Dim i, j As Integer
+    '    For i = 0 To NNodes - 1
+    '        For j = 0 To NNodes - 1
+    '            LHS(i, j) = phi * A(i, j) / 2 + b(i, j) / dt
+    '        Next
+    '    Next
+    '    Return LHS
+    'End Function
     'get the RHS matrix for Gauss matrix resolution
-    Public Function getRHS(ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-        Dim RHS(NNodes - 1, NNodes - 1) As Double
+    Public Function getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim RHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
                 RHS(i, j) = b(i, j) / dt - A(i, j) / 2
             Next
         Next
-        Return RHS
     End Function
-    Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-        Dim R(NNodes - 1, NNodes - 1) As Double
-        Dim i, j As Integer
-        For i = 0 To NNodes - 1
-            For j = 0 To NNodes - 1
-                R(i, j) = b(i, j) / dt - phi * A(i, j) / 2
-            Next
-        Next
-        Return R
-    End Function
+    'Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    '    Dim R(NNodes - 1, NNodes - 1) As Double
+    '    Dim i, j As Integer
+    '    For i = 0 To NNodes - 1
+    '        For j = 0 To NNodes - 1
+    '            R(i, j) = b(i, j) / dt - phi * A(i, j) / 2
+    '        Next
+    '    Next
+    '    Return R
+    'End Function
     'get degree of freedom /water diffusion
     Public Function getDOF(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 1
@@ -64,7 +62,7 @@ Module FunctionsXC
         Return ab
     End Function
     'linear matrix system resolution by Gauss elimination
-    Public Function GetX(ByRef A(,) As Double, ByRef b() As Double)
+    Public Function GetX(ByRef X As Double(), ByRef A(,) As Double, ByRef b() As Double)
         Dim aRows As Integer = A.GetLength(0)
         Dim aCols As Integer = A.GetLength(1)
         Dim bRows As Integer = b.GetLength(0)
@@ -72,7 +70,7 @@ Module FunctionsXC
         Dim i, j, k As Integer
         Dim sum As Double
         Dim s As Integer = bRows
-        Dim X(s - 1) As Double
+        ReDim X(s - 1)
 
         For j = 0 To s - 2 Step 1
             For i = s - 1 To j + 1 Step -1
@@ -94,7 +92,6 @@ Module FunctionsXC
             Next
             X(i) = (b(i) - sum) / A(i, i)
         Next
-        Return X
     End Function
 
     ''liquid water transport functions: (Equation and formula from Marc Mainguy, 2001)
