@@ -11,6 +11,7 @@ Module Functions2D
             Next
         Next
     End Function
+
     'Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
     '    Dim LHS(NNodes - 1, NNodes - 1) As Double
     '    Dim i, j As Integer
@@ -31,6 +32,7 @@ Module Functions2D
             Next
         Next
     End Function
+
     'Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
     '    Dim R(NNodes - 1, NNodes - 1) As Double
     '    Dim i, j As Integer
@@ -144,13 +146,12 @@ Module Functions2D
         Return Dh
     End Function
     'diffusion coefficient of water vapor or dry air in wet air [cm2/s] (Equation and formula from Marc Mainguy, 2001)
-    Public Function GetD(ByRef temperature As Double, ByRef pg As Double) As Double
-        Dim T As Double = temperature
+    Public Function GetD(ByRef Tk As Double, ByRef pg As Double) As Double
         Dim Dva As Double
         Dim p_atm As Double = 101325 'atmosphere pressure [pa]
         Dim T0 As Double = 273 '0 degree [K]
         Dim D As Double
-        Dva = 0.217 * p_atm * (T / T0) ^ 1.88
+        Dva = 0.217 * p_atm * ((Tk / T0) ^ 1.88)
         D = Dva / pg
         Return D
     End Function
@@ -168,22 +169,35 @@ Module Functions2D
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
     End Function
+    ' saturated water function 
+    Public Function GetWsat(ByRef C As Double, ByRef alpha As Double, ByRef W_C_ratio As Double, ByRef phi As Double) As Double
+        Dim Wsat As Double = C * W_C_ratio - (0.17 * alpha * C) + 10 * phi
+        Return Wsat
+    End Function
     'isotherm function 
-    Public Function GetHtoS(ByRef H As Double, ByRef type As Integer, ByRef W_C_ratio As Double, ByRef T As Double, ByRef day As Double, ByRef rho_l As Double, ByRef rho_c As Double) As Double
+    Public Function GetHtoS(ByRef H As Double, ByRef type As Integer, ByRef C As Double, ByRef W_C_ratio As Double, ByRef Tk As Double, ByRef day As Double, ByRef rho_l As Double, ByRef rho_c As Double, ByRef alpha As Double, ByRef w As Double) As Double
         Dim NT As Double = 1
         Dim VT As Double = 1
         Dim C0 As Double = 855
-        ' the adsorption curve from [Bazant]
-        Dim C As Double = Cfunc(C0, T)
+        ' the adsorption curve from [Xi 1994]
+        Dim Cbet As Double = Cfunc(C0, Tk)
         Dim Vm As Double = Vmfunc(day, W_C_ratio, type, VT)
         Dim n As Double = nfunc(day, W_C_ratio, type, NT)
         Dim k As Double = kfunc(C, n)
         Dim wc1 As Double = (C * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
         Dim phi As Double = wc1 * (rho_c / rho_l) 'intermediate term
         Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
-        Dim S As Double = wc / wc1
-        Return S 'deactivate for test
-        ' the desorption curve from [Rosfelt]
+        Dim Sa As Double = wc / wc1
+        ' the desorption curve from [Roelfstra 1989]
+        Dim Tc = Tk - 273 'temperature in [C]
+
+
+        Dim wr1 As Double
+
+        Dim Sd As Double
+        Dim S As Double
+        S = w * Sd + (1 - w) * Sa 'deactivate for test
+        Return S
         ' Return H 'activate or deactivate for test
     End Function
     Public Function nfunc(ByRef day As Double, ByRef W_C_ratio As Double, ByRef type As Integer, ByRef NT As Double) As Double
@@ -242,4 +256,5 @@ Module Functions2D
         H_avg = He.Average()
         Return H_avg
     End Function
+
 End Module

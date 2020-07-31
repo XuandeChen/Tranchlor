@@ -28,13 +28,19 @@ Public Class TransportXC
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim C As Double = 375 'density of cement (kg/m3)
         Dim day As Double = 90 'age (day)
-        Dim Temperature As Double = 273 'temperature (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
-        'Material parameters
+        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim alpha As Double = 0.6 'hydration degree (-)
+        Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Tc As Double = Tk - 273 'temperature in (C)
+        Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+        'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.25 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Temperature, day, rho_l, rho_c) 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
         Dim H_bound As Double = 0.999 'boundary relative humidity
+        Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
         Dim ind As Double = tmax / dt
@@ -68,9 +74,8 @@ Public Class TransportXC
         'Globlal time loop
         Dim ti As Integer
         Dim i, j， k As Integer
-        For ti = 0 To ind
-            '''-----------------------------------------------------------------------------------------------
-            '''-----------------------------------------------------------------------------------------------
+        For ti = 0 To CInt(ind)
+
             ' step 1: initialisation saturation field
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
@@ -82,11 +87,13 @@ Public Class TransportXC
                 Hold = Hnew
                 S_old = S_new
             End If
+
             'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.20
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Temperature, day, rho_l, rho_c)
+                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    S_old(ie) = S_bound
                 End If
             Next
 
@@ -96,10 +103,9 @@ Public Class TransportXC
             Dim RHS() As Double
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-
             Dim cie As CIETrans
             Dim se As SETrans 'element saturation vector
-            Dim D As Double = GetD(temperature, pg)
+            Dim D As Double = GetD(Tk, pg)
             Dim Dv As Double
             Dim Dl As Double
             Dim S_avg As Double 'element average saturation
