@@ -16,7 +16,6 @@ Public Class TransportXC
         Nodes = _Nodes
         Elements = _Elements
         'Material parameters, can be converted from user defined input
-        Dim temperature As Double = 273 '(K)
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
@@ -30,11 +29,11 @@ Public Class TransportXC
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
         Dim day As Double = 0 'porosity (-)
-        Dim Tempetrature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
-
+        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        'Material parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.25 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Tempetrature, day, rho_l, rho_c) 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Temperature, day, rho_l, rho_c) 'initial relative humidity
         Dim H_bound As Double = 0.999 'boundary relative humidity
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
@@ -43,7 +42,6 @@ Public Class TransportXC
         Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim Hold(NNodes - 1) As Double
         Dim Hnew(NNodes - 1) As Double
-
         Dim S_old(NNodes - 1) As Double
         Dim S_new(NNodes - 1) As Double
         Dim jj As Long
@@ -88,7 +86,7 @@ Public Class TransportXC
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Tempetrature, day, rho_l, rho_c)
+                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Temperature, day, rho_l, rho_c)
                 End If
             Next
 

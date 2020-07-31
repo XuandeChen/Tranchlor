@@ -14,14 +14,32 @@ Public Class DiffusionXC
         NElements = _NElements
         Nodes = _Nodes
         Elements = _Elements
+        'Material parameters, can be converted from user defined input
+        Dim pg As Double = 101325 'atmosphere pressure(pa)
+        Dim rho_v As Double = 1 'density of vapor (kg/m3)
+        Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+        Dim rho_c As Double = 2500 'density of concrete (kg/m3)
+        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
+        Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
+        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
+        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+        Dim phi As Double = 0.05 'porosity (-)
+        Dim type As Integer = 3 'cement type (-)
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim day As Double = 0 'porosity (-)
+        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim D0 As Double = 0.00031  ' mm2/s
+        Dim alpha_0 As Double = 0.05
+        Dim Hc As Double = 0.75
+        'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
         Dim H_bound As Double = 0.6 'boundary relative humidity
-        Dim DiffCoeff As Double = 0.000217  ' m2/s
         Dim dt As Double = 3600 'time interval (day)
-        Dim tmax As Double = 259200 'end time (s) = 3 days
+        Dim tmax As Double = 259200 'end time (s) = 3 days = 72h
         Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector (days)
+        Dim T(ind) As Double 'time vector 
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim H_old(NNodes - 1) As Double
         Dim H_new(NNodes - 1) As Double
@@ -29,6 +47,7 @@ Public Class DiffusionXC
         Dim nFic1 As Short
         Dim outfile(1) As String
         Dim T_sauv As Single = 14400 'ouput time inteval (s) = 3 hours
+        Dim i, j, k As Integer
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = directory & "\" & "R_H" & ".txt"
@@ -48,7 +67,6 @@ Public Class DiffusionXC
         PrintLine(CInt(nFic1), " ")
         'Globlal time loop
         Dim ti As Integer
-        Dim i, j, k As Integer
         For ti = 0 To ind
             ' step 1: initialisation
             T(ti) = 0 + dt * (ti - 0)
@@ -57,15 +75,14 @@ Public Class DiffusionXC
                     H_old(i) = H_int
                 Next
             Else
-                H_old = H_new ' H_t  = H_t-1
+                H_old = H_new 'H_t  = H_t-1
             End If
-
 
             'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
             Dim ie As Integer
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    H_new(ie) = H_bound
+                    H_old(ie) = H_bound
                 End If
             Next
 
@@ -77,22 +94,26 @@ Public Class DiffusionXC
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim he As HETrans
-
+            Dim H_avg As Double
+            Dim H_ele() As Double
+            Dim De As Double
             'Matrix assembling
             For i = 0 To NElements - 1
+                he = New HETrans(
+                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                          )
+                H_ele = he.getHe
+                H_avg = GetAvgH(H_ele)
+                De = GetDh(D0, alpha_0, Hc, Temperature, H_avg)
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                          DiffCoeff)
-                he = New HETrans(
-                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
-                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
-                          )
+                          De)
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
-
             Next
 
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
@@ -116,7 +137,6 @@ Public Class DiffusionXC
 
         Next
         FileClose(CInt(nFic1))
-        Beep()
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
     End Sub

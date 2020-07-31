@@ -132,8 +132,18 @@ Module Functions2D
         Return Dl
     End Function
 
-    ''water vapor transport functions: (Equation and formula from Marc Mainguy, 2001)
-    'diffusion coefficient of water vapor or dry air in wet air [cm2/s]
+    'water vapor transport functions: 
+    'diffusion coefficient of water vapor  [mm2/s] (Equation and formula from Bazant, 2001)
+    Public Function GetDh(ByRef DT0 As Double, ByRef alpha_0 As Double, ByRef Hc As Double, ByRef T As Double, ByRef H As Double) As Double
+        Dim n As Integer = 4
+        Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
+        Dim R As Double = 8.31451
+        Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
+
+        Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
+        Return Dh
+    End Function
+    'diffusion coefficient of water vapor or dry air in wet air [cm2/s] (Equation and formula from Marc Mainguy, 2001)
     Public Function GetD(ByRef temperature As Double, ByRef pg As Double) As Double
         Dim T As Double = temperature
         Dim Dva As Double
@@ -158,17 +168,6 @@ Module Functions2D
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
     End Function
-
-    'Diffusion coefficient function 
-    Public Function GetDh(ByRef DT0 As Double, ByRef alpha As Double, ByRef Hc As Double, ByRef T As Double, ByRef H As Double) As Double
-        Dim n As Integer = 4
-        Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
-        Dim R As Double = 8.31451
-        Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
-
-        Dim Dh As Double = DT0 * ((alpha + (1 - alpha) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
-        Return Dh
-    End Function
     'isotherm function 
     Public Function GetHtoS(ByRef H As Double, ByRef type As Integer, ByRef W_C_ratio As Double, ByRef T As Double, ByRef day As Double, ByRef rho_l As Double, ByRef rho_c As Double) As Double
         Dim NT As Double = 1
@@ -184,7 +183,8 @@ Module Functions2D
         Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
         Dim S As Double = (wc / phi) * (rho_c / rho_l)
         ' the desorption curve from [Rosfelt]
-        Return S
+        ' Return S 'deactivate for test
+        Return H
     End Function
     Public Function nfunc(ByRef day As Double, ByRef W_C_ratio As Double, ByRef type As Integer, ByRef NT As Double) As Double
         Dim N_Ct As Double

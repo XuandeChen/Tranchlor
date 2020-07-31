@@ -235,13 +235,31 @@ Public Class frmTrans2D
     'End Sub
     ' Program for computation 2D diffusion 
     Public Sub Analyse()
+        'Material parameters, can be converted from user defined input
+        Dim pg As Double = 101325 'atmosphere pressure(pa)
+        Dim rho_v As Double = 1 'density of vapor (kg/m3)
+        Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+        Dim rho_c As Double = 2500 'density of concrete (kg/m3)
+        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
+        Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
+        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
+        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+        Dim phi As Double = 0.05 'porosity (-)
+        Dim type As Integer = 3 'cement type (-)
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim day As Double = 0 'porosity (-)
+        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim D0 As Double = 0.00031  ' mm2/s
+        Dim alpha_0 As Double = 0.05
+        Dim Hc As Double = 0.75
+        'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
-        Dim H_bound As Double = 0.25 'boundary relative humidity
-        Dim DiffCoeff As Double = 0.000217
-        Dim dt As Double = 3600 'time interval (s)
-        Dim tmax As Double = 86400 'end time (s) 24h
-        Dim ind As Integer = CInt(tmax / dt)
+        Dim H_bound As Double = 0.6 'boundary relative humidity
+        Dim dt As Double = 3600 'time interval (day)
+        Dim tmax As Double = 259200 'end time (s) = 3 days
+        Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
         Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim H_old(NNodes - 1) As Double
@@ -249,17 +267,15 @@ Public Class frmTrans2D
         Dim jj As Long
         Dim nFic1 As Short
         Dim outfile(1) As String
-        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) = 3 hours
         Dim i, j, k As Integer
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
-
         outfile(1) = Directory & "\" & "R_H" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
 
         'step 0 Initialize output titres for result .txt files
-
         Print(nFic1, "RH", ",", nDof, ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
@@ -306,7 +322,6 @@ Public Class frmTrans2D
                 H_old = H_new
             End If
 
-
             'step 2: check boundary conditions on each node then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
             Dim ie As Integer
             For ie = 0 To NNodes - 1
@@ -323,22 +338,26 @@ Public Class frmTrans2D
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim he As HETrans
-
+            Dim H_avg As Double
+            Dim H_ele() As Double
+            Dim De As Double
             'Matrix assembling
             For i = 0 To NElements - 1
+                he = New HETrans(
+                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                          )
+                H_ele = he.getHe
+                H_avg = GetAvgH(H_ele)
+                De = GetDh(D0, alpha_0, Hc, Temperature, H_avg)
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                          DiffCoeff)
-                he = New HETrans(
-                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
-                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
-                          )
+                          De)
                 AssembleKg(cie.getbe, bg, i)
                 AssembleKg(cie.getAe, Ag, i)
-
             Next
 
             'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
@@ -382,7 +401,6 @@ Public Class frmTrans2D
     End Sub
     Public Sub AnalyseTransport()
         'Material parameters, can be converted from user defined input
-        Dim temperature As Double = 273 '(K)
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
@@ -396,16 +414,19 @@ Public Class frmTrans2D
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
         Dim day As Double = 0 'porosity (-)
-        Dim Tempetrature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et d'espace, XC 2020.07.30
-
+        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et d'espace, XC 2020.07.30
+        Dim D0 As Double = 0.00031  ' mm2/s
+        Dim alpha_0 As Double = 0.05
+        Dim Hc As Double = 0.75
+        'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.25 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Tempetrature, day, rho_l, rho_c) 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Temperature, day, rho_l, rho_c) 'initial relative humidity
         Dim H_bound As Double = 0.999 'boundary relative humidity
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
         Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector (days)
+        Dim T(ind) As Double 'time vector 
         Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim Hold(NNodes - 1) As Double
         Dim Hnew(NNodes - 1) As Double
@@ -416,6 +437,7 @@ Public Class frmTrans2D
         Dim outfile(1) As String
         Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
         Dim i, j, k As Integer
+
         'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
         outfile(1) = Directory & "\" & "R_S" & ".txt"
         nFic1 = CShort(FreeFile())
@@ -468,7 +490,7 @@ Public Class frmTrans2D
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
                     day = CDbl(ti * dt / 3600 / 24)
-                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Tempetrature, day, rho_l, rho_c)
+                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Temperature, day, rho_l, rho_c)
                 End If
             Next
 
@@ -478,7 +500,6 @@ Public Class frmTrans2D
             Dim RHS() As Double
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-
             Dim cie As CIETrans
             Dim se As SETrans 'element saturation vector
             Dim D As Double = GetD(temperature, pg)
@@ -490,9 +511,10 @@ Public Class frmTrans2D
             Dim pc As Double
             Dim dpcdS As Double
             Dim f As Double
+            Dim S_ele() As Double
+            Dim De As Double
             'Matrix assembling
             For i = 0 To NElements - 1
-                Dim S_ele() As Double
                 se = New SETrans(
                           S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
                           S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
@@ -505,7 +527,7 @@ Public Class frmTrans2D
                 Dl = GetDl(KK, yita_l, dpcdS, kr)
                 f = Getf(phi, S_avg)
                 Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
-                Dim De As Double = (Dv + Dl) / phi
+                De = (Dv + Dl) / phi
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
@@ -1447,8 +1469,6 @@ Public Class frmTrans2D
         End If
 
         'perform analysis using the finite elemeent method
-        'diffusion.Analyse(NNodes, NElements, Nodes, Elements, Directory)
-        'Return
 
         Dim myThread As System.Threading.Thread
 
@@ -1477,8 +1497,6 @@ Public Class frmTrans2D
         End If
 
         'perform analysis using the finite elemeent method
-        'diffusion.Analyse(NNodes, NElements, Nodes, Elements, Directory)
-        'Return
 
         Dim myThread As System.Threading.Thread
 
