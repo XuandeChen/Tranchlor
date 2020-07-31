@@ -189,12 +189,48 @@ Module Functions2D
         Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
-        Dim Tc = Tk - 273 'temperature in [C]
-
-
-        Dim wr1 As Double
-
+        Dim Tc As Double = Tk - 273 'temperature in [C]
+        Dim Ht As Double = 1 - 0.161 * alpha
+        Dim c1 As Double = 0.125
+        Dim c2 As Double = 0.173 - (0.431 * (Tc - 20) / 25)
+        Dim c3 As Double = 0.06 + 0.392 * ((Tc - 20) / 25)
+        Dim c4 As Double = 0.17 + (0.035 + 0.029 * (W_C_ratio - 0.4) / 0.15) * ((Tc - 20) / 25)
         Dim Sd As Double
+        Dim wr1 As Double
+        Dim wr As Double
+        Dim Mat1(2, 2) As Double
+        Mat1(0, 0) = Ht ^ 2
+        Mat1(0, 1) = 1 - 2 * Ht
+        Mat1(0, 2) = Ht ^ 2 - Ht
+        Mat1(1, 0) = -2 * Ht
+        Mat1(1, 1) = 2 * Ht
+        Mat1(1, 2) = 1 - Ht ^ 2
+        Mat1(2, 0) = 1
+        Mat1(2, 1) = -1
+        Mat1(2, 2) = Ht - 1
+        Dim Vec1(2) As Double
+        Vec1(0) = W_C_ratio - c4 * alpha
+        Vec1(1) = (c1 + c2 * Ht + c3 * Ht ^ 2) * alpha
+        Vec1(2) = (c2 + 2 * c3 * Ht) * alpha
+        Dim Vec2() As Double = MultiplyMatrixWithVector(Mat1, Vec1)
+        Dim Vec3(2) As Double
+        Vec3(0) = 1
+        Vec3(1) = H
+        Vec3(2) = H ^ 2
+        If 1 > H And H >= Ht Then
+            wr1 = C * 1 / ((1 - Ht) ^ 2) * (Vec2(0) * 1 + Vec2(1) * 1 + Vec2(2) * 1)
+            wr = C * 1 / ((1 - Ht) ^ 2) * (Vec2(0) * Vec3(0) + Vec2(1) * Vec3(1) + Vec2(2) * Vec3(2))
+            Sd = wr / wr1
+        ElseIf Ht > H And H >= 0.35 Then
+            wr1 = C * (c1 + c2 * 1 + c3 * 1 ^ 2) * alpha
+            wr = C * (c1 + c2 * H + c3 * H ^ 2) * alpha
+            Sd = wr / wr1
+        Else
+            wr1 = C * (c1 + c2 * 1 + c3 * 1 ^ 2) * alpha
+            wr = ((-(400 * c1 / 49) + c3) * H + 40 * c1 / 7 + c2) * alpha * H
+            Sd = wr / wr1
+        End If
+        ' the hysteretic curve
         Dim S As Double
         S = w * Sd + (1 - w) * Sa 'deactivate for test
         Return S
