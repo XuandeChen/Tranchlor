@@ -28,7 +28,7 @@ Public Class DiffusionXC
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
         Dim day As Double = 0 'porosity (-)
-        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Temperature As Double = 273 'temperature (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim D0 As Double = 0.00031  ' mm2/s
         Dim alpha_0 As Double = 0.05
         Dim Hc As Double = 0.75

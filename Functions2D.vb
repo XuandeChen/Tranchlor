@@ -178,13 +178,13 @@ Module Functions2D
         Dim Vm As Double = Vmfunc(day, W_C_ratio, type, VT)
         Dim n As Double = nfunc(day, W_C_ratio, type, NT)
         Dim k As Double = kfunc(C, n)
-        Dim wc1 As Double = (C * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1))
+        Dim wc1 As Double = (C * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
         Dim phi As Double = wc1 * (rho_c / rho_l) 'intermediate term
         Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
-        Dim S As Double = (wc / phi) * (rho_c / rho_l)
+        Dim S As Double = wc / wc1
+        Return S 'deactivate for test
         ' the desorption curve from [Rosfelt]
-        ' Return S 'deactivate for test
-        Return H
+        ' Return H 'activate or deactivate for test
     End Function
     Public Function nfunc(ByRef day As Double, ByRef W_C_ratio As Double, ByRef type As Integer, ByRef NT As Double) As Double
         Dim N_Ct As Double
