@@ -147,6 +147,12 @@
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Transchlor|AnyCPU'">
+    <OutputPath>bin\Transchlor\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Transchlor|x64'">
+    <OutputPath>bin\x64\Transchlor\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
@@ -244,7 +250,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HETrans.vb" />
-    <Compile Include="HydriqueXC.vb" />
+    <Compile Include="TransportXC.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -377,8 +383,11 @@
     <Content Include="Resources\Exposition\EXPO_M_E_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_M_E_O_DAVOS.txt" />
     <None Include="Resources\MeshFiles\test1ele.msh" />
+    <None Include="Resources\MeshFiles\test200ele.msh" />
     <None Include="Resources\MeshFiles\test2ele.msh" />
+    <None Include="Resources\MeshFiles\test32ele.msh" />
     <None Include="Resources\MeshFiles\test3eleL.msh" />
+    <None Include="Resources\MeshFiles\test480ele.msh" />
     <None Include="Resources\MeshFiles\test4ele.msh" />
     <None Include="Resources\MeshFiles\test50ele.msh" />
     <None Include="Resources\MeshFiles\test800ele.msh" />
@@ -405,9 +414,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Sample btFEM\smallrect.fem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\MeshFiles\test.msh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
