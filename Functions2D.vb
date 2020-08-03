@@ -161,7 +161,6 @@ Module Functions2D
         Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f
         Return Dv
     End Function
-
     'resistance factor function considering the tortuosity
     Public Function Getf(ByRef phi As Double, ByRef saturation As Double) As Double
         Dim S As Double = saturation

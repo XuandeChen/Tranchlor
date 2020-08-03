@@ -248,26 +248,37 @@ Public Class frmTrans2D
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
-        Dim day As Double = 0 'porosity (-)
-        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim C As Double = 375 'density of cement (kg/m3)
+        Dim day As Double
         Dim D0 As Double = 0.00031  ' mm2/s
         Dim alpha_0 As Double = 0.05
         Dim Hc As Double = 0.75
+        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim alpha As Double = 0.6 'hydration degree (-)
+        Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Tc As Double = Tk - 273 'temperature in (C)
+        Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
         Dim H_bound As Double = 0.6 'boundary relative humidity
-        Dim dt As Double = 3600 'time interval (day)
-        Dim tmax As Double = 259200 'end time (s) = 3 days
+        Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
+        Dim dt As Double = 3600 'time interval (s)
+        Dim tmax As Double = 259200 'end time (s) 72h
         Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
-        Dim Hm(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim H_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim H_old(NNodes - 1) As Double
         Dim H_new(NNodes - 1) As Double
+        Dim S_old(NNodes - 1) As Double
+        Dim S_new(NNodes - 1) As Double
         Dim jj As Long
         Dim nFic1 As Short
         Dim outfile(1) As String
-        Dim T_sauv As Single = 14400 'ouput time inteval (s) = 3 hours
+        Dim T_sauv As Single = 14400 'ouput time inteval (s) 4h
         Dim i, j, k As Integer
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
@@ -349,7 +360,7 @@ Public Class frmTrans2D
                           )
                 H_ele = he.getHe
                 H_avg = GetAvgH(H_ele)
-                De = GetDh(D0, alpha_0, Hc, Temperature, H_avg)
+                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
                 cie = New CIETrans(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
@@ -370,7 +381,7 @@ Public Class frmTrans2D
 
             'step 6: data stockage
             For j = 0 To NNodes - 1
-                Hm(ti, j) = H_new(j)
+                H_mat(ti, j) = H_new(j)
             Next
 
             'step 7: plot 2D image and export result .txt file 
@@ -413,23 +424,27 @@ Public Class frmTrans2D
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
-        Dim day As Double = 0 'porosity (-)
-        Dim Temperature As Double = 20 'temperature (c), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et d'espace, XC 2020.07.30
-        Dim D0 As Double = 0.00031  ' mm2/s
-        Dim alpha_0 As Double = 0.05
-        Dim Hc As Double = 0.75
+        Dim C As Double = 375 'density of cement (kg/m3)
+        Dim day As Double
+        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim alpha As Double = 0.6 'hydration degree (-)
+        Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Tc As Double = Tk - 273 'temperature in (C)
+        Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.25 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, W_C_ratio, Temperature, day, rho_l, rho_c) 'initial relative humidity
+        Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
         Dim H_bound As Double = 0.999 'boundary relative humidity
+        Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
         Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector 
+        Dim T(ind) As Double 'time vector (days)
+        Dim H_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim Hold(NNodes - 1) As Double
-        Dim Hnew(NNodes - 1) As Double
+        Dim H_old(NNodes - 1) As Double
+        Dim H_new(NNodes - 1) As Double
         Dim S_old(NNodes - 1) As Double
         Dim S_new(NNodes - 1) As Double
         Dim jj As Long
@@ -478,19 +493,20 @@ Public Class frmTrans2D
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
                 For i = 0 To nDof - 1
-                    Hold(i) = H_int
+                    H_old(i) = H_int
                     S_old(i) = S_int
                 Next
             Else
-                Hold = Hnew
+                H_old = H_new
                 S_old = S_new
             End If
             'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.20
             Dim ie As Integer
+            day = CDbl(ti * dt / 3600 / 24)
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
-                    day = CDbl(ti * dt / 3600 / 24)
-                    S_old(ie) = GetHtoS(H_bound, type, W_C_ratio, Temperature, day, rho_l, rho_c)
+                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    S_old(ie) = S_bound
                 End If
             Next
 
@@ -502,7 +518,7 @@ Public Class frmTrans2D
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
             Dim se As SETrans 'element saturation vector
-            Dim D As Double = GetD(temperature, pg)
+            Dim D As Double = GetD(Tk, pg)
             Dim Dv As Double
             Dim Dl As Double
             Dim S_avg As Double 'element average saturation
@@ -513,6 +529,7 @@ Public Class frmTrans2D
             Dim f As Double
             Dim S_ele() As Double
             Dim De As Double
+
             'Matrix assembling
             For i = 0 To NElements - 1
                 se = New SETrans(
@@ -538,7 +555,7 @@ Public Class frmTrans2D
                 AssembleKg(cie.getAe, Ag, i)
             Next
 
-            'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+            'step 4: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS
             'LHS = getNewLHS(NNodes, phi, Ag, bg, dt)
             'R = getNewR(NNodes, phi, Ag, bg, dt)
             getLHS(LHS, NNodes, Ag, bg, dt)
@@ -552,6 +569,11 @@ Public Class frmTrans2D
 
             'step 6: data stockage
             For j = 0 To NNodes - 1
+                If S_new(j) >= 1 Then
+                    S_new(j) = 1
+                ElseIf S_new(j) <= 0 Then
+                    S_new(j) = 0
+                End If
                 S_mat(ti, j) = S_new(j)
             Next
 

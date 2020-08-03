@@ -78,11 +78,23 @@ Public Class DiffusionXC
                 H_old = H_new 'H_t  = H_t-1
             End If
 
-            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
-            Dim ie As Integer
-            For ie = 0 To NNodes - 1
-                If Nodes(ie).Bord = True Then
-                    H_old(ie) = H_bound
+            'step 2: check boundary conditions on each node then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
+            ' boundary check program, 2020.08.03
+            Dim i_node As Integer
+            For i_node = 0 To NNodes - 1
+                If Nodes(i_node).Bord = True Then
+                    ' check whether the current boundary is exposed to a boundary condition
+                    Dim Xnode As Double = Nodes(i_node).x
+                    Dim Ynode As Double = Nodes(i_node).y
+                    'If Then
+
+                    'End If
+
+
+
+
+
+                    H_old(i_node) = H_bound
                 End If
             Next
 

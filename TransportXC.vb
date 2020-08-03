@@ -90,6 +90,7 @@ Public Class TransportXC
 
             'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.20
             Dim ie As Integer
+            day = CDbl(ti * dt / 3600 / 24)
             For ie = 0 To NNodes - 1
                 If Nodes(ie).Bord = True Then
                     S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
@@ -154,6 +155,11 @@ Public Class TransportXC
 
             'step 6: data stockage
             For j = 0 To NNodes - 1
+                If S_mat(ti, j) >= 1 Then
+                    S_mat(ti, j) = 1
+                ElseIf S_mat(ti, j) <= 0 Then
+                    S_mat(ti, j) = 0
+                End If
                 S_mat(ti, j) = S_new(j)
             Next
 
