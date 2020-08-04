@@ -259,6 +259,18 @@ Public Class frmTrans2D
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
 
+        'Geometry parameters for boundary check program
+        Dim X_upper As Double = 200 'mm, upper bound of X coordinate
+        Dim X_lower As Double = -200 'mm, upper bound of X coordinate
+        Dim Y_upper As Double = 100 'mm, upper bound of Y coordinate
+        Dim Y_lower As Double = -100 'mm, upper bound of Y coordinate
+        Dim Expo_X_upper As Boolean = True 'exposure on right most side
+        Dim Expo_X_lower As Boolean = True 'exposure on left most side
+        Dim Expo_Y_upper As Boolean = True 'exposure on top most side
+        Dim Expo_Y_lower As Boolean = True 'exposure on bottom most side
+        Dim X_node As Double
+        Dim Y_node As Double
+
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.999 'initial relative humidity
@@ -292,11 +304,6 @@ Public Class frmTrans2D
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
-        Print(CInt(nFic1), "0", ",", "0", ",", TAB)
-        For jj = 0 To nDof - 1
-            Print(CInt(nFic1), H_int, ",", TAB)
-        Next jj
-        PrintLine(CInt(nFic1), " ")
 
         HRRange = New Range
 
@@ -323,68 +330,106 @@ Public Class frmTrans2D
                           Me.Refresh()
                       End Sub)
 
-            ' step 1: initialisation
+            ' step 1: initialisation and boundary check
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
+                Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 For i = 0 To nDof - 1
                     H_old(i) = H_int
+                    ' boundary check program, 2020.08.03
+                    If Nodes(i).Bord = True Then
+
+                        ' check whether the current boundary is exposed to a boundary condition
+                        X_node = Nodes(i).x
+                        Y_node = Nodes(i).y
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            H_old(i) = H_bound
+                        End If
+                        'H_old(i_node) = H_bound
+                    End If
+                    Print(CInt(nFic1), H_old(i), ",", TAB)
                 Next
+                PrintLine(CInt(nFic1), " ")
             Else
-                H_old = H_new
+                For i = 0 To nDof - 1
+                    H_old(i) = H_new(i)
+                    ' boundary check program, 2020.08.03
+                    If Nodes(i).Bord = True Then
+
+                        ' check whether the current boundary is exposed to a boundary condition
+                        X_node = Nodes(i).x
+                        Y_node = Nodes(i).y
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            H_old(i) = H_bound
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            H_old(i) = H_bound
+                        End If
+                        'H_old(i_node) = H_bound
+                    End If
+                Next
             End If
 
-            'step 2: check boundary conditions on each node then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.27
-            Dim ie As Integer
-            For ie = 0 To NNodes - 1
-                If Nodes(ie).Bord = True Then
-                    H_old(ie) = H_bound
-                End If
-            Next
-
-            'step 3: elemental and global Matrix constructions
+            'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
-            Dim R(,) As Double
-            Dim RHS() As Double
-            Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
-            Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-            Dim cie As CIETrans
-            Dim he As HETrans
-            Dim H_avg As Double
-            Dim H_ele() As Double
-            Dim De As Double
-            'Matrix assembling
-            For i = 0 To NElements - 1
-                he = New HETrans(
-                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
-                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
-                          )
-                H_ele = he.getHe
-                H_avg = GetAvgH(H_ele)
-                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
-                cie = New CIETrans(
-                          Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-                          Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                          De)
-                AssembleKg(cie.getbe, bg, i)
-                AssembleKg(cie.getAe, Ag, i)
-            Next
+                Dim R(,) As Double
+                Dim RHS() As Double
+                Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+                Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+                Dim cie As CIETrans
+                Dim he As HETrans
+                Dim H_avg As Double
+                Dim H_ele() As Double
+                Dim De As Double
+                'Matrix assembling
+                For i = 0 To NElements - 1
+                    he = New HETrans(
+                              H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                              H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                              )
+                    H_ele = he.getHe
+                    H_avg = GetAvgH(H_ele)
+                    De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
+                    cie = New CIETrans(
+                              Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                              Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                              Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                              Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                              De)
+                    AssembleKg(cie.getbe, bg, i)
+                    AssembleKg(cie.getAe, Ag, i)
+                Next
 
-            'step 4: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
-            getLHS(LHS, NNodes, Ag, bg, dt)
-            getRHS(R, NNodes, Ag, bg, dt)
-            RHS = MultiplyMatrixWithVector(R, H_old)
+                'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+                getLHS(LHS, NNodes, Ag, bg, dt)
+                getRHS(R, NNodes, Ag, bg, dt)
+                RHS = MultiplyMatrixWithVector(R, H_old)
 
-            'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            GetX(H_new, LHS, RHS)
+                'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+                GetX(H_new, LHS, RHS)
 
-            'step 6: data stockage
+            'step 5: data stockage and boundary check 
             For j = 0 To NNodes - 1
+                If H_new(j) >= 1 Then
+                    H_new(j) = 1
+                ElseIf H_new(j) <= 0 Then
+                    H_new(j) = 0
+                End If
+
                 H_mat(ti, j) = H_new(j)
+
             Next
 
-            'step 7: plot 2D image and export result .txt file 
+            'step 6: plot 2D image and export result .txt file 
             For i = 0 To NElements - 1
 
                 Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
@@ -393,8 +438,10 @@ Public Class frmTrans2D
             Next
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
-
-            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+            If ti = 0 Then 'first step check
+                RegisterH(nFic1, dt, nDof, H_new)
+                PrintLine(CInt(nFic1), " ")
+            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
                 RegisterH(nFic1, ti * dt, nDof, H_new)
                 PrintLine(CInt(nFic1), " ")
             End If
@@ -426,16 +473,29 @@ Public Class frmTrans2D
         Dim W_C_ratio As Double = 0.5 'porosity (-)
         Dim C As Double = 375 'density of cement (kg/m3)
         Dim day As Double
-        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim alpha As Double = 0.6 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+
+        'Geometry parameters for boundary check program
+        Dim X_upper As Double = 200 'mm, upper bound of X coordinate
+        Dim X_lower As Double = -200 'mm, upper bound of X coordinate
+        Dim Y_upper As Double = 100 'mm, upper bound of Y coordinate
+        Dim Y_lower As Double = -100 'mm, upper bound of Y coordinate
+        Dim Expo_X_upper As Boolean = True 'exposure on right most side
+        Dim Expo_X_lower As Boolean = True 'exposure on left most side
+        Dim Expo_Y_upper As Boolean = True 'exposure on top most side
+        Dim Expo_Y_lower As Boolean = True 'exposure on bottom most side
+        Dim X_node As Double
+        Dim Y_node As Double
+
         'Computation parameters
         Dim nDof As Integer = NNodes
-        Dim H_int As Double = 0.25 'initial relative humidity
+        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim H_int As Double = 0.999 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 0.999 'boundary relative humidity
+        Dim H_bound As Double = 0.75 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
@@ -464,11 +524,6 @@ Public Class frmTrans2D
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
-        Print(CInt(nFic1), "0", ",", "0", ",", TAB)
-        For jj = 0 To nDof - 1
-            Print(CInt(nFic1), S_int, ",", TAB)
-        Next jj
-        PrintLine(CInt(nFic1), " ")
 
         SRange = New Range
 
@@ -489,28 +544,59 @@ Public Class frmTrans2D
                           Me.Refresh()
                       End Sub)
 
-            ' step 1: initialisation saturation field
+            ' step 1: initialisation saturation field and boundary check
             T(ti) = 0 + dt * (ti - 0)
+            day = CDbl(ti * dt / 3600 / 24)
             If ti = 0 Then
+                Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 For i = 0 To nDof - 1
                     H_old(i) = H_int
                     S_old(i) = S_int
-                Next
-            Else
-                H_old = H_new
-                S_old = S_new
-            End If
-            'step 2: check boundary conditions on each noeuds then construct elemental humidity vector / à reviser pour calcul d'une structure complet Xuande.2020.07.20
-            Dim ie As Integer
-            day = CDbl(ti * dt / 3600 / 24)
-            For ie = 0 To NNodes - 1
-                If Nodes(ie).Bord = True Then
-                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    S_old(ie) = S_bound
-                End If
-            Next
+                    ' boundary check program, 2020.08.03
+                    If Nodes(i).Bord = True Then
 
-            'step 3: elemental and global Matrix constructions
+                        ' check whether the current boundary is exposed to a boundary condition
+                        X_node = Nodes(i).x
+                        Y_node = Nodes(i).y
+                        S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            S_old(i) = S_bound
+                        End If
+                    End If
+                    Print(CInt(nFic1), S_old(i), ",", TAB)
+                Next
+                PrintLine(CInt(nFic1), " ")
+            Else
+                'regular loop
+                For i = 0 To nDof - 1
+                    H_old(i) = H_new(i)
+                    S_old(i) = S_new(i)
+                    If Nodes(i).Bord = True Then
+                        ' check whether the current boundary is exposed to a boundary condition
+                        X_node = Nodes(i).x
+                        Y_node = Nodes(i).y
+                        S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            S_old(i) = S_bound
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            S_old(i) = S_bound
+                        End If
+                        'H_old(i_node) = H_bound
+                    End If
+                Next
+            End If
+
+            'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
             Dim RHS() As Double
@@ -555,29 +641,32 @@ Public Class frmTrans2D
                 AssembleKg(cie.getAe, Ag, i)
             Next
 
-            'step 4: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS
+            'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS
             'LHS = getNewLHS(NNodes, phi, Ag, bg, dt)
             'R = getNewR(NNodes, phi, Ag, bg, dt)
             getLHS(LHS, NNodes, Ag, bg, dt)
             getRHS(R, NNodes, Ag, bg, dt)
             RHS = MultiplyMatrixWithVector(R, S_old)
 
-            'step 5: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
             GetX(S_new, LHS, RHS)
             ' compute Hnew as well
             'Hnew = S_new.GetHtoS
 
-            'step 6: data stockage
+            'step 5: data stockage
             For j = 0 To NNodes - 1
+
                 If S_new(j) >= 1 Then
                     S_new(j) = 1
                 ElseIf S_new(j) <= 0 Then
                     S_new(j) = 0
                 End If
+
                 S_mat(ti, j) = S_new(j)
+
             Next
 
-            'step 7: plot 2D image and export result .txt file 
+            'step 6: plot 2D image and export result .txt file 
             For i = 0 To NElements - 1
 
                 Elements(i).S(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
@@ -587,10 +676,14 @@ Public Class frmTrans2D
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
-            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time 
-                RegisterS(nFic1, ti * dt, nDof, S_new)
+            If ti = 0 Then 'first step check
+                RegisterH(nFic1, dt, nDof, S_new)
+                PrintLine(CInt(nFic1), " ")
+            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+                RegisterH(nFic1, ti * dt, nDof, S_new)
                 PrintLine(CInt(nFic1), " ")
             End If
+
         Next
         FileClose(CInt(nFic1))
 

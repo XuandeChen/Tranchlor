@@ -35,6 +35,17 @@ Public Class TransportXC
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+
+        'Geometry parameters for boundary check program
+        Dim X_upper As Double = 200 'mm, upper bound of X coordinate
+        Dim X_lower As Double = -200 'mm, upper bound of X coordinate
+        Dim Y_upper As Double = 100 'mm, upper bound of Y coordinate
+        Dim Y_lower As Double = -100 'mm, upper bound of Y coordinate
+        Dim Expo_X_upper As Boolean = True 'exposure on right most side
+        Dim Expo_X_lower As Boolean = True 'exposure on left most side
+        Dim Expo_Y_upper As Boolean = True 'exposure on top most side
+        Dim Expo_Y_lower As Boolean = True 'exposure on bottom most side
+
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.25 'initial relative humidity
