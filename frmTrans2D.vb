@@ -241,10 +241,10 @@ Public Class frmTrans2D
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
         Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
-        Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
-        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim m As Double = 0.44 ' parameter for ordinary concrete / for cement paste 37.5479
+        Dim beta As Double = 1 / m ' parameter for ordinary concrete / for cement paste 2.1684
         Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
-        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+        Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s)
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
@@ -425,6 +425,21 @@ Public Class frmTrans2D
                     H_new(j) = 0
                 End If
 
+                If Nodes(j).Bord = True Then
+                    ' check whether the current boundary is exposed to a boundary condition
+                    X_node = Nodes(j).x
+                    Y_node = Nodes(j).y
+                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                        H_new(j) = H_bound
+                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                        H_new(j) = H_bound
+                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                        H_new(j) = H_bound
+                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                        H_new(j) = H_bound
+                    End If
+                End If
+
                 H_mat(ti, j) = H_new(j)
 
             Next
@@ -464,10 +479,10 @@ Public Class frmTrans2D
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
         Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
-        Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
-        Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
+        Dim m As Double = 0.44 ' parameter for ordinary concrete 
+        Dim beta As Double = 1 / m ' parameter for ordinary concrete / for cement paste 2.1684
         Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
-        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+        Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s)
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
         Dim W_C_ratio As Double = 0.5 'porosity (-)
@@ -483,19 +498,19 @@ Public Class frmTrans2D
         Dim X_lower As Double = -200 'mm, upper bound of X coordinate
         Dim Y_upper As Double = 100 'mm, upper bound of Y coordinate
         Dim Y_lower As Double = -100 'mm, upper bound of Y coordinate
-        Dim Expo_X_upper As Boolean = True 'exposure on right most side
+        Dim Expo_X_upper As Boolean = False 'exposure on right most side
         Dim Expo_X_lower As Boolean = True 'exposure on left most side
-        Dim Expo_Y_upper As Boolean = True 'exposure on top most side
-        Dim Expo_Y_lower As Boolean = True 'exposure on bottom most side
+        Dim Expo_Y_upper As Boolean = False 'exposure on top most side
+        Dim Expo_Y_lower As Boolean = False 'exposure on bottom most side
         Dim X_node As Double
         Dim Y_node As Double
 
         'Computation parameters
         Dim nDof As Integer = NNodes
-        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
-        Dim H_int As Double = 0.999 'initial relative humidity
+        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim H_int As Double = 0.25 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 0.75 'boundary relative humidity
+        Dim H_bound As Double = 0.999 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim dt As Double = 3600 'time interval (s)
         Dim tmax As Double = 259200 'end time (s) 72h
@@ -642,8 +657,6 @@ Public Class frmTrans2D
             Next
 
             'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS
-            'LHS = getNewLHS(NNodes, phi, Ag, bg, dt)
-            'R = getNewR(NNodes, phi, Ag, bg, dt)
             getLHS(LHS, NNodes, Ag, bg, dt)
             getRHS(R, NNodes, Ag, bg, dt)
             RHS = MultiplyMatrixWithVector(R, S_old)
@@ -660,6 +673,22 @@ Public Class frmTrans2D
                     S_new(j) = 1
                 ElseIf S_new(j) <= 0 Then
                     S_new(j) = 0
+                End If
+
+                If Nodes(j).Bord = True Then
+                    ' check whether the current boundary is exposed to a boundary condition
+                    X_node = Nodes(j).x
+                    Y_node = Nodes(j).y
+                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                        S_new(j) = S_bound
+                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                        S_new(j) = S_bound
+                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                        S_new(j) = S_bound
+                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                        S_new(j) = S_bound
+                    End If
                 End If
 
                 S_mat(ti, j) = S_new(j)
