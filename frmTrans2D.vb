@@ -478,14 +478,14 @@ Public Class frmTrans2D
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
+        Dim pc_0 As Double = 37.5479 ' parameter for ordinary concrete (Mpa)
         Dim m As Double = 0.44 ' parameter for ordinary concrete 
         Dim beta As Double = 1 / m ' parameter for ordinary concrete / for cement paste 2.1684
-        Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
-        Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s)
+        Dim KK As Double = 0.00000000000000268 'intrinsic permeability (m2)
+        Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
         Dim phi As Double = 0.05 'porosity (-)
         Dim type As Integer = 3 'cement type (-)
-        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim W_C_ratio As Double = 0.44 'porosity (-)
         Dim C As Double = 375 'density of cement (kg/m3)
         Dim day As Double
         Dim alpha As Double = 0.6 'hydration degree (-)
@@ -508,7 +508,7 @@ Public Class frmTrans2D
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
-        Dim H_int As Double = 0.25 'initial relative humidity
+        Dim H_int As Double = 0.5 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
         Dim H_bound As Double = 0.999 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field

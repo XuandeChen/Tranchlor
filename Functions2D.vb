@@ -130,7 +130,7 @@ Module Functions2D
     'liquid-water contribution to the moisture diffusivity [cm2/s] 
     Public Function GetDl(ByRef K As Double, ByRef yita_l As Double, ByRef dpcdS As Double, ByRef kr As Double) As Double
         Dim Dl As Double
-        Dl = -dpcdS * K * kr / yita_l
+        Dl = -dpcdS * K * kr / yita_l * 1000000000000.0 ' convert unit to mm2/s
         Return Dl
     End Function
 
@@ -152,13 +152,13 @@ Module Functions2D
         Dim T0 As Double = 273 '0 degree [K]
         Dim D As Double
         Dva = 0.217 * p_atm * ((Tk / T0) ^ 1.88)
-        D = Dva / pg
+        D = Dva / pg * 0.0001 'convert unit to m2/s
         Return D
     End Function
     'diffusion coefficient of water vapor or dry air in wet air [cm2/s] 
     Public Function GetDv(ByRef rho_v As Double, ByRef rho_l As Double, ByRef dpcdS As Double, ByRef f As Double, ByRef D As Double, ByRef pv As Double) As Double
         Dim Dv As Double
-        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f
+        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f * 1000000000000.0 ' convert unit to mm2/s
         Return Dv
     End Function
     'resistance factor function considering the tortuosity
