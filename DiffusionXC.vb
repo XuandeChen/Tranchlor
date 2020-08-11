@@ -79,7 +79,7 @@ Public Class DiffusionXC
         nFic2 = CShort(FreeFile())
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
 
-        'step 0 Initialize output titres for result .txt files
+        'step 0 Initialize output titles for result .txt files
         Print(nFic1, "RH", ",", nDof, ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
@@ -253,21 +253,20 @@ Public Class DiffusionXC
                 RegisterH(nFic2, dt, nDof, w_new)
                 PrintLine(CInt(nFic2), " ")
 
-            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, H_new)
-                PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, ti * dt, nDof, w_new)
-                PrintLine(CInt(nFic2), " ")
-
-
+            Else
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    RegisterH(nFic1, ti * dt, nDof, H_new)
+                    PrintLine(CInt(nFic1), " ")
+                    RegisterH(nFic2, ti * dt, nDof, w_new)
+                    PrintLine(CInt(nFic2), " ")
+                End If
             End If
         Next
 
         FileClose(CInt(nFic1))
-
         FileClose(CInt(nFic2))
 
-        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         'Analysed = True
 
         'Me.Invoke(Sub()

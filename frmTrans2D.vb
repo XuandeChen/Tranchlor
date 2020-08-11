@@ -39,7 +39,7 @@ Public Class frmTrans2D
 
     Private colorMap As ColorMap
     Private HRRange As Range
-    Private SRange As Range
+    Private SlRange As Range
 
     Private Directory As String
 
@@ -47,7 +47,7 @@ Public Class frmTrans2D
     Private Enum Results
         None
         HR
-        SigmaY
+        Sl
         TauXY
         EpsilonX
         EpsilonY
@@ -479,13 +479,13 @@ Public Class frmTrans2D
                 RegisterH(nFic2, dt, nDof, w_new)
                 PrintLine(CInt(nFic2), " ")
 
-            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, H_new)
-                PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, ti * dt, nDof, w_new)
-                PrintLine(CInt(nFic2), " ")
-
-
+            Else
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    RegisterH(nFic1, ti * dt, nDof, H_new)
+                    PrintLine(CInt(nFic1), " ")
+                    RegisterH(nFic2, ti * dt, nDof, w_new)
+                    PrintLine(CInt(nFic2), " ")
+                End If
             End If
         Next
 
@@ -558,7 +558,7 @@ Public Class frmTrans2D
         Dim nFic1 As Short
         Dim nFic2 As Short
         Dim outfile(2) As String
-        Dim T_sauv As Single = 3600  'ouput time inteval (s) 4h /10day
+        Dim T_sauv As Single = 3600   'ouput time inteval (s) 4h /10day
         Dim i, j, k As Integer
 
         'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
@@ -569,7 +569,7 @@ Public Class frmTrans2D
         nFic2 = CShort(FreeFile())
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
 
-        'step 0: Initialize output titres for result .txt files
+        'step 0: Initialize output titles for result .txt files
         Print(nFic1, "S", ",", nDof, ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
@@ -582,12 +582,12 @@ Public Class frmTrans2D
         Next jj
         PrintLine(CInt(nFic2), " ")
 
-        SRange = New Range
+        SlRange = New Range
 
         For i = 0 To NElements - 1
-            ReDim Elements(i).S(ind + 1)
-            Elements(i).S(0) = S_int * 100
-            SRange.AddValue(Elements(i).S(0))
+            ReDim Elements(i).Sl(ind + 1)
+            Elements(i).Sl(0) = S_int * 100
+            SlRange.AddValue(Elements(i).Sl(0))
             ReDim Time(ind + 1)
             Time(0) = 0
         Next
@@ -628,7 +628,6 @@ Public Class frmTrans2D
                         End If
                     End If
                     w_old(i) = wsat * S_old(i)
-
                     Print(CInt(nFic1), S_old(i), ",", TAB)
                     Print(CInt(nFic2), w_old(i), ",", TAB)
                 Next
@@ -678,7 +677,6 @@ Public Class frmTrans2D
             Dim f As Double
             Dim S_ele() As Double
             Dim De As Double
-
             'Matrix assembling
             For i = 0 To NElements - 1
                 se = New SETrans(
@@ -746,8 +744,8 @@ Public Class frmTrans2D
             'step 6: plot 2D image and export result .txt file 
             For i = 0 To NElements - 1
 
-                Elements(i).S(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
-                SRange.AddValue(Elements(i).S(ti + 1))
+                Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                SlRange.AddValue(Elements(i).Sl(ti + 1))
 
             Next
 
@@ -756,24 +754,23 @@ Public Class frmTrans2D
             If ti = 0 Then 'first step check
                 RegisterH(nFic1, dt, nDof, S_new)
                 PrintLine(CInt(nFic1), " ")
-
                 RegisterH(nFic2, dt, nDof, w_new)
                 PrintLine(CInt(nFic2), " ")
 
-            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, S_new)
-                PrintLine(CInt(nFic1), " ")
-
-                RegisterH(nFic2, ti * dt, nDof, w_new)
-                PrintLine(CInt(nFic2), " ")
+            Else
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    RegisterH(nFic1, ti * dt, nDof, S_new)
+                    PrintLine(CInt(nFic1), " ")
+                    RegisterH(nFic2, ti * dt, nDof, w_new)
+                    PrintLine(CInt(nFic2), " ")
+                End If
             End If
-
         Next
+
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
 
-
-        MsgBox("Fin du calcul transport 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
 
         Me.Invoke(Sub()
@@ -1292,7 +1289,6 @@ Public Class frmTrans2D
 
                 End If
 
-
             Next
         End If
         'Now, plot results if available
@@ -1319,8 +1315,13 @@ Public Class frmTrans2D
                         TimeScrollBar.Visible = True
                         LabelT1.Visible = True
                         LabelTVal.Visible = True
-                        'Case Results.SigmaY
-                        'colorMap = New ColorMap(HRRange.Max, HRRange.Min)
+                    Case Results.Sl
+                        colorMap = New ColorMap(Math.Round(SlRange.Max, 2), Math.Round(SlRange.Min, 2))
+                        'TimeScrollBar
+                        TimeScrollBar.Maximum = Time.Length()
+                        TimeScrollBar.Visible = True
+                        LabelT1.Visible = True
+                        LabelTVal.Visible = True
                         'Case Results.TauXY
                         'colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
                         'Case Results.EpsilonX
@@ -1344,10 +1345,11 @@ Public Class frmTrans2D
                             eColor = eleColorDeformed
                         Case Results.HR
                             'eColor = colorMap.getColor(Elements(i).Stresses(0))
-
                             eColor = colorMap.getColor(Elements(i).HR(TimeScrollBar.Value))
                             LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
-                            'Case Results.SigmaY
+                        Case Results.Sl
+                            eColor = colorMap.getColor(Elements(i).Sl(TimeScrollBar.Value))
+                            LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
                             'eColor = colorMap.getColor(Elements(i).Stresses(1))
                             'eColor = colorMap.getColor(Elements(i).HR(1))
                             'Case Results.TauXY
@@ -1361,7 +1363,6 @@ Public Class frmTrans2D
                         Case Else
                             eColor = eleColor
                     End Select
-
 
                     n1 = Elements(i).Node1 - 1
                     n2 = Elements(i).Node2 - 1
@@ -1620,18 +1621,18 @@ Public Class frmTrans2D
 
     End Sub
 
-    Private Sub HandleShowResultClick(sender As Object, e As EventArgs) Handles SToolStripMenuItem.Click,
-            HRToolStripMenuItem.Click, SigmaYToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
+    Private Sub HandleShowResultClick(sender As Object, e As EventArgs) Handles XToolStripMenuItem.Click,
+            HRToolStripMenuItem.Click, SlToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
             EpsilonXToolStripMenuItem.Click, EpsilonYToolStripMenuItem.Click, GammaXYToolStripMenuItem.Click
 
         ShowResult = Results.None
 
-        If sender.Equals(SToolStripMenuItem) Then
+        If sender.Equals(XToolStripMenuItem) Then
             ShowResult = Results.None
         ElseIf sender.Equals(HRToolStripMenuItem) Then
             ShowResult = Results.HR
-        ElseIf sender.Equals(SigmaYToolStripMenuItem) Then
-            ShowResult = Results.SigmaY
+        ElseIf sender.Equals(SlToolStripMenuItem) Then
+            ShowResult = Results.Sl
         ElseIf sender.Equals(TauXYToolStripMenuItem) Then
             ShowResult = Results.TauXY
         ElseIf sender.Equals(EpsilonXToolStripMenuItem) Then
@@ -1709,6 +1710,11 @@ Public Class frmTrans2D
         DrawModel()
     End Sub
 
+
+    Private Sub LabelProgress_Click(sender As Object, e As EventArgs) Handles LabelProgress.Click
+
+    End Sub
+
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then
             e.Graphics.DrawImage(bmp, 0, 0)
@@ -1739,9 +1745,9 @@ Public Class frmTrans2D
 
     Private Sub ShowToolStripMenuItem_DropDownOpening(sender As Object, e As EventArgs) Handles ShowToolStripMenuItem.DropDownOpening
 
-        SToolStripMenuItem.Checked = False
+        XToolStripMenuItem.Checked = False
         HRToolStripMenuItem.Checked = False
-        SigmaYToolStripMenuItem.Checked = False
+        SlToolStripMenuItem.Checked = False
         TauXYToolStripMenuItem.Checked = False
         EpsilonXToolStripMenuItem.Checked = False
         EpsilonYToolStripMenuItem.Checked = False
@@ -1749,11 +1755,11 @@ Public Class frmTrans2D
 
         Select Case ShowResult
             Case Results.None
-                SToolStripMenuItem.Checked = True
+                XToolStripMenuItem.Checked = True
             Case Results.HR
                 HRToolStripMenuItem.Checked = True
-            Case Results.SigmaY
-                SigmaYToolStripMenuItem.Checked = True
+            Case Results.Sl
+                SlToolStripMenuItem.Checked = True
             Case Results.TauXY
                 TauXYToolStripMenuItem.Checked = True
             Case Results.EpsilonX

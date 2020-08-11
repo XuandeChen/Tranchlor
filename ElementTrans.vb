@@ -8,7 +8,7 @@ Public Class ElementTrans
 
     'Public Time(100) As Double
     Public HR(100) As Double
-    Public S(100) As Double
+    Public Sl(100) As Double
 
     'Public Stresses(1) As Double
     'Public Strains(1) As Double
