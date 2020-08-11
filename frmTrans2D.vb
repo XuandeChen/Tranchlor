@@ -507,8 +507,8 @@ Public Class frmTrans2D
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa)
-        Dim m As Double = 0.461 ' parameter for ordinary concrete 
+        Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa)
+        Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' parameter for ordinary concrete / for cement paste 2.1684
         Dim KK As Double = 0.000000000000038 'intrinsic permeability (mm2), given by the user
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
@@ -518,7 +518,7 @@ Public Class frmTrans2D
         Dim C As Double = 400 'density of cement (kg/m3)
         Dim day As Double
         Dim alpha As Double = 0.6 'hydration degree (-)
-        Dim Tk As Double = 295 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
         'Dim Water As Double = C * W_C_ratio 'saturated water content (-)
@@ -540,7 +540,7 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim H_int As Double = 0.75 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 0.9999 'boundary relative humidity
+        Dim H_bound As Double = 1 - 0.00000001 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim dt As Double = 3600    'time interval (s)
         Dim tmax As Double = 3600 * 24 * 3 'end time (s)  100day / 72h
@@ -751,20 +751,20 @@ Public Class frmTrans2D
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
-            If ti = 0 Then 'first step check
-                RegisterH(nFic1, dt, nDof, S_new)
-                PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, dt, nDof, w_new)
-                PrintLine(CInt(nFic2), " ")
+            'If ti = 0 Then 'first step check
+            '    RegisterH(nFic1, dt, nDof, S_new)
+            '    PrintLine(CInt(nFic1), " ")
+            '    RegisterH(nFic2, dt, nDof, w_new)
+            '    PrintLine(CInt(nFic2), " ")
 
-            Else
-                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+            'Else
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
                     RegisterH(nFic1, ti * dt, nDof, S_new)
                     PrintLine(CInt(nFic1), " ")
                     RegisterH(nFic2, ti * dt, nDof, w_new)
                     PrintLine(CInt(nFic2), " ")
                 End If
-            End If
+            'End If
         Next
 
         FileClose(CInt(nFic1))
