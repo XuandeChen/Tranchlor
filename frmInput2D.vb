@@ -356,6 +356,9 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Frame2 = New System.Windows.Forms.GroupBox()
+        Me.NumClInt = New System.Windows.Forms.NumericUpDown()
+        Me.NumTempInt = New System.Windows.Forms.NumericUpDown()
+        Me.NumHRInt = New System.Windows.Forms.NumericUpDown()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -524,10 +527,17 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Label82 = New System.Windows.Forms.Label()
         Me.Label81 = New System.Windows.Forms.Label()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.NumClExt = New System.Windows.Forms.NumericUpDown()
+        Me.NumTempExt = New System.Windows.Forms.NumericUpDown()
+        Me.NumHRExt = New System.Windows.Forms.NumericUpDown()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.Label69 = New System.Windows.Forms.Label()
         Me.Label48 = New System.Windows.Forms.Label()
         Me._SSTab1_TabPage5 = New System.Windows.Forms.TabPage()
+        Me.PictureBox11 = New System.Windows.Forms.PictureBox()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.Label141 = New System.Windows.Forms.Label()
         Me.Label142 = New System.Windows.Forms.Label()
@@ -607,20 +617,13 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.NumClInt = New System.Windows.Forms.NumericUpDown()
-        Me.NumTempInt = New System.Windows.Forms.NumericUpDown()
-        Me.NumHRInt = New System.Windows.Forms.NumericUpDown()
-        Me.PictureBox11 = New System.Windows.Forms.PictureBox()
-        Me.NumClExt = New System.Windows.Forms.NumericUpDown()
-        Me.NumTempExt = New System.Windows.Forms.NumericUpDown()
-        Me.NumHRExt = New System.Windows.Forms.NumericUpDown()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label31 = New System.Windows.Forms.Label()
-        Me.Label32 = New System.Windows.Forms.Label()
         Me.SSTab1.SuspendLayout()
         Me._SSTab1_TabPage0.SuspendLayout()
         Me.Frame1.SuspendLayout()
         Me.Frame2.SuspendLayout()
+        CType(Me.NumClInt, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumTempInt, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumHRInt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me._SSTab1_TabPage1.SuspendLayout()
         Me.Frame4.SuspendLayout()
@@ -652,20 +655,17 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Frame21.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        CType(Me.NumClExt, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumTempExt, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumHRExt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me._SSTab1_TabPage5.SuspendLayout()
+        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox8.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         Me.Frame22.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
-        CType(Me.NumClInt, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumTempInt, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumHRInt, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumClExt, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumTempExt, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumHRExt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Command2
@@ -1136,6 +1136,27 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame2.TabIndex = 15
         Me.Frame2.TabStop = False
         Me.Frame2.Text = "Nom :"
+        '
+        'NumClInt
+        '
+        Me.NumClInt.Location = New System.Drawing.Point(107, 328)
+        Me.NumClInt.Name = "NumClInt"
+        Me.NumClInt.Size = New System.Drawing.Size(120, 20)
+        Me.NumClInt.TabIndex = 159
+        '
+        'NumTempInt
+        '
+        Me.NumTempInt.Location = New System.Drawing.Point(107, 259)
+        Me.NumTempInt.Name = "NumTempInt"
+        Me.NumTempInt.Size = New System.Drawing.Size(120, 20)
+        Me.NumTempInt.TabIndex = 158
+        '
+        'NumHRInt
+        '
+        Me.NumHRInt.Location = New System.Drawing.Point(107, 294)
+        Me.NumHRInt.Name = "NumHRInt"
+        Me.NumHRInt.Size = New System.Drawing.Size(120, 20)
+        Me.NumHRInt.TabIndex = 157
         '
         'Label7
         '
@@ -3309,6 +3330,66 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.TabPage1.TabIndex = 6
         Me.TabPage1.Text = "Conditions initiales"
         '
+        'NumClExt
+        '
+        Me.NumClExt.Location = New System.Drawing.Point(131, 111)
+        Me.NumClExt.Name = "NumClExt"
+        Me.NumClExt.Size = New System.Drawing.Size(120, 20)
+        Me.NumClExt.TabIndex = 165
+        '
+        'NumTempExt
+        '
+        Me.NumTempExt.Location = New System.Drawing.Point(131, 42)
+        Me.NumTempExt.Name = "NumTempExt"
+        Me.NumTempExt.Size = New System.Drawing.Size(120, 20)
+        Me.NumTempExt.TabIndex = 164
+        '
+        'NumHRExt
+        '
+        Me.NumHRExt.Location = New System.Drawing.Point(131, 77)
+        Me.NumHRExt.Name = "NumHRExt"
+        Me.NumHRExt.Size = New System.Drawing.Size(120, 20)
+        Me.NumHRExt.TabIndex = 163
+        '
+        'Label10
+        '
+        Me.Label10.BackColor = System.Drawing.SystemColors.Control
+        Me.Label10.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label10.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label10.Location = New System.Drawing.Point(25, 114)
+        Me.Label10.Name = "Label10"
+        Me.Label10.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label10.Size = New System.Drawing.Size(160, 17)
+        Me.Label10.TabIndex = 162
+        Me.Label10.Text = "Conc Cl- Externe"
+        '
+        'Label31
+        '
+        Me.Label31.BackColor = System.Drawing.SystemColors.Control
+        Me.Label31.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label31.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label31.Location = New System.Drawing.Point(25, 80)
+        Me.Label31.Name = "Label31"
+        Me.Label31.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label31.Size = New System.Drawing.Size(153, 17)
+        Me.Label31.TabIndex = 161
+        Me.Label31.Text = "Humidité Externe"
+        '
+        'Label32
+        '
+        Me.Label32.BackColor = System.Drawing.SystemColors.Control
+        Me.Label32.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label32.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label32.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label32.Location = New System.Drawing.Point(3, 45)
+        Me.Label32.Name = "Label32"
+        Me.Label32.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label32.Size = New System.Drawing.Size(131, 17)
+        Me.Label32.TabIndex = 160
+        Me.Label32.Text = "Temperature Externe"
+        '
         'Label64
         '
         Me.Label64.BackColor = System.Drawing.SystemColors.Control
@@ -3358,6 +3439,15 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me._SSTab1_TabPage5.TabIndex = 5
         Me._SSTab1_TabPage5.Text = "Analyse probabiliste"
         Me._SSTab1_TabPage5.Visible = False
+        '
+        'PictureBox11
+        '
+        Me.PictureBox11.BackColor = System.Drawing.SystemColors.ButtonHighlight
+        Me.PictureBox11.Location = New System.Drawing.Point(8, 16)
+        Me.PictureBox11.Name = "PictureBox11"
+        Me.PictureBox11.Size = New System.Drawing.Size(944, 395)
+        Me.PictureBox11.TabIndex = 163
+        Me.PictureBox11.TabStop = False
         '
         'GroupBox8
         '
@@ -4259,96 +4349,6 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.CheckBox1.TabIndex = 20
         Me.CheckBox1.Text = "Field activation"
         '
-        'NumClInt
-        '
-        Me.NumClInt.Location = New System.Drawing.Point(107, 328)
-        Me.NumClInt.Name = "NumClInt"
-        Me.NumClInt.Size = New System.Drawing.Size(120, 20)
-        Me.NumClInt.TabIndex = 159
-        '
-        'NumTempInt
-        '
-        Me.NumTempInt.Location = New System.Drawing.Point(107, 259)
-        Me.NumTempInt.Name = "NumTempInt"
-        Me.NumTempInt.Size = New System.Drawing.Size(120, 20)
-        Me.NumTempInt.TabIndex = 158
-        '
-        'NumHRInt
-        '
-        Me.NumHRInt.Location = New System.Drawing.Point(107, 294)
-        Me.NumHRInt.Name = "NumHRInt"
-        Me.NumHRInt.Size = New System.Drawing.Size(120, 20)
-        Me.NumHRInt.TabIndex = 157
-        '
-        'PictureBox11
-        '
-        Me.PictureBox11.BackColor = System.Drawing.SystemColors.ButtonHighlight
-        Me.PictureBox11.Location = New System.Drawing.Point(8, 16)
-        Me.PictureBox11.Name = "PictureBox11"
-        Me.PictureBox11.Size = New System.Drawing.Size(944, 395)
-        Me.PictureBox11.TabIndex = 163
-        Me.PictureBox11.TabStop = False
-        '
-        'NumClExt
-        '
-        Me.NumClExt.Location = New System.Drawing.Point(131, 111)
-        Me.NumClExt.Name = "NumClExt"
-        Me.NumClExt.Size = New System.Drawing.Size(120, 20)
-        Me.NumClExt.TabIndex = 165
-        '
-        'NumTempExt
-        '
-        Me.NumTempExt.Location = New System.Drawing.Point(131, 42)
-        Me.NumTempExt.Name = "NumTempExt"
-        Me.NumTempExt.Size = New System.Drawing.Size(120, 20)
-        Me.NumTempExt.TabIndex = 164
-        '
-        'NumHRExt
-        '
-        Me.NumHRExt.Location = New System.Drawing.Point(131, 77)
-        Me.NumHRExt.Name = "NumHRExt"
-        Me.NumHRExt.Size = New System.Drawing.Size(120, 20)
-        Me.NumHRExt.TabIndex = 163
-        '
-        'Label10
-        '
-        Me.Label10.BackColor = System.Drawing.SystemColors.Control
-        Me.Label10.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label10.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label10.Location = New System.Drawing.Point(25, 114)
-        Me.Label10.Name = "Label10"
-        Me.Label10.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label10.Size = New System.Drawing.Size(160, 17)
-        Me.Label10.TabIndex = 162
-        Me.Label10.Text = "Conc Cl- Externe"
-        '
-        'Label31
-        '
-        Me.Label31.BackColor = System.Drawing.SystemColors.Control
-        Me.Label31.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label31.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label31.Location = New System.Drawing.Point(25, 80)
-        Me.Label31.Name = "Label31"
-        Me.Label31.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label31.Size = New System.Drawing.Size(153, 17)
-        Me.Label31.TabIndex = 161
-        Me.Label31.Text = "Humidité Externe"
-        '
-        'Label32
-        '
-        Me.Label32.BackColor = System.Drawing.SystemColors.Control
-        Me.Label32.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label32.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label32.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label32.Location = New System.Drawing.Point(3, 45)
-        Me.Label32.Name = "Label32"
-        Me.Label32.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label32.Size = New System.Drawing.Size(131, 17)
-        Me.Label32.TabIndex = 160
-        Me.Label32.Text = "Temperature Externe"
-        '
         'frmInput2D
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
@@ -4370,6 +4370,9 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame1.PerformLayout()
         Me.Frame2.ResumeLayout(False)
         Me.Frame2.PerformLayout()
+        CType(Me.NumClInt, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumTempInt, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumHRInt, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me._SSTab1_TabPage1.ResumeLayout(False)
         Me.Frame4.ResumeLayout(False)
@@ -4414,7 +4417,11 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame21.ResumeLayout(False)
         Me.Frame21.PerformLayout()
         Me.TabPage1.ResumeLayout(False)
+        CType(Me.NumClExt, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumTempExt, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumHRExt, System.ComponentModel.ISupportInitialize).EndInit()
         Me._SSTab1_TabPage5.ResumeLayout(False)
+        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
@@ -4425,13 +4432,6 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame22.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox3.ResumeLayout(False)
-        CType(Me.NumClInt, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumTempInt, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumHRInt, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumClExt, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumTempExt, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumHRExt, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -4984,13 +4984,13 @@ b:
         'ReDim Creadtherm(1, Nbre1)
         'For i = 1 To Nbre1
         Input(nFic, Creadtherm(0, i))
-            Input(nFic, Creadtherm(1, i))
+        Input(nFic, Creadtherm(1, i))
         'Next
         Input(nFic, 2)
         'ReDim Creadhydr(1, Nbre2)
         'For i = 1 To Nbre2
         Input(nFic, Creadhydr(0, i))
-            Input(nFic, Creadhydr(1, i))
+        Input(nFic, Creadhydr(1, i))
         'Next
         Input(nFic, 2)
         'ReDim Creadion(1, Nbre3)
@@ -5670,17 +5670,17 @@ b:
         PrintLine(CInt(nFic), 2)
         'For i = 1 To Nbre1
         PrintLine(CInt(nFic), NumTempInt)
-            PrintLine(CInt(nFic), NumTempExt)
+        PrintLine(CInt(nFic), NumTempExt)
         'Next
         PrintLine(CInt(nFic), 2)
         'For i = 1 To Nbre2
         PrintLine(CInt(nFic), NumHRInt)
-            PrintLine(CInt(nFic), NumHRExt)
+        PrintLine(CInt(nFic), NumHRExt)
         'Next
         PrintLine(CInt(nFic), 2)
         'For i = 1 To Nbre3
         PrintLine(CInt(nFic), NumClInt)
-            PrintLine(CInt(nFic), NumClExt)
+        PrintLine(CInt(nFic), NumClExt)
         'Next
 
         FileClose(CInt(nFic))
@@ -6243,6 +6243,7 @@ b:
     Private Sub ToolTip1_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip1.Popup
 
     End Sub
+
 End Class
 
 

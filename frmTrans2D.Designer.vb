@@ -30,6 +30,8 @@ Partial Class frmTrans2D
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ModelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AnalyseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Diffusion2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Transport2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ResultsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowNodeNumbersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -39,7 +41,7 @@ Partial Class frmTrans2D
         Me.ShowElementsOnDeformedShapeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem5 = New System.Windows.Forms.ToolStripSeparator()
         Me.ShowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NoneToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
         Me.HRToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SigmaYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -56,8 +58,6 @@ Partial Class frmTrans2D
         Me.LabelT1 = New System.Windows.Forms.Label()
         Me.LabelTVal = New System.Windows.Forms.Label()
         Me.LabelProgress = New System.Windows.Forms.Label()
-        Me.Diffusion2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Transport2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.pbModel, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -118,6 +118,18 @@ Partial Class frmTrans2D
         Me.AnalyseToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
         Me.AnalyseToolStripMenuItem.Text = "&Analyse"
         '
+        'Diffusion2DToolStripMenuItem
+        '
+        Me.Diffusion2DToolStripMenuItem.Name = "Diffusion2DToolStripMenuItem"
+        Me.Diffusion2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Diffusion2DToolStripMenuItem.Text = "Diffusion 2D"
+        '
+        'Transport2DToolStripMenuItem
+        '
+        Me.Transport2DToolStripMenuItem.Name = "Transport2DToolStripMenuItem"
+        Me.Transport2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.Transport2DToolStripMenuItem.Text = "Transport 2D"
+        '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
@@ -168,61 +180,61 @@ Partial Class frmTrans2D
         '
         'ShowToolStripMenuItem
         '
-        Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NoneToolStripMenuItem, Me.ToolStripMenuItem4, Me.HRToolStripMenuItem, Me.SigmaYToolStripMenuItem, Me.TauXYToolStripMenuItem, Me.ToolStripMenuItem3, Me.EpsilonXToolStripMenuItem, Me.EpsilonYToolStripMenuItem, Me.GammaXYToolStripMenuItem})
+        Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SToolStripMenuItem, Me.ToolStripMenuItem4, Me.HRToolStripMenuItem, Me.SigmaYToolStripMenuItem, Me.TauXYToolStripMenuItem, Me.ToolStripMenuItem3, Me.EpsilonXToolStripMenuItem, Me.EpsilonYToolStripMenuItem, Me.GammaXYToolStripMenuItem})
         Me.ShowToolStripMenuItem.Name = "ShowToolStripMenuItem"
         Me.ShowToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
         Me.ShowToolStripMenuItem.Text = "Show Results"
         '
-        'NoneToolStripMenuItem
+        'SToolStripMenuItem
         '
-        Me.NoneToolStripMenuItem.Name = "NoneToolStripMenuItem"
-        Me.NoneToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
-        Me.NoneToolStripMenuItem.Text = "None"
+        Me.SToolStripMenuItem.Name = "SToolStripMenuItem"
+        Me.SToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.SToolStripMenuItem.Text = "Degree of saturation"
         '
         'ToolStripMenuItem4
         '
         Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(165, 6)
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(178, 6)
         '
         'HRToolStripMenuItem
         '
         Me.HRToolStripMenuItem.Name = "HRToolStripMenuItem"
-        Me.HRToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.HRToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.HRToolStripMenuItem.Text = "Relative Humidity"
         '
         'SigmaYToolStripMenuItem
         '
         Me.SigmaYToolStripMenuItem.Name = "SigmaYToolStripMenuItem"
-        Me.SigmaYToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.SigmaYToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.SigmaYToolStripMenuItem.Text = "XXX"
         '
         'TauXYToolStripMenuItem
         '
         Me.TauXYToolStripMenuItem.Name = "TauXYToolStripMenuItem"
-        Me.TauXYToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.TauXYToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.TauXYToolStripMenuItem.Text = "XXX"
         '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(165, 6)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(178, 6)
         '
         'EpsilonXToolStripMenuItem
         '
         Me.EpsilonXToolStripMenuItem.Name = "EpsilonXToolStripMenuItem"
-        Me.EpsilonXToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.EpsilonXToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.EpsilonXToolStripMenuItem.Text = "XXX"
         '
         'EpsilonYToolStripMenuItem
         '
         Me.EpsilonYToolStripMenuItem.Name = "EpsilonYToolStripMenuItem"
-        Me.EpsilonYToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.EpsilonYToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.EpsilonYToolStripMenuItem.Text = "XXX"
         '
         'GammaXYToolStripMenuItem
         '
         Me.GammaXYToolStripMenuItem.Name = "GammaXYToolStripMenuItem"
-        Me.GammaXYToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.GammaXYToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.GammaXYToolStripMenuItem.Text = "XXX"
         '
         'pbModel
@@ -309,18 +321,6 @@ Partial Class frmTrans2D
         Me.LabelProgress.Text = "Progress"
         Me.LabelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Diffusion2DToolStripMenuItem
-        '
-        Me.Diffusion2DToolStripMenuItem.Name = "Diffusion2DToolStripMenuItem"
-        Me.Diffusion2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.Diffusion2DToolStripMenuItem.Text = "Diffusion 2D"
-        '
-        'Transport2DToolStripMenuItem
-        '
-        Me.Transport2DToolStripMenuItem.Name = "Transport2DToolStripMenuItem"
-        Me.Transport2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.Transport2DToolStripMenuItem.Text = "Transport 2D"
-        '
         'frmTrans2D
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
@@ -371,7 +371,7 @@ Partial Class frmTrans2D
     Friend WithEvents EpsilonXToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EpsilonYToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GammaXYToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents NoneToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem4 As ToolStripSeparator
     Friend WithEvents ShowNodeNumbersToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShowModelToolStripMenuItem As ToolStripMenuItem
