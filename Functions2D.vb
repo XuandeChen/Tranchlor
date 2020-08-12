@@ -12,17 +12,17 @@ Module Functions2D
         Next
     End Function
 
-    'Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-    '    Dim LHS(NNodes - 1, NNodes - 1) As Double
-    '    Dim i, j As Integer
-    '    For i = 0 To NNodes - 1
-    '        For j = 0 To NNodes - 1
-    '            LHS(i, j) = phi * A(i, j) / 2 + b(i, j) / dt
-    '        Next
-    '    Next
-    '    Return LHS
-    'End Function
-    'get the RHS matrix for Gauss matrix resolution
+    Public Function getNewLHS(ByRef NewLHS As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim NewLHS(NNodes - 1, NNodes - 1)
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                NewLHS(i, j) = A(i, j) / 2 + phi * b(i, j) / dt
+            Next
+        Next
+        Return NewLHS
+    End Function
+    'Get the RHS matrix For Gauss matrix resolution
     Public Function getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim RHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
@@ -33,17 +33,17 @@ Module Functions2D
         Next
     End Function
 
-    'Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-    '    Dim R(NNodes - 1, NNodes - 1) As Double
-    '    Dim i, j As Integer
-    '    For i = 0 To NNodes - 1
-    '        For j = 0 To NNodes - 1
-    '            R(i, j) = b(i, j) / dt - phi * A(i, j) / 2
-    '        Next
-    '    Next
-    '    Return R
-    'End Function
-    'get degree of freedom /water diffusion
+    Public Function getNewR(ByRef NewR As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim NewR(NNodes - 1, NNodes - 1)
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                NewR(i, j) = phi * b(i, j) / dt - A(i, j) / 2
+            Next
+        Next
+        Return NewR
+    End Function
+    'Get degree Of freedom /water diffusion
     Public Function getDOF(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 1
         Return (NodeNo) * nDofsPerNode
@@ -102,9 +102,10 @@ Module Functions2D
         Dim S As Double = saturation
         'Dim sa_irr As Double = 0.00001
         'Dim sb_irr As Double = 0.00001
+        'Dim n As Double = 1 / m
         'Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
         'Dim kr_b_max As Double = 1
-        'Dim kr As Double = kr_b_max * s_eff ^ m
+        'Dim kr As Double = kr_b_max * s_eff ^ n
         Dim kr As Double = Math.Sqrt(S) * (1 - (1 - S ^ (1 / m)) ^ m) ^ 2
         Return kr
     End Function
@@ -133,15 +134,15 @@ Module Functions2D
         Dim dpcdS As Double
         Dim S As Double = saturation
         Dim n As Double = 1 / b
-        dpcdS = (pc_0 * (1 / S ^ (1 / b) - 1) ^ (1 / n)) / (b * n * S * (S ^ (1 / b) - 1))
-        'dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
+        'dpcdS = (pc_0 * (1 / S ^ (1 / b) - 1) ^ (1 / n)) / (b * n * S * (S ^ (1 / b) - 1))
+        dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
         Return dpcdS
     End Function
 
     'liquid-water contribution to the moisture diffusivity [cm2/s] 
     Public Function GetDl(ByRef K As Double, ByRef yita_l As Double, ByRef dpcdS As Double, ByRef kr As Double) As Double
         Dim Dl As Double
-        Dl = -dpcdS * K * kr / yita_l * 1000000000000.0 ' convert unit to mm2/s
+        Dl = -dpcdS * K * kr / yita_l * 1000000.0   ' convert unit to mm2/s
         Return Dl
     End Function
 
@@ -152,7 +153,6 @@ Module Functions2D
         Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
         Dim R As Double = 8.31451
         Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
-
         Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
         Return Dh
     End Function
@@ -166,10 +166,10 @@ Module Functions2D
         D = Dva / pg * 0.0001 'convert unit to m2/s
         Return D
     End Function
-    'diffusion coefficient of water vapor or dry air in wet air [cm2/s] 
+    'diffusion coefficient of water vapor or dry air in wet air [mm2/s] 
     Public Function GetDv(ByRef rho_v As Double, ByRef rho_l As Double, ByRef dpcdS As Double, ByRef f As Double, ByRef D As Double, ByRef pv As Double) As Double
         Dim Dv As Double
-        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f * 1000000000000.0 ' convert unit to mm2/s
+        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f * 1000000.0 'convert unit to mm2/s
         Return Dv
     End Function
     'resistance factor function considering the tortuosity

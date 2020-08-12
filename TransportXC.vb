@@ -220,8 +220,6 @@
 
 '            'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
 '            GetX(S_new, LHS, RHS)
-'            ' compute Hnew as well
-'            'Hnew = S_new.GetHtoS
 
 '            'step 5: data stockage
 '            For j = 0 To NNodes - 1
