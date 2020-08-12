@@ -503,28 +503,28 @@ Public Class frmTrans2D
 
     End Sub
     Public Sub AnalyseTransport()
-        'Material parameters, can be converted from user defined input
-        Dim pg As Double = 0.101325 'atmosphere pressure(Mpa)
+        '        'Material parameters, can be converted from user defined input
+        Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa)
+        Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa)
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' parameter for ordinary concrete / for cement paste 2.1684
-        Dim KK As Double = 0.000000000000003 'intrinsic permeability (mm2), given by the user 30e-15
+        Dim KK As Double = 0.00000000000000892 'intrinsic permeability (mm2), given by the user
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
         Dim phi As Double = 0.12 'porosity (-)
         Dim type As Integer = 1 'cement type (-)
-        Dim W_C_ratio As Double = 0.6 'porosity (-)
-        Dim C As Double = 310 'density of cement (kg/m3)
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim C As Double = 350 'density of cement (kg/m3)
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
-        Dim alpha As Double = 0.85 'hydration degree (-)
+        Dim alpha As Double = 0.95 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
-        Dim St As Double = 0.2 'capillary pressure residual saturation
         'Dim Water As Double = C * W_C_ratio 'saturated water content (-)
+        Dim St As Double = 0.2 'capillary pressure residual saturation
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 'mm, upper bound of X coordinate
@@ -543,7 +543,7 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim H_int As Double = 0.75 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 1 - 1.0E-22 'boundary relative humidity
+        Dim H_bound As Double = 1  'boundary relative humidity
         Dim H_bound2 As Double = 0.75 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         Dim S_bound2 As Double = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
@@ -661,7 +661,6 @@ Public Class frmTrans2D
                         'H_old(i_node) = H_bound
                     End If
                     w_old(i) = wsat * S_old(i)
-
                 Next
             End If
             'step 2: elemental and global Matrix constructions
@@ -689,7 +688,6 @@ Public Class frmTrans2D
                           S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
                           S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
                           )
-
                 S_ele = se.getSe
                 S_avg = GetAvgH(S_ele)
                 kr = Getkr(S_avg, m)

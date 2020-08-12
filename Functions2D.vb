@@ -104,7 +104,7 @@ Module Functions2D
         'Dim sb_irr As Double = 0.00001
         'Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
         'Dim kr_b_max As Double = 1
-        'Dim kr As Double = kr_b_max * s_eff ^ beta
+        'Dim kr As Double = kr_b_max * s_eff ^ m
         Dim kr As Double = Math.Sqrt(S) * (1 - (1 - S ^ (1 / m)) ^ m) ^ 2
         Return kr
     End Function
@@ -113,7 +113,7 @@ Module Functions2D
     Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double, ByRef St As Double) As Double
         Dim S As Double = saturation
         Dim pc As Double
-        Dim pa As Double = 101325 'pa
+        Dim pa As Double = 0.101325 'Mpa
         'Dim n As Double = 1 / (1 - m)
         'Dim s_pc_irr As Double = 0.00001
         'Dim s_pc_max As Double = 1
@@ -132,8 +132,9 @@ Module Functions2D
     Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double) As Double
         Dim dpcdS As Double
         Dim S As Double = saturation
-        'dpcdS = (pc_0 * (1 / S ^ (1 / m) - 1) ^ (1 / n)) / (m * n * S * (S ^ (1 / m) - 1))
-        dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
+        Dim n As Double = 1 / b
+        dpcdS = (pc_0 * (1 / S ^ (1 / b) - 1) ^ (1 / n)) / (b * n * S * (S ^ (1 / b) - 1))
+        'dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
         Return dpcdS
     End Function
 
@@ -193,9 +194,9 @@ Module Functions2D
         Dim Vm As Double = Vmfunc(day, W_C_ratio, type, VT)
         Dim n As Double = nfunc(day, W_C_ratio, type, NT)
         Dim k As Double = kfunc(Cbet, n)
-        Dim wc1 As Double = (Cbet * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
+        Dim wc1 As Double = (Cbet * k * Vm * 1) / ((1 - k * 1) * (1 + (Cbet - 1) * k * 1)) 'when H = 100% = 1
         Dim phi As Double = wc1 * (rho_c / rho_l) 'intermediate term
-        Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
+        Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (Cbet - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
         Dim Tc As Double = Tk - 273 'temperature in [C]
