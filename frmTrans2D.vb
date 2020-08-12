@@ -22,8 +22,8 @@ Public Class frmTrans2D
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
     Private Time() As Double ' heure
-    Private diffusion As DiffusionXC
-    Private transport As TransportXC
+    'Private diffusion As DiffusionXC
+    'Private transport As TransportXC
 
     Private MeshFileOk As Boolean = False
 
@@ -243,21 +243,22 @@ Public Class frmTrans2D
         Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa)
         Dim m As Double = 0.461 ' parameter for ordinary concrete / for cement paste 37.5479
         Dim beta As Double = 2.2748 ' parameter for ordinary concrete / for cement paste 2.1684
-        Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
+        Dim KK As Double = 0.000000000000355 'intrinsic permeability (m2)
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s)
         Dim phi As Double = 0.12 'porosity (-)
         Dim type As Integer = 1 'cement type (-)
         Dim W_C_ratio As Double = 0.4 'porosity (-)
         Dim C As Double = 400 'density of cement (kg/m3)
+        Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
         Dim D0 As Double = 0.00006  ' mm2/s
         Dim alpha_0 As Double = 0.05
         Dim Hc As Double = 0.75
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
-        Dim alpha As Double = 0.6 'hydration degree (-)
+        Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
@@ -503,24 +504,26 @@ Public Class frmTrans2D
     End Sub
     Public Sub AnalyseTransport()
         'Material parameters, can be converted from user defined input
-        Dim pg As Double = 101325 'atmosphere pressure(pa)
+        Dim pg As Double = 0.101325 'atmosphere pressure(Mpa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa)
+        Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa)
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' parameter for ordinary concrete / for cement paste 2.1684
-        Dim KK As Double = 0.000000000000038 'intrinsic permeability (mm2), given by the user
+        Dim KK As Double = 0.000000000000003 'intrinsic permeability (mm2), given by the user 30e-15
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
         Dim phi As Double = 0.12 'porosity (-)
         Dim type As Integer = 1 'cement type (-)
-        Dim W_C_ratio As Double = 0.4 'porosity (-)
-        Dim C As Double = 400 'density of cement (kg/m3)
+        Dim W_C_ratio As Double = 0.6 'porosity (-)
+        Dim C As Double = 310 'density of cement (kg/m3)
+        Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
-        Dim alpha As Double = 0.6 'hydration degree (-)
+        Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim St As Double = 0.2 'capillary pressure residual saturation
         'Dim Water As Double = C * W_C_ratio 'saturated water content (-)
 
         'Geometry parameters for boundary check program
@@ -540,9 +543,11 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim H_int As Double = 0.75 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 1 - 0.00000001 'boundary relative humidity
+        Dim H_bound As Double = 1 - 1.0E-22 'boundary relative humidity
+        Dim H_bound2 As Double = 0.75 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
-        Dim dt As Double = 3600    'time interval (s)
+        Dim S_bound2 As Double = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
+        Dim dt As Double = 3600     'time interval (s)
         Dim tmax As Double = 3600 * 24 * 3 'end time (s)  100day / 72h
         Dim ind As Double = tmax / dt
         Dim T(ind) As Double 'time vector (days)
@@ -560,6 +565,7 @@ Public Class frmTrans2D
         Dim outfile(2) As String
         Dim T_sauv As Single = 3600   'ouput time inteval (s) 4h /10day
         Dim i, j, k As Integer
+        'day = CDbl(ti * dt / 3600 / 24)
 
         'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
         outfile(1) = Directory & "\" & "R_S_CapillaryModel" & ".txt"
@@ -655,9 +661,9 @@ Public Class frmTrans2D
                         'H_old(i_node) = H_bound
                     End If
                     w_old(i) = wsat * S_old(i)
+
                 Next
             End If
-
             'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
             Dim R(,) As Double
@@ -683,11 +689,12 @@ Public Class frmTrans2D
                           S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
                           S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
                           )
+
                 S_ele = se.getSe
                 S_avg = GetAvgH(S_ele)
-                kr = Getkr(S_avg, beta)
-                pc = Getpc(S_avg, pc_0, m)
-                dpcdS = GetdpcdS(S_avg, pc_0, m)
+                kr = Getkr(S_avg, m)
+                pc = Getpc(S_avg, pc_0, beta, St)
+                dpcdS = GetdpcdS(S_avg, pc_0, beta)
                 Dl = GetDl(KK, yita_l, dpcdS, kr)
                 f = Getf(phi, S_avg)
                 Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
@@ -735,8 +742,7 @@ Public Class frmTrans2D
                     ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
                         S_new(j) = S_bound
                     End If
-                End If
-                w_new(j) = wsat * S_new(j)
+                    w_new(j) = wsat * S_new(j)
                 'S_mat(ti, j) = S_new(j)
 
             Next
@@ -750,21 +756,13 @@ Public Class frmTrans2D
             Next
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
-
-            'If ti = 0 Then 'first step check
-            '    RegisterH(nFic1, dt, nDof, S_new)
-            '    PrintLine(CInt(nFic1), " ")
-            '    RegisterH(nFic2, dt, nDof, w_new)
-            '    PrintLine(CInt(nFic2), " ")
-
             'Else
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                    RegisterH(nFic1, ti * dt, nDof, S_new)
-                    PrintLine(CInt(nFic1), " ")
-                    RegisterH(nFic2, ti * dt, nDof, w_new)
-                    PrintLine(CInt(nFic2), " ")
-                End If
-            'End If
+                RegisterH(nFic1, ti * dt, nDof, S_new)
+                PrintLine(CInt(nFic1), " ")
+                RegisterH(nFic2, ti * dt, nDof, w_new)
+                PrintLine(CInt(nFic2), " ")
+            End If
         Next
 
         FileClose(CInt(nFic1))

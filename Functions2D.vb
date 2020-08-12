@@ -98,32 +98,42 @@ Module Functions2D
 
     ''liquid water transport functions: (Equation and formula from Marc Mainguy, 2001)
     'relative permeability function (Equation and formula from Marc Mainguy, 2001 & derived from VanGnuchten, 1980) 
-    Public Function Getkr(ByRef saturation As Double, ByRef beta As Double) As Double
+    Public Function Getkr(ByRef saturation As Double, ByRef m As Double) As Double
         Dim S As Double = saturation
-        Dim sa_irr As Double = 0.00001
-        Dim sb_irr As Double = 0.00001
-        Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
-        Dim kr_b_max As Double = 1
-        Dim kr As Double = kr_b_max * s_eff ^ beta
+        'Dim sa_irr As Double = 0.00001
+        'Dim sb_irr As Double = 0.00001
+        'Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
+        'Dim kr_b_max As Double = 1
+        'Dim kr As Double = kr_b_max * s_eff ^ beta
+        Dim kr As Double = Math.Sqrt(S) * (1 - (1 - S ^ (1 / m)) ^ m) ^ 2
         Return kr
     End Function
 
     'liquid capillary pressure function (Equation and formula from Marc Mainguy, 2001)
-    Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double) As Double
+    Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double, ByRef St As Double) As Double
         Dim S As Double = saturation
-        Dim n As Double = 1 / (1 - m)
-        Dim s_pc_irr As Double = 0.00001
-        Dim s_pc_max As Double = 1
-        Dim Sb_pc As Double = (S - s_pc_irr) / (s_pc_max - s_pc_irr)
-        Dim pc As Double = pc_0 * ((Sb_pc ^ (-1 / m) - 1) ^ (1 / n))
+        Dim pc As Double
+        Dim pa As Double = 101325 'pa
+        'Dim n As Double = 1 / (1 - m)
+        'Dim s_pc_irr As Double = 0.00001
+        'Dim s_pc_max As Double = 1
+        'Dim Sb_pc As Double = (S - s_pc_irr) / (s_pc_max - s_pc_irr)
+        Dim Pt As Double = pc_0 * (St ^ (-b) - 1) ^ (1 - 1 / b)
+        Dim P As Double = Math.Log(Pt * 1000000.0, 10)
+        Dim gamma As Double = -(Math.Log(1000000000.0, 10) - P) / St
+        If S >= St Then
+            pc = pa - pc_0 * (S ^ (-b) - 1) ^ (1 - 1 / b)
+        Else
+            pc = pa - (10 ^ (gamma * (S - St) + P)) / 1000000.0
+        End If
         Return pc
     End Function
     'derivation of the capillary pressure function 
-    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double) As Double
+    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double) As Double
         Dim dpcdS As Double
         Dim S As Double = saturation
-        Dim n As Double = 1 / (1 - m)
-        dpcdS = (pc_0 * (1 / S ^ (1 / m) - 1) ^ (1 / n)) / (m * n * S * (S ^ (1 / m) - 1))
+        'dpcdS = (pc_0 * (1 / S ^ (1 / m) - 1) ^ (1 / n)) / (m * n * S * (S ^ (1 / m) - 1))
+        dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
         Return dpcdS
     End Function
 
@@ -169,8 +179,8 @@ Module Functions2D
         Return f
     End Function
     ' saturated water function 
-    Public Function GetWsat(ByRef C As Double, ByRef alpha As Double, ByRef W_C_ratio As Double, ByRef phi As Double) As Double
-        Dim Wsat As Double = C * W_C_ratio - (0.17 * alpha * C) + 10 * phi
+    Public Function GetWsat(ByRef Water_tot As Double, ByRef C As Double) As Double
+        Dim Wsat As Double = Water_tot - C * 0.2
         Return Wsat
     End Function
     'isotherm function 
@@ -182,10 +192,10 @@ Module Functions2D
         Dim Cbet As Double = Cfunc(C0, Tk)
         Dim Vm As Double = Vmfunc(day, W_C_ratio, type, VT)
         Dim n As Double = nfunc(day, W_C_ratio, type, NT)
-        Dim k As Double = kfunc(C, n)
-        Dim wc1 As Double = (C * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
+        Dim k As Double = kfunc(Cbet, n)
+        Dim wc1 As Double = (Cbet * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
         Dim phi As Double = wc1 * (rho_c / rho_l) 'intermediate term
-        Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
+        Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
         Dim Tc As Double = Tk - 273 'temperature in [C]
