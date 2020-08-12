@@ -742,7 +742,8 @@ Public Class frmTrans2D
                     ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
                         S_new(j) = S_bound
                     End If
-                    w_new(j) = wsat * S_new(j)
+                End If
+                w_new(j) = wsat * S_new(j)
                 'S_mat(ti, j) = S_new(j)
 
             Next
