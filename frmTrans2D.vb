@@ -498,18 +498,26 @@ Public Class frmTrans2D
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa)
+        'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
+        'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
+        Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
-        Dim beta As Double = 2.2748 ' parameter for ordinary concrete / for cement paste 2.1684
-        Dim KK As Double = 0.000000000000005 'intrinsic permeability (mm2), given by the user ,5e-15
+        Dim beta As Double = 2.2748 ' 
+        Dim KK As Double = 0.000000000000004 'given by the user ,4e-15 W/C = 0.6
+        'Dim KK As Double = 0.0000000000000016 'given by the user ,1.8e-15 W/C = 0.5
+        'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
+
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
-        Dim phi As Double = 0.12 'porosity (-)
+        Dim phi As Double = 0.12 'porosity (W/C = 0.5)
         Dim type As Integer = 1 'cement type (-)
-        Dim W_C_ratio As Double = 0.5 'porosity (-)
-        Dim C As Double = 350 'density of cement (kg/m3)
+        Dim W_C_ratio As Double = 0.6 'porosity (-)
+        Dim C As Double = 310 'density of cement (kg/m3)
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
-        Dim alpha As Double = 0.8 'hydration degree (-)
+        'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5)
+        Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
+        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
+
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
@@ -533,14 +541,14 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim H_int As Double = 0.75 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 1 - 1.0E-25  'boundary relative humidity
+        Dim H_bound As Double = 1   'boundary relative humidity
         'Dim H_bound2 As Double = 0.75 'boundary relative humidity
         Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
         'Dim S_bound2 As Double = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
-        Dim dt As Double = 3600     'time interval (s)
+        Dim dt As Double = 3600       'time interval (s)
         Dim tmax As Double = 3600 * 24 * 3 'end time (s)  100day / 72h
         Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector (days)
+        Dim T(CInt(ind)) As Double 'time vector (days)
         Dim H_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim H_old(NNodes - 1) As Double
@@ -553,11 +561,10 @@ Public Class frmTrans2D
         Dim nFic1 As Short
         Dim nFic2 As Short
         Dim outfile(2) As String
-        Dim T_sauv As Single = 3600   'ouput time inteval (s) 4h /10day
-        Dim i, j, k As Integer
-        Dim npt As Integer = 10 'number of interdemidate points on the first step to avoid divergence
-        Dim dt_int As Double = dt / npt
-
+        Dim T_sauv As Single = 3600     'ouput time inteval (s) 4h /10day
+        Dim i, j, k, z As Integer
+        Dim npt As Integer 'number of interdemidate points on the first step to avoid divergence
+        Dim dt_int As Double
         Dim NewLHS(,) As Double
         Dim NewR(,) As Double
         Dim RHS() As Double
@@ -576,6 +583,9 @@ Public Class frmTrans2D
         Dim f As Double
         Dim S_ele() As Double
         Dim De As Double
+        'Globlal time loop
+        Dim ti As Integer
+        Dim stepcheck As Boolean = True
         'day = CDbl(ti * dt / 3600 / 24)
 
         'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
@@ -608,12 +618,11 @@ Public Class frmTrans2D
             ReDim Time(ind + 1)
             Time(0) = 0
         Next
-        'Globlal time loop
-        Dim ti As Integer
 
-        For ti = 0 To ind
-            T(ti) = 0 + dt * (ti - 0)
-            day = CDbl(ti * dt / 3600 / 24)
+
+        For ti = 0 To CInt(ind)
+            'T(ti) = 0 + dt * (ti - 0)
+            'day = CDbl(ti * dt / 3600 / 24)
 
             Me.Invoke(Sub()
                           LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
@@ -646,32 +655,190 @@ Public Class frmTrans2D
                     End If
                     w_old(i) = wsat * S_old(i)
                 Next
+                ''print data on each element?
+                'For i = 0 To NElements - 1
+                '    se = New SETrans(
+                '         S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
+                '         S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
+                '         )
+                '    S_ele = se.getSe
+                '    S_avg = GetAvgH(S_ele)
+                '    w_old(i) = wsat * S_avg
+                '    Print(CInt(nFic2), w_old(i), ",", TAB)
+                'Next
+
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
-            Else
-                'regular loop
-                For i = 0 To nDof - 1
-                    H_old(i) = H_new(i)
-                    S_old(i) = S_new(i)
-                    If Nodes(i).Bord = True Then
-                        ' check whether the current boundary is exposed to a boundary condition
-                        X_node = Nodes(i).x
-                        Y_node = Nodes(i).y
-                        S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                            S_old(i) = S_bound
-                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                            S_old(i) = S_bound
-                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                            S_old(i) = S_bound
-                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                            S_old(i) = S_bound
-                        End If
-                        'H_old(i_node) = H_bound
-                    End If
-                    w_old(i) = wsat * S_old(i)
-                Next
+                ' convergence check
+                'If stepcheck = True Then
+                '    npt = 1800
+                '    dt_int = dt / npt
+                '    '1.
+                '    For i = 0 To nDof - 1
+                '        If Nodes(i).Bord = True Then
+                '            X_node = Nodes(i).x
+                '            Y_node = Nodes(i).y
+                '            S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                '            If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                '                S_old(i) = S_bound
+                '            ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                '                S_old(i) = S_int
+                '            ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                '                S_old(i) = S_int
+                '            ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                '                S_old(i) = S_int
+                '            End If
+                '        End If
+                '        w_old(i) = wsat * S_old(i)
+                '    Next
+                '    '2.
+                '    For z = 0 To NElements - 1
+                '        se = New SETrans(
+                '              S_old(Elements(z).Node1 - 1), S_old(Elements(z).Node2 - 1),
+                '              S_old(Elements(z).Node3 - 1), S_old(Elements(z).Node4 - 1)
+                '              )
+                '        S_ele = se.getSe
+                '        S_avg = GetAvgH(S_ele)
+                '        kr = Getkr(S_avg, m)
+                '        pc = Getpc(S_avg, pc_0, beta, St)
+                '        dpcdS = GetdpcdS(S_avg, pc_0, beta)
+                '        Dl = GetDl(KK, yita_l, dpcdS, kr)
+                '        f = Getf(phi, S_avg)
+                '        Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
+                '        De = Dv + Dl
+                '        cie = New CIETrans(
+                '              Nodes(Elements(z).Node1 - 1).x, Nodes(Elements(z).Node1 - 1).y,
+                '              Nodes(Elements(z).Node2 - 1).x, Nodes(Elements(z).Node2 - 1).y,
+                '              Nodes(Elements(z).Node3 - 1).x, Nodes(Elements(z).Node3 - 1).y,
+                '              Nodes(Elements(z).Node4 - 1).x, Nodes(Elements(z).Node4 - 1).y,
+                '              De)
+                '        AssembleKg(cie.getbe, bg, z)
+                '        AssembleKg(cie.getAe, Ag, z)
+                '    Next
+                '    '3.
+                '    getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt_int)
+                '    getNewR(NewR, NNodes, phi, Ag, bg, dt_int)
+                '    RHS = MultiplyMatrixWithVector(NewR, S_old)
+                '    GetX(S_new, NewLHS, RHS)
+
+                '    '4.
+                '    For j = 0 To nDof - 1
+
+                '        If S_new(j) >= 1 Then
+
+                '            S_new(j) = 1
+
+                '        ElseIf S_new(j) <= 0 Then
+
+                '            S_new(j) = 0
+
+                '        End If
+
+                '        w_new(j) = wsat * S_new(j)
+                '        H_old(j) = H_new(j)
+                '        S_old(j) = S_new(j)
+                '    Next
+
+                '    RegisterH(nFic1, dt_int, nDof, S_new)
+                '    PrintLine(CInt(nFic1), " ")
+                '    RegisterH(nFic2, dt_int, nDof, w_new)
+                '    PrintLine(CInt(nFic2), " ")
+
+                ''iteration over first step or?
+                'For k = 0 To npt - 1
+                '    '1.
+                '    For i = 0 To nDof - 1
+                '        If Nodes(i).Bord = True Then
+                '            ' check whether the current boundary is exposed to a boundary condition
+                '            X_node = Nodes(i).x
+                '            Y_node = Nodes(i).y
+                '            S_bound = GetHtoS(H_int + k * (H_bound - H_int) / npt, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                '            If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                '                S_old(i) = S_bound
+                '            ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                '                S_old(i) = S_int
+                '            ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                '                S_old(i) = S_int
+                '            ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                '                S_old(i) = S_int
+                '            End If
+                '        End If
+                '        w_old(i) = wsat * S_old(i)
+                '    Next
+                '    '2.
+                '    For z = 0 To NElements - 1
+                '        se = New SETrans(
+                '              S_old(Elements(z).Node1 - 1), S_old(Elements(z).Node2 - 1),
+                '              S_old(Elements(z).Node3 - 1), S_old(Elements(z).Node4 - 1)
+                '              )
+                '        S_ele = se.getSe
+                '        S_avg = GetAvgH(S_ele)
+                '        kr = Getkr(S_avg, m)
+                '        pc = Getpc(S_avg, pc_0, beta, St)
+                '        dpcdS = GetdpcdS(S_avg, pc_0, beta)
+                '        Dl = GetDl(KK, yita_l, dpcdS, kr)
+                '        f = Getf(phi, S_avg)
+                '        Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
+                '        De = Dv + Dl
+                '        cie = New CIETrans(
+                '              Nodes(Elements(z).Node1 - 1).x, Nodes(Elements(z).Node1 - 1).y,
+                '              Nodes(Elements(z).Node2 - 1).x, Nodes(Elements(z).Node2 - 1).y,
+                '              Nodes(Elements(z).Node3 - 1).x, Nodes(Elements(z).Node3 - 1).y,
+                '              Nodes(Elements(z).Node4 - 1).x, Nodes(Elements(z).Node4 - 1).y,
+                '              De)
+                '        AssembleKg(cie.getbe, bg, z)
+                '        AssembleKg(cie.getAe, Ag, z)
+                '    Next
+                '    '3.
+                '    getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt_int)
+                '    getNewR(NewR, NNodes, phi, Ag, bg, dt_int)
+                '    RHS = MultiplyMatrixWithVector(NewR, S_old)
+                '    GetX(S_new, NewLHS, RHS)
+
+                '    '4.
+                '    For j = 0 To nDof - 1
+
+                '        If S_new(j) >= 1 Then
+
+                '            S_new(j) = 1
+
+                '        ElseIf S_new(j) <= 0 Then
+
+                '            S_new(j) = 0
+
+                '        End If
+
+                '        w_new(j) = wsat * S_new(j)
+                '        H_old(j) = H_new(j)
+                '        S_old(j) = S_new(j)
+                '    Next
+                '    If k > 0 Then
+                '        RegisterH(nFic1, k * dt_int, nDof, S_new)
+                '        PrintLine(CInt(nFic1), " ")
+                '        RegisterH(nFic2, k * dt_int, nDof, w_new)
+                '        PrintLine(CInt(nFic2), " ")
+                '    End If
+                'Next
+                'End If
             End If
+            'regular loop
+            For i = 0 To nDof - 1
+                If Nodes(i).Bord = True Then
+                    X_node = Nodes(i).x
+                    Y_node = Nodes(i).y
+                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                        S_old(i) = S_bound
+                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                        S_old(i) = S_int
+                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                        S_old(i) = S_int
+                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                        S_old(i) = S_int
+                    End If
+                End If
+                w_old(i) = wsat * S_old(i)
+            Next
             'step 2: elemental and global Matrix constructions
             'Matrix assembling
             For i = 0 To NElements - 1
@@ -681,6 +848,8 @@ Public Class frmTrans2D
                           )
                 S_ele = se.getSe
                 S_avg = GetAvgH(S_ele)
+                'w_old(i) = wsat * S_avg
+                'Print(CInt(nFic2), w_old(i), ",", TAB)
                 kr = Getkr(S_avg, m)
                 pc = Getpc(S_avg, pc_0, beta, St)
                 dpcdS = GetdpcdS(S_avg, pc_0, beta)
@@ -710,37 +879,39 @@ Public Class frmTrans2D
             For j = 0 To NNodes - 1
 
                 If S_new(j) >= 1 Then
-
                     S_new(j) = 1
-
                 ElseIf S_new(j) <= 0 Then
-
                     S_new(j) = 0
-
                 End If
 
                 If Nodes(j).Bord = True Then
-                    ' check whether the current boundary is exposed to a boundary condition
                     X_node = Nodes(j).x
                     Y_node = Nodes(j).y
                     S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                     If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
                         S_new(j) = S_bound
                     ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                        S_new(j) = S_bound
+                        S_new(j) = S_int
                     ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                        S_new(j) = S_bound
+                        S_new(j) = S_int
                     ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                        S_new(j) = S_bound
+                        S_new(j) = S_int
                     End If
                 End If
+                H_old(j) = H_new(j)
+                S_old(j) = S_new(j)
                 w_new(j) = wsat * S_new(j)
-
             Next
 
             'step 6: plot 2D image and export result .txt file 
             For i = 0 To NElements - 1
-
+                'se = New SETrans(
+                '         S_new(Elements(i).Node1 - 1), S_new(Elements(i).Node2 - 1),
+                '         S_new(Elements(i).Node3 - 1), S_new(Elements(i).Node4 - 1)
+                '         )
+                'S_ele = se.getSe
+                'S_avg = GetAvgH(S_ele)
+                'w_new(i) = wsat * S_avg
                 Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
                 SlRange.AddValue(Elements(i).Sl(ti + 1))
 
