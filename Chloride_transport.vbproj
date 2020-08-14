@@ -166,9 +166,11 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -191,15 +193,23 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Compute2D.vb" />
+    <Compile Include="DBConnexion.vb" />
+    <Compile Include="Exposition.vb" />
     <Compile Include="frmInput2D.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaterialsData.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaterialsData.xsd</DependentUpon>
     </Compile>
     <Compile Include="Old\btGauss.vb" />
     <Compile Include="Old\CGraph.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ColorMap.vb" />
-    <Compile Include="Compute.vb">
+    <Compile Include="Compute1D.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DiffusionXC.vb" />
@@ -342,6 +352,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="MaterialsData.xsc">
+      <DependentUpon>MaterialsData.xsd</DependentUpon>
+    </None>
+    <None Include="MaterialsData.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MaterialsData.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="MaterialsData.xss">
+      <DependentUpon>MaterialsData.xsd</DependentUpon>
+    </None>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -363,6 +384,8 @@
     <Content Include="Resources\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Exposition\EXPO2D_Explication.txt" />
+    <Content Include="Resources\Exposition\EXPO2D_200Elements.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_O_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_CAC_DAVOS.txt" />
@@ -395,6 +418,18 @@
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Resources\InitialCondition\CI2D_200Elements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InitialCondition\CI2D_Explication.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Input\SIMU2D.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Input\SIMU2D_Explication.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Input\INPUT2D_Explication.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

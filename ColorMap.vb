@@ -2,9 +2,9 @@
 Option Strict On
 
 Public Class ColorMap
+
     'A simple implementation of colormap..
     'only red-blue map is implemented.
-
     Public Property Max As Double
     Public Property Min As Double
 
@@ -112,8 +112,11 @@ Public Class ColorMap
 
 
     Public Sub New(Max As Double, Min As Double)
+
         Me.Max = Max
         Me.Min = Min
         setColors()
+
     End Sub
+
 End Class

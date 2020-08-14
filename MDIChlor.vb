@@ -50,7 +50,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem11 As MenuItem
     Friend WithEvents MenuItem12 As MenuItem
     Friend WithEvents MenuItem14 As MenuItem
-    Friend WithEvents MenuItem7 As MenuItem
+    Friend WithEvents MenuCalcul1D As MenuItem
     Friend WithEvents Calcul2D As MenuItem
     Friend WithEvents MenuItem17 As MenuItem
     Friend WithEvents MenuItem13 As MenuItem
@@ -67,9 +67,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem7 = New System.Windows.Forms.MenuItem()
+        Me.MenuCalcul1D = New System.Windows.Forms.MenuItem()
         Me.MenuItem8 = New System.Windows.Forms.MenuItem()
         Me.MenuItem13 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.Calcul2D = New System.Windows.Forms.MenuItem()
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
@@ -79,7 +80,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -124,7 +124,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
-        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuItem7, Me.MenuItem8})
+        Me.MenuItem5.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem6, Me.MenuCalcul1D, Me.MenuItem8})
         Me.MenuItem5.Text = "Transport 1D"
         '
         'MenuItem6
@@ -132,10 +132,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem6.Index = 0
         Me.MenuItem6.Text = "Input 1D"
         '
-        'MenuItem7
+        'MenuCalcul1D
         '
-        Me.MenuItem7.Index = 1
-        Me.MenuItem7.Text = "Calcul 1D"
+        Me.MenuCalcul1D.Index = 1
+        Me.MenuCalcul1D.Text = "Calcul 1D"
         '
         'MenuItem8
         '
@@ -147,6 +147,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem13.Index = 3
         Me.MenuItem13.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem15, Me.Calcul2D})
         Me.MenuItem13.Text = "Transport 2D "
+        '
+        'MenuItem15
+        '
+        Me.MenuItem15.Index = 0
+        Me.MenuItem15.Text = "Input 2D"
         '
         'Calcul2D
         '
@@ -190,11 +195,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
         '
-        'MenuItem15
-        '
-        Me.MenuItem15.Index = 0
-        Me.MenuItem15.Text = "Input 2D"
-        '
         'MDIChlor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
@@ -215,17 +215,18 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
     'Public CPTerase As Short = 0
     Dim Para5 As Short = 0
+    Public Prefile As String
 
-    Dim frmC As New frmGraph1D
     Dim frm2D As New frmTrans2D
+
     'Dim diff As New DiffusionXC
     'Dim transport As New HydriqueXC
     'Dim directoryPath As String
 
     ' Xuande 10/06/2020
-    Private Nodes() As NodeTrans
-    Private Elements() As ElementTrans
-    Private NNodes, NElements, Nbloc As Integer
+    'Private Nodes() As NodeTrans
+    'Private Elements() As ElementTrans
+    'Private NNodes, NElements, Nbloc As Integer
     'Private MeshFileOk = False
 
     'Lorsque la fenêtre est activée
@@ -234,12 +235,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         My.Application.ChangeCulture("en-US")
         Me.IsMdiContainer = True
         Me.WindowState = FormWindowState.Maximized
-
-        frmC.Left = 0
-        frmC.Top = 0
-        frmC.Height = (Me.Height)
-        frmC.Width = (Me.Width)
-        frmC.Hide()
 
         frm2D.Left = 0
         frm2D.Top = 0
@@ -265,415 +260,41 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     End Sub
 
     'Lancement de Open dans le menu déroulant
-    Private Sub MenuItem7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem7.Click
-        ' Moisture Parameters 
-        ' Diffusion Coefficient
-        Dim aa As Single ' Function coefficient
-        Dim Hc As Single ' Function coefficient
-        Dim ab As Single ' Function coefficient
-        Dim tc As Single ' Function coefficient
-        Dim ImpHydr As Boolean
-        ' chloride
-        Dim LambdaT(1) As Single
-        Dim LambdaH(1) As Single
-        Dim aOH As Single
-        Dim EbG As Single
-        Dim toG As Single
-        Dim faG As Single
-        Dim hMin As Single
-        Dim hEcart As Single
-        Dim wMin As Single
-        Dim wEcart As Single
-        Dim CTmin As Single
-        Dim CTecart As Single
-        Dim CLmin As Single
-        Dim CLecart As Single
-        Dim Tecart As Single
-        Dim H_snap As Single
-        Dim Retard As Single
-        ' Structural data
-        Dim TimeMax As Single
-        Dim Length As Single 'length of the layer [mm]
-        Dim Ne As Short 'Number of finite elements
-        Dim Le(1) As Decimal 'element length
-        Dim PosProf(1) As Decimal
-        'Computational data
-        Dim Dofs As Short
-        'computationals values
-        Dim Duration As Single
-        Dim DeltaT As Single
-        'boundary conditions
-        Dim NEXPO As Short
-        Dim NQUAL As Short
-        Dim taff As Single
-        Dim Hsauv As Single
-        Dim Wsauv As Single
-        Dim CTsauv As Single
-        Dim CLsauv As Single
-        Dim Tsauv As Single
-        Dim Carbsauv As Single
-        Dim Filebeton(1) As String
-        Dim Fileres(1) As String
-        Dim PD(1) As Single
-        Dim qGran(1) As Single
-        Dim Dcl(1) As Single
-        Dim SAT(1) As Single
-        Dim ciment(1) As Single
-        Dim FileGexpo(1) As String
-        Dim FileDexpo(1) As String
-        Dim proba(1, 1) As Single
-        Dim ChoixRep As Short
-        Dim nChmt As Short
-        Dim Nbreel(1) As Short
-        Dim LenApp(1) As Single
-        Dim EC(1) As Single
-        Dim tProt(1) As Single
-        Dim Vct(1) As Single
-        Dim Nct(1) As Single
-        Dim capCal As Single
-        Dim Hydr(1) As Single
-        '---------------------------------------------------------------------------------------
-        'Lecture du fichier txt
-        Dim Para1 As Single
-        Dim Para2 As Single
-        Dim Para3 As Single
-        Dim Para4 As Single
-        Dim test As Single
-        Dim i As Short
-        Dim j As Short
-        Dim nFic As Integer = FreeFile()
-        Dim OutFile As String
-        Dim Filtre As String
-        Dim Index As Short
-        Dim Directoire As Boolean
-        Dim Titre As String
-        Dim Canc As Boolean = False
-        Dim ED(1) As Single
-        Dim ToHydr(1) As Single
-        Dim Ecl(1) As Single
-        Dim ToCl(1) As Single
-        Dim PostFile As String
+    Private Sub MenuCalcul1D_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuCalcul1D.Click
+
         Dim Creadtherm(1, 1) As Double
         Dim Creadhydr(1, 1) As Double
         Dim Creadion(1, 1) As Double
-        Dim Ctherm(1) As Double
-        Dim Chydr(1) As Double
-        Dim Cion(1) As Double
         Dim Nbre1 As Short
         Dim Nbre2 As Short
         Dim Nbre3 As Short
-        Dim Var As Double
-        Dim Var1 As Double
-        Dim GyCO2 As Single
-        Dim DyCO2 As Single
-        Dim RoC(1) As Single
-        Dim RoA(1) As Single
 
-        Dim Option2d As Boolean
+        Dim C1D As New Compute1D
 
-        Dim PintermManual As Integer = 0
+        C1D.ReadFile(Nbre1, Nbre2, Nbre3, Creadtherm, Creadhydr, Creadion)
 
-        ''''''''''''''''''''''''''''''''''''''''''''
-        Filtre = "Text files (INPUT_*.txt)|INPUT_*.txt"
-        Index = 1
-        Directoire = True
-        Titre = "Sélectionner le fichier d'exposition"
-        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then GoTo b
-        ''''''''''''''''''''''''''''''''''''''''''''
+        C1D.InitialConditions(Nbre1, Nbre2, Nbre3, Creadtherm, Creadhydr, Creadion)
 
-        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        FilePost(OutFile, PostFile)
+        C1D.InitFrmGraph()
 
-        Input(nFic, Length)
-        Input(nFic, Ne)
-        Input(nFic, ChoixRep)
-        ReDim Le(Ne + CShort(1))
-        ReDim PosProf(Ne + CShort(2))
+        'C1D.Compute_All()
 
-        PosProf(1) = 0
-        Select Case ChoixRep
-            Case CShort(1)
-                For i = CShort(1) To Ne
-                    Le(i) = CDec(Length) / CDec(Ne)
-                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
-                Next i
-            Case CShort(2)
-                Input(nFic, Le(1))
-                Para1 = CSng(0)
-                Para2 = CSng(0)
-                For i = CShort(1) To Ne / CShort(2) - CShort(1)
-                    Para1 = Para1 + CSng(1)
-                    Para2 = Para2 + Para1
-                Next i
-                If Le(1) > CDec(Length) Then GoTo b
-                Para1 = (Length / CSng(2) - CSng(Ne) / CSng(2) * CSng(Le(1))) / Para2
-                PosProf(2) = Le(1)
-                PosProf(Ne + CShort(1)) = CDec(Length)
-                PosProf(Ne) = CDec(Length) - Le(1)
-                For i = CShort(2) To Ne / CShort(2)
-                    Le(i) = Le(1) + (CDec(i) - CDec(1)) * CDec(Para1)
-                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
-                    Le(Ne - i) = Le(i)
-                    PosProf(Ne + CShort(1) - i) = PosProf(Ne + CShort(2) - i) - Le(i)
-                Next i
-            Case 3
-                Input(nFic, Le(1))
-                Para3 = CSng(Le(1))
-                test = CSng(10)
-                If Le(1) > CDec(Length) Then GoTo b
-                Do While System.Math.Abs(test) > 0.0001
-                    Para1 = CSng(1) - Length / (CSng(2) * CSng(Le(1)))
-                    Para2 = CSng(1)
-                    For i = CShort(1) To Ne / CShort(2) - CShort(1)
-                        Para1 = Para1 + Para3 ^ CSng(i)
-                        If i < Ne / CShort(2) - CShort(1) Then Para2 = Para2 + (CSng(i) + CSng(1)) * Para3 ^ CSng(i)
-                    Next i
-                    Para4 = Para3 - Para1 / Para2
-                    test = Para4 - Para3
-                    Para3 = Para4
-                Loop
-                PosProf(2) = Le(1)
-                PosProf(Ne + CShort(1)) = CDec(Length)
-                PosProf(Ne) = CDec(Length) - Le(1)
-                For i = CShort(2) To Ne / CShort(2)
-                    Le(i) = Le(1) * CDec(Para4) ^ (CDec(i) - CDec(1))
-                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
-                    Le(Ne - i) = Le(i)
-                    PosProf(Ne + CShort(1) - i) = PosProf(Ne + CShort(2) - i) - Le(i)
-                Next i
-            Case 4
-                Input(nFic, nChmt)
-                ReDim Nbreel(nChmt - CShort(1))
-                ReDim LenApp(nChmt - CShort(1))
-                PosProf(Ne + CShort(1)) = CDec(Length)
-                Para1 = CSng(0)
-                Para2 = CSng(0)
-                For i = CShort(1) To nChmt - CShort(1)
-                    Input(nFic, Nbreel(i))
-                    Input(nFic, LenApp(i))
-                    For j = CShort(1) To Nbreel(i)
-                        Le(j + CShort(Para1)) = CDec(LenApp(i)) / CDec(Nbreel(i))
-                        PosProf(j + CShort(1) + CShort(Para1)) = PosProf(j + CShort(Para1)) + Le(j + CShort(Para1))
-                        Le(Ne + CShort(1) - j - CShort(Para1)) = Le(j + CShort(Para1))
-                        PosProf(Ne + CShort(1) - j - CShort(Para1)) = PosProf(Ne + CShort(2) - j - CShort(Para1)) - Le(j + CShort(Para1))
-                    Next j
-                    Para1 = Para1 + CSng(Nbreel(i))
-                    Para2 = Para2 + LenApp(i)
-                Next i
-                Para3 = CSng(Ne) - CSng(2) * Para1
-                Para2 = Length - CSng(2) * Para2
-                For i = CShort(Para1) + CShort(1) To CShort(Para1) + CShort(Para3)
-                    Le(i) = CDec(Para2) / CDec(Para3)
-                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
-                Next i
-            Case 5
-                Input(nFic, nChmt)
-                ReDim Nbreel(nChmt - CShort(1))
-                ReDim LenApp(nChmt - CShort(1))
-                PosProf(Ne + CShort(1)) = CDec(Length)
-                Para1 = CSng(0)
-                Para2 = CSng(0)
-                For i = CShort(1) To nChmt - CShort(1)
-                    Input(nFic, Nbreel(i))
-                    Input(nFic, LenApp(i))
-                    For j = CShort(1) To Nbreel(i)
-                        Le(j + CShort(Para1)) = CDec(LenApp(i)) / CDec(Nbreel(i))
-                        PosProf(j + CShort(1) + CShort(Para1)) = PosProf(j + CShort(Para1)) + Le(j + CShort(Para1))
-                    Next j
-                    Para1 = Para1 + CSng(Nbreel(i))
-                    Para2 = Para2 + LenApp(i)
-                Next i
-                Para3 = CSng(Ne) - Para1
-                Para2 = Length - Para2
-                For i = CShort(Para1) + CShort(1) To CShort(Para1) + CShort(Para3)
-                    Le(i) = CDec(Para2) / CDec(Para3)
-                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
-                Next i
-        End Select
+        Dim myThread As New System.Threading.Thread(AddressOf C1D.Compute_All)
 
-        Input(nFic, TimeMax)
-        Input(nFic, DeltaT)
-        Input(nFic, taff)
-        Input(nFic, Hsauv)
-        Input(nFic, Wsauv)
-        Input(nFic, CTsauv)
-        Input(nFic, CLsauv)
-        Input(nFic, Tsauv)
-        Input(nFic, Carbsauv)
-        Input(nFic, hMin)
-        Input(nFic, hEcart)
-        Input(nFic, wMin)
-        Input(nFic, wEcart)
-        Input(nFic, CLmin)
-        Input(nFic, CLecart)
-        Input(nFic, CTmin)
-        Input(nFic, CTecart)
-        Input(nFic, Tecart)
-        Input(nFic, aa)
-        Input(nFic, Hc)
-        Input(nFic, ab)
-        Input(nFic, tc)
-        Input(nFic, ImpHydr)
-        Input(nFic, H_snap)
-        Input(nFic, Retard)
-        Input(nFic, aOH)
-        Input(nFic, EbG)
-        Input(nFic, toG)
-        Input(nFic, faG)
-        Input(nFic, capCal)
-        Input(nFic, GyCO2)
-        Input(nFic, DyCO2)
-
-        Input(nFic, NEXPO)
-        ReDim FileGexpo(NEXPO)
-        ReDim FileDexpo(NEXPO)
-        For i = CShort(1) To NEXPO
-            Input(nFic, FileGexpo(i))
-            Input(nFic, FileDexpo(i))
-        Next i
-
-        Input(nFic, NQUAL)
-        ReDim Filebeton(NQUAL)
-        ReDim Fileres(NQUAL)
-        ReDim PD(NQUAL)
-        ReDim Dcl(NQUAL)
-        ReDim qGran(NQUAL)
-        ReDim LambdaH(NQUAL)
-        ReDim LambdaT(NQUAL)
-        ReDim SAT(NQUAL)
-        ReDim ciment(NQUAL)
-        ReDim EC(NQUAL)
-        ReDim tProt(NQUAL)
-        ReDim Vct(NQUAL)
-        ReDim Nct(NQUAL)
-        ReDim Hydr(NQUAL)
-        ReDim ED(NQUAL)
-        ReDim ToHydr(NQUAL)
-        ReDim Ecl(NQUAL)
-        ReDim ToCl(NQUAL)
-        ReDim RoA(NQUAL)
-        ReDim RoC(NQUAL)
-        ReDim proba(NQUAL, 19)
-        For i = CShort(1) To NQUAL
-            Input(nFic, Filebeton(i))
-            Input(nFic, Fileres(i))
-            Input(nFic, PD(i))
-            Input(nFic, Dcl(i))
-            Input(nFic, qGran(i))
-            Input(nFic, LambdaH(i))
-            Input(nFic, LambdaT(i))
-            Input(nFic, SAT(i))
-            Input(nFic, ciment(i))
-            Input(nFic, EC(i))
-            Input(nFic, tProt(i))
-            Input(nFic, Hydr(i))
-            Input(nFic, Vct(i))
-            Input(nFic, Nct(i))
-            Input(nFic, ED(i))
-            Input(nFic, ToHydr(i))
-            Input(nFic, Ecl(i))
-            Input(nFic, ToCl(i))
-            Input(nFic, RoA(i))
-            Input(nFic, RoC(i))
-            For j = 0 To 19
-                Input(nFic, proba(i, j))
-            Next
-        Next i
-
-        Input(nFic, Nbre1)
-        ReDim Creadtherm(1, Nbre1)
-        For i = 1 To Nbre1
-            Input(nFic, Creadtherm(0, i))
-            Input(nFic, Creadtherm(1, i))
-        Next
-
-        Input(nFic, Nbre2)
-        ReDim Creadhydr(1, Nbre2)
-        For i = 1 To Nbre2
-            Input(nFic, Creadhydr(0, i))
-            Input(nFic, Creadhydr(1, i))
-            Creadhydr(1, i) = Creadhydr(1, i) / 100
-        Next
-
-        Input(nFic, Nbre3)
-        ReDim Creadion(1, Nbre3)
-        For i = 1 To Nbre3
-            Input(nFic, Creadion(0, i))
-            Input(nFic, Creadion(1, i))
-        Next
-
-        Dofs = Ne + CShort(1)
-        'calcul des conditions initiales
-        j = 0
-        ReDim Ctherm(Dofs + 1)
-        For i = 1 To Nbre1 - 1
-            Var = (Creadtherm(1, i + 1) - Creadtherm(1, i)) / (Creadtherm(0, i + 1) - Creadtherm(0, i))
-            Var1 = Creadtherm(1, i) - Var * Creadtherm(0, i)
-            Do While PosProf(j) <= Creadtherm(0, i + 1)
-                Ctherm(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
-            Ctherm(Dofs + 1) = Ctherm(Dofs)
-        Next
-        j = 0
-        ReDim Chydr(Dofs + 1)
-        For i = 1 To Nbre2 - 1
-            Var = (Creadhydr(1, i + 1) - Creadhydr(1, i)) / (Creadhydr(0, i + 1) - Creadhydr(0, i))
-            Var1 = Creadhydr(1, i) - Var * Creadhydr(0, i)
-            Do While PosProf(j) <= Creadhydr(0, i + 1)
-                Chydr(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
-            Chydr(Dofs + 1) = Chydr(Dofs)
-            If j > Dofs + 1 Then Exit For
-        Next
-        j = 0
-        ReDim Cion(Dofs + 1)
-        For i = 1 To Nbre3 - 1
-            Var = (Creadion(1, i + 1) - Creadion(1, i)) / (Creadion(0, i + 1) - Creadion(0, i))
-            Var1 = Creadion(1, i) - Var * Creadion(0, i)
-            Do While PosProf(j) <= Creadion(0, i + 1)
-                Cion(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
-            Cion(Dofs + 1) = Cion(Dofs)
-        Next
-
-        Le(0) = CDec(1)       'couche limite
-        Le(Dofs) = CDec(1)    'couche limite
-
-        Try
-            Input(nFic, PintermManual)
-            MsgBox("Le nombre de points est de" & CStr(PintermManual), MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
-        Catch
-            MsgBox("Attention aucun points pris en compte manuellement", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
-        End Try
-
-        FileClose(nFic)
-
-        '---------------------------------------------------------------------------------------
-        Dim myThread As System.Threading.Thread
-
-        SetParameters(frmC, Length, Ne, ChoixRep, Le, PosProf, nChmt, Nbreel, LenApp, TimeMax, DeltaT, taff, Hsauv, Wsauv, CTsauv, CLsauv, Tsauv, Carbsauv, hMin, hEcart, wMin, wEcart, CLmin, CLecart, CTmin, CTecart, Tecart, aa, Hc, ab, tc, ImpHydr, H_snap, Retard, aOH, EbG, toG, faG, NEXPO, FileGexpo, FileDexpo, NQUAL, Filebeton, Fileres, PD, Dcl, capCal, LambdaH, LambdaT, SAT, ciment, EC, tProt, Vct, Nct, proba, Dofs, qGran, Hydr, ED, ToHydr, Ecl, ToCl, PostFile, Ctherm, Chydr, Cion, GyCO2, DyCO2, RoA, RoC, PintermManual)
-
-        myThread = New System.Threading.Thread(AddressOf Compute_All)
-
-        frmC.MdiParent = Me
-        frmC.Show()
         If Para5 <> CShort(1) Then
             myThread.Start()
         End If
-
-b:      'user pressed cancel error
 
     End Sub
 
     'construction de graphique
     Private Sub MenuItem8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem8.Click
+
+        Dim frmC As New frmGraph1D
+        frmC.Left = 0
+        frmC.Top = 0
+        frmC.Height = (Me.Height)
+        frmC.Width = (Me.Width)
 
         Using frm03 As New frmGraph1DScale
             frmC.MdiParent = Me
@@ -701,6 +322,12 @@ b:      'user pressed cancel error
 
     'lancement du traitement graphique des probabilités
     Private Sub MenuItem9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItem9.Click
+
+        Dim frmC As New frmGraph1D
+        frmC.Left = 0
+        frmC.Top = 0
+        frmC.Height = (Me.Height)
+        frmC.Width = (Me.Width)
 
         Using frm03 As New frmGraph1DScale
             frmC.MdiParent = Me
@@ -735,9 +362,11 @@ b:      'user pressed cancel error
     'End Sub
     'Lecture du module PhreeqC
     Private Sub MenuItem14_Click(sender As Object, e As EventArgs) Handles MenuItem14.Click
+
         Using frm As New frmPhreeqC
             frm.ShowDialog()
         End Using
+
     End Sub
 
     'Lecture du module FEM mechical analyse
@@ -828,150 +457,150 @@ b:      'user pressed cancel error
     '    End If
     'End Sub
     'Lecture de fichier .msh 'Xuande  10/06/2020
-    Public Function ReadFile(f As String) As Boolean
-        Try
+    'Public Function ReadFile(f As String) As Boolean
+    '    Try
 
-            Dim sr As New StreamReader(f)
-            Dim s As String
-            Dim Arr(0) As String
-            Dim Temp As String
-            Dim i As Integer
-            Dim j As Integer
-            Dim jj As Integer
-            Dim k As Integer
-            Dim NN(0) As Integer
-            Dim XX(0), YY(0), ZZ(0) As Double
-            Dim n0 As Integer
-            Dim n, n1, n2, n3, n4 As Integer
-            Dim x, y, z As Double
-            Dim brd As Boolean
-            Dim bloc_node As Integer
-            Dim bloc_type As Integer
-            Dim bloc_element As Integer
+    '        Dim sr As New StreamReader(f)
+    '        Dim s As String
+    '        Dim Arr(0) As String
+    '        Dim Temp As String
+    '        Dim i As Integer
+    '        Dim j As Integer
+    '        Dim jj As Integer
+    '        Dim k As Integer
+    '        Dim NN(0) As Integer
+    '        Dim XX(0), YY(0), ZZ(0) As Double
+    '        Dim n0 As Integer
+    '        Dim n, n1, n2, n3, n4 As Integer
+    '        Dim x, y, z As Double
+    '        Dim brd As Boolean
+    '        Dim bloc_node As Integer
+    '        Dim bloc_type As Integer
+    '        Dim bloc_element As Integer
 
-            'Skip the version data
-            Temp = readLine(sr)
+    '        'Skip the version data
+    '        Temp = readLine(sr)
 
-            'Skip the unnecessary first few lines
-            Do While Temp <> "$Nodes"
-                Temp = sr.ReadLine.Trim
-            Loop
+    '        'Skip the unnecessary first few lines
+    '        Do While Temp <> "$Nodes"
+    '            Temp = sr.ReadLine.Trim
+    '        Loop
 
-            'Read total number of nodes and blocks 
-            s = readLine(sr)
-            Arr = Split(s, " "c)
-            Try
-                Nbloc = Integer.Parse(Arr(0))
-                NNodes = Integer.Parse(Arr(1))
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                Return False
-            End Try
+    '        'Read total number of nodes and blocks 
+    '        s = readLine(sr)
+    '        Arr = Split(s, " "c)
+    '        Try
+    '            Nbloc = Integer.Parse(Arr(0))
+    '            NNodes = Integer.Parse(Arr(1))
+    '        Catch ex As Exception
+    '            MsgBox(ex.Message)
+    '            Return False
+    '        End Try
 
-            'Read node coordinates block by block
-            ReDim Nodes(NNodes - 1)
-            For i = 0 To Nbloc - 1
-                'read bloc information for how many nodes should be read inside
-                s = readLine(sr)
-                Arr = Split(s, " "c)
-                bloc_type = Integer.Parse(Arr(0))
-                bloc_node = Integer.Parse(Arr(3))
-                ReDim NN(bloc_node - 1)
-                ReDim XX(bloc_node - 1)
-                ReDim YY(bloc_node - 1)
-                ReDim ZZ(bloc_node - 1)
-                For j = 0 To bloc_node - 1
-                    'read first lines of node number
-                    s = readLine(sr)
-                    Arr = Split(s, " "c)
-                    n = Integer.Parse(Arr(0))
-                    NN(j) = n
-                Next
-                'read corresponding lines of coordinates
-                For k = 0 To bloc_node - 1
-                    'judging wether points of current block belongs to the boundary
-                    If bloc_type <= 1 Then
-                        brd = True
-                    Else
-                        brd = False
-                    End If
-                    'read corresponding lines of coordinates
-                    s = readLine(sr)
-                    Arr = Split(s, " "c)
-                    x = Arr(0)
-                    XX(k) = x
-                    y = Arr(1)
-                    YY(k) = y
-                    z = Arr(2)
-                    ZZ(k) = z
-                    Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), brd)
-                Next
-            Next
+    '        'Read node coordinates block by block
+    '        ReDim Nodes(NNodes - 1)
+    '        For i = 0 To Nbloc - 1
+    '            'read bloc information for how many nodes should be read inside
+    '            s = readLine(sr)
+    '            Arr = Split(s, " "c)
+    '            bloc_type = Integer.Parse(Arr(0))
+    '            bloc_node = Integer.Parse(Arr(3))
+    '            ReDim NN(bloc_node - 1)
+    '            ReDim XX(bloc_node - 1)
+    '            ReDim YY(bloc_node - 1)
+    '            ReDim ZZ(bloc_node - 1)
+    '            For j = 0 To bloc_node - 1
+    '                'read first lines of node number
+    '                s = readLine(sr)
+    '                Arr = Split(s, " "c)
+    '                n = Integer.Parse(Arr(0))
+    '                NN(j) = n
+    '            Next
+    '            'read corresponding lines of coordinates
+    '            For k = 0 To bloc_node - 1
+    '                'judging wether points of current block belongs to the boundary
+    '                If bloc_type <= 1 Then
+    '                    brd = True
+    '                Else
+    '                    brd = False
+    '                End If
+    '                'read corresponding lines of coordinates
+    '                s = readLine(sr)
+    '                Arr = Split(s, " "c)
+    '                x = Arr(0)
+    '                XX(k) = x
+    '                y = Arr(1)
+    '                YY(k) = y
+    '                z = Arr(2)
+    '                ZZ(k) = z
+    '                Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), brd)
+    '            Next
+    '        Next
 
-            'Read total number of elements and blocks 
-            s = readLine(sr)
-            Arr = Split(s, " "c)
-            Try
-                Nbloc = Integer.Parse(Arr(0))
-                NElements = Integer.Parse(Arr(1))
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                Return False
-            End Try
+    '        'Read total number of elements and blocks 
+    '        s = readLine(sr)
+    '        Arr = Split(s, " "c)
+    '        Try
+    '            Nbloc = Integer.Parse(Arr(0))
+    '            NElements = Integer.Parse(Arr(1))
+    '        Catch ex As Exception
+    '            MsgBox(ex.Message)
+    '            Return False
+    '        End Try
 
-            'Read element connectivity block by block
-            For i = 0 To Nbloc - 1
-                'read bloc information for how many nodes should be read inside
-                s = readLine(sr)
-                Arr = Split(s, " "c)
-                bloc_type = Integer.Parse(Arr(0))
-                bloc_element = Integer.Parse(Arr(3))
-                If bloc_type = 0 Then
-                    Temp = readLine(sr)
-                End If
+    '        'Read element connectivity block by block
+    '        For i = 0 To Nbloc - 1
+    '            'read bloc information for how many nodes should be read inside
+    '            s = readLine(sr)
+    '            Arr = Split(s, " "c)
+    '            bloc_type = Integer.Parse(Arr(0))
+    '            bloc_element = Integer.Parse(Arr(3))
+    '            If bloc_type = 0 Then
+    '                Temp = readLine(sr)
+    '            End If
 
-                If bloc_type = 1 Then
-                    For j = 0 To bloc_element - 1
-                        Temp = readLine(sr)
-                        Arr = Split(Temp, " "c)
-                        n0 = Integer.Parse(Arr(0))
-                    Next
-                End If
+    '            If bloc_type = 1 Then
+    '                For j = 0 To bloc_element - 1
+    '                    Temp = readLine(sr)
+    '                    Arr = Split(Temp, " "c)
+    '                    n0 = Integer.Parse(Arr(0))
+    '                Next
+    '            End If
 
-                If bloc_type = 2 Then
-                    NElements = bloc_element
-                    ReDim Elements(NElements - 1)
-                    For jj = 0 To bloc_element - 1
-                        s = readLine(sr)
-                        Arr = Split(s, " "c)
-                        n = Integer.Parse(Arr(0)) - n0
-                        n1 = Integer.Parse(Arr(1))
-                        n2 = Integer.Parse(Arr(2))
-                        n3 = Integer.Parse(Arr(3))
-                        n4 = Integer.Parse(Arr(4))
-                        Elements(jj) = New ElementTrans(n, n1, n2, n3, n4)
-                    Next
-                End If
+    '            If bloc_type = 2 Then
+    '                NElements = bloc_element
+    '                ReDim Elements(NElements - 1)
+    '                For jj = 0 To bloc_element - 1
+    '                    s = readLine(sr)
+    '                    Arr = Split(s, " "c)
+    '                    n = Integer.Parse(Arr(0)) - n0
+    '                    n1 = Integer.Parse(Arr(1))
+    '                    n2 = Integer.Parse(Arr(2))
+    '                    n3 = Integer.Parse(Arr(3))
+    '                    n4 = Integer.Parse(Arr(4))
+    '                    Elements(jj) = New ElementTrans(n, n1, n2, n3, n4)
+    '                Next
+    '            End If
 
-            Next
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            Return False
-        End Try
-        Return True
-    End Function
-    'Fonction readline  'Xuande  10/06/2020
-    Private Function readLine(ByRef sr As StreamReader) As String
-        Dim s As String
-        If sr.EndOfStream = True Then Return ""
-        While sr.EndOfStream = False
-            s = sr.ReadLine.Trim
-            If s.Length > 0 Then
-                If s.Substring(0, 1) <> "$" Then
-                    Return s
-                End If
-            End If
-        End While
-        Return ""
-    End Function
+    '        Next
+    '    Catch ex As Exception
+    '        MsgBox(ex.Message)
+    '        Return False
+    '    End Try
+    '    Return True
+    'End Function
+    ''Fonction readline  'Xuande  10/06/2020
+    'Private Function readLine(ByRef sr As StreamReader) As String
+    '    Dim s As String
+    '    If sr.EndOfStream = True Then Return ""
+    '    While sr.EndOfStream = False
+    '        s = sr.ReadLine.Trim
+    '        If s.Length > 0 Then
+    '            If s.Substring(0, 1) <> "$" Then
+    '                Return s
+    '            End If
+    '        End If
+    '    End While
+    '    Return ""
+    'End Function
 End Class

@@ -164,6 +164,7 @@ Public Class frmGraph1D : Inherits System.Windows.Forms.Form
         Dim x As Short = a
         Dim y As Short = 18 * a
         Me.Command1.Location = New System.Drawing.Point(x, y)
+
     End Sub
 
     'dessin des graphiques durant l'exécution du calcul
@@ -300,13 +301,28 @@ Public Class frmGraph1D : Inherits System.Windows.Forms.Form
 
     'Click sur le bouton store
     Private Sub Command1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Command1.Click
-        Save_pictures(Picture_Number)
+
+        Picture_Number = Picture_Number + 1
+
+        Dim outfile As String
+
+        outfile = MDIChlor.Prefile & "Graph_1_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox1.Image.Save(outfile)
+        outfile = MDIChlor.Prefile & "Graph_2_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox2.Image.Save(outfile)
+        outfile = MDIChlor.Prefile & "Graph_3_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox3.Image.Save(outfile)
+        outfile = MDIChlor.Prefile & "Graph_4_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox4.Image.Save(outfile)
+        outfile = MDIChlor.Prefile & "Graph_5_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox5.Image.Save(outfile)
+        outfile = MDIChlor.Prefile & "Graph_6_" & Convert.ToString(Picture_Number) & ".bmp"
+        PictureBox6.Image.Save(outfile)
+
     End Sub
 
     Public Sub ModifyTitle(ByVal Title As String)
-        Me.Invoke(Sub()
-                      Me.Text = Title
-                  End Sub)
+        Invoke(Sub() Me.Text = Title)
     End Sub
 
     Public Sub PlotGraph1(ByVal position As Point, ByVal m_Longueur As Single, ByVal m_Hauteur As Single, ByVal couleur As Color, ByVal message0 As String, ByVal message1 As String, ByVal message2 As String, ByVal message3 As String, ByVal x1 As Single, ByVal x2 As Single, ByVal h1 As Single, ByVal h2 As Single, ByVal EctX As Single, ByVal EctY As Single, ByRef PosProf() As Decimal, ByRef Result() As Decimal, ByVal Dofs As Short, ByRef Gxc As Single, ByRef Dxc As Single)
@@ -1012,10 +1028,7 @@ Public Class frmGraph1D : Inherits System.Windows.Forms.Form
     End Sub
 
     Public Sub ModifyCommand1(ByVal Val As Boolean)
-        Me.Invoke(Sub()
-                      Me.Command1.Enabled = Val
-                  End Sub)
-
+        Invoke(Sub() Me.Command1.Enabled = Val)
     End Sub
 
 End Class

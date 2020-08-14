@@ -5,32 +5,42 @@ Imports System.IO
 Imports System.Linq
 ' Module de calcul diffusion 2D Xuande.2020.07.20
 Public Class DiffusionXC
+
+    Public pg As Double = 101325 'atmosphere pressure(pa)
+    Public rho_v As Double = 1 'density of vapor (kg/m3)
+    Public rho_l As Double = 1000 'density of liquid (kg/m3)
+    Public yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
+    Public D0 As Double = 0.00031  ' mm2/s
+
     Private NNodes, NElements As Integer
     Private Nodes() As NodeTrans
     Private Elements() As ElementTrans
+
     Public Sub Analyse(ByRef _NNodes As Integer, ByRef _NElements As Integer, ByRef _Nodes() As NodeTrans, ByRef _Elements() As ElementTrans, ByRef directory As String)
         'Material parameters, can be converted from user defined input
-        Dim pg As Double = 101325 'atmosphere pressure(pa)
-        Dim rho_v As Double = 1 'density of vapor (kg/m3)
-        Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+
+        ' INPUT.TXT 
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
-        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa)
+        Dim Tk As Double = 293 'temperature interne in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
+        Dim Tc As Double = Tk - 273 'temperature in (C)
+        Dim type As Integer = 3 'cement type (-) DOIT ETRE SAUVEGARDE
+        Dim W_C_ratio As Double = 0.5 'porosity (-)
+        Dim C As Double = 375 'density of cement (kg/m3)
+        Dim alpha_0 As Double = 0.05 ' aa
+        Dim Hc As Double = 0.75 '
+
+        ' Calculer à partir de INPUT avec W/C ABAQUE
+        Dim pc_0 As Double = 28000 ' parameter for ordinary concrete (pa) 
         Dim m As Double = 0.5 ' parameter for ordinary concrete / for cement paste 37.5479
         Dim beta As Double = 2 ' parameter for ordinary concrete / for cement paste 2.1684
         Dim KK As Double = 0.000000000002 'intrinsic permeability (m2)
-        Dim yita_l As Double = 0.0011 'viscosity of water (kg/m.s)
-        Dim phi As Double = 0.05 'porosity (-)
-        Dim type As Integer = 3 'cement type (-)
-        Dim W_C_ratio As Double = 0.5 'porosity (-)
-        Dim C As Double = 375 'density of cement (kg/m3)
+        Dim phi As Double = 0.05 'porosity (-) TROUVER ABAQUE DAVID
+
+
         Dim day As Double
-        Dim D0 As Double = 0.00031  ' mm2/s
-        Dim alpha_0 As Double = 0.05
-        Dim Hc As Double = 0.75
         Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
         Dim alpha As Double = 0.6 'hydration degree (-)
-        Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
-        Dim Tc As Double = Tk - 273 'temperature in (C)
+
         Dim wsat As Double = GetWsat(C, alpha, W_C_ratio, phi) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
@@ -38,6 +48,7 @@ Public Class DiffusionXC
         Dim X_lower As Double = -200 'mm, upper bound of X coordinate
         Dim Y_upper As Double = 100 'mm, upper bound of Y coordinate
         Dim Y_lower As Double = -100 'mm, upper bound of Y coordinate
+
         Dim Expo_X_upper As Boolean = True 'exposure on right most side
         Dim Expo_X_lower As Boolean = True 'exposure on left most side
         Dim Expo_Y_upper As Boolean = True 'exposure on top most side
@@ -113,7 +124,6 @@ Public Class DiffusionXC
             Else
                 H_old = H_new
             End If
-
 
             'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
@@ -195,6 +205,7 @@ Public Class DiffusionXC
             Next
         Next
     End Sub
+
     'Assembling global vector /water diffusion
     Private Function AssembleVg(ByRef ve() As Double, ByRef H() As Double, ElementNo As Integer)
         Dim i As Integer
@@ -220,4 +231,5 @@ Public Class DiffusionXC
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
+
 End Class

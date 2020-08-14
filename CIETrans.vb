@@ -1,4 +1,5 @@
 ﻿Public Class CIETrans
+
     'Implementation of the 4*4 Rectangular Elemental Matrix for the chronological integration part
     Private x1, y1, x2, y2, x3, y3, x4, y4, DiffCoeff As Double
 
