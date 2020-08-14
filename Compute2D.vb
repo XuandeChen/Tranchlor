@@ -10,7 +10,9 @@ Public Class Compute2D
 
     Dim H_int As Double  'initial relative humidity in the material
     Dim Tc As Double 'initial temperature in the material
-
+    Dim Tk As Double = Tc + 273 '(K)
+    Dim rho_v As Double = 1 'density of vapor (kg/m3)
+    Dim rho_l As Double = 1000 'density of liquid (kg/m3)
     Dim D0 As Double
     Dim alpha_0 As Double
     Dim Hc As Double
@@ -23,14 +25,24 @@ Public Class Compute2D
     Public RoW As Integer = 1000        'kg/m3
     Public R As Double = 8.3145        'J/mol.K
 
+    'recuperer depuis database
+    Dim C As Double = 400 'densite ciment (kg/m3)
+    Dim W_C_ratio As Double = 0.4 'ratio E/C (kg/m3)
+    Dim Water_tot As Double = W_C_ratio * C 'densite eau (kg/m3)
+    Dim wsat As Double = GetWsat(Water_tot, C) 'teneur en eau sature (kg/m3)
+    Dim type As Integer = 1 'cement type (-)
+    Dim phi As Double = 0.12 'porosity (-)
+    Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+    Dim alpha As Double = 0.85 'hydration degree (-)
+    Dim day As Double = 0 'age du beton
+    Dim rho_c As Double = 2500 'density of concrete (kg/m3)
+
     'Dim wc As Double
     'Dim kg As Double
     'Dim kl As Double
     'Dim a As Double
     'Dim b As Double
     'Dim m As Double
-
-
 
     '' Moisture Parameters 
     'Dim aa As Single ' Function coefficient
@@ -565,7 +577,6 @@ Public Class Compute2D
 
     End Sub
 
-
     Public Sub DBInput(ByRef MatName As String)
 
         Dim con As New SqlConnection("Data Source=GCI-DACON-01.FSG.ULAVAL.CA;Initial Catalog=\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF;Integrated Security=True")
@@ -657,27 +668,35 @@ Public Class Compute2D
     Public Sub Compute_All(ByRef frm As frmTrans2D)
 
         Dim nFic1 As Short
-        Dim outfile(1) As String
+        Dim nFic2 As Short
+        Dim outfile(2) As String
         Dim nDof As Integer = frm.NNodes
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = directory & "\" & "R_H" & ".txt"
+        outfile(2) = directory & "\" & "R_W_DiffusionModel" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
+        nFic2 = CShort(FreeFile())
+        FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
 
         'step 0 Initialize output titres for result .txt files
         Print(nFic1, "RH", ",", nDof, ",", TAB)
+        Print(nFic2, "W", ",", nDof, ",", TAB)
         For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+            Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
+        PrintLine(CInt(nFic2), " ")
 
         Dim ti As Integer
         Dim ind As Double = tmax / dt
-
         Dim H_old(nDof - 1) As Double
         Dim H_new(nDof - 1) As Double
-        Dim H_mat(ind, nDof - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
+        Dim w_old(nDof - 1) As Double
+        Dim w_new(nDof - 1) As Double
+        'Dim H_mat(ind, nDof - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim T_old(nDof - 1) As Double
 
         Dim T(ind) As Double 'time vector (days)
@@ -704,16 +723,20 @@ Public Class Compute2D
             ' step 1: initialisation and boundary check
             T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
+
+                Print(CInt(nFic1), "0", ",", "0", ",", TAB)
+                Print(CInt(nFic2), "0", ",", "0", ",", TAB)
+
                 For i As Integer = 0 To nDof - 1
 
                     H_old(i) = H_int
+                    w_old(i) = wsat * GetHtoS(H_old(i), Type, C, W_C_ratio, Tk, Day, rho_l, rho_c, alpha, w)
+                    Print(CInt(nFic1), H_old(i), ",", TAB)
+                    Print(CInt(nFic2), w_old(i), ",", TAB)
 
                 Next
 
-                ' boundary check program, 2020.08.03
-                Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 Dim i_node As Integer
-                Dim iT As Integer = 0
 
                 For i_node = 0 To nDof - 1
                     If frm.Nodes(i_node).Bord = True Then
@@ -727,44 +750,32 @@ Public Class Compute2D
                         If NbExpo <> 0 Then
 
                             H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-
+                            w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                         End If
 
-                        'If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                        '    H_old(i_node) = Expo(1).
-                        'ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                        '    H_old(i_node) = H_bound
-                        'ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                        '    H_old(i_node) = H_bound
-                        'ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                        '    H_old(i_node) = H_bound
-                        'End If
-
-                        'H_old(i_node) = H_bound
                     End If
 
-                    Print(CInt(nFic1), H_old(i_node), ",", TAB)
-
                 Next
-
                 PrintLine(CInt(nFic1), " ")
+                PrintLine(CInt(nFic2), " ")
+
             Else
 
                 For i_node As Integer = 0 To nDof - 1
                     H_old(i_node) = H_new(i_node)
+                    w_old(i_node) = w_new(i_node)
                     ' boundary check program, 2020.08.03
                     Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
 
                     If NbExpo <> 0 Then
 
                         H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-
+                        w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                     End If
 
                 Next
 
             End If
-
 
             'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
@@ -817,10 +828,9 @@ Public Class Compute2D
                 If NbExpo <> 0 Then
                     ' check whether the current boundary is exposed to a boundary condition
                     H_new(j) = Expo(NbExpo - 1).Humidite(ti)
-
+                    w_new(j) = wsat * GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                 End If
-
-                H_mat(ti, j) = H_new(j)
+                'H_mat(ti, j) = H_new(j)
             Next
 
             'step 6: plot 2D image and export result .txt file 
@@ -832,17 +842,18 @@ Public Class Compute2D
             Next
             frm.Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
-            If ti = 0 Then
-                RegisterH(nFic1, dt, nDof, H_new)
-                PrintLine(CInt(nFic1), " ")
-            ElseIf (ti * dt / T_sauv) = Int(ti * dt / T_sauv) Then ' check register time
+            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
                 RegisterH(nFic1, ti * dt, nDof, H_new)
                 PrintLine(CInt(nFic1), " ")
+                RegisterH(nFic2, ti * dt, nDof, w_new)
+                PrintLine(CInt(nFic2), " ")
             End If
 
         Next
 
         FileClose(CInt(nFic1))
+        FileClose(CInt(nFic2))
+
         MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         frm.Analysed = True
 
@@ -854,7 +865,7 @@ Public Class Compute2D
     End Sub
 
     'Assembling global matrix /water diffusion
-    Private Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
+    Private Shared Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
         Dim i, j As Integer
         Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
                                  getDOF(Elements(ElementNo).Node2 - 1),
@@ -871,42 +882,13 @@ Public Class Compute2D
     End Sub
 
     'Enregistrement des données dans les fichiers d'output
-    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Double)
+    Private Shared Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Decimal, ByRef Dofs As Short, ByRef H_new() As Double)
         Dim j As Short
         'Register values
         Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
-        For j = 0 To Dofs - 1
+        For j = 0 To CShort(Dofs - 1)
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
-
-
-    'Enregistrement des données dans les fichiers d'output
-    'Private Sub Register(ByRef nFic1 As Short, ByRef Tijd As Decimal, ByRef Dofs As Short, ByRef H_new() As Decimal, ByRef para As Single)
-
-    '    Dim j As Short
-    '    'Register values
-    '    Print(CInt(nFic1), Tijd / 365, ",", Tijd, ",", TAB)
-    '    For j = CShort(1) To Dofs
-    '        Print(CInt(nFic1), H_new(j) + para, ",", TAB) '% humidité relative dans le béton
-    '    Next j
-
-    'End Sub
-
-    ''Enregistrement des données dans le fichier d'output pour l'humidité relative
-    'Private Sub Regist01(ByRef nFic1 As Short, ByRef Tijd As Decimal, ByRef Dofs As Short, ByRef CL_new() As Decimal, ByRef W() As Decimal, ByRef Ciment As Single, ByRef Para As Short)
-
-    '    Dim j As Short
-    '    'Register values
-    '    Print(CInt(nFic1), Tijd / 365, ",", Tijd, ",", TAB)
-    '    For j = CShort(1) To Dofs
-    '        If Para = 3 Then
-    '            Print(CInt(nFic1), CL_new(j) * W(j) / 1000, ",", TAB)
-    '        Else        'avec traitement probabiliste
-    '            Print(CInt(nFic1), CL_new(j) * W(j) / (10 * Ciment), ",", TAB)
-    '        End If
-    '    Next j
-
-    'End Sub
 
 End Class

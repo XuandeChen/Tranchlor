@@ -677,6 +677,7 @@ Public Class frmTrans2D
 
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
+
                 ' convergence check
                 'If stepcheck = True Then
                 '    npt = 1800
@@ -1912,7 +1913,6 @@ Public Class frmTrans2D
         'show the output
         DrawModel()
     End Sub
-
 
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then

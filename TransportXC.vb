@@ -3,7 +3,7 @@
 'Imports System.ComponentModel
 'Imports System.IO
 'Imports System.Linq
-'' Developper's note. Module pour calcul Transport Hydrique 2D Xuande.2020.07.15
+'' Developper's note. Module pour calcul Transport Hydrique 2D. Xuande.2020.07.15
 '' implémentation des équations de capillarité, de perméabilité et d'isotherme de adsorption/désorption
 'Public Class TransportXC
 '    Private NNodes, NElements As Integer
