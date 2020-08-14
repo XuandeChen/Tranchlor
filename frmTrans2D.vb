@@ -655,6 +655,7 @@ Public Class frmTrans2D
                     End If
                     w_old(i) = wsat * S_old(i)
                 Next
+
                 ''print data on each element?
                 'For i = 0 To NElements - 1
                 '    se = New SETrans(
@@ -1064,7 +1065,6 @@ Public Class frmTrans2D
 
     '    Return hbw
     'End Function
-
     Public Function ReadFile(f As String) As Boolean
         Try
 

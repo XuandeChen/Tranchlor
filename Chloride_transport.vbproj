@@ -392,6 +392,7 @@
     <None Include="Resources\MeshFiles\test50ele.msh" />
     <None Include="Resources\MeshFiles\test800ele.msh" />
     <None Include="Resources\MeshFiles\test8ele.msh" />
+    <None Include="Resources\MeshFiles\test_100ele_LUNK_BO.msh" />
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
