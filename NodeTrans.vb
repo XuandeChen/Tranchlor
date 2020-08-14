@@ -7,6 +7,7 @@ Public Class NodeTrans
     Public Property z As Double
 
     Public Property Bord As Boolean
+    Public Property NumExpo As Integer
 
     Public Sub New(nn As Integer, x As Double, y As Double, z As Double, brd As Boolean)
         _NodeNumber = nn

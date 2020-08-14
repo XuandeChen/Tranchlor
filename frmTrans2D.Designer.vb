@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmTrans2D
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmTrans2D
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -58,6 +58,7 @@ Partial Class frmTrans2D
         Me.LabelT1 = New System.Windows.Forms.Label()
         Me.LabelTVal = New System.Windows.Forms.Label()
         Me.LabelProgress = New System.Windows.Forms.Label()
+        Me.ShowExpositionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.pbModel, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -78,14 +79,14 @@ Partial Class frmTrans2D
         Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenMeshFile, Me.SaveImageAsToolStripMenuItem, Me.ToolStripMenuItem1, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-        Me.FileToolStripMenuItem.Text = "&File"
+        Me.FileToolStripMenuItem.Text = "File"
         '
         'OpenMeshFile
         '
         Me.OpenMeshFile.AccessibleRole = System.Windows.Forms.AccessibleRole.None
         Me.OpenMeshFile.Name = "OpenMeshFile"
-        Me.OpenMeshFile.Size = New System.Drawing.Size(159, 22)
-        Me.OpenMeshFile.Text = "&Open..."
+        Me.OpenMeshFile.Size = New System.Drawing.Size(180, 22)
+        Me.OpenMeshFile.Text = "Open MeshFile"
         '
         'SaveImageAsToolStripMenuItem
         '
@@ -106,7 +107,7 @@ Partial Class frmTrans2D
         '
         'ModelToolStripMenuItem
         '
-        Me.ModelToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnalyseToolStripMenuItem, Me.ToolStripMenuItem2, Me.ResultsToolStripMenuItem, Me.ShowNodeNumbersToolStripMenuItem, Me.SetDeformationZoomToolStripMenuItem, Me.ShowModelToolStripMenuItem, Me.ShowDeformationsToolStripMenuItem, Me.ShowElementsOnDeformedShapeToolStripMenuItem, Me.ToolStripMenuItem5, Me.ShowToolStripMenuItem})
+        Me.ModelToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnalyseToolStripMenuItem, Me.ToolStripMenuItem2, Me.ResultsToolStripMenuItem, Me.ShowNodeNumbersToolStripMenuItem, Me.ShowExpositionsToolStripMenuItem, Me.SetDeformationZoomToolStripMenuItem, Me.ShowModelToolStripMenuItem, Me.ShowDeformationsToolStripMenuItem, Me.ShowElementsOnDeformedShapeToolStripMenuItem, Me.ToolStripMenuItem5, Me.ShowToolStripMenuItem})
         Me.ModelToolStripMenuItem.Name = "ModelToolStripMenuItem"
         Me.ModelToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
         Me.ModelToolStripMenuItem.Text = "&Model"
@@ -322,6 +323,12 @@ Partial Class frmTrans2D
         Me.LabelProgress.Text = "Progress"
         Me.LabelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
+        'ShowExpositionsToolStripMenuItem
+        '
+        Me.ShowExpositionsToolStripMenuItem.Name = "ShowExpositionsToolStripMenuItem"
+        Me.ShowExpositionsToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
+        Me.ShowExpositionsToolStripMenuItem.Text = "Show Expositions"
+        '
         'frmTrans2D
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit
@@ -385,5 +392,6 @@ Partial Class frmTrans2D
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Diffusion2DToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Transport2DToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShowExpositionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SlToolStripMenuItem As ToolStripMenuItem
 End Class

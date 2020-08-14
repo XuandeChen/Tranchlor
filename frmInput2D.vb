@@ -35,7 +35,7 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
     Public WithEvents Combo5 As System.Windows.Forms.ComboBox
     Public WithEvents Text45 As System.Windows.Forms.TextBox
     Public WithEvents Text44 As System.Windows.Forms.TextBox
-    Public WithEvents Text2 As System.Windows.Forms.TextBox
+    Public WithEvents TextC As System.Windows.Forms.TextBox
     Public WithEvents Text1 As System.Windows.Forms.TextBox
     Public WithEvents Label86 As System.Windows.Forms.Label
     Public WithEvents Label85 As System.Windows.Forms.Label
@@ -147,7 +147,7 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
     Public WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Public WithEvents Command1 As System.Windows.Forms.Button
     Public WithEvents Label89 As System.Windows.Forms.Label
-    Public WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Public WithEvents TextBoxRho_c As System.Windows.Forms.TextBox
     Public WithEvents Label90 As System.Windows.Forms.Label
     Public WithEvents Label91 As System.Windows.Forms.Label
     Public WithEvents Label92 As System.Windows.Forms.Label
@@ -320,6 +320,14 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
     Public WithEvents Label31 As Label
     Public WithEvents Label32 As Label
     Friend WithEvents PictureBox11 As PictureBox
+    Public WithEvents Label152 As Label
+    Public WithEvents Label70 As Label
+    Public WithEvents Label63 As Label
+    Public WithEvents Label47 As Label
+    Public WithEvents TextBoxb As TextBox
+    Public WithEvents TextBoxa As TextBox
+    Public WithEvents TextBoxKl As TextBox
+    Public WithEvents TextBoxKg As TextBox
     Friend WithEvents Button10 As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -340,12 +348,12 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Label92 = New System.Windows.Forms.Label()
         Me.Label91 = New System.Windows.Forms.Label()
         Me.Label90 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.TextBoxRho_c = New System.Windows.Forms.TextBox()
         Me.Label89 = New System.Windows.Forms.Label()
         Me.Combo5 = New System.Windows.Forms.ComboBox()
         Me.Text45 = New System.Windows.Forms.TextBox()
         Me.Text44 = New System.Windows.Forms.TextBox()
-        Me.Text2 = New System.Windows.Forms.TextBox()
+        Me.TextC = New System.Windows.Forms.TextBox()
         Me.Text1 = New System.Windows.Forms.TextBox()
         Me.Label86 = New System.Windows.Forms.Label()
         Me.Label85 = New System.Windows.Forms.Label()
@@ -444,6 +452,14 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Text26 = New System.Windows.Forms.TextBox()
         Me.Label46 = New System.Windows.Forms.Label()
         Me._SSTab1_TabPage3 = New System.Windows.Forms.TabPage()
+        Me.Label152 = New System.Windows.Forms.Label()
+        Me.Label70 = New System.Windows.Forms.Label()
+        Me.Label63 = New System.Windows.Forms.Label()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.TextBoxb = New System.Windows.Forms.TextBox()
+        Me.TextBoxa = New System.Windows.Forms.TextBox()
+        Me.TextBoxKl = New System.Windows.Forms.TextBox()
+        Me.TextBoxKg = New System.Windows.Forms.TextBox()
         Me.Frame12 = New System.Windows.Forms.GroupBox()
         Me.Label106 = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
@@ -725,12 +741,12 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame1.Controls.Add(Me.Label92)
         Me.Frame1.Controls.Add(Me.Label91)
         Me.Frame1.Controls.Add(Me.Label90)
-        Me.Frame1.Controls.Add(Me.TextBox1)
+        Me.Frame1.Controls.Add(Me.TextBoxRho_c)
         Me.Frame1.Controls.Add(Me.Label89)
         Me.Frame1.Controls.Add(Me.Combo5)
         Me.Frame1.Controls.Add(Me.Text45)
         Me.Frame1.Controls.Add(Me.Text44)
-        Me.Frame1.Controls.Add(Me.Text2)
+        Me.Frame1.Controls.Add(Me.TextC)
         Me.Frame1.Controls.Add(Me.Text1)
         Me.Frame1.Controls.Add(Me.Label86)
         Me.Frame1.Controls.Add(Me.Label85)
@@ -906,20 +922,20 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Label90.TabIndex = 177
         Me.Label90.Text = "kg/m3 de béton"
         '
-        'TextBox1
+        'TextBoxRho_c
         '
-        Me.TextBox1.AcceptsReturn = True
-        Me.TextBox1.BackColor = System.Drawing.SystemColors.Window
-        Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.TextBox1.Location = New System.Drawing.Point(176, 24)
-        Me.TextBox1.MaxLength = 0
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.TextBox1.Size = New System.Drawing.Size(73, 20)
-        Me.TextBox1.TabIndex = 176
-        Me.TextBox1.Text = "0"
+        Me.TextBoxRho_c.AcceptsReturn = True
+        Me.TextBoxRho_c.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBoxRho_c.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBoxRho_c.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxRho_c.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBoxRho_c.Location = New System.Drawing.Point(176, 24)
+        Me.TextBoxRho_c.MaxLength = 0
+        Me.TextBoxRho_c.Name = "TextBoxRho_c"
+        Me.TextBoxRho_c.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBoxRho_c.Size = New System.Drawing.Size(73, 20)
+        Me.TextBoxRho_c.TabIndex = 176
+        Me.TextBoxRho_c.Text = "0"
         '
         'Label89
         '
@@ -978,20 +994,20 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Text44.TabIndex = 169
         Me.Text44.Text = "0"
         '
-        'Text2
+        'TextC
         '
-        Me.Text2.AcceptsReturn = True
-        Me.Text2.BackColor = System.Drawing.SystemColors.Window
-        Me.Text2.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.Text2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Text2.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.Text2.Location = New System.Drawing.Point(128, 88)
-        Me.Text2.MaxLength = 0
-        Me.Text2.Name = "Text2"
-        Me.Text2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Text2.Size = New System.Drawing.Size(73, 20)
-        Me.Text2.TabIndex = 9
-        Me.Text2.Text = "0"
+        Me.TextC.AcceptsReturn = True
+        Me.TextC.BackColor = System.Drawing.SystemColors.Window
+        Me.TextC.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextC.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextC.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextC.Location = New System.Drawing.Point(128, 88)
+        Me.TextC.MaxLength = 0
+        Me.TextC.Name = "TextC"
+        Me.TextC.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextC.Size = New System.Drawing.Size(73, 20)
+        Me.TextC.TabIndex = 9
+        Me.TextC.Text = "0"
         '
         'Text1
         '
@@ -2329,6 +2345,14 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         '
         '_SSTab1_TabPage3
         '
+        Me._SSTab1_TabPage3.Controls.Add(Me.Label152)
+        Me._SSTab1_TabPage3.Controls.Add(Me.Label70)
+        Me._SSTab1_TabPage3.Controls.Add(Me.Label63)
+        Me._SSTab1_TabPage3.Controls.Add(Me.Label47)
+        Me._SSTab1_TabPage3.Controls.Add(Me.TextBoxb)
+        Me._SSTab1_TabPage3.Controls.Add(Me.TextBoxa)
+        Me._SSTab1_TabPage3.Controls.Add(Me.TextBoxKl)
+        Me._SSTab1_TabPage3.Controls.Add(Me.TextBoxKg)
         Me._SSTab1_TabPage3.Controls.Add(Me.Frame12)
         Me._SSTab1_TabPage3.Controls.Add(Me.Frame13)
         Me._SSTab1_TabPage3.Controls.Add(Me.Frame16)
@@ -2338,6 +2362,110 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me._SSTab1_TabPage3.TabIndex = 3
         Me._SSTab1_TabPage3.Text = "Transport hydrique"
         Me._SSTab1_TabPage3.Visible = False
+        '
+        'Label152
+        '
+        Me.Label152.BackColor = System.Drawing.SystemColors.Control
+        Me.Label152.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label152.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label152.Location = New System.Drawing.Point(221, 326)
+        Me.Label152.Name = "Label152"
+        Me.Label152.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label152.Size = New System.Drawing.Size(47, 20)
+        Me.Label152.TabIndex = 142
+        Me.Label152.Text = "g (.)"
+        '
+        'Label70
+        '
+        Me.Label70.BackColor = System.Drawing.SystemColors.Control
+        Me.Label70.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label70.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label70.Location = New System.Drawing.Point(221, 297)
+        Me.Label70.Name = "Label70"
+        Me.Label70.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label70.Size = New System.Drawing.Size(47, 20)
+        Me.Label70.TabIndex = 141
+        Me.Label70.Text = "a (MPa)"
+        '
+        'Label63
+        '
+        Me.Label63.BackColor = System.Drawing.SystemColors.Control
+        Me.Label63.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label63.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label63.Location = New System.Drawing.Point(25, 329)
+        Me.Label63.Name = "Label63"
+        Me.Label63.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label63.Size = New System.Drawing.Size(69, 17)
+        Me.Label63.TabIndex = 140
+        Me.Label63.Text = "kl (m-2.s-1)"
+        '
+        'Label47
+        '
+        Me.Label47.BackColor = System.Drawing.SystemColors.Control
+        Me.Label47.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label47.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label47.Location = New System.Drawing.Point(25, 300)
+        Me.Label47.Name = "Label47"
+        Me.Label47.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label47.Size = New System.Drawing.Size(69, 29)
+        Me.Label47.TabIndex = 139
+        Me.Label47.Text = "kg (m-2.s-1)"
+        '
+        'TextBoxb
+        '
+        Me.TextBoxb.AcceptsReturn = True
+        Me.TextBoxb.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBoxb.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBoxb.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxb.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBoxb.Location = New System.Drawing.Point(274, 326)
+        Me.TextBoxb.MaxLength = 0
+        Me.TextBoxb.Name = "TextBoxb"
+        Me.TextBoxb.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBoxb.Size = New System.Drawing.Size(97, 20)
+        Me.TextBoxb.TabIndex = 138
+        '
+        'TextBoxa
+        '
+        Me.TextBoxa.AcceptsReturn = True
+        Me.TextBoxa.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBoxa.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBoxa.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxa.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBoxa.Location = New System.Drawing.Point(274, 297)
+        Me.TextBoxa.MaxLength = 0
+        Me.TextBoxa.Name = "TextBoxa"
+        Me.TextBoxa.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBoxa.Size = New System.Drawing.Size(97, 20)
+        Me.TextBoxa.TabIndex = 137
+        '
+        'TextBoxKl
+        '
+        Me.TextBoxKl.AcceptsReturn = True
+        Me.TextBoxKl.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBoxKl.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBoxKl.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxKl.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBoxKl.Location = New System.Drawing.Point(100, 326)
+        Me.TextBoxKl.MaxLength = 0
+        Me.TextBoxKl.Name = "TextBoxKl"
+        Me.TextBoxKl.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBoxKl.Size = New System.Drawing.Size(97, 20)
+        Me.TextBoxKl.TabIndex = 136
+        '
+        'TextBoxKg
+        '
+        Me.TextBoxKg.AcceptsReturn = True
+        Me.TextBoxKg.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBoxKg.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBoxKg.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxKg.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.TextBoxKg.Location = New System.Drawing.Point(100, 297)
+        Me.TextBoxKg.MaxLength = 0
+        Me.TextBoxKg.Name = "TextBoxKg"
+        Me.TextBoxKg.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.TextBoxKg.Size = New System.Drawing.Size(97, 20)
+        Me.TextBoxKg.TabIndex = 135
         '
         'Frame12
         '
@@ -4183,9 +4311,6 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Label111.TabIndex = 171
         Me.Label111.Text = "valeur moyenne (loi normale) :"
         '
-        'ToolTip1
-        '
-        '
         'Command1
         '
         Me.Command1.BackColor = System.Drawing.SystemColors.Control
@@ -4389,6 +4514,7 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Me.Frame8.ResumeLayout(False)
         Me.Frame8.PerformLayout()
         Me._SSTab1_TabPage3.ResumeLayout(False)
+        Me._SSTab1_TabPage3.PerformLayout()
         Me.Frame12.ResumeLayout(False)
         Me.Frame12.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -4456,16 +4582,17 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
 
     'Chargement de la feuille
     Private Sub frmOption1_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+
         CheckBox1.Checked = False
         Option4.Checked = True
         Text1.Text = 0
-        Text2.Text = 0
+        TextC.Text = 0
         Text3.Text = ""
         Text4.Text = ""
         Text44.Text = 0
         Text45.Text = 0
         Label92.Text = 2550
-        TextBox1.Text = 2550
+        TextBoxRho_c.Text = 2550
         TextBox2.Text = 0
         TextBox3.Text = 0
         Text5.Text = 73000
@@ -4521,9 +4648,9 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Text1.BackColor = Me.BackColor
         Text1.BorderStyle = BorderStyle.None
         Text1.Enabled = False
-        TextBox1.BackColor = Me.BackColor
-        TextBox1.BorderStyle = BorderStyle.None
-        TextBox1.Enabled = False
+        TextBoxRho_c.BackColor = Me.BackColor
+        TextBoxRho_c.BorderStyle = BorderStyle.None
+        TextBoxRho_c.Enabled = False
         Var03 = CShort(1)
         Button3.Enabled = False
         Button5.Enabled = False
@@ -4594,13 +4721,16 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         Label144.Visible = False
         TextBox6.Visible = False
         CmtTextProb10()
+
         If CheckBox6.Checked = True Then
             Text46.Text = CStr(0.0943 * System.Math.Exp(CDbl(TextBox3.Text) * 7.899)) * 0.000001
         End If
+
     End Sub
 
     'Click sur Ok
     Private Sub Command1_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Command1.Click
+
         Dim aa As Single ' Function coefficient
         Dim Hc As Single ' Function coefficient
         Dim ab As Single ' Function coefficient
@@ -4680,12 +4810,15 @@ b:
 
     'Click sur Cancel
     Private Sub Command2_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Command2.Click
+
         Me.Hide()
         Exit Sub
+
     End Sub
 
     'Click sur new dans materials
     Private Sub Command3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Command3.Click
+
         Dim Message As String = 0
         If Label48.Text = "" Or Label64.Text = "" Or Label69.Text = "" Then
             MsgBox("Manque les conditions initiales", MsgBoxStyle.Information, "Avertissement")
@@ -4711,10 +4844,12 @@ b:
         ComboBox2.SelectedIndex = Var03 - 2
         Button3.Enabled = True
         Label102.Text = "Number of material(s) : " & Var03 - 1
+
     End Sub
 
     'Click sur delete dans materials
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+
         Dim PosNum As Short
         Dim Can As Short
 
@@ -5082,6 +5217,7 @@ b:
 
     'Click sur Change
     Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button9.Click
+
         If Label56.Text = "Lunk" Then
             TextBox21.Text = 0.97
             TextBox22.Text = 0.05
@@ -5095,6 +5231,7 @@ b:
             TextBox22.Text = 0.09
             Label56.Text = "Lunk"
         End If
+
     End Sub
 
     'click sur kT => E / C    -    Valeur du coefficient de Torrent
@@ -5348,9 +5485,9 @@ b:
                 Text25.Text = CStr(0.7)         'capacité calorifique des granulats
                 Text39.Text = CStr(1.0#)        'coefficient de transfert de surface hydrique
                 Text26.Text = CStr(1.0#)        'coefficient de transfert de surface thermique
-                Text2.Text = CStr(375)          'teneur en ciment en kg/m3
+                TextC.Text = CStr(375)          'teneur en ciment en kg/m3
                 TextBox3.Text = CStr(0.42)      'rapport eau/ciment
-                TextBox1.Text = CStr(2450)      'masse volumique du béton
+                TextBoxRho_c.Text = CStr(2450)      'masse volumique du béton
                 Text44.Text = CStr(0.8)         'taux d'hydratation
                 TextBox2.Text = CStr(1.5)       'teneur en air
                 TextBox4.Text = CStr(0)         'vapeur d'eau : énergie d'activation pour la température
@@ -5365,9 +5502,9 @@ b:
                 Text25.Text = CStr(0.7)
                 Text39.Text = CStr(1.0#)
                 Text26.Text = CStr(1.0#)
-                Text2.Text = CStr(375)
+                TextC.Text = CStr(375)
                 TextBox3.Text = CStr(0.52)
-                TextBox1.Text = CStr(2384)
+                TextBoxRho_c.Text = CStr(2384)
                 Text44.Text = CStr(0.9)
                 TextBox2.Text = CStr(1.5)
                 TextBox4.Text = CStr(0)
@@ -5382,9 +5519,9 @@ b:
                 Text25.Text = CStr(0.7)
                 Text39.Text = CStr(1.0#)
                 Text26.Text = CStr(1.0#)
-                Text2.Text = CStr(250)
+                TextC.Text = CStr(250)
                 TextBox3.Text = CStr(0.73)
-                TextBox1.Text = CStr(2387)
+                TextBoxRho_c.Text = CStr(2387)
                 Text44.Text = CStr(0.9)
                 TextBox2.Text = CStr(1.5)
                 TextBox4.Text = CStr(0)
@@ -5400,9 +5537,9 @@ b:
         Text25.Enabled = False
         Text39.Enabled = False
         Text26.Enabled = False
-        Text2.Enabled = False
+        TextC.Enabled = False
         TextBox3.Enabled = False
-        TextBox1.Enabled = False
+        TextBoxRho_c.Enabled = False
         Text44.Enabled = False
         TextBox2.Enabled = False
         TextBox4.Enabled = False
@@ -5410,9 +5547,9 @@ b:
         TextBox8.Enabled = False
         TextBox9.Enabled = False
         'calcul de la teneur en granulat et de la teneur en eau
-        Text1.Text = CStr(CSng(Text2.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(Text2.Text) + CSng(10) * CSng(TextBox2.Text))
-        Label92.Text = CStr((1 - CSng(Text2.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(Text2.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
-        TextBox1.Text = CStr(CSng(Text2.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(Text2.Text))
+        Text1.Text = CStr(CSng(TextC.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(TextC.Text) + CSng(10) * CSng(TextBox2.Text))
+        Label92.Text = CStr((1 - CSng(TextC.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(TextC.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
+        TextBoxRho_c.Text = CStr(CSng(TextC.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(TextC.Text))
     End Sub
 
     'Choix des caractéristiques du béton = autres
@@ -5427,8 +5564,8 @@ b:
             Text39.Enabled = True
             Text26.Enabled = True
             Text1.Enabled = True
-            TextBox1.Enabled = True
-            Text2.Enabled = True
+            TextBoxRho_c.Enabled = True
+            TextC.Enabled = True
             TextBox3.Enabled = True
             TextBox2.Enabled = True
             Text44.Enabled = True
@@ -5440,12 +5577,12 @@ b:
     End Sub
 
     'Calcul de la teneur en granulat et de la teneur en eau, approche probabiliste
-    Private Sub CmtTextCompBeton(ByVal Sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles TextBox26.Validating, TextBox25.Validating, Text2.Validating, TextBox2.Validating, Text44.Validating, TextBox3.Validating
+    Private Sub CmtTextCompBeton(ByVal Sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles TextBox26.Validating, TextBox25.Validating, TextC.Validating, TextBox2.Validating, Text44.Validating, TextBox3.Validating
         Dim a As Decimal
         Dim b As Decimal
-        Text1.Text = CStr(CSng(Text2.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(Text2.Text) + CSng(10) * CSng(TextBox2.Text))
-        Label92.Text = CStr((1 - CSng(Text2.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(Text2.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
-        TextBox1.Text = CStr(CSng(Text2.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(Text2.Text))
+        Text1.Text = CStr(CSng(TextC.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(TextC.Text) + CSng(10) * CSng(TextBox2.Text))
+        Label92.Text = CStr((1 - CSng(TextC.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(TextC.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
+        TextBoxRho_c.Text = CStr(CSng(TextC.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(TextC.Text))
         a = 0.0000625 * CDec(TextBox3.Text) ^ 2 - 0.000104 * CDec(TextBox3.Text) + 0.00003
         b = -0.015547 * CDec(TextBox3.Text) ^ 2 + 0.0216515 * CDec(TextBox3.Text) - 0.005652
         Label105.Text = CStr(CSng(a * 100 + b))
@@ -5552,9 +5689,9 @@ b:
 
     'Calcul de la teneur en granulat et de la teneur en eau
     Private Sub TextBox25_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles TextBox25.TextChanged
-        Text1.Text = CStr(CSng(Text2.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(Text2.Text) + CSng(10) * CSng(TextBox2.Text))
-        Label92.Text = CStr((1 - CSng(Text2.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(Text2.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
-        TextBox1.Text = CStr(CSng(Text2.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(Text2.Text))
+        Text1.Text = CStr(CSng(TextC.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(TextC.Text) + CSng(10) * CSng(TextBox2.Text))
+        Label92.Text = CStr((1 - CSng(TextC.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(TextC.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
+        TextBoxRho_c.Text = CStr(CSng(TextC.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(TextC.Text))
     End Sub
 
     'Copies du temps de stockage dans d'autres éléments
@@ -5705,8 +5842,8 @@ b:
         Dim Dim1 As String
         Try
             'Matériaux ... Béton
-            If TextBox1.Text <= 0 Or Not IsNumeric(TextBox1.Text) Or TextBox1.Text = "" Then Message = "La " & Label89.Text & " est non valide !"
-            If Text2.Text <= 0 Or Not IsNumeric(Text2.Text) Or Text2.Text = "" Then Message = "La " & Label3.Text & " est non valide !"
+            If TextBoxRho_c.Text <= 0 Or Not IsNumeric(TextBoxRho_c.Text) Or TextBoxRho_c.Text = "" Then Message = "La " & Label89.Text & " est non valide !"
+            If TextC.Text <= 0 Or Not IsNumeric(TextC.Text) Or TextC.Text = "" Then Message = "La " & Label3.Text & " est non valide !"
             If TextBox2.Text < 0 Or Not IsNumeric(TextBox2.Text) Or TextBox2.Text = "" Then Message = "La " & Label95.Text & " est non valide !"
             If TextBox3.Text <= 0 Or Not IsNumeric(TextBox3.Text) Or TextBox3.Text = "" Then Message = "La " & Label83.Text & " est non valide !"
             If Text45.Text < 0 Or Not IsNumeric(Text45.Text) Or Text45.Text = "" Then Message = "L'" & Label84.Text & " est non valide !"
@@ -5897,7 +6034,7 @@ b:
         Bara1(6, rt) = Text39.Text      'coefficient de transfert de surface pour l'eau
         Bara1(7, rt) = Text26.Text      'coefficient de transfert de surface pour la température
         Bara1(8, rt) = Text1.Text       'teneur en eau saturée
-        Bara1(9, rt) = Text2.Text       'quantité de ciment
+        Bara1(9, rt) = TextC.Text       'quantité de ciment
         Bara1(10, rt) = TextBox3.Text   'eau sur ciment
         Bara1(11, rt) = Text45.Text     'âge du béton 
         Bara1(12, rt) = Text44.Text     'taux d'hydratation
@@ -6022,7 +6159,7 @@ b:
         Text39.Text = Bara1(6, rt)
         Text26.Text = Bara1(7, rt)
         Text1.Text = Bara1(8, rt)
-        Text2.Text = Bara1(9, rt)
+        TextC.Text = Bara1(9, rt)
         TextBox3.Text = Bara1(10, rt)
         Text45.Text = Bara1(11, rt)
         Text44.Text = Bara1(12, rt)
@@ -6234,14 +6371,6 @@ b:
             End If
         End If
         If Label55.Text <> "" And TextBox10.Text <> "" Then CmtTextProb10()
-    End Sub
-
-    Private Sub Label9_Click(sender As Object, e As EventArgs) Handles Label9.Click
-
-    End Sub
-
-    Private Sub ToolTip1_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip1.Popup
-
     End Sub
 
 End Class

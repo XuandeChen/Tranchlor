@@ -1,173 +1,422 @@
 
-Module Compute
+Public Class Compute1D
 
-    Private m_frm02 As frmGraph1D
+    Public LgLim As Integer = 40
+    Public pPH As Double = 12.6
+    Public mPh As Double = 6.5
+    Public RoW As Integer = 1000        'kg/m3
+    Public R As Double = 8.3145        'J/mol.K
+
+    Public frm As frmGraph1D
+
     ' Moisture Parameters 
-    Dim m_aa As Single ' Function coefficient
-    Dim m_Hc As Single ' Function coefficient
-    Dim m_ab As Single ' Function coefficient
-    Dim m_tc As Single ' Function coefficient
-    Dim m_ImpHydr As Boolean
+    Dim aa As Single ' Function coefficient
+    Dim Hc As Single ' Function coefficient
+    Dim ab As Single ' Function coefficient
+    Dim tc As Single ' Function coefficient
+    Dim ImpHydr As Boolean
     ' chloride
-    Dim m_LambdaT(1) As Single
-    Dim m_LambdaH(1) As Single
-    Dim m_aOH As Single
-    Dim m_EbG As Single
-    Dim m_toG As Single
-    Dim m_faG As Single
+    Dim LambdaT(1) As Single
+    Dim LambdaH(1) As Single
+    Dim aOH As Single
+    Dim EbG As Single
+    Dim toG As Single
+    Dim faG As Single
     ' Moisture variables
-    Dim m_hMin As Single
-    Dim m_hEcart As Single
-    Dim m_wMin As Single
-    Dim m_wEcart As Single
-    Dim m_CTmin As Single
-    Dim m_CTecart As Single
-    Dim m_CLmin As Single
-    Dim m_CLecart As Single
-    Dim m_Tecart As Single
-    Dim m_H_snap As Single
-    Dim m_Retard As Single
+    Dim hMin As Single
+    Dim hEcart As Single
+    Dim wMin As Single
+    Dim wEcart As Single
+    Dim CTmin As Single
+    Dim CTecart As Single
+    Dim CLmin As Single
+    Dim CLecart As Single
+    Dim Tecart As Single
+    Dim H_snap As Single
+    Dim Retard As Single
     ' Structural data
-    Dim m_TimeMax As Single
-    Dim m_Length As Single 'length of the layer [mm]
-    Dim m_Ne As Short 'Number of finite elements
-    Dim m_Le(1) As Decimal 'element length
-    Dim m_PosProf(1) As Decimal
+    Dim TimeMax As Single
+    Dim Length As Single 'length of the layer [mm]
+    Dim Ne As Short 'Number of finite elements
+    Dim Le(1) As Decimal 'element length
+    Dim PosProf(1) As Decimal
     'Computational data
-    Dim m_Dofs As Short
+    Dim Dofs As Short
     'computationals values
-    Dim m_DeltaT As Single
+    Dim DeltaT As Single
     'boundary conditions
-    Dim m_NEXPO As Short
-    Dim m_NQUAL As Short
-    Dim m_taff As Single
-    Dim m_Hsauv As Single
-    Dim m_Wsauv As Single
-    Dim m_CTsauv As Single
-    Dim m_CLsauv As Single
-    Dim m_Tsauv As Single
-    Dim m_Carbsauv As Single
-    Dim m_Filebeton(1) As String
-    Dim m_Fileres(1) As String
-    Dim m_PD(1) As Single
-    Dim m_qGran(1) As Single
-    Dim m_Dcl(1) As Single
-    Dim m_SAT(1) As Single
-    Dim m_ciment(1) As Single
-    Dim m_FileGexpo(1) As String
-    Dim m_FileDexpo(1) As String
-    Dim m_proba(1, 1) As Single
-    Dim m_ChoixRep As Short
-    Dim m_nChmt As Short
-    Dim m_Nbreel(1) As Short
-    Dim m_LenApp(1) As Single
-    Dim m_EC(1) As Single
-    Dim m_tProt(1) As Single
-    Dim m_Vct(1) As Single
-    Dim m_Nct(1) As Single
-    Dim m_capCal As Single
-    Dim m_Hydr(1) As Single
-    Dim m_ED(1) As Single
-    Dim m_ToHydr(1) As Single
-    Dim m_Ecl(1) As Single
-    Dim m_ToCl(1) As Single
-    Dim m_Ctherm(1) As Double
-    Dim m_Chydr(1) As Double
-    Dim m_Cion(1) As Double
-    Dim m_PostFile As String
-    Dim PreFile As String
-    Dim m_GyCO2 As Single
-    Dim m_DyCO2 As Single
-    Dim m_RoA(1) As Single
-    Dim m_RoC(1) As Single
+    Dim NEXPO As Short
+    Dim NQUAL As Short
+    Dim taff As Single
+    Dim Hsauv As Single
+    Dim Wsauv As Single
+    Dim CTsauv As Single
+    Dim CLsauv As Single
+    Dim Tsauv As Single
+    Dim Carbsauv As Single
+    Dim Filebeton(1) As String
+    Dim Fileres(1) As String
+    Dim PD(1) As Single
+    Dim qGran(1) As Single
+    Dim Dcl(1) As Single
+    Dim SAT(1) As Single
+    Dim ciment(1) As Single
+    Dim FileGexpo(1) As String
+    Dim FileDexpo(1) As String
+    Dim proba(1, 1) As Single
+    Dim ChoixRep As Short
+    Dim nChmt As Short
+    Dim Nbreel(1) As Short
+    Dim LenApp(1) As Single
+    Dim EC(1) As Single
+    Dim tProt(1) As Single
+    Dim Vct(1) As Single
+    Dim Nct(1) As Single
+    Dim capCal As Single
+    Dim Hydr(1) As Single
+    Dim ED(1) As Single
+    Dim ToHydr(1) As Single
+    Dim Ecl(1) As Single
+    Dim ToCl(1) As Single
+    Dim Ctherm(1) As Double
+    Dim Chydr(1) As Double
+    Dim Cion(1) As Double
+    Dim PostFile As String
+    Dim GyCO2 As Single
+    Dim DyCO2 As Single
+    Dim RoA(1) As Single
+    Dim RoC(1) As Single
 
-    Dim m_PintermManual As Integer
+    Dim PintermManual As Integer = 0
 
-    Public Sub SetParameters(ByRef frm02 As frmGraph1D, ByRef Length As Single, ByRef Ne As Short, ByRef ChoixRep As Short, ByRef Le() As Decimal, ByRef PosProf() As Decimal, ByRef nChmt As Short, ByRef Nbreel() As Short, ByRef LenApp() As Single, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef Carbsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef ImpHydr As Boolean, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef FileGexpo() As String, ByRef FileDexpo() As String, ByRef NQUAL As Short, ByRef Filebeton() As String, ByRef Fileres() As String, ByRef PD() As Single, ByRef Dcl() As Single, ByRef capCal As Single, ByRef LambdaH() As Single, ByRef LambdaT() As Single, ByRef SAT() As Single, ByRef ciment() As Single, ByRef EC() As Single, ByRef tProt() As Single, ByRef Vct() As Single, ByRef Nct() As Single, ByRef proba(,) As Single, ByRef Dofs As Short, ByRef qGran() As Single, ByRef Hydr() As Single, ByRef ED() As Single, ByRef ToHydr() As Single, ByRef Ecl() As Single, ByRef ToCl() As Single, ByRef PostFile As String, ByRef Ctherm() As Double, ByRef Chydr() As Double, ByRef Cion() As Double, ByRef GyCO2 As Single, ByRef DyCO2 As Single, ByRef RoA() As Single, ByRef RoC() As Single, ByRef PintermManual As Integer)
+    Public Sub ReadFile(ByRef Nbre1 As Short, ByRef Nbre2 As Short, ByRef Nbre3 As Short,
+                        ByRef Creadtherm(,) As Double, ByRef Creadhydr(,) As Double, ByRef Creadion(,) As Double)
 
-        m_frm02 = frm02
-        m_aa = aa
-        m_Hc = Hc
-        m_ab = ab
-        m_ImpHydr = ImpHydr
-        m_tc = tc
-        m_LambdaT = LambdaT
-        m_LambdaH = LambdaH
-        m_aOH = aOH
-        m_EbG = EbG
-        m_toG = toG
-        m_faG = faG
-        m_hMin = hMin
-        m_hEcart = hEcart
-        m_wMin = wMin
-        m_wEcart = wEcart
-        m_CTmin = CTmin
-        m_CTecart = CTecart
-        m_CLmin = CLmin
-        m_CLecart = CLecart
-        m_Tecart = Tecart
-        m_H_snap = H_snap
-        m_Retard = Retard
-        m_TimeMax = TimeMax
-        m_Length = Length
-        m_Ne = Ne
-        m_Le = Le
-        m_PosProf = PosProf
-        m_Dofs = Dofs
-        m_DeltaT = DeltaT
-        m_NEXPO = NEXPO
-        m_NQUAL = NQUAL
-        m_taff = taff
-        m_Hsauv = Hsauv
-        m_Wsauv = Wsauv
-        m_CTsauv = CTsauv
-        m_CLsauv = CLsauv
-        m_Tsauv = Tsauv
-        m_Carbsauv = Carbsauv
-        m_Filebeton = Filebeton
-        m_Fileres = Fileres
-        m_PD = PD
-        m_qGran = qGran
-        m_Dcl = Dcl
-        m_SAT = SAT
-        m_ciment = ciment
-        m_FileGexpo = FileGexpo
-        m_FileDexpo = FileDexpo
-        m_proba = proba
-        m_ChoixRep = ChoixRep
-        m_nChmt = nChmt
-        m_Nbreel = Nbreel
-        m_LenApp = LenApp
-        m_EC = EC
-        m_tProt = tProt
-        m_Vct = Vct
-        m_Nct = Nct
-        m_capCal = capCal
-        m_Hydr = Hydr
-        m_ED = ED
-        m_ToHydr = ToHydr
-        m_Ecl = Ecl
-        m_ToCl = ToCl
-        m_PostFile = PostFile
-        m_Ctherm = Ctherm
-        m_Chydr = Chydr
-        m_Cion = Cion
-        m_GyCO2 = GyCO2
-        m_DyCO2 = DyCO2
-        m_RoA = RoA
-        m_RoC = RoC
-        m_PintermManual = PintermManual
+        ''''''''''''''''''''''''''''''''''''''''''''
+        Dim Filtre As String = "Text files (INPUT_*.txt)|INPUT_*.txt"
+        Dim Index As Short = 1
+        Dim Directoire As Boolean = True
+        Dim Titre As String = "Sélectionner le fichier d'exposition"
+        Dim OutFile As String
+        Dim Canc As Boolean = False
+        Dim nFic As Integer = FreeFile()
+        Dim i, j As Short
+
+        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then End
+        ''''''''''''''''''''''''''''''''''''''''''''
+
+        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+        FilePost(OutFile, PostFile)
+
+        Dim Para1 As Single
+        Dim Para2 As Single
+        Dim Para3 As Single
+        Dim Para4 As Single
+        Dim test As Single
+
+        Input(nFic, Length)
+        Input(nFic, Ne)
+        Input(nFic, ChoixRep)
+        ReDim Le(Ne + CShort(1))
+        ReDim PosProf(Ne + CShort(2))
+
+        PosProf(1) = 0
+        Select Case ChoixRep
+            Case CShort(1)
+                For i = CShort(1) To Ne
+                    Le(i) = CDec(Length) / CDec(Ne)
+                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
+                Next i
+            Case CShort(2)
+                Input(nFic, Le(1))
+                Para1 = CSng(0)
+                Para2 = CSng(0)
+                For i = CShort(1) To Ne / CShort(2) - CShort(1)
+                    Para1 = Para1 + CSng(1)
+                    Para2 = Para2 + Para1
+                Next i
+                If Le(1) > CDec(Length) Then End
+                Para1 = (Length / CSng(2) - CSng(Ne) / CSng(2) * CSng(Le(1))) / Para2
+                PosProf(2) = Le(1)
+                PosProf(Ne + CShort(1)) = CDec(Length)
+                PosProf(Ne) = CDec(Length) - Le(1)
+                For i = CShort(2) To Ne / CShort(2)
+                    Le(i) = Le(1) + (CDec(i) - CDec(1)) * CDec(Para1)
+                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
+                    Le(Ne - i) = Le(i)
+                    PosProf(Ne + CShort(1) - i) = PosProf(Ne + CShort(2) - i) - Le(i)
+                Next i
+            Case 3
+                Input(nFic, Le(1))
+                Para3 = CSng(Le(1))
+                test = CSng(10)
+                If Le(1) > CDec(Length) Then End
+                Do While System.Math.Abs(test) > 0.0001
+                    Para1 = CSng(1) - Length / (CSng(2) * CSng(Le(1)))
+                    Para2 = CSng(1)
+                    For i = CShort(1) To Ne / CShort(2) - CShort(1)
+                        Para1 = Para1 + Para3 ^ CSng(i)
+                        If i < Ne / CShort(2) - CShort(1) Then Para2 = Para2 + (CSng(i) + CSng(1)) * Para3 ^ CSng(i)
+                    Next i
+                    Para4 = Para3 - Para1 / Para2
+                    test = Para4 - Para3
+                    Para3 = Para4
+                Loop
+                PosProf(2) = Le(1)
+                PosProf(Ne + CShort(1)) = CDec(Length)
+                PosProf(Ne) = CDec(Length) - Le(1)
+                For i = CShort(2) To Ne / CShort(2)
+                    Le(i) = Le(1) * CDec(Para4) ^ (CDec(i) - CDec(1))
+                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
+                    Le(Ne - i) = Le(i)
+                    PosProf(Ne + CShort(1) - i) = PosProf(Ne + CShort(2) - i) - Le(i)
+                Next i
+            Case 4
+                Input(nFic, nChmt)
+                ReDim Nbreel(nChmt - CShort(1))
+                ReDim LenApp(nChmt - CShort(1))
+                PosProf(Ne + CShort(1)) = CDec(Length)
+                Para1 = CSng(0)
+                Para2 = CSng(0)
+                For i = CShort(1) To nChmt - CShort(1)
+                    Input(nFic, Nbreel(i))
+                    Input(nFic, LenApp(i))
+                    For j = CShort(1) To Nbreel(i)
+                        Le(j + CShort(Para1)) = CDec(LenApp(i)) / CDec(Nbreel(i))
+                        PosProf(j + CShort(1) + CShort(Para1)) = PosProf(j + CShort(Para1)) + Le(j + CShort(Para1))
+                        Le(Ne + CShort(1) - j - CShort(Para1)) = Le(j + CShort(Para1))
+                        PosProf(Ne + CShort(1) - j - CShort(Para1)) = PosProf(Ne + CShort(2) - j - CShort(Para1)) - Le(j + CShort(Para1))
+                    Next j
+                    Para1 = Para1 + CSng(Nbreel(i))
+                    Para2 = Para2 + LenApp(i)
+                Next i
+                Para3 = CSng(Ne) - CSng(2) * Para1
+                Para2 = Length - CSng(2) * Para2
+                For i = CShort(Para1) + CShort(1) To CShort(Para1) + CShort(Para3)
+                    Le(i) = CDec(Para2) / CDec(Para3)
+                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
+                Next i
+            Case 5
+                Input(nFic, nChmt)
+                ReDim Nbreel(nChmt - CShort(1))
+                ReDim LenApp(nChmt - CShort(1))
+                PosProf(Ne + CShort(1)) = CDec(Length)
+                Para1 = CSng(0)
+                Para2 = CSng(0)
+                For i = CShort(1) To nChmt - CShort(1)
+                    Input(nFic, Nbreel(i))
+                    Input(nFic, LenApp(i))
+                    For j = CShort(1) To Nbreel(i)
+                        Le(j + CShort(Para1)) = CDec(LenApp(i)) / CDec(Nbreel(i))
+                        PosProf(j + CShort(1) + CShort(Para1)) = PosProf(j + CShort(Para1)) + Le(j + CShort(Para1))
+                    Next j
+                    Para1 = Para1 + CSng(Nbreel(i))
+                    Para2 = Para2 + LenApp(i)
+                Next i
+                Para3 = CSng(Ne) - Para1
+                Para2 = Length - Para2
+                For i = CShort(Para1) + CShort(1) To CShort(Para1) + CShort(Para3)
+                    Le(i) = CDec(Para2) / CDec(Para3)
+                    PosProf(i + CShort(1)) = PosProf(i) + Le(i)
+                Next i
+        End Select
+
+        Input(nFic, TimeMax)
+        Input(nFic, DeltaT)
+        Input(nFic, taff)
+        Input(nFic, Hsauv)
+        Input(nFic, Wsauv)
+        Input(nFic, CTsauv)
+        Input(nFic, CLsauv)
+        Input(nFic, Tsauv)
+        Input(nFic, Carbsauv)
+        Input(nFic, hMin)
+        Input(nFic, hEcart)
+        Input(nFic, wMin)
+        Input(nFic, wEcart)
+        Input(nFic, CLmin)
+        Input(nFic, CLecart)
+        Input(nFic, CTmin)
+        Input(nFic, CTecart)
+        Input(nFic, Tecart)
+        Input(nFic, aa)
+        Input(nFic, Hc)
+        Input(nFic, ab)
+        Input(nFic, tc)
+        Input(nFic, ImpHydr)
+        Input(nFic, H_snap)
+        Input(nFic, Retard)
+        Input(nFic, aOH)
+        Input(nFic, EbG)
+        Input(nFic, toG)
+        Input(nFic, faG)
+        Input(nFic, capCal)
+        Input(nFic, GyCO2)
+        Input(nFic, DyCO2)
+
+        Input(nFic, NEXPO)
+        ReDim FileGexpo(NEXPO)
+        ReDim FileDexpo(NEXPO)
+        For i = CShort(1) To NEXPO
+            Input(nFic, FileGexpo(i))
+            Input(nFic, FileDexpo(i))
+        Next i
+
+        Input(nFic, NQUAL)
+        ReDim Filebeton(NQUAL)
+        ReDim Fileres(NQUAL)
+        ReDim PD(NQUAL)
+        ReDim Dcl(NQUAL)
+        ReDim qGran(NQUAL)
+        ReDim LambdaH(NQUAL)
+        ReDim LambdaT(NQUAL)
+        ReDim SAT(NQUAL)
+        ReDim ciment(NQUAL)
+        ReDim EC(NQUAL)
+        ReDim tProt(NQUAL)
+        ReDim Vct(NQUAL)
+        ReDim Nct(NQUAL)
+        ReDim Hydr(NQUAL)
+        ReDim ED(NQUAL)
+        ReDim ToHydr(NQUAL)
+        ReDim Ecl(NQUAL)
+        ReDim ToCl(NQUAL)
+        ReDim RoA(NQUAL)
+        ReDim RoC(NQUAL)
+        ReDim proba(NQUAL, 19)
+        For i = CShort(1) To NQUAL
+            Input(nFic, Filebeton(i))
+            Input(nFic, Fileres(i))
+            Input(nFic, PD(i))
+            Input(nFic, Dcl(i))
+            Input(nFic, qGran(i))
+            Input(nFic, LambdaH(i))
+            Input(nFic, LambdaT(i))
+            Input(nFic, SAT(i))
+            Input(nFic, ciment(i))
+            Input(nFic, EC(i))
+            Input(nFic, tProt(i))
+            Input(nFic, Hydr(i))
+            Input(nFic, Vct(i))
+            Input(nFic, Nct(i))
+            Input(nFic, ED(i))
+            Input(nFic, ToHydr(i))
+            Input(nFic, Ecl(i))
+            Input(nFic, ToCl(i))
+            Input(nFic, RoA(i))
+            Input(nFic, RoC(i))
+            For j = 0 To 19
+                Input(nFic, proba(i, j))
+            Next
+        Next i
+
+        ReDim Creadtherm(1, 1)
+        ReDim Creadhydr(1, 1)
+        ReDim Creadion(1, 1)
+
+        Input(nFic, Nbre1)
+        ReDim Creadtherm(1, Nbre1)
+        For i = 1 To Nbre1
+            Input(nFic, Creadtherm(0, i))
+            Input(nFic, Creadtherm(1, i))
+        Next
+
+        Input(nFic, Nbre2)
+        ReDim Creadhydr(1, Nbre2)
+        For i = 1 To Nbre2
+            Input(nFic, Creadhydr(0, i))
+            Input(nFic, Creadhydr(1, i))
+            Creadhydr(1, i) = Creadhydr(1, i) / 100
+        Next
+
+        Input(nFic, Nbre3)
+        ReDim Creadion(1, Nbre3)
+        For i = 1 To Nbre3
+            Input(nFic, Creadion(0, i))
+            Input(nFic, Creadion(1, i))
+        Next
+
+        Try
+            Input(nFic, PintermManual)
+            MsgBox("Le nombre de points est de" & CStr(PintermManual), MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
+        Catch
+            MsgBox("Attention aucun points pris en compte manuellement", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Information Points de discretisation")
+        End Try
+
+        FileClose(nFic)
 
     End Sub
 
-    Public Sub Compute_All()
-        Compute_All(m_frm02, m_Length, m_Ne, m_ChoixRep, m_Le, m_PosProf, m_nChmt, m_Nbreel, m_LenApp, m_TimeMax, m_DeltaT, m_taff, m_Hsauv, m_Wsauv, m_CTsauv, m_CLsauv, m_Tsauv, m_Carbsauv, m_hMin, m_hEcart, m_wMin, m_wEcart, m_CLmin, m_CLecart, m_CTmin, m_CTecart, m_Tecart, m_aa, m_Hc, m_ab, m_tc, m_ImpHydr, m_H_snap, m_Retard, m_aOH, m_EbG, m_toG, m_faG, m_NEXPO, m_FileGexpo, m_FileDexpo, m_NQUAL, m_Filebeton, m_Fileres, m_PD, m_Dcl, m_capCal, m_LambdaH, m_LambdaT, m_SAT, m_ciment, m_EC, m_tProt, m_Vct, m_Nct, m_proba, m_Dofs, m_qGran, m_Hydr, m_ED, m_ToHydr, m_Ecl, m_ToCl, m_PostFile, m_Ctherm, m_Chydr, m_Cion, m_GyCO2, m_DyCO2, m_RoA, m_RoC, m_PintermManual)
+    Public Sub InitialConditions(ByRef Nbre1 As Short, ByRef Nbre2 As Short, ByRef Nbre3 As Short,
+                                 ByRef Creadtherm(,) As Double, ByRef Creadhydr(,) As Double, ByRef Creadion(,) As Double)
+
+        Dofs = Ne + CShort(1)
+
+        'calcul des conditions initiales
+        Dim i As Short
+        Dim j As Short = 0
+        ReDim Ctherm(Dofs + 1)
+        Dim Var, Var1 As Double
+
+        For i = 1 To Nbre1 - 1
+            Var = (Creadtherm(1, i + 1) - Creadtherm(1, i)) / (Creadtherm(0, i + 1) - Creadtherm(0, i))
+            Var1 = Creadtherm(1, i) - Var * Creadtherm(0, i)
+            Do While PosProf(j) <= Creadtherm(0, i + 1)
+                Ctherm(j) = Var * PosProf(j) + Var1
+                j = j + 1
+                If j > Dofs Then Exit Do
+            Loop
+            Ctherm(Dofs + 1) = Ctherm(Dofs)
+        Next
+        j = 0
+
+        ReDim Chydr(Dofs + 1)
+        For i = 1 To Nbre2 - 1
+            Var = (Creadhydr(1, i + 1) - Creadhydr(1, i)) / (Creadhydr(0, i + 1) - Creadhydr(0, i))
+            Var1 = Creadhydr(1, i) - Var * Creadhydr(0, i)
+            Do While PosProf(j) <= Creadhydr(0, i + 1)
+                Chydr(j) = Var * PosProf(j) + Var1
+                j = j + 1
+                If j > Dofs Then Exit Do
+            Loop
+            Chydr(Dofs + 1) = Chydr(Dofs)
+            If j > Dofs + 1 Then Exit For
+        Next
+        j = 0
+
+        ReDim Cion(Dofs + 1)
+        For i = 1 To Nbre3 - 1
+            Var = (Creadion(1, i + 1) - Creadion(1, i)) / (Creadion(0, i + 1) - Creadion(0, i))
+            Var1 = Creadion(1, i) - Var * Creadion(0, i)
+            Do While PosProf(j) <= Creadion(0, i + 1)
+                Cion(j) = Var * PosProf(j) + Var1
+                j = j + 1
+                If j > Dofs Then Exit Do
+            Loop
+            Cion(Dofs + 1) = Cion(Dofs)
+        Next
+
+        Le(0) = CDec(1)       'couche limite
+        Le(Dofs) = CDec(1)    'couche limite
+
+    End Sub
+
+    Public Sub InitFrmGraph()
+
+        frm = New frmGraph1D
+        frm.MdiParent = MDIChlor
+        frm.Left = 0
+        frm.Top = 0
+        frm.Height = (MDIChlor.Height)
+        frm.Width = (MDIChlor.Width)
+
+        frm.Show()
+
     End Sub
 
     'Coeur du calcul
-    Private Sub Compute_All(ByRef frm02 As frmGraph1D, ByRef Length As Single, ByRef Ne As Short, ByRef ChoixRep As Short, ByRef Le() As Decimal, ByRef PosProf() As Decimal, ByRef nChmt As Short, ByRef Nbreel() As Short, ByRef LenApp() As Single, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef Carbsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef ImpHydr As Boolean, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef FileGexpo() As String, ByRef FileDexpo() As String, ByRef NQUAL As Short, ByRef Filebeton() As String, ByRef Fileres() As String, ByRef PD() As Single, ByRef Dcl() As Single, ByRef capCal As Single, ByRef LambdaH() As Single, ByRef LambdaT() As Single, ByRef SAT() As Single, ByRef ciment() As Single, ByRef EC() As Single, ByRef tProt() As Single, ByRef Vct() As Single, ByRef Nct() As Single, ByRef proba(,) As Single, ByRef Dofs As Short, ByRef qGran() As Single, ByRef Hydr() As Single, ByRef ED() As Single, ByRef ToHydr() As Single, ByRef Ecl() As Single, ByRef ToCl() As Single, ByRef PostFile As String, ByRef Ctherm() As Double, ByRef Chydr() As Double, ByRef Cion() As Double, ByRef GyCO2 As Single, ByRef DyCO2 As Single, ByRef RoA() As Single, ByRef RoC() As Single, ByRef PintermManual As Integer)
-
-        MsgBox("Calcul 1D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information)
+    Public Sub Compute_All()
 
         ' Moisture variables
         Dim H_old(1) As Decimal ' Moisture potential at beginning interval[-]  (p/ps)
@@ -252,6 +501,7 @@ Module Compute
         Dim nFic5 As Short
         Dim nFic6 As Short
         Dim nFic7 As Short
+
         ' Dim nFic8 As Short      'prov
         Dim XdHmax As Single
         Dim XdCTmax As Single
@@ -378,11 +628,6 @@ Module Compute
         Dim Hsym As Boolean
         Dim Ssym As Boolean
         Dim Tsym As Boolean
-        Const LgLim = 40
-        Const pPH = 12.6
-        Const mPh = 6.5
-        Const RoW = 1000        'kg/m3
-        Const R = 8.3145        'J/mol.K
 
         ' redimension variables
         ReDim T_new(Dofs + CShort(1))
@@ -404,9 +649,8 @@ Module Compute
 
         ' version sept 15th 2002
         ' First initialize all variables
-        frm02.ModifyCommand1(True)
 
-        PreFile = PostFile
+        MDIChlor.Prefile = PostFile
 
         Hteller = CDbl(Hsauv)
         Wteller = CDbl(Wsauv)
@@ -434,7 +678,6 @@ Module Compute
         'Dim cpt1 As Integer
         'Dim cpt2 As Integer
         'FileOpen(CInt(nFile), "R_HR_cumul.txt", OpenMode.Output)
-
 
         For Boucle1 = CShort(1) To NEXPO 'exposition direct, éclaboussures, brouillard
             For Boucle2 = CShort(1) To NQUAL 'qualité du béton bonne, moyenne, mauvaise
@@ -576,7 +819,7 @@ Module Compute
                                 Hright = Hright / LgLim 'Regle pb de Dcap des 2 cotés
                                 Hleft = Hleft / LgLim 'Regle pb de Dcap des 2 cotés
 
-                                frm02.design(Wsat, H_old, W, T_old, C_new, CT, TempMin, TempMax, Length, PosProf, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CTmax, CLmin, CLecart, CLmax, Tecart, Dofs, Tijd, Gxc, Dxc, Ph)
+                                frm.design(Wsat, H_old, W, T_old, C_new, CT, TempMin, TempMax, Length, PosProf, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CTmax, CLmin, CLecart, CLmax, Tecart, Dofs, Tijd, Gxc, Dxc, Ph)
 
                                 ' -------------------------------
                                 ' start of computations
@@ -684,7 +927,7 @@ Module Compute
                                 If BDlibre = False Then DSTa = Left(DSTa, Num - 4)
 
                                 Dim TitreGraph As String = "Panel with computed results, " & GSTa & ", " & DSTa & ", " & Filebeton(Boucle2) & ", " & FileProb
-                                frm02.ModifyTitle(TitreGraph)
+                                frm.ModifyTitle(TitreGraph)
 
                                 'frm02.Text = "Panel with computed results, " & GSTa & ", " & DSTa & ", " & Filebeton(Boucle2) & ", " & FileProb 'Erreur VS2019 2020-04-24
                                 OutFile(1) = PostFile & "R_H_" & GSTa & "_" & DSTa & "_" & Fileres(Boucle2) & "_" & FileProb & ".txt"
@@ -1513,7 +1756,7 @@ Again2:                                 If jj = 1 Then
                                     If i >= CLng(affiche) Then  '1 mois ou 30 jours
                                         affiche = affiche + CDbl(taff)
                                         'Update the pictures
-                                        frm02.design(Wsat, H_old, W, T_old, C_new, CT, TempMin, TempMax, Length, PosProf, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CTmax, CLmin, CLecart, CLmax, Tecart, Dofs, Tijd, Gxc, Dxc, Ph)
+                                        frm.design(Wsat, H_old, W, T_old, C_new, CT, TempMin, TempMax, Length, PosProf, hMin, hEcart, wMin, wEcart, CTmin, CTecart, CTmax, CLmin, CLecart, CLmax, Tecart, Dofs, Tijd, Gxc, Dxc, Ph)
                                     End If
                                     If i >= CLng(Hteller) Then '1 an ou 365 jours
                                         Hteller = Hteller + CDbl(Hsauv)
@@ -1591,27 +1834,28 @@ Again2:                                 If jj = 1 Then
         'Next
         'FileClose(CInt(nFile))
 
-        Beep()
-
         MsgBox("Fin du calcul", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Fin")
 
-        frm02.ModifyCommand1(False)
+        frm.ModifyCommand1(False)
         'frm02.Command1..Enabled = False
 
     End Sub
 
     'Enregistrement des données dans les fichiers d'output
     Private Sub Register(ByRef nFic1 As Short, ByRef Tijd As Decimal, ByRef Dofs As Short, ByRef H_new() As Decimal, ByRef para As Single)
+
         Dim j As Short
         'Register values
         Print(CInt(nFic1), Tijd / 365, ",", Tijd, ",", TAB)
         For j = CShort(1) To Dofs
             Print(CInt(nFic1), H_new(j) + para, ",", TAB) '% humidité relative dans le béton
         Next j
+
     End Sub
 
     'Enregistrement des données dans le fichier d'output pour l'humidité relative
     Private Sub Regist01(ByRef nFic1 As Short, ByRef Tijd As Decimal, ByRef Dofs As Short, ByRef CL_new() As Decimal, ByRef W() As Decimal, ByRef Ciment As Single, ByRef Para As Short)
+
         Dim j As Short
         'Register values
         Print(CInt(nFic1), Tijd / 365, ",", Tijd, ",", TAB)
@@ -1622,28 +1866,7 @@ Again2:                                 If jj = 1 Then
                 Print(CInt(nFic1), CL_new(j) * W(j) / (10 * Ciment), ",", TAB)
             End If
         Next j
-    End Sub
-
-    'Sauvegarde lors du click sur le bouton store
-    Public Sub Save_pictures(ByRef Picture_Number As Short)
-
-        Picture_Number = Picture_Number + 1
-
-        Dim outfile As String
-
-        outfile = PreFile & "Graph_1_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox1.Image.Save(outfile)
-        outfile = PreFile & "Graph_2_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox2.Image.Save(outfile)
-        outfile = PreFile & "Graph_3_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox3.Image.Save(outfile)
-        outfile = PreFile & "Graph_4_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox4.Image.Save(outfile)
-        outfile = PreFile & "Graph_5_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox5.Image.Save(outfile)
-        outfile = PreFile & "Graph_6_" & Convert.ToString(Picture_Number) & ".bmp"
-        m_frm02.PictureBox6.Image.Save(outfile)
 
     End Sub
 
-End Module
+End Class

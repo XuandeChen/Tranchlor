@@ -2,6 +2,21 @@ Il ne faut pas utiliser ce file pour le modèle, il sert simplement à expliquer l
 
 TimeMax	73000	temps max en jours arrivé à l'échéance le calcul s'arrête
 DeltaT	3600	pas de temps utilisé en s (il ne faut pas changer cette valeur)
+Tsauv	8760	pas de temps de stockage dans le fichier d'output durant le calcul, ici ça correpond à une année (température)
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+
+
+
+
 taff	720		pas de temps d'affichage des graphiques en heure durant le calcul, ici ça correspond à 30 jours
 Hsauv	8760	pas de temps de stockage dans le fichier d'output durant le calcul, ici ça correpond à une année (humidité relative)
 Wsauv	8760	pas de temps de stockage dans le fichier d'output durant le calcul, ici ça correpond à une année (teneur en eau)

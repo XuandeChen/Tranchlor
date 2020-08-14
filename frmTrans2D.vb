@@ -14,34 +14,35 @@ Public Class frmTrans2D
     'Quebec, QC
     'Canada
 
-    Private Para As Short
+    Public Para As Short
 
-    Private NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
-    Private ElasticityModulus, Thickness, PoissonRatio As Double
+    Public NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
+    Public ElasticityModulus, Thickness, PoissonRatio As Double
 
-    Private Nodes() As NodeTrans
-    Private Elements() As ElementTrans
-    Private Time() As Double ' heure
-    'Private diffusion As DiffusionXC
-    'Private transport As TransportXC
+    Public Nodes() As NodeTrans
+    Public Elements() As ElementTrans
+    Public Time() As Double ' heure
+    'Public diffusion As DiffusionXC
+    'Public transport As TransportXC
 
-    Private MeshFileOk As Boolean = False
+    Public MeshFileOk As Boolean = False
 
-    Private PointLoads() As PointLoad
-    Private Supports() As Support
-    Private Deformations() As Double 'the deformation vector
-    Private Analysed As Boolean = False
+    Public PointLoads() As PointLoad
+    Public Supports() As Support
+    Public Deformations() As Double 'the deformation vector
+    Public Analysed As Boolean = False
 
-    Private ShowDeformations As Boolean = True
-    Private ShowModel As Boolean = True
-    Private ShowNodeNumbers As Boolean = False
-    Private ShowElementsOnDeformedShape As Boolean = True
+    Public ShowDeformations As Boolean = True
+    Public ShowModel As Boolean = True
+    Public ShowNodeNumbers As Boolean = False
+    Public ShowExpo As Boolean = False
+    Public ShowElementsOnDeformedShape As Boolean = True
 
-    Private colorMap As ColorMap
-    Private HRRange As Range
-    Private SlRange As Range
+    Public colorMap As ColorMap
+    Public HRRange As Range
+    Public SlRange As Range
 
-    Private Directory As String
+    Public Directory As String
 
     'Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
     Private Enum Results
@@ -90,17 +91,21 @@ Public Class frmTrans2D
             MeshFileOk = True
             Directory = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
             DrawModel()
+
         End If
     End Sub
 
     Private Sub ClearAnalysisOutput()
+
         Erase Deformations 'Clear the earlier analysis output
         TimeScrollBar.Visible = False
         LabelT1.Visible = False
         LabelTVal.Visible = False
         LabelProgress.Visible = False
         Analysed = False
+
     End Sub
+
     ' mechanical computations
     'Private Sub Analyse()
     '    'Calculate statistics
@@ -235,6 +240,8 @@ Public Class frmTrans2D
     'End Sub
     ' Program for computation 2D diffusion 
     Public Sub Analyse()
+
+
         'Material parameters, can be converted from user defined input
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
@@ -400,41 +407,41 @@ Public Class frmTrans2D
 
             'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
-                Dim R(,) As Double
-                Dim RHS() As Double
-                Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
-                Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-                Dim cie As CIETrans
-                Dim he As HETrans
-                Dim H_avg As Double
-                Dim H_ele() As Double
-                Dim De As Double
-                'Matrix assembling
-                For i = 0 To NElements - 1
-                    he = New HETrans(
-                              H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
-                              H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
-                              )
-                    H_ele = he.getHe
-                    H_avg = GetAvgH(H_ele)
-                    De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
-                    cie = New CIETrans(
-                              Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-                              Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-                              Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-                              Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                              De)
-                    AssembleKg(cie.getbe, bg, i)
-                    AssembleKg(cie.getAe, Ag, i)
-                Next
+            Dim R(,) As Double
+            Dim RHS() As Double
+            Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+            Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+            Dim cie As CIETrans
+            Dim he As HETrans
+            Dim H_avg As Double
+            Dim H_ele() As Double
+            Dim De As Double
+            'Matrix assembling
+            For i = 0 To NElements - 1
+                he = New HETrans(
+                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                          )
+                H_ele = he.getHe
+                H_avg = GetAvgH(H_ele)
+                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
+                cie = New CIETrans(
+                          Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                          Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                          De)
+                AssembleKg(cie.getbe, bg, i)
+                AssembleKg(cie.getAe, Ag, i)
+            Next
 
-                'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
-                getLHS(LHS, NNodes, Ag, bg, dt)
-                getRHS(R, NNodes, Ag, bg, dt)
-                RHS = MultiplyMatrixWithVector(R, H_old)
+            'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+            getLHS(LHS, NNodes, Ag, bg, dt)
+            getRHS(R, NNodes, Ag, bg, dt)
+            RHS = MultiplyMatrixWithVector(R, H_old)
 
-                'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-                GetX(H_new, LHS, RHS)
+            'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
+            GetX(H_new, LHS, RHS)
 
             'step 5: data stockage and boundary check 
             For j = 0 To NNodes - 1
@@ -1405,6 +1412,23 @@ Public Class frmTrans2D
                 Next
             End If
 
+            'Draw the Expositions
+            If ShowExpo = True Then
+                Dim p As New Pen(Color.Black)
+                Dim nx, ny As Integer
+                Dim fnt As New Font("Arial", 8)
+                Dim brsh As New SolidBrush(Color.Red)
+                For i = 0 To NNodes - 1
+                    nx = CInt(Nodes(i).x * zoom + shiftx)
+                    ny = CInt(-Nodes(i).y * zoom + shifty)
+                    Dim r As New Rectangle(nx - 3, ny - 3, 6, 6)
+                    gr.DrawEllipse(p, r)
+
+                    gr.DrawString(CStr(Nodes(i).NumExpo), fnt, brsh, New PointF(nx + 5, ny + 5))
+
+                Next
+            End If
+
             'Draw the supports
             'we draw squares for supports
             ReDim ptsf(3)
@@ -1764,6 +1788,11 @@ Public Class frmTrans2D
         DrawModel()
     End Sub
 
+    Private Sub ShowExpositionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowExpositionsToolStripMenuItem.Click
+        ShowExpo = Not ShowExpo
+        DrawModel()
+    End Sub
+
     Private Sub DrawVArrow(px As Integer, py As Integer, c As Color, downward As Boolean)
         Dim p As New Pen(c)
         Dim size As Integer = 15
@@ -1816,6 +1845,7 @@ Public Class frmTrans2D
     End Sub
     ' add two labels to distinguish diffusion and capillary transport process 30.07.2020 Xuande
     Private Sub Diffusion2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diffusion2DToolStripMenuItem.Click
+
         'check if there is a proper model
         If NElements <= 0 OrElse NNodes <= 0 Then
             'there are no elements defined
@@ -1826,21 +1856,33 @@ Public Class frmTrans2D
 
         'perform analysis using the finite elemeent method
 
-        Dim myThread As System.Threading.Thread
+        Dim C2D As New Compute2D
 
-        myThread = New System.Threading.Thread(AddressOf Analyse)
+        C2D.Read_InitialConditions()
 
-        'frmC.MdiParent = Me
-        'frmC.Show()
+        C2D.Read_Expositions(Nodes)
 
-        If Para <> CShort(1) Then
-            myThread.Start()
-        End If
+        C2D.Read_Simulation(Directory)
+
+        C2D.DBInput("CEMI0.35")
+
+        C2D.Compute_All(Me)
+
+        'Dim myThread As System.Threading.Thread
+        'myThread = New System.Threading.Thread(AddressOf C2D.Compute_All)
+
+        ''frmC.MdiParent = Me
+        ''frmC.Show()
+
+        'If Para <> CShort(1) Then
+        '    myThread.Start()
+        'End If
 
         'Analyse(NNodes, NElements, Nodes, Elements, Directory)
 
         'show the output
         DrawModel()
+
     End Sub
 
     Private Sub Transport2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Transport2DToolStripMenuItem.Click
@@ -1871,10 +1913,6 @@ Public Class frmTrans2D
         DrawModel()
     End Sub
 
-
-    Private Sub LabelProgress_Click(sender As Object, e As EventArgs) Handles LabelProgress.Click
-
-    End Sub
 
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then
