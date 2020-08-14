@@ -21,5 +21,4 @@ Public Class Range
         Return Max - Min
     End Function
 
-
 End Class

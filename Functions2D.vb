@@ -12,17 +12,17 @@ Module Functions2D
         Next
     End Function
 
-    'Public Function getNewLHS(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-    '    Dim LHS(NNodes - 1, NNodes - 1) As Double
-    '    Dim i, j As Integer
-    '    For i = 0 To NNodes - 1
-    '        For j = 0 To NNodes - 1
-    '            LHS(i, j) = phi * A(i, j) / 2 + b(i, j) / dt
-    '        Next
-    '    Next
-    '    Return LHS
-    'End Function
-    'get the RHS matrix for Gauss matrix resolution
+    Public Function getNewLHS(ByRef NewLHS As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim NewLHS(NNodes - 1, NNodes - 1)
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                NewLHS(i, j) = A(i, j) / 2 + phi * b(i, j) / dt
+            Next
+        Next
+        Return NewLHS
+    End Function
+    'Get the RHS matrix For Gauss matrix resolution
     Public Function getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim RHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
@@ -33,17 +33,17 @@ Module Functions2D
         Next
     End Function
 
-    'Public Function getNewR(ByRef NNodes As Integer, ByRef phi As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
-    '    Dim R(NNodes - 1, NNodes - 1) As Double
-    '    Dim i, j As Integer
-    '    For i = 0 To NNodes - 1
-    '        For j = 0 To NNodes - 1
-    '            R(i, j) = b(i, j) / dt - phi * A(i, j) / 2
-    '        Next
-    '    Next
-    '    Return R
-    'End Function
-    'get degree of freedom /water diffusion
+    Public Function getNewR(ByRef NewR As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+        ReDim NewR(NNodes - 1, NNodes - 1)
+        Dim i, j As Integer
+        For i = 0 To NNodes - 1
+            For j = 0 To NNodes - 1
+                NewR(i, j) = phi * b(i, j) / dt - A(i, j) / 2
+            Next
+        Next
+        Return NewR
+    End Function
+    'Get degree Of freedom /water diffusion
     Public Function getDOF(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 1
         Return (NodeNo) * nDofsPerNode
@@ -98,39 +98,51 @@ Module Functions2D
 
     ''liquid water transport functions: (Equation and formula from Marc Mainguy, 2001)
     'relative permeability function (Equation and formula from Marc Mainguy, 2001 & derived from VanGnuchten, 1980) 
-    Public Function Getkr(ByRef saturation As Double, ByRef beta As Double) As Double
+    Public Function Getkr(ByRef saturation As Double, ByRef m As Double) As Double
         Dim S As Double = saturation
-        Dim sa_irr As Double = 0.00001
-        Dim sb_irr As Double = 0.00001
-        Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
-        Dim kr_b_max As Double = 1
-        Dim kr As Double = kr_b_max * s_eff ^ beta
+        'Dim sa_irr As Double = 0.00001
+        'Dim sb_irr As Double = 0.00001
+        'Dim n As Double = 1 / m
+        'Dim s_eff As Double = (S - sb_irr) / (1 - sa_irr - sb_irr)
+        'Dim kr_b_max As Double = 1
+        'Dim kr As Double = kr_b_max * s_eff ^ n
+        Dim kr As Double = Math.Sqrt(S) * (1 - (1 - S ^ (1 / m)) ^ m) ^ 2
         Return kr
     End Function
 
     'liquid capillary pressure function (Equation and formula from Marc Mainguy, 2001)
-    Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double) As Double
+    Public Function Getpc(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double, ByRef St As Double) As Double
         Dim S As Double = saturation
-        Dim n As Double = 1 / (1 - m)
-        Dim s_pc_irr As Double = 0.00001
-        Dim s_pc_max As Double = 1
-        Dim Sb_pc As Double = (S - s_pc_irr) / (s_pc_max - s_pc_irr)
-        Dim pc As Double = pc_0 * ((Sb_pc ^ (-1 / m) - 1) ^ (1 / n))
+        Dim pc As Double
+        Dim pa As Double = 0.101325 'Mpa
+        'Dim n As Double = 1 / (1 - m)
+        'Dim s_pc_irr As Double = 0.00001
+        'Dim s_pc_max As Double = 1
+        'Dim Sb_pc As Double = (S - s_pc_irr) / (s_pc_max - s_pc_irr)
+        Dim Pt As Double = pc_0 * (St ^ (-b) - 1) ^ (1 - 1 / b)
+        Dim P As Double = Math.Log(Pt * 1000000.0, 10)
+        Dim gamma As Double = -(Math.Log(1000000000.0, 10) - P) / St
+        If S >= St Then
+            pc = pa - pc_0 * (S ^ (-b) - 1) ^ (1 - 1 / b)
+        Else
+            pc = pa - (10 ^ (gamma * (S - St) + P)) / 1000000.0
+        End If
         Return pc
     End Function
     'derivation of the capillary pressure function 
-    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef m As Double) As Double
+    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double) As Double
         Dim dpcdS As Double
         Dim S As Double = saturation
-        Dim n As Double = 1 / (1 - m)
-        dpcdS = (pc_0 * (1 / S ^ (1 / m) - 1) ^ (1 / n)) / (m * n * S * (S ^ (1 / m) - 1))
+        Dim n As Double = 1 / b
+        'dpcdS = (pc_0 * (1 / S ^ (1 / b) - 1) ^ (1 / n)) / (b * n * S * (S ^ (1 / b) - 1))
+        dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
         Return dpcdS
     End Function
 
     'liquid-water contribution to the moisture diffusivity [cm2/s] 
     Public Function GetDl(ByRef K As Double, ByRef yita_l As Double, ByRef dpcdS As Double, ByRef kr As Double) As Double
         Dim Dl As Double
-        Dl = -dpcdS * K * kr / yita_l
+        Dl = -dpcdS * K * kr / yita_l * 1000000.0   ' convert unit to mm2/s
         Return Dl
     End Function
 
@@ -141,7 +153,6 @@ Module Functions2D
         Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
         Dim R As Double = 8.31451
         Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
-
         Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
         Return Dh
     End Function
@@ -152,13 +163,13 @@ Module Functions2D
         Dim T0 As Double = 273 '0 degree [K]
         Dim D As Double
         Dva = 0.217 * p_atm * ((Tk / T0) ^ 1.88)
-        D = Dva / pg
+        D = Dva / pg * 0.0001 'convert unit to m2/s
         Return D
     End Function
-    'diffusion coefficient of water vapor or dry air in wet air [cm2/s] 
+    'diffusion coefficient of water vapor or dry air in wet air [mm2/s] 
     Public Function GetDv(ByRef rho_v As Double, ByRef rho_l As Double, ByRef dpcdS As Double, ByRef f As Double, ByRef D As Double, ByRef pv As Double) As Double
         Dim Dv As Double
-        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f
+        Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f * 1000000.0 'convert unit to mm2/s
         Return Dv
     End Function
     'resistance factor function considering the tortuosity
@@ -169,8 +180,8 @@ Module Functions2D
         Return f
     End Function
     ' saturated water function 
-    Public Function GetWsat(ByRef C As Double, ByRef alpha As Double, ByRef W_C_ratio As Double, ByRef phi As Double) As Double
-        Dim Wsat As Double = C * W_C_ratio - (0.17 * alpha * C) + 10 * phi
+    Public Function GetWsat(ByRef Water_tot As Double, ByRef C As Double) As Double
+        Dim Wsat As Double = Water_tot - C * 0.2
         Return Wsat
     End Function
     'isotherm function 
@@ -182,10 +193,10 @@ Module Functions2D
         Dim Cbet As Double = Cfunc(C0, Tk)
         Dim Vm As Double = Vmfunc(day, W_C_ratio, type, VT)
         Dim n As Double = nfunc(day, W_C_ratio, type, NT)
-        Dim k As Double = kfunc(C, n)
-        Dim wc1 As Double = (C * k * Vm * 1) / ((1 - k * 1) * (1 + (C - 1) * k * 1)) 'when H = 100% = 1
+        Dim k As Double = kfunc(Cbet, n)
+        Dim wc1 As Double = (Cbet * k * Vm * 1) / ((1 - k * 1) * (1 + (Cbet - 1) * k * 1)) 'when H = 100% = 1
         Dim phi As Double = wc1 * (rho_c / rho_l) 'intermediate term
-        Dim wc As Double = (C * k * Vm * H) / ((1 - k * H) * (1 + (C - 1) * k * H))
+        Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (Cbet - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
         Dim Tc As Double = Tk - 273 'temperature in [C]
