@@ -10,8 +10,10 @@ Public Class Compute2D
 
     Dim H_int As Double  'initial relative humidity in the material
     Dim Tc As Double 'initial temperature in the material
+
     Dim D0 As Double
     Dim alpha_0 As Double
+    Dim Hc As Double
 
     Dim Expo(1) As Exposition
 
@@ -566,7 +568,7 @@ Public Class Compute2D
 
     Public Sub DBInput(ByRef MatName As String)
 
-        Dim con As New SqlConnection("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=\\GCI-DACON-01\TransChlor\Database\TransChlorMat.mdf;Integrated Security=True;Connect Timeout=30")
+        Dim con As New SqlConnection("Data Source=GCI-DACON-01.FSG.ULAVAL.CA;Initial Catalog=\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF;Integrated Security=True")
 
         Try
 
@@ -578,8 +580,9 @@ Public Class Compute2D
 
             While reader.Read()
 
-                D0 = CDbl(reader("Dvap").ToString())
+                D0 = CDbl(reader("Dvap").ToString()) * 1000000.0
                 alpha_0 = CDbl(reader("alpha0").ToString())
+                Hc = CDbl(reader("Hc").ToString())
                 'wc = CDbl(reader("W/C").ToString())
                 'kg = CDbl(reader("kg").ToString())
                 'kl = CDbl(reader("kl").ToString())
@@ -591,7 +594,7 @@ Public Class Compute2D
 
         Catch ex As SqlException
 
-            Console.WriteLine("Error: " & ex.ToString())
+            MsgBox("Database not found")
 
         End Try
 
@@ -782,7 +785,7 @@ Public Class Compute2D
                           )
                 H_ele = he.getHe
                 H_avg = GetAvgH(H_ele)
-                De = GetDh(D0, alpha_0, H_int, Tc, H_avg)
+                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
                 cie = New CIETrans(
                           frm.Nodes(frm.Elements(i).Node1 - 1).x, frm.Nodes(frm.Elements(i).Node1 - 1).y,
                           frm.Nodes(frm.Elements(i).Node2 - 1).x, frm.Nodes(frm.Elements(i).Node2 - 1).y,

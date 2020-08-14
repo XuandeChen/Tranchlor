@@ -22,8 +22,8 @@ Public Class frmTrans2D
     Public Nodes() As NodeTrans
     Public Elements() As ElementTrans
     Public Time() As Double ' heure
-    Public diffusion As DiffusionXC
-    Public transport As TransportXC
+    'Public diffusion As DiffusionXC
+    'Public transport As TransportXC
 
     Public MeshFileOk As Boolean = False
 
@@ -40,7 +40,7 @@ Public Class frmTrans2D
 
     Public colorMap As ColorMap
     Public HRRange As Range
-    Public SRange As Range
+    Public SlRange As Range
 
     Public Directory As String
 
