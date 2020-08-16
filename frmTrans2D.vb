@@ -578,6 +578,7 @@ Public Class frmTrans2D
         Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
         Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
         Dim cie As CIETrans
+        Dim cieNew As CIETransNew
         Dim se As SETrans 'element saturation vector
         Dim D As Double = GetD(Tk, pg)
         Dim Dv As Double
@@ -625,7 +626,6 @@ Public Class frmTrans2D
             ReDim Time(ind + 1)
             Time(0) = 0
         Next
-
 
         For ti = 0 To CInt(ind)
             'T(ti) = 0 + dt * (ti - 0)
@@ -856,24 +856,68 @@ Public Class frmTrans2D
                           S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
                           )
                 S_ele = se.getSe
-                S_avg = GetAvgH(S_ele)
-                'w_old(i) = wsat * S_avg
-                'Print(CInt(nFic2), w_old(i), ",", TAB)
-                kr = Getkr(S_avg, m)
-                pc = Getpc(S_avg, pc_0, beta, St)
-                dpcdS = GetdpcdS(S_avg, pc_0, beta)
-                Dl = GetDl(KK, yita_l, dpcdS, kr)
-                f = Getf(phi, S_avg)
-                Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
-                De = Dv + Dl
-                cie = New CIETrans(
+
+                'trial on using nodal interpolations instead of mean value to compute transport coefficient 2020.08.15 Xuande
+                'trial verified, it works pretty well 2020.08.15 Xuande
+                Dim kr1 As Double = Getkr(S_ele(0), m)
+                Dim kr2 As Double = Getkr(S_ele(1), m)
+                Dim kr3 As Double = Getkr(S_ele(2), m)
+                Dim kr4 As Double = Getkr(S_ele(3), m)
+                Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
+                Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
+                Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
+                Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
+                Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
+                Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
+                Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
+                Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
+                Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
+                Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
+                Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
+                Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
+                Dim f1 As Double = Getf(phi, S_ele(0))
+                Dim f2 As Double = Getf(phi, S_ele(1))
+                Dim f3 As Double = Getf(phi, S_ele(2))
+                Dim f4 As Double = Getf(phi, S_ele(3))
+                Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
+                Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
+                Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
+                Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
+                Dim d1 As Double = Dl1 + Dv1
+                Dim d2 As Double = Dl2 + Dv2
+                Dim d3 As Double = Dl3 + Dv3
+                Dim d4 As Double = Dl4 + Dv4
+
+                cieNew = New CIETransNew(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                          De)
-                AssembleKg(cie.getbe, bg, i)
-                AssembleKg(cie.getAe, Ag, i)
+                          d1, d2, d3, d4)
+
+                AssembleKg(cieNew.getbe, bg, i)
+                AssembleKg(cieNew.getAe, Ag, i)
+
+                '' old program using elemental average value to compute transport coefficient 2020.08.15 Xuande
+                'S_avg = GetAvgH(S_ele)
+                'kr = Getkr(S_avg, m)
+                'pc = Getpc(S_avg, pc_0, beta, St)
+                'dpcdS = GetdpcdS(S_avg, pc_0, beta)
+                'Dl = GetDl(KK, yita_l, dpcdS, kr)
+                'f = Getf(phi, S_avg)
+                'Dv = GetDv(rho_v, rho_l, dpcdS, f, D, pg)
+                'De = Dv + Dl
+
+                'cie = New CIETrans(
+                '          Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                '          Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                '          Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                '          Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                '          De)
+
+                'AssembleKg(cie.getbe, bg, i)
+                'AssembleKg(cie.getAe, Ag, i)
+
             Next
 
             'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS

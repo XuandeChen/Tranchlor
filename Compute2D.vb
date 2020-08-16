@@ -122,155 +122,6 @@ Public Class Compute2D
     'Dim RoA(1) As Single
     'Dim RoC(1) As Single
 
-    Public Sub Read_Simulation(ByRef Dir As String)
-
-        ''''''''''''''''''''''''''''''''''''''''''''
-        Dim Filtre As String = "Text files (SIMU2D_*.txt)|SIMU2D_*.txt"
-        Dim Index As Short = 1
-        Dim Directoire As Boolean = True
-        Dim Titre As String = "Sélectionner les données de simulation"
-        Dim OutFile As String
-        Dim Canc As Boolean = False
-        Dim nFic As Integer = FreeFile()
-        Dim i, j As Short
-
-        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
-        ''''''''''''''''''''''''''''''''''''''''''''
-        Dim Postfile As String = frmTrans2D.Directory & "\"
-        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        FilePost(OutFile, Postfile)
-
-        Dim Para1 As Single
-        Dim Para2 As Single
-        Dim Para3 As Single
-        Dim Para4 As Single
-        Dim test As Single
-
-        Input(nFic, tmax)
-        Input(nFic, dt)
-        Input(nFic, T_sauv)
-
-        directory = Dir
-
-        'Input(nFic, taff)
-        'Input(nFic, Hsauv)
-        'Input(nFic, Wsauv)
-        'Input(nFic, CTsauv)
-        'Input(nFic, CLsauv)
-        'Input(nFic, Tsauv)
-        'Input(nFic, Carbsauv)
-        'Input(nFic, hMin)
-        'Input(nFic, hEcart)
-        'Input(nFic, wMin)
-        'Input(nFic, wEcart)
-        'Input(nFic, CLmin)
-        'Input(nFic, CLecart)
-        'Input(nFic, CTmin)
-        'Input(nFic, CTecart)
-        'Input(nFic, Tecart)
-        'Input(nFic, aa)
-        'Input(nFic, Hc)
-        'Input(nFic, ab)
-        'Input(nFic, tc)
-        'Input(nFic, ImpHydr)
-        'Input(nFic, H_snap)
-        'Input(nFic, Retard)
-        'Input(nFic, aOH)
-        'Input(nFic, EbG)
-        'Input(nFic, toG)
-        'Input(nFic, faG)
-        'Input(nFic, capCal)
-        'Input(nFic, GyCO2)
-        'Input(nFic, DyCO2)
-
-        'Input(nFic, NEXPO)
-        'ReDim FileGexpo(NEXPO)
-        'ReDim FileDexpo(NEXPO)
-        'For i = CShort(1) To NEXPO
-        '    Input(nFic, FileGexpo(i))
-        '    Input(nFic, FileDexpo(i))
-        'Next i
-
-        'Input(nFic, NQUAL)
-        'ReDim Filebeton(NQUAL)
-        'ReDim Fileres(NQUAL)
-        'ReDim PD(NQUAL)
-        'ReDim Dcl(NQUAL)
-        'ReDim qGran(NQUAL)
-        'ReDim LambdaH(NQUAL)
-        'ReDim LambdaT(NQUAL)
-        'ReDim SAT(NQUAL)
-        'ReDim ciment(NQUAL)
-        'ReDim EC(NQUAL)
-        'ReDim tProt(NQUAL)
-        'ReDim Vct(NQUAL)
-        'ReDim Nct(NQUAL)
-        'ReDim Hydr(NQUAL)
-        'ReDim ED(NQUAL)
-        'ReDim ToHydr(NQUAL)
-        'ReDim Ecl(NQUAL)
-        'ReDim ToCl(NQUAL)
-        'ReDim RoA(NQUAL)
-        'ReDim RoC(NQUAL)
-        'ReDim proba(NQUAL, 19)
-
-        'For i = CShort(1) To NQUAL
-        '    Input(nFic, Filebeton(i))
-        '    Input(nFic, Fileres(i))
-        '    Input(nFic, PD(i))
-        '    Input(nFic, Dcl(i))
-        '    Input(nFic, qGran(i))
-        '    Input(nFic, LambdaH(i))
-        '    Input(nFic, LambdaT(i))
-        '    Input(nFic, SAT(i))
-        '    Input(nFic, ciment(i))
-        '    Input(nFic, EC(i))
-        '    Input(nFic, tProt(i))
-        '    Input(nFic, Hydr(i))
-        '    Input(nFic, Vct(i))
-        '    Input(nFic, Nct(i))
-        '    Input(nFic, ED(i))
-        '    Input(nFic, ToHydr(i))
-        '    Input(nFic, Ecl(i))
-        '    Input(nFic, ToCl(i))
-        '    Input(nFic, RoA(i))
-        '    Input(nFic, RoC(i))
-        '    For j = 0 To 19
-        '        Input(nFic, proba(i, j))
-        '    Next
-        'Next i
-
-        'ReDim Creadtherm(1, 1)
-        'ReDim Creadhydr(1, 1)
-        'ReDim Creadion(1, 1)
-
-        'Input(nFic, Nbre1)
-        'ReDim Creadtherm(1, Nbre1)
-        'For i = 1 To Nbre1
-        '    Input(nFic, Creadtherm(0, i))
-        '    Input(nFic, Creadtherm(1, i))
-        'Next
-
-        'Input(nFic, Nbre2)
-        'ReDim Creadhydr(1, Nbre2)
-        'For i = 1 To Nbre2
-        '    Input(nFic, Creadhydr(0, i))
-        '    Input(nFic, Creadhydr(1, i))
-        '    Creadhydr(1, i) = Creadhydr(1, i) / 100
-        'Next
-
-        'Input(nFic, Nbre3)
-        'ReDim Creadion(1, Nbre3)
-        'For i = 1 To Nbre3
-        '    Input(nFic, Creadion(0, i))
-        '    Input(nFic, Creadion(1, i))
-        'Next
-
-        FileClose(nFic)
-
-    End Sub
-
     Public Sub Read_InitialConditions()
 
         ''''''''''''''''''''''''''''''''''''''''''''
@@ -289,129 +140,8 @@ Public Class Compute2D
         Dim Postfile As String = frmTrans2D.Directory & "\"
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         FilePost(OutFile, Postfile)
-
-        'Dim Para1 As Single
-        'Dim Para2 As Single
-        'Dim Para3 As Single
-        'Dim Para4 As Single
-        'Dim test As Single
-
         Input(nFic, H_int)
         Input(nFic, Tc)
-
-        'Input(nFic, taff)
-        'Input(nFic, Hsauv)
-        'Input(nFic, Wsauv)
-        'Input(nFic, CTsauv)
-        'Input(nFic, CLsauv)
-        'Input(nFic, Tsauv)
-        'Input(nFic, Carbsauv)
-        'Input(nFic, hMin)
-        'Input(nFic, hEcart)
-        'Input(nFic, wMin)
-        'Input(nFic, wEcart)
-        'Input(nFic, CLmin)
-        'Input(nFic, CLecart)
-        'Input(nFic, CTmin)
-        'Input(nFic, CTecart)
-        'Input(nFic, Tecart)
-        'Input(nFic, aa)
-        'Input(nFic, Hc)
-        'Input(nFic, ab)
-        'Input(nFic, tc)
-        'Input(nFic, ImpHydr)
-        'Input(nFic, H_snap)
-        'Input(nFic, Retard)
-        'Input(nFic, aOH)
-        'Input(nFic, EbG)
-        'Input(nFic, toG)
-        'Input(nFic, faG)
-        'Input(nFic, capCal)
-        'Input(nFic, GyCO2)
-        'Input(nFic, DyCO2)
-
-        'Input(nFic, NEXPO)
-        'ReDim FileGexpo(NEXPO)
-        'ReDim FileDexpo(NEXPO)
-        'For i = CShort(1) To NEXPO
-        '    Input(nFic, FileGexpo(i))
-        '    Input(nFic, FileDexpo(i))
-        'Next i
-
-        'Input(nFic, NQUAL)
-        'ReDim Filebeton(NQUAL)
-        'ReDim Fileres(NQUAL)
-        'ReDim PD(NQUAL)
-        'ReDim Dcl(NQUAL)
-        'ReDim qGran(NQUAL)
-        'ReDim LambdaH(NQUAL)
-        'ReDim LambdaT(NQUAL)
-        'ReDim SAT(NQUAL)
-        'ReDim ciment(NQUAL)
-        'ReDim EC(NQUAL)
-        'ReDim tProt(NQUAL)
-        'ReDim Vct(NQUAL)
-        'ReDim Nct(NQUAL)
-        'ReDim Hydr(NQUAL)
-        'ReDim ED(NQUAL)
-        'ReDim ToHydr(NQUAL)
-        'ReDim Ecl(NQUAL)
-        'ReDim ToCl(NQUAL)
-        'ReDim RoA(NQUAL)
-        'ReDim RoC(NQUAL)
-        'ReDim proba(NQUAL, 19)
-
-        'For i = CShort(1) To NQUAL
-        '    Input(nFic, Filebeton(i))
-        '    Input(nFic, Fileres(i))
-        '    Input(nFic, PD(i))
-        '    Input(nFic, Dcl(i))
-        '    Input(nFic, qGran(i))
-        '    Input(nFic, LambdaH(i))
-        '    Input(nFic, LambdaT(i))
-        '    Input(nFic, SAT(i))
-        '    Input(nFic, ciment(i))
-        '    Input(nFic, EC(i))
-        '    Input(nFic, tProt(i))
-        '    Input(nFic, Hydr(i))
-        '    Input(nFic, Vct(i))
-        '    Input(nFic, Nct(i))
-        '    Input(nFic, ED(i))
-        '    Input(nFic, ToHydr(i))
-        '    Input(nFic, Ecl(i))
-        '    Input(nFic, ToCl(i))
-        '    Input(nFic, RoA(i))
-        '    Input(nFic, RoC(i))
-        '    For j = 0 To 19
-        '        Input(nFic, proba(i, j))
-        '    Next
-        'Next i
-
-        'ReDim Creadtherm(1, 1)
-        'ReDim Creadhydr(1, 1)
-        'ReDim Creadion(1, 1)
-
-        'Input(nFic, Nbre1)
-        'ReDim Creadtherm(1, Nbre1)
-        'For i = 1 To Nbre1
-        '    Input(nFic, Creadtherm(0, i))
-        '    Input(nFic, Creadtherm(1, i))
-        'Next
-
-        'Input(nFic, Nbre2)
-        'ReDim Creadhydr(1, Nbre2)
-        'For i = 1 To Nbre2
-        '    Input(nFic, Creadhydr(0, i))
-        '    Input(nFic, Creadhydr(1, i))
-        '    Creadhydr(1, i) = Creadhydr(1, i) / 100
-        'Next
-
-        'Input(nFic, Nbre3)
-        'ReDim Creadion(1, Nbre3)
-        'For i = 1 To Nbre3
-        '    Input(nFic, Creadion(0, i))
-        '    Input(nFic, Creadion(1, i))
-        'Next
 
         FileClose(nFic)
 
@@ -459,124 +189,43 @@ Public Class Compute2D
 
         Next
 
-        'Input(nFic, taff)
-        'Input(nFic, Hsauv)
-        'Input(nFic, Wsauv)
-        'Input(nFic, CTsauv)
-        'Input(nFic, CLsauv)
-        'Input(nFic, Tsauv)
-        'Input(nFic, Carbsauv)
-        'Input(nFic, hMin)
-        'Input(nFic, hEcart)
-        'Input(nFic, wMin)
-        'Input(nFic, wEcart)
-        'Input(nFic, CLmin)
-        'Input(nFic, CLecart)
-        'Input(nFic, CTmin)
-        'Input(nFic, CTecart)
-        'Input(nFic, Tecart)
-        'Input(nFic, aa)
-        'Input(nFic, Hc)
-        'Input(nFic, ab)
-        'Input(nFic, tc)
-        'Input(nFic, ImpHydr)
-        'Input(nFic, H_snap)
-        'Input(nFic, Retard)
-        'Input(nFic, aOH)
-        'Input(nFic, EbG)
-        'Input(nFic, toG)
-        'Input(nFic, faG)
-        'Input(nFic, capCal)
-        'Input(nFic, GyCO2)
-        'Input(nFic, DyCO2)
-
-        'Input(nFic, NEXPO)
-        'ReDim FileGexpo(NEXPO)
-        'ReDim FileDexpo(NEXPO)
-        'For i = CShort(1) To NEXPO
-        '    Input(nFic, FileGexpo(i))
-        '    Input(nFic, FileDexpo(i))
-        'Next i
-
-        'Input(nFic, NQUAL)
-        'ReDim Filebeton(NQUAL)
-        'ReDim Fileres(NQUAL)
-        'ReDim PD(NQUAL)
-        'ReDim Dcl(NQUAL)
-        'ReDim qGran(NQUAL)
-        'ReDim LambdaH(NQUAL)
-        'ReDim LambdaT(NQUAL)
-        'ReDim SAT(NQUAL)
-        'ReDim ciment(NQUAL)
-        'ReDim EC(NQUAL)
-        'ReDim tProt(NQUAL)
-        'ReDim Vct(NQUAL)
-        'ReDim Nct(NQUAL)
-        'ReDim Hydr(NQUAL)
-        'ReDim ED(NQUAL)
-        'ReDim ToHydr(NQUAL)
-        'ReDim Ecl(NQUAL)
-        'ReDim ToCl(NQUAL)
-        'ReDim RoA(NQUAL)
-        'ReDim RoC(NQUAL)
-        'ReDim proba(NQUAL, 19)
-
-        'For i = CShort(1) To NQUAL
-        '    Input(nFic, Filebeton(i))
-        '    Input(nFic, Fileres(i))
-        '    Input(nFic, PD(i))
-        '    Input(nFic, Dcl(i))
-        '    Input(nFic, qGran(i))
-        '    Input(nFic, LambdaH(i))
-        '    Input(nFic, LambdaT(i))
-        '    Input(nFic, SAT(i))
-        '    Input(nFic, ciment(i))
-        '    Input(nFic, EC(i))
-        '    Input(nFic, tProt(i))
-        '    Input(nFic, Hydr(i))
-        '    Input(nFic, Vct(i))
-        '    Input(nFic, Nct(i))
-        '    Input(nFic, ED(i))
-        '    Input(nFic, ToHydr(i))
-        '    Input(nFic, Ecl(i))
-        '    Input(nFic, ToCl(i))
-        '    Input(nFic, RoA(i))
-        '    Input(nFic, RoC(i))
-        '    For j = 0 To 19
-        '        Input(nFic, proba(i, j))
-        '    Next
-        'Next i
-
-        'ReDim Creadtherm(1, 1)
-        'ReDim Creadhydr(1, 1)
-        'ReDim Creadion(1, 1)
-
-        'Input(nFic, Nbre1)
-        'ReDim Creadtherm(1, Nbre1)
-        'For i = 1 To Nbre1
-        '    Input(nFic, Creadtherm(0, i))
-        '    Input(nFic, Creadtherm(1, i))
-        'Next
-
-        'Input(nFic, Nbre2)
-        'ReDim Creadhydr(1, Nbre2)
-        'For i = 1 To Nbre2
-        '    Input(nFic, Creadhydr(0, i))
-        '    Input(nFic, Creadhydr(1, i))
-        '    Creadhydr(1, i) = Creadhydr(1, i) / 100
-        'Next
-
-        'Input(nFic, Nbre3)
-        'ReDim Creadion(1, Nbre3)
-        'For i = 1 To Nbre3
-        '    Input(nFic, Creadion(0, i))
-        '    Input(nFic, Creadion(1, i))
-        'Next
-
         FileClose(nFic)
 
     End Sub
 
+    Public Sub Read_Simulation(ByRef Dir As String)
+
+        ''''''''''''''''''''''''''''''''''''''''''''
+        Dim Filtre As String = "Text files (SIMU2D_*.txt)|SIMU2D_*.txt"
+        Dim Index As Short = 1
+        Dim Directoire As Boolean = True
+        Dim Titre As String = "Sélectionner les données de simulation"
+        Dim OutFile As String
+        Dim Canc As Boolean = False
+        Dim nFic As Integer = FreeFile()
+        Dim i, j As Short
+
+        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then End
+        ''''''''''''''''''''''''''''''''''''''''''''
+        Dim Postfile As String = frmTrans2D.Directory & "\"
+        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+        FilePost(OutFile, Postfile)
+
+        Dim Para1 As Single
+        Dim Para2 As Single
+        Dim Para3 As Single
+        Dim Para4 As Single
+        Dim test As Single
+
+        Input(nFic, tmax)
+        Input(nFic, dt)
+        Input(nFic, T_sauv)
+
+        directory = Dir
+        FileClose(nFic)
+
+    End Sub
     Public Sub DBInput(ByRef MatName As String)
 
         Dim con As New SqlConnection("Data Source=GCI-DACON-01.FSG.ULAVAL.CA;Initial Catalog=\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF;Integrated Security=True")
@@ -608,59 +257,6 @@ Public Class Compute2D
             MsgBox("Database not found")
 
         End Try
-
-    End Sub
-
-    Public Sub InitialConditions()
-
-        'Dofs = Ne + CShort(1)
-
-        ''calcul des conditions initiales
-        'Dim i As Short
-        'Dim j As Short = 0
-        'ReDim Ctherm(Dofs + 1)
-        'Dim Var, Var1 As Double
-
-        'For i = 1 To Nbre1 - 1
-        '    Var = (Creadtherm(1, i + 1) - Creadtherm(1, i)) / (Creadtherm(0, i + 1) - Creadtherm(0, i))
-        '    Var1 = Creadtherm(1, i) - Var * Creadtherm(0, i)
-        '    Do While PosProf(j) <= Creadtherm(0, i + 1)
-        '        Ctherm(j) = Var * PosProf(j) + Var1
-        '        j = j + 1
-        '        If j > Dofs Then Exit Do
-        '    Loop
-        '    Ctherm(Dofs + 1) = Ctherm(Dofs)
-        'Next
-        'j = 0
-
-        'ReDim Chydr(Dofs + 1)
-        'For i = 1 To Nbre2 - 1
-        '    Var = (Creadhydr(1, i + 1) - Creadhydr(1, i)) / (Creadhydr(0, i + 1) - Creadhydr(0, i))
-        '    Var1 = Creadhydr(1, i) - Var * Creadhydr(0, i)
-        '    Do While PosProf(j) <= Creadhydr(0, i + 1)
-        '        Chydr(j) = Var * PosProf(j) + Var1
-        '        j = j + 1
-        '        If j > Dofs Then Exit Do
-        '    Loop
-        '    Chydr(Dofs + 1) = Chydr(Dofs)
-        '    If j > Dofs + 1 Then Exit For
-        'Next
-        'j = 0
-
-        'ReDim Cion(Dofs + 1)
-        'For i = 1 To Nbre3 - 1
-        '    Var = (Creadion(1, i + 1) - Creadion(1, i)) / (Creadion(0, i + 1) - Creadion(0, i))
-        '    Var1 = Creadion(1, i) - Var * Creadion(0, i)
-        '    Do While PosProf(j) <= Creadion(0, i + 1)
-        '        Cion(j) = Var * PosProf(j) + Var1
-        '        j = j + 1
-        '        If j > Dofs Then Exit Do
-        '    Loop
-        '    Cion(Dofs + 1) = Cion(Dofs)
-        'Next
-
-        'Le(0) = CDec(1)       'couche limite
-        'Le(Dofs) = CDec(1)    'couche limite
 
     End Sub
 
@@ -744,7 +340,6 @@ Public Class Compute2D
                         ' check whether the current boundary is exposed to a boundary condition
                         Dim X_node As Double = frm.Nodes(i_node).x
                         Dim Y_node As Double = frm.Nodes(i_node).y
-
                         Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
 
                         If NbExpo <> 0 Then
@@ -784,6 +379,7 @@ Public Class Compute2D
             Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
             Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
             Dim cie As CIETrans
+            Dim cieNew As CIETransNew
             Dim he As HETrans
             Dim H_avg As Double
             Dim H_ele() As Double
@@ -795,16 +391,35 @@ Public Class Compute2D
                           H_old(frm.Elements(i).Node3 - 1), H_old(frm.Elements(i).Node4 - 1)
                           )
                 H_ele = he.getHe
-                H_avg = GetAvgH(H_ele)
-                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
-                cie = New CIETrans(
+
+                '' old program using elemental average value to compute diffusion coefficient 2020.08.15 Xuande
+                'H_avg = GetAvgH(H_ele)
+                'De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
+                'cie = New CIETrans(
+                '          frm.Nodes(frm.Elements(i).Node1 - 1).x, frm.Nodes(frm.Elements(i).Node1 - 1).y,
+                '          frm.Nodes(frm.Elements(i).Node2 - 1).x, frm.Nodes(frm.Elements(i).Node2 - 1).y,
+                '          frm.Nodes(frm.Elements(i).Node3 - 1).x, frm.Nodes(frm.Elements(i).Node3 - 1).y,
+                '          frm.Nodes(frm.Elements(i).Node4 - 1).x, frm.Nodes(frm.Elements(i).Node4 - 1).y,
+                '          De)
+                'AssembleKg(cie.getbe, bg, frm.Elements, i)
+                'AssembleKg(cie.getAe, Ag, frm.Elements, i)
+
+                '' new program using nodal interpolations instead of mean value on elements to calculate diffusion coefficient 2020.08.15 Xuande
+                Dim d1 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(0))
+                Dim d2 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(1))
+                Dim d3 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(2))
+                Dim d4 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(3))
+
+                cieNew = New CIETransNew(
                           frm.Nodes(frm.Elements(i).Node1 - 1).x, frm.Nodes(frm.Elements(i).Node1 - 1).y,
                           frm.Nodes(frm.Elements(i).Node2 - 1).x, frm.Nodes(frm.Elements(i).Node2 - 1).y,
                           frm.Nodes(frm.Elements(i).Node3 - 1).x, frm.Nodes(frm.Elements(i).Node3 - 1).y,
                           frm.Nodes(frm.Elements(i).Node4 - 1).x, frm.Nodes(frm.Elements(i).Node4 - 1).y,
-                          De)
-                AssembleKg(cie.getbe, bg, frm.Elements, i)
-                AssembleKg(cie.getAe, Ag, frm.Elements, i)
+                          d1, d2, d3, d4)
+
+                AssembleKg(cieNew.getbe, bg, frm.Elements, i)
+                AssembleKg(cieNew.getAe, Ag, frm.Elements, i)
+
             Next
 
             'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS

@@ -193,6 +193,7 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CIETransNew.vb" />
     <Compile Include="Compute2D.vb" />
     <Compile Include="DBConnexion.vb" />
     <Compile Include="Exposition.vb" />
