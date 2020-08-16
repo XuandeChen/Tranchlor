@@ -1,6 +1,6 @@
 
 Imports System.Data.SqlClient
-
+Imports System.Linq
 Public Class Compute2D
 
     Dim dt As Double 'time interval (s)
@@ -269,7 +269,7 @@ Public Class Compute2D
         Dim nDof As Integer = frm.NNodes
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
-        outfile(1) = directory & "\" & "R_H" & ".txt"
+        outfile(1) = directory & "\" & "R_H_DiffusionModel" & ".txt"
         outfile(2) = directory & "\" & "R_W_DiffusionModel" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
@@ -277,12 +277,18 @@ Public Class Compute2D
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
 
         'step 0 Initialize output titres for result .txt files
-        Print(nFic1, "RH", ",", nDof, ",", TAB)
-        Print(nFic2, "W", ",", nDof, ",", TAB)
+        Print(nFic1, "RH", ",", nDof, ",", "Average RH", ",", "dH", ",", TAB)
         For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nFic1), " ")
+
+        Print(nFic2, "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
+        For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
+        PrintLine(CInt(nFic2), " ")
+
         PrintLine(CInt(nFic1), " ")
         PrintLine(CInt(nFic2), " ")
 
@@ -290,6 +296,8 @@ Public Class Compute2D
         Dim ind As Double = tmax / dt
         Dim H_old(nDof - 1) As Double
         Dim H_new(nDof - 1) As Double
+        Dim S_old(nDof - 1) As Double
+        Dim S_new(nDof - 1) As Double
         Dim w_old(nDof - 1) As Double
         Dim w_new(nDof - 1) As Double
         'Dim H_mat(ind, nDof - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
@@ -326,15 +334,22 @@ Public Class Compute2D
                 For i As Integer = 0 To nDof - 1
 
                     H_old(i) = H_int
-                    w_old(i) = wsat * GetHtoS(H_old(i), Type, C, W_C_ratio, Tk, Day, rho_l, rho_c, alpha, w)
-                    Print(CInt(nFic1), H_old(i), ",", TAB)
-                    Print(CInt(nFic2), w_old(i), ",", TAB)
-
+                    S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_old(i) = wsat * S_old(i)
+                    'Print(CInt(nFic1), H_old(i), ",", TAB)
+                    'Print(CInt(nFic2), w_old(i), ",", TAB)
                 Next
+                Dim w_avg_0 As Double = w_old.Average()
+                Dim H_avg_0 As Double = S_old.Average()
+                Print(CInt(nFic1), H_avg_0, ",", "0", ",", TAB)
+                Print(CInt(nFic2), w_avg_0, ",", "0", ",", TAB)
 
                 Dim i_node As Integer
 
                 For i_node = 0 To nDof - 1
+                    Print(CInt(nFic1), S_old(i_node), ",", TAB)
+                    Print(CInt(nFic2), w_old(i_node), ",", TAB)
+
                     If frm.Nodes(i_node).Bord = True Then
 
                         ' check whether the current boundary is exposed to a boundary condition
@@ -349,28 +364,24 @@ Public Class Compute2D
                         End If
 
                     End If
-
                 Next
+
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
+            End If
 
-            Else
-
-                For i_node As Integer = 0 To nDof - 1
+            For i_node As Integer = 0 To nDof - 1
                     H_old(i_node) = H_new(i_node)
                     w_old(i_node) = w_new(i_node)
                     ' boundary check program, 2020.08.03
                     Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
 
-                    If NbExpo <> 0 Then
+                If NbExpo <> 0 Then
+                    H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
+                    w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                End If
 
-                        H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                        w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    End If
-
-                Next
-
-            End If
+            Next
 
             'step 2: elemental and global Matrix constructions
             Dim LHS(,) As Double
@@ -455,12 +466,21 @@ Public Class Compute2D
                 frm.HRRange.AddValue(frm.Elements(i).HR(ti + 1))
 
             Next
+
             frm.Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
+            Dim fieldHnew_average As Double = H_new.Average
+            Dim fieldHold_average As Double = H_old.Average
+            Dim fieldwnew_average As Double = w_new.Average
+            Dim fieldwold_average As Double = w_old.Average
+            Dim dH_avg As Double
+            dH_avg = fieldHnew_average - fieldHold_average + dH_avg
+            Dim dw_avg As Double
+            dw_avg = fieldwnew_average - fieldwold_average + dw_avg
 
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, H_new)
+                RegisterField(nFic1, ti * dt, nDof, dH_avg, H_new)
                 PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, ti * dt, nDof, w_new)
+                RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
                 PrintLine(CInt(nFic2), " ")
             End If
 
@@ -469,7 +489,7 @@ Public Class Compute2D
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
 
-        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         frm.Analysed = True
 
 
@@ -505,5 +525,15 @@ Public Class Compute2D
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
-
+    Private Sub RegisterField(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef d_avg As Double, ByRef H_new() As Double)
+        'Register field values
+        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
+        'Dim avg_old As Double = H_old.Average()
+        Dim avg_new As Double = H_new.Average()
+        'Dim delta As Double = avg_new - avg_0
+        Print(CInt(nFic1), avg_new, ",", d_avg, ",", TAB)
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
+        Next j
+    End Sub
 End Class

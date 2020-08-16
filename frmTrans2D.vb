@@ -962,8 +962,6 @@ Public Class frmTrans2D
                         S_new(j) = S_int
                     End If
                 End If
-                'H_old(j) = H_new(j)
-                'S_old(j) = S_new(j)
                 w_new(j) = wsat * S_new(j)
             Next
 
@@ -983,25 +981,16 @@ Public Class frmTrans2D
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
-            'If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-            '    RegisterH(nFic1, ti * dt, nDof, S_new)
-            '    PrintLine(CInt(nFic1), " ")
-            '    RegisterH(nFic2, ti * dt, nDof, w_new)
-            '    PrintLine(CInt(nFic2), " ")
-            'End If
             Dim fieldSnew_average As Double = S_new.Average
             Dim fieldSold_average As Double = S_old.Average
             Dim fieldwnew_average As Double = w_new.Average
             Dim fieldwold_average As Double = w_old.Average
-
             Dim dS_avg As Double
             dS_avg = fieldSnew_average - fieldSold_average + dS_avg
             Dim dw_avg As Double
             dw_avg = fieldwnew_average - fieldwold_average + dw_avg
 
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                'dS_avg(ti) = dS_avg(ti - 1) + fieldSnew_average - fieldSold_average
-                'dw_avg(ti) = dw_avg(ti - 1) + fieldwnew_average - fieldwold_average
                 RegisterField(nFic1, ti * dt, nDof, dS_avg, S_new)
                 PrintLine(CInt(nFic1), " ")
                 RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
@@ -1016,7 +1005,7 @@ Public Class frmTrans2D
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
 
-        MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D transport", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
 
         Me.Invoke(Sub()
