@@ -506,24 +506,28 @@ Public Class frmTrans2D
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
         'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
-        'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
-        Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
+        Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
+        'Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' 
-        Dim KK As Double = 0.000000000000004 'given by the user ,4e-15 W/C = 0.6
-        'Dim KK As Double = 0.0000000000000016 'given by the user ,1.8e-15 W/C = 0.5
-        'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
+        'Dim KK As Double = 0.000000000000004 'given by the user ,4e-15 W/C = 0.6
+        'Dim KK As Double = 0.000000000000002 'given by the user ,2e-15 W/C = 0.5
+        Dim KK As Double = 0.000000000000001 'given by the user ,1e-15 W/C = 0.4
 
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
         Dim phi As Double = 0.12 'porosity (W/C = 0.5)
         Dim type As Integer = 1 'cement type (-)
-        Dim W_C_ratio As Double = 0.6 'porosity (-)
-        Dim C As Double = 310 'density of cement (kg/m3)
+        'Dim W_C_ratio As Double = 0.6 'W/C = 0.6
+        'Dim W_C_ratio As Double = 0.5 'W/C = 0.5
+        Dim W_C_ratio As Double = 0.4 'W/C = 0.4
+        'Dim C As Double = 310 'density of cement (W/C = 0.6)
+        'Dim C As Double = 350 'density of cement (W/C = 0.5)
+        Dim C As Double = 400 'density of cement (W/C = 0.4)
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
         'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5)
-        Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
-        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
+        'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
+        Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
 
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
@@ -605,13 +609,13 @@ Public Class frmTrans2D
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
 
         'step 0: Initialize output titles for result .txt files
-        Print(nFic1, "S", ",", nDof, ",", TAB)
+        Print(nFic1, "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
 
-        Print(nFic2, "W", ",", nDof, ",", TAB)
+        Print(nFic2, "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
@@ -644,6 +648,13 @@ Public Class frmTrans2D
                     H_old(i) = H_int
                     S_old(i) = S_int
                     w_old(i) = wsat * S_old(i)
+                Next
+                Dim w_avg_0 As Double = w_old.Average()
+                Dim S_avg_0 As Double = S_old.Average()
+                Print(CInt(nFic1), S_avg_0, ",", "0", ",", TAB)
+                Print(CInt(nFic2), w_avg_0, ",", "0", ",", TAB)
+
+                For i = 0 To nDof - 1
                     Print(CInt(nFic1), S_old(i), ",", TAB)
                     Print(CInt(nFic2), w_old(i), ",", TAB)
                     If Nodes(i).Bord = True Then
@@ -951,8 +962,8 @@ Public Class frmTrans2D
                         S_new(j) = S_int
                     End If
                 End If
-                H_old(j) = H_new(j)
-                S_old(j) = S_new(j)
+                'H_old(j) = H_new(j)
+                'S_old(j) = S_new(j)
                 w_new(j) = wsat * S_new(j)
             Next
 
@@ -972,12 +983,33 @@ Public Class frmTrans2D
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
 
+            'If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+            '    RegisterH(nFic1, ti * dt, nDof, S_new)
+            '    PrintLine(CInt(nFic1), " ")
+            '    RegisterH(nFic2, ti * dt, nDof, w_new)
+            '    PrintLine(CInt(nFic2), " ")
+            'End If
+            Dim fieldSnew_average As Double = S_new.Average
+            Dim fieldSold_average As Double = S_old.Average
+            Dim fieldwnew_average As Double = w_new.Average
+            Dim fieldwold_average As Double = w_old.Average
+
+            Dim dS_avg As Double
+            dS_avg = fieldSnew_average - fieldSold_average + dS_avg
+            Dim dw_avg As Double
+            dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, S_new)
+                'dS_avg(ti) = dS_avg(ti - 1) + fieldSnew_average - fieldSold_average
+                'dw_avg(ti) = dw_avg(ti - 1) + fieldwnew_average - fieldwold_average
+                RegisterField(nFic1, ti * dt, nDof, dS_avg, S_new)
                 PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, ti * dt, nDof, w_new)
+                RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
                 PrintLine(CInt(nFic2), " ")
             End If
+
+            H_old = H_new
+            S_old = S_new
 
         Next
 
@@ -1000,6 +1032,18 @@ Public Class frmTrans2D
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
         Next j
     End Sub
+    Private Sub RegisterField(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef d_avg As Double, ByRef H_new() As Double)
+        'Register field values
+        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
+        'Dim avg_old As Double = H_old.Average()
+        Dim avg_new As Double = H_new.Average()
+        'Dim delta As Double = avg_new - avg_0
+        Print(CInt(nFic1), avg_new, ",", d_avg, ",", TAB)
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
+        Next j
+    End Sub
+
     'Private Function MaxKgiiPower(ByRef Kg(,) As Double) As Double
     '    Dim Max As Double = Double.MinValue
     '    Dim i As Integer

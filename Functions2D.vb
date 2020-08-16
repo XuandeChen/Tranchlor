@@ -17,7 +17,7 @@ Module Functions2D
         Dim i, j As Integer
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
-                NewLHS(i, j) = A(i, j) / 2 + phi * b(i, j) / dt
+                NewLHS(i, j) = phi * b(i, j) / dt + A(i, j)
             Next
         Next
         Return NewLHS
@@ -38,7 +38,7 @@ Module Functions2D
         Dim i, j As Integer
         For i = 0 To NNodes - 1
             For j = 0 To NNodes - 1
-                NewR(i, j) = phi * b(i, j) / dt - A(i, j) / 2
+                NewR(i, j) = phi * b(i, j) / dt
             Next
         Next
         Return NewR
