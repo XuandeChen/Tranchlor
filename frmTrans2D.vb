@@ -1854,6 +1854,8 @@ Public Class frmTrans2D
 
         C2D.DBInput("CEMI0.35")
 
+        C2D.CalculInitialization()
+
         C2D.Compute_All(Me)
 
         'Dim myThread As System.Threading.Thread

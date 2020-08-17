@@ -16,7 +16,7 @@ Public Class Compute2D
     Dim D0 As Double
     Dim alpha_0 As Double
     Dim Hc As Double
-
+    Dim type As Integer
     Dim Expo(1) As Exposition
 
     Public LgLim As Integer = 40
@@ -26,16 +26,15 @@ Public Class Compute2D
     Public R As Double = 8.3145        'J/mol.K
 
     'recuperer depuis database
-    Dim C As Double = 400 'densite ciment (kg/m3)
-    Dim W_C_ratio As Double = 0.4 'ratio E/C (kg/m3)
-    Dim Water_tot As Double = W_C_ratio * C 'densite eau (kg/m3)
-    Dim wsat As Double = GetWsat(Water_tot, C) 'teneur en eau sature (kg/m3)
-    Dim type As Integer = 1 'cement type (-)
-    Dim phi As Double = 0.12 'porosity (-)
-    Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
-    Dim alpha As Double = 0.85 'hydration degree (-)
-    Dim day As Double = 0 'age du beton
-    Dim rho_c As Double = 2500 'density of concrete (kg/m3)
+    Dim C As Double
+    Dim W_C_ratio As Double  'ratio E/C (kg/m3)
+    Dim Water_tot As Double  'densite eau (kg/m3)
+    Dim wsat As Double 'teneur en eau sature (kg/m3)
+    Dim phi As Double  'porosity (-)
+    Dim w As Double  'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+    Dim alpha As Double  'hydration degree (-)
+    Dim day As Double  'age du beton
+    Dim rho_c As Double  'density of concrete (kg/m3)
 
     'Dim wc As Double
     'Dim kg As Double
@@ -239,10 +238,15 @@ Public Class Compute2D
             Dim reader As SqlDataReader = command.ExecuteReader()
 
             While reader.Read()
-
+                type = CDbl(reader("Type").ToString())
+                W_C_ratio = CDbl(reader("W/C").ToString())
+                rho_c = CDbl(reader("Density").ToString()) 'density of concrete (kg/m3)
+                C = CDbl(reader("CementContent").ToString())
+                phi = CDbl(reader("Porosity").ToString())
                 D0 = CDbl(reader("Dvap").ToString()) * 1000000.0
                 alpha_0 = CDbl(reader("alpha0").ToString())
                 Hc = CDbl(reader("Hc").ToString())
+
                 'wc = CDbl(reader("W/C").ToString())
                 'kg = CDbl(reader("kg").ToString())
                 'kl = CDbl(reader("kl").ToString())
@@ -260,6 +264,13 @@ Public Class Compute2D
 
     End Sub
 
+    Public Sub CalculInitialization()
+        Water_tot = W_C_ratio * C 'densite eau (kg/m3)
+        wsat = GetWsat(Water_tot, C) 'teneur en eau sature (kg/m3)
+        w = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        alpha = 0.85 'hydration degree (-)
+        day = 0 'age du beton
+    End Sub
     'Coeur du calcul
     Public Sub Compute_All(ByRef frm As frmTrans2D)
 
@@ -312,11 +323,15 @@ Public Class Compute2D
         Dim T(ind) As Double 'time vector (days)
 
         frm.HRRange = New Range
+        frm.SlRange = New Range
 
         For i As Integer = 0 To frm.NElements - 1
             ReDim frm.Elements(i).HR(ind + 1)
+            ReDim frm.Elements(i).Sl(ind + 1)
             frm.Elements(i).HR(0) = H_int * 100
+            frm.Elements(i).Sl(0) = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) * 100
             frm.HRRange.AddValue(frm.Elements(i).HR(0))
+            frm.SlRange.AddValue(frm.Elements(i).Sl(0))
             ReDim frm.Time(ind + 1)
             frm.Time(0) = 0
         Next
@@ -341,7 +356,7 @@ Public Class Compute2D
                 For i As Integer = 0 To nDof - 1
                     H_old(i) = H_int
                     S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    w_old(i) = wsat * S_old(i)
+                    w_old(i) = wsat * S_old(i) * phi
                 Next
                 Dim w_avg_0 As Double = w_old.Average()
                 Dim H_avg_0 As Double = H_old.Average()
@@ -363,10 +378,10 @@ Public Class Compute2D
                         Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
                         If NbExpo <> 0 Then
                             H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                            S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                            w_old(i_node) = wsat * S_old(i_node)
                         End If
                     End If
+                    S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_old(i_node) = wsat * S_old(i_node) * phi
                 Next
 
                 PrintLine(CInt(nFic1), " ")
@@ -380,9 +395,9 @@ Public Class Compute2D
                 Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
                 If NbExpo <> 0 Then
                     H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                    S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                 End If
-                w_old(i_node) = wsat * S_old(i_node)
+                S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                w_old(i_node) = wsat * S_old(i_node) * phi
             Next
 
             'step 2: elemental and global Matrix constructions
@@ -451,15 +466,17 @@ Public Class Compute2D
                 If NbExpo <> 0 Then
                     ' check whether the current boundary is exposed to a boundary condition
                     H_new(j) = Expo(NbExpo - 1).Humidite(ti)
-                    S_new(j) = GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    w_new(j) = wsat * S_new(j)
                 End If
+                S_new(j) = GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                w_new(j) = wsat * S_new(j) * phi
             Next
 
             'step 6: plot 2D image and export result .txt file 
             For i As Integer = 0 To frm.NElements - 1
                 frm.Elements(i).HR(ti + 1) = (H_new(frm.Elements(i).Node1 - 1) + H_new(frm.Elements(i).Node2 - 1) + H_new(frm.Elements(i).Node3 - 1) + H_new(frm.Elements(i).Node4 - 1)) * 100 / 4
+                frm.Elements(i).Sl(ti + 1) = (S_new(frm.Elements(i).Node1 - 1) + S_new(frm.Elements(i).Node2 - 1) + S_new(frm.Elements(i).Node3 - 1) + S_new(frm.Elements(i).Node4 - 1)) * 100 / 4
                 frm.HRRange.AddValue(frm.Elements(i).HR(ti + 1))
+                frm.SlRange.AddValue(frm.Elements(i).Sl(ti + 1))
             Next
 
             frm.Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour

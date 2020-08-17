@@ -199,6 +199,7 @@ Module Functions2D
         Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (Cbet - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
+        alpha = 0.6
         Dim Tc As Double = Tk - 273 'temperature in [C]
         Dim Ht As Double = 1 - 0.161 * alpha
         Dim c1 As Double = 0.125
