@@ -265,16 +265,20 @@ Public Class Compute2D
 
         Dim nFic1 As Short
         Dim nFic2 As Short
-        Dim outfile(2) As String
+        Dim nfic3 As Short
+        Dim outfile(3) As String
         Dim nDof As Integer = frm.NNodes
 
         'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = directory & "\" & "R_H_DiffusionModel" & ".txt"
         outfile(2) = directory & "\" & "R_W_DiffusionModel" & ".txt"
+        outfile(3) = directory & "\" & "R_S_DiffusionModel" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
         nFic2 = CShort(FreeFile())
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
+        nfic3 = CShort(FreeFile())
+        FileOpen(CInt(nfic3), outfile(3), OpenMode.Output)
 
         'step 0 Initialize output titres for result .txt files
         Print(nFic1, "RH", ",", nDof, ",", "Average RH", ",", "dH", ",", TAB)
@@ -289,8 +293,11 @@ Public Class Compute2D
         Next jj
         PrintLine(CInt(nFic2), " ")
 
-        PrintLine(CInt(nFic1), " ")
-        PrintLine(CInt(nFic2), " ")
+        Print(nfic3, "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
+        For jj As Integer = 0 To nDof - 1
+            Print(CInt(nFic2), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nfic3), " ")
 
         Dim ti As Integer
         Dim ind As Double = tmax / dt
@@ -300,7 +307,6 @@ Public Class Compute2D
         Dim S_new(nDof - 1) As Double
         Dim w_old(nDof - 1) As Double
         Dim w_new(nDof - 1) As Double
-        'Dim H_mat(ind, nDof - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
         Dim T_old(nDof - 1) As Double
 
         Dim T(ind) As Double 'time vector (days)
@@ -330,57 +336,53 @@ Public Class Compute2D
 
                 Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 Print(CInt(nFic2), "0", ",", "0", ",", TAB)
+                Print(CInt(nfic3), "0", ",", "0", ",", TAB)
 
                 For i As Integer = 0 To nDof - 1
-
                     H_old(i) = H_int
                     S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                     w_old(i) = wsat * S_old(i)
-                    'Print(CInt(nFic1), H_old(i), ",", TAB)
-                    'Print(CInt(nFic2), w_old(i), ",", TAB)
                 Next
                 Dim w_avg_0 As Double = w_old.Average()
-                Dim H_avg_0 As Double = S_old.Average()
+                Dim H_avg_0 As Double = H_old.Average()
+                Dim S_avg_0 As Double = S_old.Average()
                 Print(CInt(nFic1), H_avg_0, ",", "0", ",", TAB)
                 Print(CInt(nFic2), w_avg_0, ",", "0", ",", TAB)
+                Print(CInt(nfic3), S_avg_0, ",", "0", ",", TAB)
 
                 Dim i_node As Integer
 
                 For i_node = 0 To nDof - 1
-                    Print(CInt(nFic1), S_old(i_node), ",", TAB)
+                    Print(CInt(nFic1), H_old(i_node), ",", TAB)
                     Print(CInt(nFic2), w_old(i_node), ",", TAB)
-
+                    Print(CInt(nfic3), S_old(i_node), ",", TAB)
                     If frm.Nodes(i_node).Bord = True Then
-
                         ' check whether the current boundary is exposed to a boundary condition
                         Dim X_node As Double = frm.Nodes(i_node).x
                         Dim Y_node As Double = frm.Nodes(i_node).y
                         Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
-
                         If NbExpo <> 0 Then
-
                             H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                            w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                            S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                            w_old(i_node) = wsat * S_old(i_node)
                         End If
-
                     End If
                 Next
 
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
+                PrintLine(CInt(nfic3), " ")
             End If
 
+            'regular loop
             For i_node As Integer = 0 To nDof - 1
-                    H_old(i_node) = H_new(i_node)
-                    w_old(i_node) = w_new(i_node)
-                    ' boundary check program, 2020.08.03
-                    Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
-
+                'boundary check program, 2020.08.03 Thomas
+                Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
                 If NbExpo <> 0 Then
                     H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                    w_old(i_node) = wsat * GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    S_old(i_node) = GetHtoS(H_old(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                 End If
-
+                w_old(i_node) = wsat * S_old(i_node)
             Next
 
             'step 2: elemental and global Matrix constructions
@@ -402,7 +404,6 @@ Public Class Compute2D
                           H_old(frm.Elements(i).Node3 - 1), H_old(frm.Elements(i).Node4 - 1)
                           )
                 H_ele = he.getHe
-
                 '' old program using elemental average value to compute diffusion coefficient 2020.08.15 Xuande
                 'H_avg = GetAvgH(H_ele)
                 'De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
@@ -437,8 +438,6 @@ Public Class Compute2D
             getLHS(LHS, frm.NNodes, Ag, bg, dt)
             getRHS(R, frm.NNodes, Ag, bg, dt)
             RHS = MultiplyMatrixWithVector(R, H_old)
-
-            'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
             GetX(H_new, LHS, RHS)
 
             'step 5: data stockage
@@ -448,55 +447,58 @@ Public Class Compute2D
                 ElseIf H_new(j) <= 0 Then
                     H_new(j) = 0
                 End If
-
                 Dim NbExpo As Integer = frm.Nodes(j).NumExpo
-
                 If NbExpo <> 0 Then
                     ' check whether the current boundary is exposed to a boundary condition
                     H_new(j) = Expo(NbExpo - 1).Humidite(ti)
-                    w_new(j) = wsat * GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    S_new(j) = GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_new(j) = wsat * S_new(j)
                 End If
-                'H_mat(ti, j) = H_new(j)
             Next
 
             'step 6: plot 2D image and export result .txt file 
             For i As Integer = 0 To frm.NElements - 1
-
                 frm.Elements(i).HR(ti + 1) = (H_new(frm.Elements(i).Node1 - 1) + H_new(frm.Elements(i).Node2 - 1) + H_new(frm.Elements(i).Node3 - 1) + H_new(frm.Elements(i).Node4 - 1)) * 100 / 4
                 frm.HRRange.AddValue(frm.Elements(i).HR(ti + 1))
-
             Next
 
             frm.Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
+
             Dim fieldHnew_average As Double = H_new.Average
             Dim fieldHold_average As Double = H_old.Average
+            Dim fieldSnew_average As Double = S_new.Average
+            Dim fieldSold_average As Double = S_old.Average
             Dim fieldwnew_average As Double = w_new.Average
             Dim fieldwold_average As Double = w_old.Average
             Dim dH_avg As Double
             dH_avg = fieldHnew_average - fieldHold_average + dH_avg
             Dim dw_avg As Double
             dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+            Dim dS_avg As Double
+            dS_avg = fieldSnew_average - fieldSold_average + dS_avg
 
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
                 RegisterField(nFic1, ti * dt, nDof, dH_avg, H_new)
                 PrintLine(CInt(nFic1), " ")
                 RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
                 PrintLine(CInt(nFic2), " ")
+                RegisterField(nfic3, ti * dt, nDof, dS_avg, S_new)
+                PrintLine(CInt(nfic3), " ")
             End If
-
+            H_old = H_new
+            S_old = S_new
         Next
 
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
+        FileClose(CInt(nfic3))
 
         MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         frm.Analysed = True
 
-
         'Me.Invoke(Sub()
         frm.LabelProgress.Visible = False
         'End Sub)
-
     End Sub
 
     'Assembling global matrix /water diffusion

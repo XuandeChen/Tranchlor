@@ -108,7 +108,7 @@ Public Class frmTrans2D
     End Sub
 
     ' mechanical computations
-    'Private Sub Analyse()
+    'Private Sub AnalyseMecha()
     '    'Calculate statistics
     '    Dim nDof As Integer = NNodes * 2
 
@@ -240,7 +240,7 @@ Public Class frmTrans2D
 
     'End Sub
     ' Program for computation 2D diffusion 
-    Public Sub Analyse()
+    Public Sub AnalyseDiffusion()
 
 
         'Material parameters, can be converted from user defined input
@@ -727,22 +727,23 @@ Public Class frmTrans2D
 
             'regular loop
             For i = 0 To nDof - 1
-                    If Nodes(i).Bord = True Then
-                        X_node = Nodes(i).x
-                        Y_node = Nodes(i).y
-                        S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                            S_old(i) = S_bound
-                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                            S_old(i) = S_int
-                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                            S_old(i) = S_int
-                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                            S_old(i) = S_int
-                        End If
+                If Nodes(i).Bord = True Then
+                    X_node = Nodes(i).x
+                    Y_node = Nodes(i).y
+                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                        S_old(i) = S_bound
+                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                        S_old(i) = S_int
+                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                        S_old(i) = S_int
+                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                        S_old(i) = S_int
                     End If
-                    w_old(i) = wsat * S_old(i)
-                Next
+                End If
+                w_old(i) = wsat * S_old(i)
+            Next
+
             'step 2: elemental and global Matrix constructions
             'Matrix assembling
             For i = 0 To NElements - 1
@@ -866,13 +867,11 @@ Public Class frmTrans2D
 
             'step 5: data stockage
             For j = 0 To NNodes - 1
-
                 If S_new(j) >= 1 Then
                     S_new(j) = 1
                 ElseIf S_new(j) <= 0 Then
                     S_new(j) = 0
                 End If
-
                 If Nodes(j).Bord = True Then
                     X_node = Nodes(j).x
                     Y_node = Nodes(j).y
@@ -894,7 +893,6 @@ Public Class frmTrans2D
             For i = 0 To NElements - 1
                 Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
                 SlRange.AddValue(Elements(i).Sl(ti + 1))
-
             Next
 
             Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
@@ -914,10 +912,8 @@ Public Class frmTrans2D
                 RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
                 PrintLine(CInt(nFic2), " ")
             End If
-
             H_old = H_new
             S_old = S_new
-
         Next
 
         FileClose(CInt(nFic1))
@@ -929,9 +925,7 @@ Public Class frmTrans2D
         Me.Invoke(Sub()
                       LabelProgress.Visible = False
                   End Sub)
-
     End Sub
-
     Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef H_new() As Double)
         'Register values
         Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
@@ -942,9 +936,7 @@ Public Class frmTrans2D
     Private Sub RegisterField(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef d_avg As Double, ByRef H_new() As Double)
         'Register field values
         Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
-        'Dim avg_old As Double = H_old.Average()
         Dim avg_new As Double = H_new.Average()
-        'Dim delta As Double = avg_new - avg_0
         Print(CInt(nFic1), avg_new, ",", d_avg, ",", TAB)
         For j As Integer = 0 To Dofs - 1
             Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
