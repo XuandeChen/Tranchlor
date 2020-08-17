@@ -302,5 +302,14 @@ Module Functions2D
         H_avg = He.Average()
         Return H_avg
     End Function
+    'get norm of a given vector
+    Public Function GetNorm(ByRef v() As Double) As Double
+        Dim Norm As Double
+        For i As Integer = 0 To v.Length - 1
+            Norm += v(i) ^ 2
+        Next
+        Norm = Math.Sqrt(Norm)
+        Return Norm
+    End Function
 
 End Module
