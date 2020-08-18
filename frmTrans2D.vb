@@ -1839,7 +1839,7 @@ Public Class frmTrans2D
 
         C2D.Read_Simulation(Directory)
 
-        C2D.DBInput("CEMI0.35")
+        C2D.DBInput("CEMI0.44DC")
 
         C2D.CalculInitialization()
 
