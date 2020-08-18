@@ -242,7 +242,6 @@ Public Class frmTrans2D
     ' Program for computation 2D diffusion 
     Public Sub AnalyseDiffusion()
 
-
         'Material parameters, can be converted from user defined input
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
@@ -283,222 +282,280 @@ Public Class frmTrans2D
         'Computation parameters
         Dim nDof As Integer = NNodes
         Dim H_int As Double = 0.75 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 1 - 1.0E-22 'boundary relative humidity
-        Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
+        Dim S_int As Double = GetHtoS(H_int, Type, C, W_C_ratio, Tk, Day, rho_l, rho_c, alpha, w) 'initial saturation field
+        Dim H_bound1 As Double = 1 - 1.0E-22 'boundary relative humidity
+        Dim H_bound2 As Double = 1 - 1.0E-22 'boundary relative humidity
+        Dim H_bound3 As Double = 1 - 1.0E-22 'boundary relative humidity
+        Dim H_bound4 As Double = 1 - 1.0E-22 'boundary relative humidity
         Dim dt As Double = 3600   'time interval (s)
         Dim tmax As Double = 3600 * 24 * 3 'end time (s) 100 day / 72h
-        Dim ind As Double = tmax / dt
-        Dim T(ind) As Double 'time vector (days)
-        Dim H_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim H_old(NNodes - 1) As Double
-        Dim H_new(NNodes - 1) As Double
-        Dim S_old(NNodes - 1) As Double
-        Dim S_new(NNodes - 1) As Double
-        Dim jj As Long
-        Dim w_old(NNodes - 1) As Double
-        Dim w_new(NNodes - 1) As Double
         Dim nFic1 As Short
         Dim nFic2 As Short
-        Dim outfile(2) As String
-        'Dim outfile2(1) As String
-        Dim T_sauv As Single = 3600  '14400 'ouput time inteval (s) 4h
-        Dim i, j, k As Integer
+        Dim nfic3 As Short
+        Dim outfile(3) As String
+        Dim ti As Integer
+        Dim ind As Integer = tmax / dt
+        Dim T_sauv As Double = 14400
+        Dim H_old(nDof - 1) As Double
+        Dim H_new(nDof - 1) As Double
+        Dim S_old(nDof - 1) As Double
+        Dim S_new(nDof - 1) As Double
+        Dim w_old(nDof - 1) As Double
+        Dim w_new(nDof - 1) As Double
+        Dim fieldHnew_average As Double
+        Dim fieldHold_average As Double
+        Dim fieldSnew_average As Double
+        Dim fieldSold_average As Double
+        Dim fieldwnew_average As Double
+        Dim fieldwold_average As Double
+        Dim dH_avg As Double
+        Dim dw_avg As Double
+        Dim dS_avg As Double
+        Dim LHS(,) As Double
+        Dim R(,) As Double
+        Dim RHS() As Double
+        Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+        Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+        Dim cieNew As CIETransNew
+        Dim he As HETrans
+        Dim H_ele() As Double
+        Dim i, j As Integer
 
-        'step 0: Creating output .txt computation result file 2020-07-17 Xuande 
+        ''Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = Directory & "\" & "R_H_DiffusionModel" & ".txt"
         outfile(2) = Directory & "\" & "R_W_DiffusionModel" & ".txt"
+        outfile(3) = Directory & "\" & "R_S_DiffusionModel" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
         nFic2 = CShort(FreeFile())
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
-
-        'step 0 Initialize output titres for result .txt files
-        Print(nFic1, "RH", ",", nDof, ",", TAB)
-        For jj = 0 To nDof - 1
+        nfic3 = CShort(FreeFile())
+        FileOpen(CInt(nfic3), outfile(3), OpenMode.Output)
+        Print(nFic1, "RH", ",", nDof, ",", "Average RH", ",", "dH", ",", TAB)
+        For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
-
-        Print(nFic2, "W", ",", nDof, ",", TAB)
-        For jj = 0 To nDof - 1
+        Print(nFic2, "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
+        For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic2), " ")
-
+        Print(nfic3, "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
+        For jj As Integer = 0 To nDof - 1
+            Print(CInt(nfic3), jj + CShort(1), ",", TAB)
+        Next jj
+        PrintLine(CInt(nfic3), " ")
         HRRange = New Range
-
+        SlRange = New Range
+        ReDim Time(ind + 2)
+        Time(0) = 0
+        Me.Invoke(Sub()
+                      LabelProgress.Visible = True
+                  End Sub)
         For i = 0 To NElements - 1
             ReDim Elements(i).HR(ind + 1)
             Elements(i).HR(0) = H_int * 100
             HRRange.AddValue(Elements(i).HR(0))
-            ReDim Time(ind + 1)
-            Time(0) = 0
         Next
 
-        Me.Invoke(Sub()
-                      LabelProgress.Visible = True
-                  End Sub)
-
         'Globlal time loop
-
-        Dim ti As Integer
-
         For ti = 0 To ind
-
             Me.Invoke(Sub()
                           LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
                           Me.Refresh()
                       End Sub)
 
-            ' step 1: initialisation and boundary check
-            T(ti) = 0 + dt * (ti - 0)
+            ' step 1: initialisation and boundary check 
             If ti = 0 Then
                 Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 Print(CInt(nFic2), "0", ",", "0", ",", TAB)
+                Print(CInt(nfic3), "0", ",", "0", ",", TAB)
                 For i = 0 To nDof - 1
                     H_old(i) = H_int
-                    w_old(i) = wsat * GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_old(i) = wsat * S_old(i)
+                    H_new(i) = H_old(i)
+                    S_new(i) = S_old(i)
+                    w_new(i) = w_old(i)
+                Next
+                Dim w_avg_0 As Double = w_old.Average()
+                Dim H_avg_0 As Double = H_old.Average()
+                Dim S_avg_0 As Double = S_old.Average()
+                Print(CInt(nFic1), H_avg_0, ",", "0", ",", TAB)
+                Print(CInt(nFic2), w_avg_0, ",", "0", ",", TAB)
+                Print(CInt(nfic3), S_avg_0, ",", "0", ",", TAB)
+                'plot initial state
+                For i = 0 To NElements - 1
+                    ReDim Elements(i).HR(ind + 2)
+                    ReDim Elements(i).Sl(ind + 2)
+                    Elements(i).HR(0) = H_new(i) * 100
+                    Elements(i).Sl(0) = S_new(i) * 100
+                    HRRange.AddValue(Elements(i).HR(0))
+                    SlRange.AddValue(Elements(i).Sl(0))
+                Next
+                'apply BC
+                For i = 0 To nDof - 1
                     Print(CInt(nFic1), H_old(i), ",", TAB)
                     Print(CInt(nFic2), w_old(i), ",", TAB)
-                    ' boundary check program, 2020.08.03
+                    Print(CInt(nfic3), S_old(i), ",", TAB)
                     If Nodes(i).Bord = True Then
-                        ' check whether the current boundary is exposed to a boundary condition
                         X_node = Nodes(i).x
                         Y_node = Nodes(i).y
                         If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                            H_old(i) = H_bound
+                            H_old(i) = H_bound1
                         ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                            H_old(i) = H_int
+                            H_old(i) = H_bound2
                         ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                            H_old(i) = H_int
+                            H_old(i) = H_bound3
                         ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                            H_old(i) = H_int
+                            H_old(i) = H_bound4
                         End If
+                    Else
+                        H_new(i) = H_old(i)
                     End If
-                    w_old(i) = wsat * GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    'isotherm state check 
+                    If w = 0 And H_new(i) > H_old(i) Then 'state change from desorption to adsorption
+                        w = 1
+                    ElseIf w = 1 And H_new(i) < H_old(i) Then 'adsorption to desorption
+                        w = 0
+                    End If
+                    S_new(i) = GetHtoS(H_new(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_new(i) = wsat * S_new(i) * phi
                 Next
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
-
-            Else
-                For i = 0 To nDof - 1
-                    H_old(i) = H_new(i)
-                    w_old(i) = w_new(i)
-                    ' boundary check program, 2020.08.03
-                    If Nodes(i).Bord = True Then
-                        ' check whether the current boundary is exposed to a boundary condition
-                        X_node = Nodes(i).x
-                        Y_node = Nodes(i).y
-                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                            H_old(i) = H_bound
-                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                            H_old(i) = H_int
-                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                            H_old(i) = H_int
-                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                            H_old(i) = H_int
-                        End If
-                        'H_old(i_node) = H_bound
-                    End If
-                    w_old(i) = wsat * GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                PrintLine(CInt(nfic3), " ")
+                'plot intital state after BC applied
+                For i = 0 To NElements - 1
+                    Elements(i).HR(1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
+                    Elements(i).Sl(1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                    HRRange.AddValue(Elements(i).HR(1))
+                    SlRange.AddValue(Elements(i).Sl(1))
                 Next
-            End If
+                Time(1) = dt / 1000 / 3600 ' Time in hour
+                'compute variation
+                fieldHnew_average = H_new.Average
+                fieldHold_average = H_old.Average
+                fieldSnew_average = S_new.Average
+                fieldSold_average = S_old.Average
+                fieldwnew_average = w_new.Average
+                fieldwold_average = w_old.Average
+                dH_avg = fieldHnew_average - fieldHold_average + dH_avg
+                dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+                dS_avg = fieldSnew_average - fieldSold_average + dS_avg
+                'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
+                RegisterField(nFic1, dt / 1000.0, nDof, dH_avg, H_new)
+                PrintLine(CInt(nFic1), " ")
+                RegisterField(nFic2, dt / 1000.0, nDof, dw_avg, w_new)
+                PrintLine(CInt(nFic2), " ")
+                RegisterField(nfic3, dt / 1000.0, nDof, dS_avg, S_new)
+                PrintLine(CInt(nfic3), " ")
+            Else
+                For i = 0 To nDof - 1                 ''regular loop
+                    H_old(i) = H_new(i)
+                    S_old(i) = S_new(i)
+                    w_old(i) = w_new(i)
+                Next
 
-            'step 2: elemental and global Matrix constructions
-            Dim LHS(,) As Double
-            Dim R(,) As Double
-            Dim RHS() As Double
-            Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
-            Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-            Dim cie As CIETrans
-            Dim he As HETrans
-            Dim H_avg As Double
-            Dim H_ele() As Double
-            Dim De As Double
-            'Matrix assembling
-            For i = 0 To NElements - 1
-                he = New HETrans(
-                          H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
-                          H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
-                          )
-                H_ele = he.getHe
-                H_avg = GetAvgH(H_ele)
-                De = GetDh(D0, alpha_0, Hc, Tc, H_avg)
-                cie = New CIETrans(
+                'step 2: elemental and global Matrix constructions
+                'Matrix assembling
+                For i = 0 To NElements - 1
+                    he = New HETrans(
+                              H_old(Elements(i).Node1 - 1), H_old(Elements(i).Node2 - 1),
+                              H_old(Elements(i).Node3 - 1), H_old(Elements(i).Node4 - 1)
+                              )
+                    H_ele = he.getHe
+                    '' new program using nodal interpolations instead of mean value on elements to calculate diffusion coefficient 2020.08.15 Xuande
+                    Dim d1 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(0))
+                    Dim d2 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(1))
+                    Dim d3 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(2))
+                    Dim d4 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(3))
+                    cieNew = New CIETransNew(
                           Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                           Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                          De)
-                AssembleKg(cie.getbe, bg, i)
-                AssembleKg(cie.getAe, Ag, i)
-            Next
+                          d1, d2, d3, d4)
+                    AssembleKg(cieNew.getbe, bg, i)
+                    AssembleKg(cieNew.getAe, Ag, i)
+                Next
 
-            'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
-            getLHS(LHS, NNodes, Ag, bg, dt)
-            getRHS(R, NNodes, Ag, bg, dt)
-            RHS = MultiplyMatrixWithVector(R, H_old)
+                'step 3: now, we have assembled Hg_old, Ag and bg , to get LHS and RHS
+                getLHS(LHS, NNodes, Ag, bg, dt)
+                getRHS(R, NNodes, Ag, bg, dt)
+                RHS = MultiplyMatrixWithVector(R, H_old)
+                GetX(H_new, LHS, RHS)
 
-            'step 4: now with LHS*x = RHS, using Gauss Elimination we can get the resolution for the new field of humidity Hnew
-            GetX(H_new, LHS, RHS)
-
-            'step 5: data stockage and boundary check 
-            For j = 0 To NNodes - 1
-                If H_new(j) >= 1 Then
-                    H_new(j) = 1
-                ElseIf H_new(j) <= 0 Then
-                    H_new(j) = 0
-                End If
-
-                If Nodes(j).Bord = True Then
-                    ' check whether the current boundary is exposed to a boundary condition
-                    X_node = Nodes(j).x
-                    Y_node = Nodes(j).y
-                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                        H_new(j) = H_bound
-                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                        H_new(j) = H_int
-                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                        H_new(j) = H_int
-                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                        H_new(j) = H_int
+                'step 5: result check
+                For j = 0 To NNodes - 1
+                    If H_new(j) >= 1 Then
+                        H_new(j) = 1
+                    ElseIf H_new(j) <= 0 Then
+                        H_new(j) = 0
                     End If
+                    If Nodes(j).Bord = True Then
+                        ' check whether the current boundary is exposed to a boundary condition
+                        X_node = Nodes(j).x
+                        Y_node = Nodes(j).y
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            H_new(j) = H_bound1
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            H_new(j) = H_bound2
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            H_new(j) = H_bound3
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            H_new(j) = H_bound4
+                        End If
+                    End If
+                    ''isotherm state check 
+                    If w = 0 And H_new(j) > H_old(j) Then 'state change from desorption to adsorption
+                        w = 1
+                    ElseIf w = 1 And H_new(j) < H_old(j) Then 'adsorption to desorption
+                        w = 0
+                    End If
+                    S_new(j) = GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_new(j) = wsat * S_new(j)
+                Next
+
+                'step 6: Post-process : plot 2D image and export result .txt file  
+                For i = 0 To NElements - 1
+                    Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
+                    Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                    HRRange.AddValue(Elements(i).HR(ti + 1))
+                    SlRange.AddValue(Elements(i).Sl(ti + 1))
+                Next
+                Time(ti + 1) = ti * dt / 3600 ' Time in hour
+                'compute variation
+                fieldHnew_average = H_new.Average
+                fieldHold_average = H_old.Average
+                fieldSnew_average = S_new.Average
+                fieldSold_average = S_old.Average
+                fieldwnew_average = w_new.Average
+                fieldwold_average = w_old.Average
+                dH_avg = fieldHnew_average - fieldHold_average + dH_avg
+                dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+                dS_avg = fieldSnew_average - fieldSold_average + dS_avg
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    RegisterField(nFic1, ti * dt, nDof, dH_avg, H_new)
+                    PrintLine(CInt(nFic1), " ")
+                    RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
+                    PrintLine(CInt(nFic2), " ")
+                    RegisterField(nfic3, ti * dt, nDof, dS_avg, S_new)
+                    PrintLine(CInt(nfic3), " ")
                 End If
-                w_new(j) = wsat * GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-            Next
-
-            'step 6: plot 2D image and export result .txt file 
-            For i = 0 To NElements - 1
-
-                Elements(i).HR(ti + 1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
-                HRRange.AddValue(Elements(i).HR(ti + 1))
-
-            Next
-
-            Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
-
-
-            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                RegisterH(nFic1, ti * dt, nDof, H_new)
-                PrintLine(CInt(nFic1), " ")
-                RegisterH(nFic2, ti * dt, nDof, w_new)
-                PrintLine(CInt(nFic2), " ")
             End If
         Next
-
         FileClose(CInt(nFic1))
-
         FileClose(CInt(nFic2))
+        FileClose(CInt(nfic3))
 
-        MsgBox("Fin du calcul diffusion 2D", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
 
         Me.Invoke(Sub()
                       LabelProgress.Visible = False
                   End Sub)
-
     End Sub
     Public Sub AnalyseTransport()
         'Material parameters, can be converted from user defined input
@@ -507,15 +564,12 @@ Public Class frmTrans2D
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
 
-
         'Dim pc_0 As Double = 8.8678 ' parameter for ordinary concrete (Mpa) W/C = 0.73
         'Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
         Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
         'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
         'Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
         'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
-
-
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' 
 
@@ -546,7 +600,6 @@ Public Class frmTrans2D
         'Dim C As Double = 375 'density of cement (W/C = 0.44)
         'Dim C As Double = 400 'density of cement (W/C = 0.4)
 
-
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
 
@@ -564,7 +617,6 @@ Public Class frmTrans2D
         Dim St As Double = 0.2 'capillary pressure residual saturation
 
         'Geometry parameters for boundary check program
-
         ''LUNK
         'Dim X_upper As Double = 75 'mm, upper bound of X coordinate
         'Dim X_lower As Double = -75 'mm, upper bound of X coordinate
@@ -589,98 +641,79 @@ Public Class frmTrans2D
         Dim Y_node As Double
 
         'Computation parameters
-        Dim nDof As Integer = NNodes
-        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
-        Dim H_int As Double = 0.75 'initial relative humidity
-        Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
-        Dim H_bound As Double = 1   'boundary relative humidity
-        'Dim H_bound2 As Double = 0.75 'boundary relative humidity
-        Dim S_bound As Double = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
-        'Dim S_bound2 As Double = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'boundary saturation field
-        Dim dt As Double = 3600       'time interval (s)
-        'Dim tmax As Double = 3600 * 24 * 3 'end time (s)  3Days / Lunk
-        Dim tmax As Double = 3600 * 24 * 7.5 'end time (s)  7.5days / DC
-
-        Dim ind As Double = tmax / dt
-        Dim T(CInt(ind)) As Double 'time vector (days)
-        Dim H_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim S_mat(ind, NNodes - 1) As Double 'Matrix for stockage of computation results (days, number of nodes)
-        Dim H_old(NNodes - 1) As Double
-        Dim H_new(NNodes - 1) As Double
-        Dim S_old(NNodes - 1) As Double
-        Dim S_new(NNodes - 1) As Double
-        Dim jj As Long
-        Dim w_old(NNodes - 1) As Double
-        Dim w_new(NNodes - 1) As Double
         Dim nFic1 As Short
         Dim nFic2 As Short
         Dim outfile(2) As String
-        Dim T_sauv As Single = 3600     'ouput time inteval (s) 4h /10day
-        Dim i, j, k, z As Integer
-        Dim npt As Integer 'number of interdemidate points on the first step to avoid divergence
-        Dim dt_int As Double
+        Dim nDof As Integer = NNodes
+        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
+        Dim H_int As Double = 0.75 'initial relative humidity
+        Dim H_bound1 As Double = 1 'boundary relative humidity1
+        Dim H_bound2 As Double = 1 'boundary relative humidity2
+        Dim H_bound3 As Double = 1 'boundary relative humidity3
+        Dim H_bound4 As Double = 1 'boundary relative humidity4
+        Dim ti As Integer
+        Dim dt As Double = 3600       'time interval (s)
+        'Dim tmax As Double = 3600 * 24 * 3 'end time (s)  3Days / Lunk
+        Dim tmax As Double = 3600 * 24 * 7.5 'end time (s)  7.5days / DC
+        Dim ind As Double = tmax / dt
+        Dim H_old(nDof - 1) As Double
+        Dim H_new(nDof - 1) As Double
+        Dim S_old(nDof - 1) As Double
+        Dim S_new(nDof - 1) As Double
+        Dim w_old(nDof - 1) As Double
+        Dim w_new(nDof - 1) As Double
+        'Dim fieldHnew_average As Double
+        'Dim fieldHold_average As Double
+        Dim fieldSnew_average As Double
+        Dim fieldSold_average As Double
+        Dim fieldwnew_average As Double
+        Dim fieldwold_average As Double
+        'Dim dH_avg As Double
+        Dim dw_avg As Double
+        Dim dS_avg As Double
+        Dim T_sauv As Single = 14400     'ouput time inteval (s) 4h /10day
+        Dim i, j, jj As Integer
         Dim NewLHS(,) As Double
         Dim NewR(,) As Double
         Dim RHS() As Double
         Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
         Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-        Dim cie As CIETrans
         Dim cieNew As CIETransNew
         Dim se As SETrans 'element saturation vector
         Dim D As Double = GetD(Tk, pg)
-        Dim Dv As Double
-        Dim Dl As Double
-        Dim S_avg As Double 'element average saturation
-        Dim H_avg As Double
-        Dim kr As Double
-        Dim pc As Double
-        Dim dpcdS As Double
-        Dim f As Double
         Dim S_ele() As Double
-        Dim De As Double
-        'Globlal time loop
-        Dim ti As Integer
-        Dim stepcheck As Boolean = True
+        'nonlinear iterative process
+        Dim dt_int As Double
         Dim tol As Double = 0.0001 'tolerance of convergence
         Dim Norm_R As Double  'Normal of residu array
         Dim R() As Double
-        'day = CDbl(ti * dt / 3600 / 24)
 
-        'step 0: Creating output .txt computation result file 2020-07-27 Xuande 
+        ''Creating output .txt computation result file 2020-07-27 Xuande 
         outfile(1) = Directory & "\" & "R_S_CapillaryModel" & ".txt"
         outfile(2) = Directory & "\" & "R_W_CapillaryModel" & ".txt"
         nFic1 = CShort(FreeFile())
         FileOpen(CInt(nFic1), outfile(1), OpenMode.Output)
         nFic2 = CShort(FreeFile())
         FileOpen(CInt(nFic2), outfile(2), OpenMode.Output)
-
-        'step 0: Initialize output titles for result .txt files
         Print(nFic1, "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
-
         Print(nFic2, "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
         For jj = 0 To nDof - 1
             Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic2), " ")
-
         SlRange = New Range
+        ReDim Time(ind + 2)
+        Time(0) = 0
+        Me.Invoke(Sub()
+                      LabelProgress.Visible = True
+                  End Sub)
 
-        For i = 0 To NElements - 1
-            ReDim Elements(i).Sl(ind + 1)
-            Elements(i).Sl(0) = S_int * 100
-            SlRange.AddValue(Elements(i).Sl(0))
-            ReDim Time(ind + 1)
-            Time(0) = 0
-        Next
-
+        ''Global time loop
         For ti = 0 To CInt(ind)
-            'T(ti) = 0 + dt * (ti - 0)
-            'day = CDbl(ti * dt / 3600 / 24)
-
             Me.Invoke(Sub()
                           LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
                           Me.Refresh()
@@ -692,236 +725,244 @@ Public Class frmTrans2D
                 Print(CInt(nFic2), "0", ",", "0", ",", TAB)
                 For i = 0 To nDof - 1
                     H_old(i) = H_int
-                    S_old(i) = S_int
+                    S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                     w_old(i) = wsat * S_old(i)
+                    H_new(i) = H_old(i)
+                    S_new(i) = S_old(i)
+                    w_new(i) = w_old(i)
                 Next
                 Dim w_avg_0 As Double = w_old.Average()
                 Dim S_avg_0 As Double = S_old.Average()
                 Print(CInt(nFic1), S_avg_0, ",", "0", ",", TAB)
                 Print(CInt(nFic2), w_avg_0, ",", "0", ",", TAB)
-
+                'plot initial state
+                For i = 0 To NElements - 1
+                    ReDim Elements(i).HR(ind + 2)
+                    ReDim Elements(i).Sl(ind + 2)
+                    'Elements(i).HR(0) = H_new(i) * 100
+                    Elements(i).Sl(0) = S_new(i) * 100
+                    'HRRange.AddValue(Elements(i).HR(0))
+                    SlRange.AddValue(Elements(i).Sl(0))
+                Next
+                'apply BC
                 For i = 0 To nDof - 1
                     Print(CInt(nFic1), S_old(i), ",", TAB)
                     Print(CInt(nFic2), w_old(i), ",", TAB)
-                    If Nodes(i).Bord = True Then
-                        ' check whether the current boundary is exposed to a boundary condition
+                    If Nodes(i).Bord = True Then ' check whether the current boundary is exposed to a boundary condition
                         X_node = Nodes(i).x
                         Y_node = Nodes(i).y
                         If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                            S_old(i) = S_bound
+                            H_new(i) = H_bound1
                         ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                            S_old(i) = S_int
+                            H_new(i) = H_bound2
                         ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                            S_old(i) = S_int
+                            H_new(i) = H_bound3
                         ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                            S_old(i) = S_int
+                            H_new(i) = H_bound4
                         End If
+                    Else
+                        H_new(i) = H_old(i)
                     End If
-                    w_old(i) = wsat * S_old(i)
+                    'isotherm state check 
+                    If w = 0 And H_new(i) > H_old(i) Then 'state change from desorption to adsorption
+                        w = 1
+                    ElseIf w = 1 And H_new(i) < H_old(i) Then 'adsorption to desorption
+                        w = 0
+                    End If
+                    S_new(i) = GetHtoS(H_new(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                    w_new(i) = wsat * S_new(i)
+                Next
+                PrintLine(CInt(nFic1), " ")
+                PrintLine(CInt(nFic2), " ")
+                'plot intital state after BC applied
+                For i = 0 To NElements - 1
+                    'Elements(i).HR(1) = (H_new(Elements(i).Node1 - 1) + H_new(Elements(i).Node2 - 1) + H_new(Elements(i).Node3 - 1) + H_new(Elements(i).Node4 - 1)) * 100 / 4
+                    Elements(i).Sl(1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                    'HRRange.AddValue(Elements(i).HR(1))
+                    SlRange.AddValue(Elements(i).Sl(1))
+                Next
+                Time(1) = dt / 1000 / 3600 ' Time in hour
+                'compute variation
+                fieldSnew_average = S_new.Average
+                fieldSold_average = S_old.Average
+                fieldwnew_average = w_new.Average
+                fieldwold_average = w_old.Average
+                dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+                dS_avg = fieldSnew_average - fieldSold_average + dS_avg
+                'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
+                RegisterField(nFic1, dt / 1000.0, nDof, dS_avg, S_new)
+                PrintLine(CInt(nFic1), " ")
+                RegisterField(nFic2, dt / 1000.0, nDof, dw_avg, w_new)
+                PrintLine(CInt(nFic2), " ")
+            Else
+                For i = 0 To nDof - 1 'regular loop
+                    S_old(i) = S_new(i)
+                    w_old(i) = w_new(i)
                 Next
 
-                PrintLine(CInt(nFic1), " ")
-                PrintLine(CInt(nFic2), " ")
+                'step 2: elemental and global Matrix constructions
+                'Matrix assembling
+                For i = 0 To NElements - 1
+                    se = New SETrans(
+                S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
+                S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
+                )
+                    S_ele = se.getSe
+                    '' new program using nodal interpolations instead of mean value on elements to calculate transport coefficient 2020.08.15 Xuande
+                    Dim kr1 As Double = Getkr(S_ele(0), m)
+                    Dim kr2 As Double = Getkr(S_ele(1), m)
+                    Dim kr3 As Double = Getkr(S_ele(2), m)
+                    Dim kr4 As Double = Getkr(S_ele(3), m)
+                    Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
+                    Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
+                    Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
+                    Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
+                    Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
+                    Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
+                    Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
+                    Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
+                    Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
+                    Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
+                    Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
+                    Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
+                    Dim f1 As Double = Getf(phi, S_ele(0))
+                    Dim f2 As Double = Getf(phi, S_ele(1))
+                    Dim f3 As Double = Getf(phi, S_ele(2))
+                    Dim f4 As Double = Getf(phi, S_ele(3))
+                    Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
+                    Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
+                    Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
+                    Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
+                    Dim d1 As Double = Dl1 + Dv1
+                    Dim d2 As Double = Dl2 + Dv2
+                    Dim d3 As Double = Dl3 + Dv3
+                    Dim d4 As Double = Dl4 + Dv4
+                    cieNew = New CIETransNew(
+                Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                d1, d2, d3, d4)
+                    AssembleKg(cieNew.getbe, bg, i)
+                    AssembleKg(cieNew.getAe, Ag, i)
+                Next
 
-            End If
+                'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS and solve it
+                getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt)
+                getNewR(NewR, NNodes, phi, Ag, bg, dt)
+                RHS = MultiplyMatrixWithVector(NewR, S_old)
+                GetX(S_new, NewLHS, RHS)
 
-            'regular loop
-            For i = 0 To nDof - 1
-                If Nodes(i).Bord = True Then
-                    X_node = Nodes(i).x
-                    Y_node = Nodes(i).y
-                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                        S_old(i) = S_bound
-                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                        S_old(i) = S_int
-                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                        S_old(i) = S_int
-                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                        S_old(i) = S_int
+                'Do
+                '    'step 4: check residual convergence
+                '    For i = 0 To NElements - 1
+                '        se = New SETrans(
+                '              S_new(Elements(i).Node1 - 1), S_new(Elements(i).Node2 - 1),
+                '              S_new(Elements(i).Node3 - 1), S_new(Elements(i).Node4 - 1)
+                '              )
+                '        S_ele = se.getSe
+                '        Dim kr1 As Double = Getkr(S_ele(0), m)
+                '        Dim kr2 As Double = Getkr(S_ele(1), m)
+                '        Dim kr3 As Double = Getkr(S_ele(2), m)
+                '        Dim kr4 As Double = Getkr(S_ele(3), m)
+                '        Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
+                '        Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
+                '        Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
+                '        Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
+                '        Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
+                '        Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
+                '        Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
+                '        Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
+                '        Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
+                '        Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
+                '        Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
+                '        Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
+                '        Dim f1 As Double = Getf(phi, S_ele(0))
+                '        Dim f2 As Double = Getf(phi, S_ele(1))
+                '        Dim f3 As Double = Getf(phi, S_ele(2))
+                '        Dim f4 As Double = Getf(phi, S_ele(3))
+                '        Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
+                '        Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
+                '        Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
+                '        Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
+                '        Dim d1 As Double = Dl1 + Dv1
+                '        Dim d2 As Double = Dl2 + Dv2
+                '        Dim d3 As Double = Dl3 + Dv3
+                '        Dim d4 As Double = Dl4 + Dv4
+                '        cieNew = New CIETransNew(
+                '              Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
+                '              Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
+                '              Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
+                '              Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
+                '              d1, d2, d3, d4)
+                '        AssembleKg(cieNew.getbe, bg, i)
+                '        AssembleKg(cieNew.getAe, Ag, i)
+                '    Next
+                '    getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt)
+                '    getNewR(NewR, NNodes, phi, Ag, bg, dt)
+                '    RHS = MultiplyMatrixWithVector(NewR, S_old)
+                '    Dim RHS_ite = MultiplyMatrixWithVector(NewLHS, S_new)
+                '    For k = 0 To RHS_ite.Length - 1
+                '        R(k) = RHS_ite(k) - RHS(k)
+                '    Next
+                '    Norm_R = GetNorm(R)
+                '    GetX(S_new, NewLHS, RHS_ite)
+                'Loop Until Norm_R <= tol
+
+                'step 5: data stockage
+                For j = 0 To NNodes - 1
+                    If S_new(j) >= 1 Then
+                        S_new(j) = 1
+                    ElseIf S_new(j) <= 0 Then
+                        S_new(j) = 0
                     End If
-                End If
-                w_old(i) = wsat * S_old(i)
-            Next
-
-            'step 2: elemental and global Matrix constructions
-            'Matrix assembling
-            For i = 0 To NElements - 1
-                se = New SETrans(
-                              S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
-                              S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
-                              )
-                S_ele = se.getSe
-
-                'trial on using nodal interpolations instead of mean value to compute transport coefficient 2020.08.15 Xuande
-                'trial verified, it works pretty well 2020.08.15 Xuande
-                Dim kr1 As Double = Getkr(S_ele(0), m)
-                Dim kr2 As Double = Getkr(S_ele(1), m)
-                Dim kr3 As Double = Getkr(S_ele(2), m)
-                Dim kr4 As Double = Getkr(S_ele(3), m)
-                Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
-                Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
-                Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
-                Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
-                Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
-                Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
-                Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
-                Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
-                Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
-                Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
-                Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
-                Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
-                Dim f1 As Double = Getf(phi, S_ele(0))
-                Dim f2 As Double = Getf(phi, S_ele(1))
-                Dim f3 As Double = Getf(phi, S_ele(2))
-                Dim f4 As Double = Getf(phi, S_ele(3))
-                Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
-                Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
-                Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
-                Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
-                Dim d1 As Double = Dl1 + Dv1
-                Dim d2 As Double = Dl2 + Dv2
-                Dim d3 As Double = Dl3 + Dv3
-                Dim d4 As Double = Dl4 + Dv4
-
-                cieNew = New CIETransNew(
-                              Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-                              Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-                              Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-                              Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-                              d1, d2, d3, d4)
-
-                AssembleKg(cieNew.getbe, bg, i)
-                AssembleKg(cieNew.getAe, Ag, i)
-
-            Next
-
-            'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS and solve it
-            getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt)
-            getNewR(NewR, NNodes, phi, Ag, bg, dt)
-            RHS = MultiplyMatrixWithVector(NewR, S_old)
-            GetX(S_new, NewLHS, RHS)
-
-            'Do
-            '    'step 4: check residual convergence
-            '    For i = 0 To NElements - 1
-            '        se = New SETrans(
-            '              S_new(Elements(i).Node1 - 1), S_new(Elements(i).Node2 - 1),
-            '              S_new(Elements(i).Node3 - 1), S_new(Elements(i).Node4 - 1)
-            '              )
-            '        S_ele = se.getSe
-
-            '        'trial on using nodal interpolations instead of mean value to compute transport coefficient 2020.08.15 Xuande
-            '        'trial verified, it works pretty well 2020.08.15 Xuande
-            '        Dim kr1 As Double = Getkr(S_ele(0), m)
-            '        Dim kr2 As Double = Getkr(S_ele(1), m)
-            '        Dim kr3 As Double = Getkr(S_ele(2), m)
-            '        Dim kr4 As Double = Getkr(S_ele(3), m)
-            '        Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
-            '        Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
-            '        Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
-            '        Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
-            '        Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
-            '        Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
-            '        Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
-            '        Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
-            '        Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
-            '        Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
-            '        Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
-            '        Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
-            '        Dim f1 As Double = Getf(phi, S_ele(0))
-            '        Dim f2 As Double = Getf(phi, S_ele(1))
-            '        Dim f3 As Double = Getf(phi, S_ele(2))
-            '        Dim f4 As Double = Getf(phi, S_ele(3))
-            '        Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
-            '        Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
-            '        Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
-            '        Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
-            '        Dim d1 As Double = Dl1 + Dv1
-            '        Dim d2 As Double = Dl2 + Dv2
-            '        Dim d3 As Double = Dl3 + Dv3
-            '        Dim d4 As Double = Dl4 + Dv4
-
-            '        cieNew = New CIETransNew(
-            '              Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
-            '              Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
-            '              Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
-            '              Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
-            '              d1, d2, d3, d4)
-
-            '        AssembleKg(cieNew.getbe, bg, i)
-            '        AssembleKg(cieNew.getAe, Ag, i)
-
-            '    Next
-            '    getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt)
-            '    getNewR(NewR, NNodes, phi, Ag, bg, dt)
-            '    RHS = MultiplyMatrixWithVector(NewR, S_old)
-            '    Dim RHS_ite = MultiplyMatrixWithVector(NewLHS, S_new)
-            '    For k = 0 To RHS_ite.Length - 1
-            '        R(k) = RHS_ite(k) - RHS(k)
-            '    Next
-            '    Norm_R = GetNorm(R)
-            '    GetX(S_new, NewLHS, RHS_ite)
-
-            'Loop Until Norm_R <= tol
-
-            'step 5: data stockage
-            For j = 0 To NNodes - 1
-                If S_new(j) >= 1 Then
-                    S_new(j) = 1
-                ElseIf S_new(j) <= 0 Then
-                    S_new(j) = 0
-                End If
-                If Nodes(j).Bord = True Then
-                    X_node = Nodes(j).x
-                    Y_node = Nodes(j).y
-                    S_bound = GetHtoS(H_bound, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                        S_new(j) = S_bound
-                    ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                        S_new(j) = S_int
-                    ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                        S_new(j) = S_int
-                    ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                        S_new(j) = S_int
+                    ''isotherm state check 
+                    If w = 0 And S_new(j) > S_old(j) Then 'state change from desorption to adsorption
+                        w = 1
+                    ElseIf w = 1 And S_new(j) < S_old(j) Then 'adsorption to desorption
+                        w = 0
                     End If
+                    If Nodes(j).Bord = True Then
+                        X_node = Nodes(j).x
+                        Y_node = Nodes(j).y
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            S_new(j) = GetHtoS(H_bound1, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            S_new(j) = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            S_new(j) = GetHtoS(H_bound3, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            S_new(j) = GetHtoS(H_bound4, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+                        End If
+                    End If
+                    w_new(j) = wsat * S_new(j)
+                Next
+
+                'step 6: Post-process : plot 2D image and export result .txt file 
+                For i = 0 To NElements - 1
+                    Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
+                    SlRange.AddValue(Elements(i).Sl(ti + 1))
+                Next
+                Time(ti + 1) = ti * dt / 3600 ' Time in hour
+                'compute variation
+                fieldSnew_average = S_new.Average
+                fieldSold_average = S_old.Average
+                fieldwnew_average = w_new.Average
+                fieldwold_average = w_old.Average
+                dS_avg = fieldSnew_average - fieldSold_average + dS_avg
+                dw_avg = fieldwnew_average - fieldwold_average + dw_avg
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    RegisterField(nFic1, ti * dt, nDof, dS_avg, S_new)
+                    PrintLine(CInt(nFic1), " ")
+                    RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
+                    PrintLine(CInt(nFic2), " ")
                 End If
-                w_new(j) = wsat * S_new(j)
-            Next
-
-            'step 6: plot 2D image and export result .txt file 
-            For i = 0 To NElements - 1
-                Elements(i).Sl(ti + 1) = (S_new(Elements(i).Node1 - 1) + S_new(Elements(i).Node2 - 1) + S_new(Elements(i).Node3 - 1) + S_new(Elements(i).Node4 - 1)) * 100 / 4
-                SlRange.AddValue(Elements(i).Sl(ti + 1))
-            Next
-
-            Time(ti + 1) = (ti + 1) * dt / 3600 ' Time in hour
-
-            Dim fieldSnew_average As Double = S_new.Average
-            Dim fieldSold_average As Double = S_old.Average
-            Dim fieldwnew_average As Double = w_new.Average
-            Dim fieldwold_average As Double = w_old.Average
-            Dim dS_avg As Double
-            dS_avg = fieldSnew_average - fieldSold_average + dS_avg
-            Dim dw_avg As Double
-            dw_avg = fieldwnew_average - fieldwold_average + dw_avg
-
-            If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                RegisterField(nFic1, ti * dt, nDof, dS_avg, S_new)
-                PrintLine(CInt(nFic1), " ")
-                RegisterField(nFic2, ti * dt, nDof, dw_avg, w_new)
-                PrintLine(CInt(nFic2), " ")
             End If
-            H_old = H_new
-            S_old = S_new
         Next
-
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
-
         MsgBox("End of 2D transport", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         Analysed = True
-
         Me.Invoke(Sub()
                       LabelProgress.Visible = False
                   End Sub)

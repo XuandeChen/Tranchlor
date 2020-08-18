@@ -274,14 +274,40 @@ Public Class Compute2D
     End Sub
     'Coeur du calcul
     Public Sub Compute_All(ByRef frm As frmTrans2D)
-
+        'frm.AnalyseDiffusion()
         Dim nFic1 As Short
         Dim nFic2 As Short
         Dim nfic3 As Short
         Dim outfile(3) As String
         Dim nDof As Integer = frm.NNodes
+        Dim ti As Integer
+        Dim ind As Integer = CInt(tmax / dt)
+        Dim H_old(nDof - 1) As Double
+        Dim H_new(nDof - 1) As Double
+        Dim S_old(nDof - 1) As Double
+        Dim S_new(nDof - 1) As Double
+        Dim w_old(nDof - 1) As Double
+        Dim w_new(nDof - 1) As Double
+        Dim fieldHnew_average As Double
+        Dim fieldHold_average As Double
+        Dim fieldSnew_average As Double
+        Dim fieldSold_average As Double
+        Dim fieldwnew_average As Double
+        Dim fieldwold_average As Double
+        Dim dH_avg As Double
+        Dim dw_avg As Double
+        Dim dS_avg As Double
+        Dim i_node As Integer
+        Dim LHS(,) As Double
+        Dim R(,) As Double
+        Dim RHS() As Double
+        Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
+        Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
+        Dim cieNew As CIETransNew
+        Dim he As HETrans
+        Dim H_ele() As Double
 
-        'Creating output .txt computation result file 2020-07-17 Xuande 
+        ''Creating output .txt computation result file 2020-07-17 Xuande 
         outfile(1) = directory & "\" & "R_H_DiffusionModel" & ".txt"
         outfile(2) = directory & "\" & "R_W_DiffusionModel" & ".txt"
         outfile(3) = directory & "\" & "R_S_DiffusionModel" & ".txt"
@@ -296,38 +322,16 @@ Public Class Compute2D
             Print(CInt(nFic1), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic1), " ")
-
         Print(nFic2, "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
         For jj As Integer = 0 To nDof - 1
             Print(CInt(nFic2), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nFic2), " ")
-
         Print(nfic3, "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
         For jj As Integer = 0 To nDof - 1
             Print(CInt(nfic3), jj + CShort(1), ",", TAB)
         Next jj
         PrintLine(CInt(nfic3), " ")
-
-        Dim ti As Integer
-        Dim ind As Double = tmax / dt
-        Dim H_old(nDof - 1) As Double
-        Dim H_new(nDof - 1) As Double
-        Dim S_old(nDof - 1) As Double
-        Dim S_new(nDof - 1) As Double
-        Dim w_old(nDof - 1) As Double
-        Dim w_new(nDof - 1) As Double
-        Dim T_old(nDof - 1) As Double
-        Dim fieldHnew_average As Double
-        Dim fieldHold_average As Double
-        Dim fieldSnew_average As Double
-        Dim fieldSold_average As Double
-        Dim fieldwnew_average As Double
-        Dim fieldwold_average As Double
-        Dim dH_avg As Double
-        Dim dw_avg As Double
-        Dim dS_avg As Double
-        Dim T(ind) As Double 'time vector (days)
         frm.HRRange = New Range
         frm.SlRange = New Range
         ReDim frm.Time(ind + 2)
@@ -335,25 +339,21 @@ Public Class Compute2D
         'Me.Invoke(Sub()
         frm.LabelProgress.Visible = True
         'End Sub)
-        'Global time loop
-        For ti = 0 To ind
 
+        ''Global time loop
+        For ti = 0 To ind
             frm.LabelProgress.Text = CStr(ti) + " / " + CStr(ind)
             frm.Refresh()
 
             ' step 1: initialisation and boundary check
-            T(ti) = 0 + dt * (ti - 0)
             If ti = 0 Then
-
                 Print(CInt(nFic1), "0", ",", "0", ",", TAB)
                 Print(CInt(nFic2), "0", ",", "0", ",", TAB)
                 Print(CInt(nfic3), "0", ",", "0", ",", TAB)
-
                 For i As Integer = 0 To nDof - 1
                     H_old(i) = H_int
                     S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    w_old(i) = wsat * S_old(i) * phi
-
+                    w_old(i) = wsat * S_old(i)
                     H_new(i) = H_old(i)
                     S_new(i) = S_old(i)
                     w_new(i) = w_old(i)
@@ -374,14 +374,11 @@ Public Class Compute2D
                     frm.SlRange.AddValue(frm.Elements(i).Sl(0))
                 Next
                 'apply BC
-                Dim i_node As Integer
                 For i_node = 0 To nDof - 1
                     Print(CInt(nFic1), H_old(i_node), ",", TAB)
                     Print(CInt(nFic2), w_old(i_node), ",", TAB)
                     Print(CInt(nfic3), S_old(i_node), ",", TAB)
                     If frm.Nodes(i_node).Bord = True Then
-                        Dim X_node As Double = frm.Nodes(i_node).x
-                        Dim Y_node As Double = frm.Nodes(i_node).y
                         Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
                         If NbExpo <> 0 Then
                             H_new(i_node) = Expo(NbExpo - 1).Humidite(ti)
@@ -398,7 +395,7 @@ Public Class Compute2D
                         w = 0
                     End If
                     S_new(i_node) = GetHtoS(H_new(i_node), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    w_new(i_node) = wsat * S_new(i_node) * phi
+                    w_new(i_node) = wsat * S_new(i_node)
                 Next
                 PrintLine(CInt(nFic1), " ")
                 PrintLine(CInt(nFic2), " ")
@@ -411,7 +408,7 @@ Public Class Compute2D
                     frm.SlRange.AddValue(frm.Elements(i).Sl(1))
                 Next
                 frm.Time(1) = dt / 1000 / 3600 ' Time in hour
-
+                'compute variation
                 fieldHnew_average = H_new.Average
                 fieldHold_average = H_old.Average
                 fieldSnew_average = S_new.Average
@@ -429,8 +426,7 @@ Public Class Compute2D
                 RegisterField(nfic3, dt / 1000.0, nDof, dS_avg, S_new)
                 PrintLine(CInt(nfic3), " ")
             Else
-                ''regular loop
-                For i_node As Integer = 0 To nDof - 1
+                For i_node = 0 To nDof - 1 ''regular loop
                     ''boundary check program, 2020.08.03 Thomas
                     'Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
                     'If NbExpo <> 0 Then
@@ -442,21 +438,8 @@ Public Class Compute2D
                     S_old(i_node) = S_new(i_node)
                     w_old(i_node) = w_new(i_node)
                 Next
-                'H_old = H_new
-                'S_old = S_new
-                'w_old = w_new
+
                 'step 2: elemental and global Matrix constructions
-                Dim LHS(,) As Double
-                Dim R(,) As Double
-                Dim RHS() As Double
-                Dim bg(nDof - 1, nDof - 1) As Double 'Global b matrix
-                Dim Ag(nDof - 1, nDof - 1) As Double 'Global A matrix
-                Dim cie As CIETrans
-                Dim cieNew As CIETransNew
-                Dim he As HETrans
-                Dim H_avg As Double
-                Dim H_ele() As Double
-                Dim De As Double
                 'Matrix assembling
                 For i As Integer = 0 To frm.NElements - 1
                     he = New HETrans(
@@ -464,20 +447,17 @@ Public Class Compute2D
                               H_old(frm.Elements(i).Node3 - 1), H_old(frm.Elements(i).Node4 - 1)
                               )
                     H_ele = he.getHe
-
                     '' new program using nodal interpolations instead of mean value on elements to calculate diffusion coefficient 2020.08.15 Xuande
                     Dim d1 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(0))
                     Dim d2 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(1))
                     Dim d3 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(2))
                     Dim d4 As Double = GetDh(D0, alpha_0, Hc, Tc, H_ele(3))
-
                     cieNew = New CIETransNew(
                               frm.Nodes(frm.Elements(i).Node1 - 1).x, frm.Nodes(frm.Elements(i).Node1 - 1).y,
                               frm.Nodes(frm.Elements(i).Node2 - 1).x, frm.Nodes(frm.Elements(i).Node2 - 1).y,
                               frm.Nodes(frm.Elements(i).Node3 - 1).x, frm.Nodes(frm.Elements(i).Node3 - 1).y,
                               frm.Nodes(frm.Elements(i).Node4 - 1).x, frm.Nodes(frm.Elements(i).Node4 - 1).y,
                               d1, d2, d3, d4)
-
                     AssembleKg(cieNew.getbe, bg, frm.Elements, i)
                     AssembleKg(cieNew.getAe, Ag, frm.Elements, i)
                 Next
@@ -506,7 +486,7 @@ Public Class Compute2D
                         w = 0
                     End If
                     S_new(j) = GetHtoS(H_new(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                    w_new(j) = wsat * S_new(j) * phi
+                    w_new(j) = wsat * S_new(j)
                 Next
 
                 'step 6: Post-process : plot 2D image and export result .txt file 
@@ -516,9 +496,8 @@ Public Class Compute2D
                     frm.HRRange.AddValue(frm.Elements(i).HR(ti + 1))
                     frm.SlRange.AddValue(frm.Elements(i).Sl(ti + 1))
                 Next
-
                 frm.Time(ti + 1) = (ti) * dt / 3600 ' Time in hour
-
+                'compute variation
                 fieldHnew_average = H_new.Average
                 fieldHold_average = H_old.Average
                 fieldSnew_average = S_new.Average
@@ -528,7 +507,6 @@ Public Class Compute2D
                 dH_avg = fieldHnew_average - fieldHold_average + dH_avg
                 dw_avg = fieldwnew_average - fieldwold_average + dw_avg
                 dS_avg = fieldSnew_average - fieldSold_average + dS_avg
-
                 If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
                     RegisterField(nFic1, ti * dt, nDof, dH_avg, H_new)
                     PrintLine(CInt(nFic1), " ")
@@ -537,18 +515,13 @@ Public Class Compute2D
                     RegisterField(nfic3, ti * dt, nDof, dS_avg, S_new)
                     PrintLine(CInt(nfic3), " ")
                 End If
-                'H_old = H_new
-                'S_old = S_new
-                'w_old = w_new
             End If
         Next
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
         FileClose(CInt(nfic3))
-
         MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
         frm.Analysed = True
-
         'Me.Invoke(Sub()
         frm.LabelProgress.Visible = False
         'End Sub)
