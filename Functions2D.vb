@@ -228,24 +228,25 @@ Module Functions2D
         Vec3(0) = 1
         Vec3(1) = H
         Vec3(2) = H ^ 2
-        If 1 > H And H >= Ht Then
-            wr1 = C * 1 / ((1 - Ht) ^ 2) * (Vec2(0) * 1 + Vec2(1) * 1 + Vec2(2) * 1)
+        wr1 = C * 1 / ((1 - Ht) ^ 2) * (Vec2(0) * 1 + Vec2(1) * 1 + Vec2(2) * 1)
+        If 1 >= H And H >= Ht Then
+
             wr = C * 1 / ((1 - Ht) ^ 2) * (Vec2(0) * Vec3(0) + Vec2(1) * Vec3(1) + Vec2(2) * Vec3(2))
-            Sd = wr / wr1
+
         ElseIf Ht > H And H >= 0.35 Then
-            wr1 = C * (c1 + c2 * 1 + c3 * 1 ^ 2) * alpha
+
             wr = C * (c1 + c2 * H + c3 * H ^ 2) * alpha
-            Sd = wr / wr1
+
         Else
-            wr1 = C * (c1 + c2 * 1 + c3 * 1 ^ 2) * alpha
-            wr = ((-(400 * c1 / 49) + c3) * H + 40 * c1 / 7 + c2) * alpha * H
-            Sd = wr / wr1
+
+            wr = C * ((-(400 * c1 / 49) + c3) * H + 40 * c1 / 7 + c2) * alpha * H
+
         End If
+        Sd = wr / wr1
         ' the hysteretic curve
         Dim S As Double
-        S = w * Sd + (1 - w) * Sa 'deactivate for test
+        S = w * Sa + (1 - w) * Sd
         Return S
-        ' Return H 'activate or deactivate for test
     End Function
     Public Function nfunc(ByRef day As Double, ByRef W_C_ratio As Double, ByRef type As Integer, ByRef NT As Double) As Double
         Dim N_Ct As Double

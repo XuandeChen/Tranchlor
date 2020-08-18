@@ -590,7 +590,7 @@ Public Class frmTrans2D
 
         'Computation parameters
         Dim nDof As Integer = NNodes
-        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
+        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
         Dim H_int As Double = 0.75 'initial relative humidity
         Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) 'initial saturation field
         Dim H_bound As Double = 1   'boundary relative humidity
@@ -1354,10 +1354,7 @@ Public Class frmTrans2D
 
         Dim i As Integer
         Dim n1, n2, n3, n4 As Integer
-
         Dim ptsf(3) As PointF
-
-
         'Draw the undeformed model
 
         If ShowModel = True Then
@@ -1367,20 +1364,16 @@ Public Class frmTrans2D
                 n1 = Elements(i).Node1 - 1
                 n2 = Elements(i).Node2 - 1
                 n3 = Elements(i).Node3 - 1
-
                 n4 = Elements(i).Node4 - 1
 
                 ptsf(0) = New PointF(CSng(Nodes(n1).x * zoom + shiftx), CSng(-Nodes(n1).y * zoom + shifty))
                 ptsf(1) = New PointF(CSng(Nodes(n2).x * zoom + shiftx), CSng(-Nodes(n2).y * zoom + shifty))
                 ptsf(2) = New PointF(CSng(Nodes(n3).x * zoom + shiftx), CSng(-Nodes(n3).y * zoom + shifty))
-
                 ptsf(3) = New PointF(CSng(Nodes(n4).x * zoom + shiftx), CSng(-Nodes(n4).y * zoom + shifty))
-
 
                 'Draw the element
                 gr.FillPolygon(New SolidBrush(eleColor), ptsf)
                 gr.DrawPolygon(New Pen(Color.Black), ptsf)
-
             Next
 
             'Draw the node numbers
@@ -1394,7 +1387,6 @@ Public Class frmTrans2D
                     ny = CInt(-Nodes(i).y * zoom + shifty)
                     Dim r As New Rectangle(nx - 3, ny - 3, 6, 6)
                     gr.DrawEllipse(p, r)
-
                     gr.DrawString((i + 1).ToString, fnt, brsh, New PointF(nx + 5, ny + 5))
 
                 Next
@@ -1411,9 +1403,7 @@ Public Class frmTrans2D
                     ny = CInt(-Nodes(i).y * zoom + shifty)
                     Dim r As New Rectangle(nx - 3, ny - 3, 6, 6)
                     gr.DrawEllipse(p, r)
-
                     gr.DrawString(CStr(Nodes(i).NumExpo), fnt, brsh, New PointF(nx + 5, ny + 5))
-
                 Next
             End If
 
@@ -1473,9 +1463,7 @@ Public Class frmTrans2D
             'we can plot now.
             If ShowDeformations = True Then
                 ReDim ptsf(3)
-
                 'compute the colormap
-
                 'set the colormap if required
                 Select Case ShowResult
                     Case Results.None
@@ -1540,7 +1528,6 @@ Public Class frmTrans2D
                     n1 = Elements(i).Node1 - 1
                     n2 = Elements(i).Node2 - 1
                     n3 = Elements(i).Node3 - 1
-
                     n4 = Elements(i).Node4 - 1
 
                     'ptsf(0) = New PointF((CSng(Nodes(n1).x * zoom + getDeformationX(n1) * DeformationZoom) + shiftx), CSng((-Nodes(n1).y * zoom - getDeformationY(n1) * DeformationZoom) + shifty))
@@ -1902,6 +1889,7 @@ Public Class frmTrans2D
         'show the output
         DrawModel()
     End Sub
+
 
     Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then
