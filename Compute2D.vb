@@ -327,10 +327,7 @@ Public Class Compute2D
         Dim dH_avg As Double
         Dim dw_avg As Double
         Dim dS_avg As Double
-
-
         Dim T(ind) As Double 'time vector (days)
-
         frm.HRRange = New Range
         frm.SlRange = New Range
         ReDim frm.Time(ind + 2)
@@ -356,6 +353,10 @@ Public Class Compute2D
                     H_old(i) = H_int
                     S_old(i) = GetHtoS(H_old(i), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
                     w_old(i) = wsat * S_old(i) * phi
+
+                    H_new(i) = H_old(i)
+                    S_new(i) = S_old(i)
+                    w_new(i) = w_old(i)
                 Next
                 Dim w_avg_0 As Double = w_old.Average()
                 Dim H_avg_0 As Double = H_old.Average()
@@ -367,18 +368,18 @@ Public Class Compute2D
                 For i As Integer = 0 To frm.NElements - 1
                     ReDim frm.Elements(i).HR(ind + 2)
                     ReDim frm.Elements(i).Sl(ind + 2)
-                    frm.Elements(i).HR(0) = H_int * 100
-                    frm.Elements(i).Sl(0) = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w) * 100
+                    frm.Elements(i).HR(0) = H_new(i) * 100
+                    frm.Elements(i).Sl(0) = S_new(i) * 100
                     frm.HRRange.AddValue(frm.Elements(i).HR(0))
                     frm.SlRange.AddValue(frm.Elements(i).Sl(0))
                 Next
+                'apply BC
                 Dim i_node As Integer
                 For i_node = 0 To nDof - 1
                     Print(CInt(nFic1), H_old(i_node), ",", TAB)
                     Print(CInt(nFic2), w_old(i_node), ",", TAB)
                     Print(CInt(nfic3), S_old(i_node), ",", TAB)
                     If frm.Nodes(i_node).Bord = True Then
-                        ' check whether the current boundary is exposed to a boundary condition
                         Dim X_node As Double = frm.Nodes(i_node).x
                         Dim Y_node As Double = frm.Nodes(i_node).y
                         Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
@@ -423,24 +424,27 @@ Public Class Compute2D
                 'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
                 RegisterField(nFic1, dt / 1000.0, nDof, dH_avg, H_new)
                 PrintLine(CInt(nFic1), " ")
-
                 RegisterField(nFic2, dt / 1000.0, nDof, dw_avg, w_new)
                 PrintLine(CInt(nFic2), " ")
-
                 RegisterField(nfic3, dt / 1000.0, nDof, dS_avg, S_new)
                 PrintLine(CInt(nfic3), " ")
-
             Else
-
-                'regular loop
+                ''regular loop
                 For i_node As Integer = 0 To nDof - 1
-                    'boundary check program, 2020.08.03 Thomas
-                    Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
-                    If NbExpo <> 0 Then
-                        H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
-                    End If
+                    ''boundary check program, 2020.08.03 Thomas
+                    'Dim NbExpo As Integer = frm.Nodes(i_node).NumExpo
+                    'If NbExpo <> 0 Then
+                    '    H_old(i_node) = Expo(NbExpo - 1).Humidite(ti)
+                    'Else
+                    '    H_old(i_node) = H_new(i_node)
+                    'End If
+                    H_old(i_node) = H_new(i_node)
+                    S_old(i_node) = S_new(i_node)
+                    w_old(i_node) = w_new(i_node)
                 Next
-
+                'H_old = H_new
+                'S_old = S_new
+                'w_old = w_new
                 'step 2: elemental and global Matrix constructions
                 Dim LHS(,) As Double
                 Dim R(,) As Double
@@ -495,7 +499,7 @@ Public Class Compute2D
                     If NbExpo <> 0 Then
                         H_new(j) = Expo(NbExpo - 1).Humidite(ti) ' check whether the current boundary is exposed to a boundary condition
                     End If
-                    'isotherm state check 
+                    ''isotherm state check 
                     If w = 0 And H_new(j) > H_old(j) Then 'state change from desorption to adsorption
                         w = 1
                     ElseIf w = 1 And H_new(j) < H_old(j) Then 'adsorption to desorption
@@ -533,11 +537,11 @@ Public Class Compute2D
                     RegisterField(nfic3, ti * dt, nDof, dS_avg, S_new)
                     PrintLine(CInt(nfic3), " ")
                 End If
+                'H_old = H_new
+                'S_old = S_new
+                'w_old = w_new
             End If
-            H_old = H_new
-            S_old = S_new
         Next
-
         FileClose(CInt(nFic1))
         FileClose(CInt(nFic2))
         FileClose(CInt(nfic3))
