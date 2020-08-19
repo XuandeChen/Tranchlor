@@ -131,8 +131,6 @@ Public Class Compute2D
         Dim OutFile As String
         Dim Canc As Boolean = False
         Dim nFic As Integer = FreeFile()
-        Dim i, j As Short
-
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
@@ -141,7 +139,6 @@ Public Class Compute2D
         FilePost(OutFile, Postfile)
         Input(nFic, H_int)
         Input(nFic, Tc)
-
         FileClose(nFic)
 
     End Sub
@@ -156,8 +153,6 @@ Public Class Compute2D
         Dim OutFile As String
         Dim Canc As Boolean = False
         Dim nFic As Integer = FreeFile()
-        Dim i, j As Short
-
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
@@ -171,25 +166,16 @@ Public Class Compute2D
 
         Dim NodeMin, NodeMax As Integer
         For ii As Integer = 0 To NbExpo - 1
-
             Dim FileExpo As String
             Input(nFic, FileExpo)
-
             Expo(ii) = New Exposition(FileExpo)
-
             Input(nFic, NodeMin)
             Input(nFic, NodeMax)
-
             For jj As Integer = NodeMin To NodeMax
-
                 Nodes(jj - 1).NumExpo = ii + 1
-
             Next
-
         Next
-
         FileClose(nFic)
-
     End Sub
 
     Public Sub Read_Simulation(ByRef Dir As String)
@@ -202,28 +188,22 @@ Public Class Compute2D
         Dim OutFile As String
         Dim Canc As Boolean = False
         Dim nFic As Integer = FreeFile()
-        Dim i, j As Short
-
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
         Dim Postfile As String = frmTrans2D.Directory & "\"
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         FilePost(OutFile, Postfile)
-
         Dim Para1 As Single
         Dim Para2 As Single
         Dim Para3 As Single
         Dim Para4 As Single
         Dim test As Single
-
         Input(nFic, tmax)
         Input(nFic, dt)
         Input(nFic, T_sauv)
-
         directory = Dir
         FileClose(nFic)
-
     End Sub
 
     Public Sub DBInput(ByRef MatName As String)
@@ -233,11 +213,9 @@ Public Class Compute2D
         Try
 
             con.Open()
-
             Dim sql As String = "SELECT * FROM Materials WHERE Name IN ('" + MatName + "')"
             Dim command As New SqlCommand(sql, con)
             Dim reader As SqlDataReader = command.ExecuteReader()
-
             While reader.Read()
                 type = CDbl(reader("Type").ToString())
                 W_C_ratio = CDbl(reader("W/C").ToString())
@@ -247,22 +225,17 @@ Public Class Compute2D
                 D0 = CDbl(reader("Dvap").ToString()) * 1000000.0
                 alpha_0 = CDbl(reader("alpha0").ToString())
                 Hc = CDbl(reader("Hc").ToString())
-
                 'wc = CDbl(reader("W/C").ToString())
                 'kg = CDbl(reader("kg").ToString())
                 'kl = CDbl(reader("kl").ToString())
                 'a = CDbl(reader("a").ToString())
                 'b = CDbl(reader("b").ToString())
                 'm = CDbl(reader("m").ToString())
-
             End While
 
         Catch ex As SqlException
-
             MsgBox("Database not found")
-
         End Try
-
     End Sub
 
     Public Sub CalculInitialization()

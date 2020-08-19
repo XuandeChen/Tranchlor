@@ -385,6 +385,7 @@
     <Content Include="Resources\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Exposition\EXPO2D_200Elements_serveurXC.txt" />
     <Content Include="Resources\Exposition\EXPO2D_Explication.txt" />
     <Content Include="Resources\Exposition\EXPO2D_200Elements.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_E_DAVOS.txt" />
