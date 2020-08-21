@@ -559,54 +559,53 @@ Public Class frmTrans2D
 
         'Dim pc_0 As Double = 8.8678 ' parameter for ordinary concrete (Mpa) W/C = 0.73
         'Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
-        Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
+        'Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
         'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
-        'Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
+        Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
         'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' 
 
         'Dim KK As Double = 0.00000000000009 'given by the user ,9e-14 W/C = 0.73
         'Dim KK As Double = 0.0000000000000042 'given by the user ,4.2e-15 W/C = 0.6
-        Dim KK As Double = 0.0000000000000085 'given by the user ,8.5e-15 W/C = 0.52
+        'Dim KK As Double = 0.0000000000000085 'given by the user ,8.5e-15 W/C = 0.52
         'Dim KK As Double = 0.0000000000000017 'given by the user ,1.7e-15 W/C = 0.5
-        'Dim KK As Double = 3.5e-15 'given by the user ,3.5e-15 W/C = 0.44
+        Dim KK As Double = 0.0000000000000035 'given by the user ,3.5e-15 W/C = 0.44
         'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
 
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
         'Dim phi As Double = 0.1299 'porosity (W/C = 0.6-0.73)
-        Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
-        'Dim phi As Double = 0.12 'porosity (W/C = 0.44)
+        'Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
+        Dim phi As Double = 0.12 'porosity (W/C = 0.44)
         Dim type As Integer = 1 'cement type (-)
 
         'Dim W_C_ratio As Double = 0.73 'W/C = 0.73
         'Dim W_C_ratio As Double = 0.6 'W/C = 0.6
-        Dim W_C_ratio As Double = 0.52 'W/C = 0.52
+        'Dim W_C_ratio As Double = 0.52 'W/C = 0.52
         'Dim W_C_ratio As Double = 0.5 'W/C = 0.5
-        'Dim W_C_ratio As Double = 0.44 'W/C = 0.44
+        Dim W_C_ratio As Double = 0.44 'W/C = 0.44
         'Dim W_C_ratio As Double = 0.4 'W/C = 0.4
 
         'Dim C As Double = 250 'density of cement (W/C = 0.73)
         'Dim C As Double = 310 'density of cement (W/C = 0.6)
-        Dim C As Double = 375 'density of cement (W/C = 0.52)
+        'Dim C As Double = 375 'density of cement (W/C = 0.52)
         'Dim C As Double = 350 'density of cement (W/C = 0.5)
-        'Dim C As Double = 375 'density of cement (W/C = 0.44)
+        Dim C As Double = 375 'density of cement (W/C = 0.44)
         'Dim C As Double = 400 'density of cement (W/C = 0.4)
 
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
 
-        Dim alpha As Double = 0.9 'hydration degree (W/C=...)
+        Dim alpha As Double = 0.6 'hydration degree (W/C=...)
         'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
         'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5)
         'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
 
         'Dim Tk As Double = 293 'temperature in (K) 20c
         'Dim Tk As Double = 283 'temperature in (K) 10c
-        Dim Tk As Double = 273 'temperature in (K) 0c
+        Dim Tk As Double = 293 'temperature in (K) 0c
         Dim Tc As Double = Tk - 273 'temperature in (C)
         Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
-        'Dim Water As Double = C * W_C_ratio 'saturated water content (-)
         Dim St As Double = 0.2 'capillary pressure residual saturation
 
         'Geometry parameters for boundary check program
@@ -637,16 +636,16 @@ Public Class frmTrans2D
         Dim nFic2 As Short
         Dim outfile(2) As String
         Dim nDof As Integer = NNodes
-        Dim w As Double = 1 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
-        Dim H_int As Double = 0.75 'initial relative humidity
-        Dim H_bound1 As Double = 1 'boundary relative humidity1
-        Dim H_bound2 As Double = 1 'boundary relative humidity2
-        Dim H_bound3 As Double = 1 'boundary relative humidity3
-        Dim H_bound4 As Double = 1 'boundary relative humidity4
+        Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
+        Dim H_int As Double = 1 'initial relative humidity
+        Dim H_bound1 As Double = 0.75 'boundary relative humidity1
+        Dim H_bound2 As Double = 0.75 'boundary relative humidity2
+        Dim H_bound3 As Double = 0.75 'boundary relative humidity3
+        Dim H_bound4 As Double = 0.75 'boundary relative humidity4
         Dim ti As Integer
-        Dim dt As Double = 3600       'time interval (s)
+        Dim dt As Double = 3600        'time interval (s)
         'Dim tmax As Double = 3600 * 24 * 3 'end time (s)  3Days / Lunk
-        Dim tmax As Double = 3600 * 24 * 7.5 'end time (s)  7.5days / DC
+        Dim tmax As Double = 3600 * 24 * 100 'end time (s)  7.5days / DC
         Dim ind As Integer = CInt(tmax / dt)
         Dim H_old(nDof - 1) As Double
         Dim H_new(nDof - 1) As Double
@@ -663,7 +662,7 @@ Public Class frmTrans2D
         'Dim dH_avg As Double
         Dim dw_avg As Double
         Dim dS_avg As Double
-        Dim T_sauv As Single = 14400     'ouput time inteval (s) 4h /10day
+        Dim T_sauv As Single = 3600 * 24     'ouput time inteval (s) 4h /10day
         Dim i, j, jj As Integer
         Dim NewLHS(,) As Double
         Dim NewR(,) As Double
@@ -959,7 +958,7 @@ Public Class frmTrans2D
                   End Sub)
     End Sub
     Public Sub AnalyseThermo()
-        'Material parameters, can be converted from user defined input
+        '' codes à modifier
         Dim pg As Double = 101325 'atmosphere pressure(pa)
         Dim rho_v As Double = 1 'density of vapor (kg/m3)
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
