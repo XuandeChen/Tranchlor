@@ -180,8 +180,8 @@ Module Functions2D
         Return f
     End Function
     ' saturated water function 
-    Public Function GetWsat(ByRef Water_tot As Double, ByRef C As Double) As Double
-        Dim Wsat As Double = Water_tot - C * 0.2
+    Public Function GetWsat(ByRef Water_tot As Double, ByRef C As Double, ByRef alpha As Double) As Double
+        Dim Wsat As Double = Water_tot - C * 0.2 * alpha
         Return Wsat
     End Function
     'isotherm function 
@@ -199,7 +199,7 @@ Module Functions2D
         Dim wc As Double = (Cbet * k * Vm * H) / ((1 - k * H) * (1 + (Cbet - 1) * k * H))
         Dim Sa As Double = wc / wc1
         ' the desorption curve from [Roelfstra 1989]
-        alpha = 0.6
+        'alpha = 0.6
         Dim Tc As Double = Tk - 273 'temperature in [C]
         Dim Ht As Double = 1 - 0.161 * alpha
         Dim c1 As Double = 0.125
