@@ -258,7 +258,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
@@ -566,17 +566,25 @@ Public Class frmTrans2D
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' 
 
-        'Dim KK As Double = 0.0000000000000055 'given by the user ,7.5e-15 W/C = 0.73
+        'Dim KK As Double = 0.0000000000000055 'given by the user ,5.5e-15 W/C = 0.73 dry to 75%RH
         'Dim KK As Double = 0.0000000000000042 'given by the user ,4.2e-15 W/C = 0.6
-        Dim KK As Double = 0.0000000000000037 'given by the user ,3.7e-15 W/C = 0.52
+        'Dim KK As Double = 3.5E-15 'given by the user ,3.5e-15 W/C = 0.52 dry to 75%RH
+
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 50%RH
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.44 dry to 50%RH
+        'Dim KK As Double = 0.00000000000000025 'given by the user ,2.5e-16 W/C = 0.73 dry to 50%RH
+
+        Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.44 dry to 25%RH
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
+        'Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.73 dry to 25%RH
+
         'Dim KK As Double = 0.0000000000000017 'given by the user ,1.7e-15 W/C = 0.5
-        'Dim KK As Double = 1.5e-15 'given by the user ,1.5e-15 W/C = 0.44
+        'Dim KK As Double = 0.0000000000000015 'given by the user ,1.5e-15 W/C = 0.44 dry to 75%RH
         'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
 
+        Dim alpha_int = 0.6
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
-        'Dim phi As Double = 0.1299 'porosity (W/C = 0.6-0.73)
-        Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
-        'Dim phi As Double = 0.12 'porosity (W/C = 0.44)
+
         Dim type As Integer = 1 'cement type (-)
 
         'Dim W_C_ratio As Double = 0.73 'W/C = 0.73
@@ -593,19 +601,35 @@ Public Class frmTrans2D
         'Dim C As Double = 375 'density of cement (W/C = 0.44)
         'Dim C As Double = 400 'density of cement (W/C = 0.4)
 
+        Dim phi As Double = (C * W_C_ratio - 0.2 * C * alpha_int) / rho_l
+        'Dim phi As Double = 0.1299 'porosity (W/C = 0.6-0.73)
+        'Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
+        'Dim phi As Double = 0.12 'porosity (W/C = 0.44)
+
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
 
-        Dim alpha As Double = 0.28 'hydration degree (W/C=...)
-        'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
-        'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5)
-        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
+        'Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 75%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 75%)
+        'Dim alpha As Double = 0.82 'hydration degree (W/C=0.73, DC to 75%)
+
+        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.44, DC to 50%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 50%)
+        'Dim alpha As Double = 0.6 'hydration degree (W/C=0.73, DC to 50%)
+
+        Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 25%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 25%)
+        'Dim alpha As Double = 0.76 'hydration degree (W/C=0.73, DC to 25%)
+
+        'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6,LK)
+        'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5,LK)
+        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4,LK)
 
         Dim Tk As Double = 293 'temperature in (K) 20c
         'Dim Tk As Double = 283 'temperature in (K) 10c
         'Dim Tk As Double = 273 'temperature in (K) 0c
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
         Dim St As Double = 0.2 'capillary pressure residual saturation
 
         'Geometry parameters for boundary check program
@@ -614,11 +638,13 @@ Public Class frmTrans2D
         'Dim X_lower As Double = -75 'mm, upper bound of X coordinate
         'Dim Y_upper As Double = 75 'mm, upper bound of Y coordinate
         'Dim Y_lower As Double = -75 'mm, upper bound of Y coordinate
+
         'DC A&B
         Dim X_upper As Double = 15 'mm, upper bound of X coordinate
         Dim X_lower As Double = -15 'mm, upper bound of X coordinate
         Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
         Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
+
         ''DC C
         'Dim X_upper As Double = 20 'mm, upper bound of X coordinate
         'Dim X_lower As Double = -20 'mm, upper bound of X coordinate
@@ -640,15 +666,15 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
         Dim Node_w(nDof - 1) As Double
         Dim H_int As Double = 1 'initial relative humidity
-        Dim H_bound1 As Double = 0.5 'boundary relative humidity1
-        Dim H_bound2 As Double = 0.5 'boundary relative humidity2
-        Dim H_bound3 As Double = 0.5 'boundary relative humidity3
-        Dim H_bound4 As Double = 0.5 'boundary relative humidity4
+        Dim H_bound1 As Double = 0.25 'boundary relative humidity1
+        Dim H_bound2 As Double = 0.25 'boundary relative humidity2
+        Dim H_bound3 As Double = 0.25 'boundary relative humidity3
+        Dim H_bound4 As Double = 0.25 'boundary relative humidity4
         Dim ti As Integer
         Dim dt As Double = 3600       'time interval (s)
         Dim dt_new As Double
         'Dim tmax As Double = 3600 * 24 * 3 'end time (s)  3Days / Lunk
-        Dim tmax As Double = 3600 * 24 * 300 'end time (s)  7.5days / DC
+        Dim tmax As Double = 3600 * 24 * 450 'end time (s)  7.5days / DC
         Dim ind As Integer = CInt(tmax / dt)
         Dim H_old(nDof - 1) As Double
         Dim H_new(nDof - 1) As Double
@@ -665,7 +691,7 @@ Public Class frmTrans2D
         'Dim dH_avg As Double
         Dim dw_avg As Double
         Dim dS_avg As Double
-        Dim T_sauv As Single = 3600 * 4     'ouput time inteval (s) 4h /10day
+        Dim T_sauv As Single = 3600 * 24     'ouput time inteval (s) 4h /10day
         Dim i, j, jj As Integer
         Dim NewLHS(,) As Double
         Dim NewR(,) As Double
@@ -930,6 +956,7 @@ Public Class frmTrans2D
                 '    Norm_R = GetNorm(R)
                 '    GetX(S_new, NewLHS, RHS_ite)
                 'Loop Until Norm_R <= tol
+
                 'step 5: data stockage
                 For j = 0 To NNodes - 1
                     If S_new(j) >= 1 Then
@@ -1013,7 +1040,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
@@ -1330,7 +1357,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
