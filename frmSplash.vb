@@ -283,7 +283,6 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
     'Gestion de la fenêtre
     Private Sub Run()
         Timer1.Enabled = False
-        Me.Visible = False
         Me.Close()
     End Sub
 

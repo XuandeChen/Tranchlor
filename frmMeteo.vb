@@ -28,7 +28,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents ButtonExportFile As System.Windows.Forms.Button
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
@@ -141,9 +141,11 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
     Friend WithEvents Label77 As System.Windows.Forms.Label
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents NumericUpDown25 As System.Windows.Forms.NumericUpDown
+    Friend WithEvents ButtonExportDB As Button
+    Friend WithEvents LabelOR As Label
     Friend WithEvents Label78 As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.ButtonExportFile = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.NumericUpDown25 = New System.Windows.Forms.NumericUpDown()
@@ -257,6 +259,8 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         Me.Label64 = New System.Windows.Forms.Label()
         Me.NumericUpDown22 = New System.Windows.Forms.NumericUpDown()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.ButtonExportDB = New System.Windows.Forms.Button()
+        Me.LabelOR = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         CType(Me.NumericUpDown25, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -289,13 +293,13 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         CType(Me.NumericUpDown22, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'Button2
+        'ButtonExportFile
         '
-        Me.Button2.Location = New System.Drawing.Point(850, 580)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(50, 32)
-        Me.Button2.TabIndex = 13
-        Me.Button2.Text = "&Ok"
+        Me.ButtonExportFile.Location = New System.Drawing.Point(665, 580)
+        Me.ButtonExportFile.Name = "ButtonExportFile"
+        Me.ButtonExportFile.Size = New System.Drawing.Size(105, 32)
+        Me.ButtonExportFile.TabIndex = 13
+        Me.ButtonExportFile.Text = "Export File"
         '
         'GroupBox1
         '
@@ -1392,18 +1396,37 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         Me.Button1.TabIndex = 67
         Me.Button1.Text = "Calculer"
         '
-        'TempSeuil
+        'ButtonExportDB
+        '
+        Me.ButtonExportDB.Location = New System.Drawing.Point(795, 580)
+        Me.ButtonExportDB.Name = "ButtonExportDB"
+        Me.ButtonExportDB.Size = New System.Drawing.Size(105, 32)
+        Me.ButtonExportDB.TabIndex = 68
+        Me.ButtonExportDB.Text = "Export Database"
+        '
+        'LabelOR
+        '
+        Me.LabelOR.AutoSize = True
+        Me.LabelOR.Location = New System.Drawing.Point(771, 590)
+        Me.LabelOR.Name = "LabelOR"
+        Me.LabelOR.Size = New System.Drawing.Size(23, 13)
+        Me.LabelOR.TabIndex = 69
+        Me.LabelOR.Text = "OR"
+        '
+        'frmMeteo
         '
         Me.ClientSize = New System.Drawing.Size(912, 616)
+        Me.Controls.Add(Me.LabelOR)
+        Me.Controls.Add(Me.ButtonExportDB)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.ButtonExportFile)
         Me.Controls.Add(Me.Button1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "TempSeuil"
+        Me.Name = "frmMeteo"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Meteo - treatment"
@@ -1440,20 +1463,39 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         CType(Me.NumericUpDown21, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown22, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
 #End Region
 
 
-    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+    Private Sub ButtonExportFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonExportFile.Click
         If CStr(NumericUpDown3.Value) = "" Then
             MsgBox("Manque une concentration d'épandage de NaCl dans l'eau", MsgBoxStyle.Exclamation And MsgBoxStyle.OkOnly, "Avertissement")
             Exit Sub
         End If
+
+        SetExport("File")
+
         Me.Hide()
         Me.Close()
     End Sub
+
+    Private Sub ButtonExportDB_Click(sender As Object, e As EventArgs) Handles ButtonExportDB.Click
+
+        If CStr(NumericUpDown3.Value) = "" Then
+            MsgBox("Manque une concentration d'épandage de NaCl dans l'eau", MsgBoxStyle.Exclamation And MsgBoxStyle.OkOnly, "Avertissement")
+            Exit Sub
+        End If
+
+        SetExport("DB")
+
+        Me.Hide()
+        Me.Close()
+
+    End Sub
+
 
     Private Sub NumericUpDown1_ValueChanged_1(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim nbrInt As Integer
@@ -1468,12 +1510,16 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
     End Sub
 
     Private Sub NumericUpDown_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown3.ValueChanged
-        Button2.Hide()
+        ButtonExportFile.Hide()
+        ButtonExportDB.Hide()
+        LabelOR.Hide()
     End Sub
 
 
     Private Sub NumericUpDown_LostFocus(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown3.LostFocus
-        Button2.Hide()
+        ButtonExportFile.Hide()
+        ButtonExportDB.Hide()
+        LabelOR.Hide()
     End Sub
 
     Private Sub NumericUpDown1_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -1489,14 +1535,13 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
     End Sub
 
     Private Sub Button1_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
         If NumericUpDown1.Text = "" Or NumericUpDown2.Text = "" Or NumericUpDown1.Value <= 0 Or NumericUpDown2.Value <= 0 Then
             MsgBox("Le nombre d'interventions ou l'intervalle minimale entre 2 interventions est invalide", MsgBoxStyle.Exclamation And MsgBoxStyle.OkOnly, "Avertissement")
             Exit Sub
         End If
         WCal()
-    End Sub
-
-    Private Sub TempSeuil_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
+
 End Class

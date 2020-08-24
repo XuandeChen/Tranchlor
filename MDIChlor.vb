@@ -55,6 +55,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem17 As MenuItem
     Friend WithEvents MenuItem13 As MenuItem
     Friend WithEvents MenuItem15 As MenuItem
+    Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -80,6 +81,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -113,13 +115,13 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem1
         '
         Me.MenuItem1.Index = 1
-        Me.MenuItem1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem2})
+        Me.MenuItem1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem2, Me.MenuItem7})
         Me.MenuItem1.Text = "Climat"
         '
         'MenuItem2
         '
         Me.MenuItem2.Index = 0
-        Me.MenuItem2.Text = "MeteoFile"
+        Me.MenuItem2.Text = "Meteo File"
         '
         'MenuItem5
         '
@@ -194,6 +196,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
+        '
+        'MenuItem7
+        '
+        Me.MenuItem7.Index = 1
+        Me.MenuItem7.Text = "Expo Database"
         '
         'MDIChlor
         '
@@ -424,6 +431,14 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Private Sub MenuItem15_Click(sender As Object, e As EventArgs) Handles MenuItem15.Click
 
         Using frm As New frmInput2D
+            frm.ShowDialog()
+        End Using
+
+    End Sub
+
+    Private Sub MenuItem7_Click(sender As Object, e As EventArgs) Handles MenuItem7.Click
+
+        Using frm As New FrmMeteoDatabase
             frm.ShowDialog()
         End Using
 

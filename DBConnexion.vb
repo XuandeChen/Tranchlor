@@ -8,15 +8,28 @@ Public Class DBconnexion
     Public Command As New SqlCommand
     Public user As String
 
-    'Public Sub UserLog()
+    Public Sub New()
 
-    '    Using frm As New FrmLogin
-    '        frm.ShowDialog()
-    '    End Using
+        Dim connected As Boolean = False
 
-    'End Sub
+        Dim ServerName As String = "132.203.36.238"
+        Dim DatabaseName As String = "\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF"
 
-    Public Sub VerifyConnexion()
+        While connected = False
+
+            'Dim frm As New FrmLogin
+            'frm.ShowDialog()
+            Connexion.ConnectionString = "Data Source = " + ServerName + "; Initial Catalog= " + DatabaseName + "; Integrated Security=True"
+
+            If VerifyConnexion() = True Then
+                connected = True
+            End If
+
+        End While
+
+    End Sub
+
+    Public Function VerifyConnexion() As Boolean
 
         If Connexion.State = ConnectionState.Open Then
             Connexion.Close()
@@ -24,11 +37,13 @@ Public Class DBconnexion
 
         Try
             Connexion.Open()
+            Return True
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+            Return False
         End Try
 
-    End Sub
+    End Function
 
     Public Sub DBRequest(ByRef Request As String)
 
@@ -66,6 +81,5 @@ Public Class DBconnexion
         Command.Dispose()
 
     End Sub
-
 
 End Class
