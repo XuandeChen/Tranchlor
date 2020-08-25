@@ -258,7 +258,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
@@ -559,53 +559,77 @@ Public Class frmTrans2D
 
         'Dim pc_0 As Double = 8.8678 ' parameter for ordinary concrete (Mpa) W/C = 0.73
         'Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
-        'Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
+        Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
         'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
-        Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
+        'Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
         'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
         Dim m As Double = 0.4396 ' parameter for ordinary concrete 
         Dim beta As Double = 2.2748 ' 
 
-        'Dim KK As Double = 0.00000000000009 'given by the user ,9e-14 W/C = 0.73
+        'Dim KK As Double = 0.0000000000000055 'given by the user ,5.5e-15 W/C = 0.73 dry to 75%RH
         'Dim KK As Double = 0.0000000000000042 'given by the user ,4.2e-15 W/C = 0.6
-        'Dim KK As Double = 0.0000000000000085 'given by the user ,8.5e-15 W/C = 0.52
+        'Dim KK As Double = 3.5E-15 'given by the user ,3.5e-15 W/C = 0.52 dry to 75%RH
+
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 50%RH
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.44 dry to 50%RH
+        'Dim KK As Double = 0.00000000000000025 'given by the user ,2.5e-16 W/C = 0.73 dry to 50%RH
+
+        Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.44 dry to 25%RH
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
+        'Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.73 dry to 25%RH
+
         'Dim KK As Double = 0.0000000000000017 'given by the user ,1.7e-15 W/C = 0.5
-        Dim KK As Double = 0.00000000000006 'given by the user ,3.5e-15 W/C = 0.44
+        'Dim KK As Double = 0.0000000000000015 'given by the user ,1.5e-15 W/C = 0.44 dry to 75%RH
         'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
 
+        Dim alpha_int = 0.6
         Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
-        'Dim phi As Double = 0.1299 'porosity (W/C = 0.6-0.73)
-        'Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
-        Dim phi As Double = 0.12 'porosity (W/C = 0.44)
+
         Dim type As Integer = 1 'cement type (-)
 
         'Dim W_C_ratio As Double = 0.73 'W/C = 0.73
         'Dim W_C_ratio As Double = 0.6 'W/C = 0.6
-        'Dim W_C_ratio As Double = 0.52 'W/C = 0.52
+        Dim W_C_ratio As Double = 0.52 'W/C = 0.52
         'Dim W_C_ratio As Double = 0.5 'W/C = 0.5
-        Dim W_C_ratio As Double = 0.44 'W/C = 0.44
+        'Dim W_C_ratio As Double = 0.44 'W/C = 0.44
         'Dim W_C_ratio As Double = 0.4 'W/C = 0.4
 
         'Dim C As Double = 250 'density of cement (W/C = 0.73)
         'Dim C As Double = 310 'density of cement (W/C = 0.6)
-        'Dim C As Double = 375 'density of cement (W/C = 0.52)
+        Dim C As Double = 375 'density of cement (W/C = 0.52)
         'Dim C As Double = 350 'density of cement (W/C = 0.5)
-        Dim C As Double = 375 'density of cement (W/C = 0.44)
+        'Dim C As Double = 375 'density of cement (W/C = 0.44)
         'Dim C As Double = 400 'density of cement (W/C = 0.4)
+
+        Dim phi As Double = (C * W_C_ratio - 0.2 * C * alpha_int) / rho_l
+        'Dim phi As Double = 0.1299 'porosity (W/C = 0.6-0.73)
+        'Dim phi As Double = 0.1289 'porosity (W/C = 0.5-0.52)
+        'Dim phi As Double = 0.12 'porosity (W/C = 0.44)
 
         Dim Water_tot As Double = W_C_ratio * C 'density of cement (kg/m3)
         Dim day As Double
 
-        Dim alpha As Double = 0.6 'hydration degree (W/C=...)
-        'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6)
-        'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5)
-        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4)
+        'Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 75%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 75%)
+        'Dim alpha As Double = 0.82 'hydration degree (W/C=0.73, DC to 75%)
 
-        'Dim Tk As Double = 293 'temperature in (K) 20c
+        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.44, DC to 50%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 50%)
+        'Dim alpha As Double = 0.6 'hydration degree (W/C=0.73, DC to 50%)
+
+        Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 25%)
+        'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 25%)
+        'Dim alpha As Double = 0.76 'hydration degree (W/C=0.73, DC to 25%)
+
+        'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6,LK)
+        'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5,LK)
+        'Dim alpha As Double = 0.72 'hydration degree (W/C=0.4,LK)
+
+        Dim Tk As Double = 293 'temperature in (K) 20c
         'Dim Tk As Double = 283 'temperature in (K) 10c
-        Dim Tk As Double = 293 'temperature in (K) 0c
+        'Dim Tk As Double = 273 'temperature in (K) 0c
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
         Dim St As Double = 0.2 'capillary pressure residual saturation
 
         'Geometry parameters for boundary check program
@@ -614,20 +638,23 @@ Public Class frmTrans2D
         'Dim X_lower As Double = -75 'mm, upper bound of X coordinate
         'Dim Y_upper As Double = 75 'mm, upper bound of Y coordinate
         'Dim Y_lower As Double = -75 'mm, upper bound of Y coordinate
+
         'DC A&B
         Dim X_upper As Double = 15 'mm, upper bound of X coordinate
         Dim X_lower As Double = -15 'mm, upper bound of X coordinate
         Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
         Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
+
         ''DC C
         'Dim X_upper As Double = 20 'mm, upper bound of X coordinate
         'Dim X_lower As Double = -20 'mm, upper bound of X coordinate
         'Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
         'Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
-        Dim Expo_X_upper As Boolean = False 'exposure on right most side
+
+        Dim Expo_X_upper As Boolean = True 'exposure on right most side
         Dim Expo_X_lower As Boolean = True 'exposure on left most side
-        Dim Expo_Y_upper As Boolean = False 'exposure on top most side
-        Dim Expo_Y_lower As Boolean = False 'exposure on bottom most side
+        Dim Expo_Y_upper As Boolean = True 'exposure on top most side
+        Dim Expo_Y_lower As Boolean = True 'exposure on bottom most side
         Dim X_node As Double
         Dim Y_node As Double
 
@@ -639,15 +666,15 @@ Public Class frmTrans2D
         Dim w As Double = 0 'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
         Dim Node_w(nDof - 1) As Double
         Dim H_int As Double = 1 'initial relative humidity
-        Dim H_bound1 As Double = 0.5 'boundary relative humidity1
-        Dim H_bound2 As Double = 0.5 'boundary relative humidity2
-        Dim H_bound3 As Double = 0.5 'boundary relative humidity3
-        Dim H_bound4 As Double = 0.5 'boundary relative humidity4
+        Dim H_bound1 As Double = 0.25 'boundary relative humidity1
+        Dim H_bound2 As Double = 0.25 'boundary relative humidity2
+        Dim H_bound3 As Double = 0.25 'boundary relative humidity3
+        Dim H_bound4 As Double = 0.25 'boundary relative humidity4
         Dim ti As Integer
         Dim dt As Double = 3600       'time interval (s)
         Dim dt_new As Double
         'Dim tmax As Double = 3600 * 24 * 3 'end time (s)  3Days / Lunk
-        Dim tmax As Double = 3600 * 24 * 300 'end time (s)  7.5days / DC
+        Dim tmax As Double = 3600 * 24 * 450 'end time (s)  7.5days / DC
         Dim ind As Integer = CInt(tmax / dt)
         Dim H_old(nDof - 1) As Double
         Dim H_new(nDof - 1) As Double
@@ -664,7 +691,7 @@ Public Class frmTrans2D
         'Dim dH_avg As Double
         Dim dw_avg As Double
         Dim dS_avg As Double
-        Dim T_sauv As Single = 3600 * 4     'ouput time inteval (s) 4h /10day
+        Dim T_sauv As Single = 3600 * 24     'ouput time inteval (s) 4h /10day
         Dim i, j, jj As Integer
         Dim NewLHS(,) As Double
         Dim NewR(,) As Double
@@ -798,81 +825,81 @@ Public Class frmTrans2D
                 'For jj = 1 To dt / dt_new
 
                 For i = 0 To nDof - 1 'regular loop
-                        S_old(i) = S_new(i)
-                        w_old(i) = w_new(i)
-                        ''isotherm state check 
-                        If Node_w(i) = 0 And S_new(i) > S_old(i) Then 'state change from desorption to adsorption
-                            w = 1
-                        ElseIf Node_w(i) = 1 And S_new(i) < S_old(i) Then 'adsorption to desorption
-                            w = 0
+                    S_old(i) = S_new(i)
+                    w_old(i) = w_new(i)
+                    ''isotherm state check 
+                    If Node_w(i) = 0 And S_new(i) > S_old(i) Then 'state change from desorption to adsorption
+                        w = 1
+                    ElseIf Node_w(i) = 1 And S_new(i) < S_old(i) Then 'adsorption to desorption
+                        w = 0
+                    End If
+                    If Nodes(i).Bord = True Then
+                        X_node = Nodes(i).x
+                        Y_node = Nodes(i).y
+                        If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
+                            S_new(i) = GetHtoS(H_bound1, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
+                        ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
+                            S_new(i) = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
+                        ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
+                            S_new(i) = GetHtoS(H_bound3, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
+                        ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
+                            S_new(i) = GetHtoS(H_bound4, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
                         End If
-                        If Nodes(i).Bord = True Then
-                            X_node = Nodes(i).x
-                            Y_node = Nodes(i).y
-                            If Math.Abs(X_node - X_lower) <= 0.00001 And Expo_X_lower = True Then
-                                S_new(i) = GetHtoS(H_bound1, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
-                            ElseIf Math.Abs(X_node - X_upper) <= 0.00001 And Expo_X_upper = True Then
-                                S_new(i) = GetHtoS(H_bound2, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
-                            ElseIf Math.Abs(Y_node - Y_lower) <= 0.00001 And Expo_Y_lower = True Then
-                                S_new(i) = GetHtoS(H_bound3, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
-                            ElseIf Math.Abs(Y_node - Y_upper) <= 0.00001 And Expo_Y_upper = True Then
-                                S_new(i) = GetHtoS(H_bound4, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(i))
-                            End If
-                        End If
-                    Next
+                    End If
+                Next
 
-                    'step 2: elemental and global Matrix constructions
-                    'Matrix assembling
-                    For i = 0 To NElements - 1
-                        se = New SETrans(
+                'step 2: elemental and global Matrix constructions
+                'Matrix assembling
+                For i = 0 To NElements - 1
+                    se = New SETrans(
                  S_old(Elements(i).Node1 - 1), S_old(Elements(i).Node2 - 1),
                  S_old(Elements(i).Node3 - 1), S_old(Elements(i).Node4 - 1)
                  )
-                        S_ele = se.getSe
-                        '' new program using nodal interpolations instead of mean value on elements to calculate transport coefficient 2020.08.15 Xuande
-                        Dim kr1 As Double = Getkr(S_ele(0), m)
-                        Dim kr2 As Double = Getkr(S_ele(1), m)
-                        Dim kr3 As Double = Getkr(S_ele(2), m)
-                        Dim kr4 As Double = Getkr(S_ele(3), m)
-                        Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
-                        Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
-                        Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
-                        Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
-                        Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
-                        Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
-                        Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
-                        Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
-                        Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
-                        Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
-                        Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
-                        Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
-                        Dim f1 As Double = Getf(phi, S_ele(0))
-                        Dim f2 As Double = Getf(phi, S_ele(1))
-                        Dim f3 As Double = Getf(phi, S_ele(2))
-                        Dim f4 As Double = Getf(phi, S_ele(3))
-                        Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
-                        Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
-                        Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
-                        Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
-                        Dim d1 As Double = Dl1 + Dv1
-                        Dim d2 As Double = Dl2 + Dv2
-                        Dim d3 As Double = Dl3 + Dv3
-                        Dim d4 As Double = Dl4 + Dv4
-                        cieNew = New CIETransNew(
+                    S_ele = se.getSe
+                    '' new program using nodal interpolations instead of mean value on elements to calculate transport coefficient 2020.08.15 Xuande
+                    Dim kr1 As Double = Getkr(S_ele(0), m)
+                    Dim kr2 As Double = Getkr(S_ele(1), m)
+                    Dim kr3 As Double = Getkr(S_ele(2), m)
+                    Dim kr4 As Double = Getkr(S_ele(3), m)
+                    Dim pc1 As Double = Getpc(S_ele(0), pc_0, beta, St)
+                    Dim pc2 As Double = Getpc(S_ele(1), pc_0, beta, St)
+                    Dim pc3 As Double = Getpc(S_ele(2), pc_0, beta, St)
+                    Dim pc4 As Double = Getpc(S_ele(3), pc_0, beta, St)
+                    Dim dpcdS1 As Double = GetdpcdS(S_ele(0), pc_0, beta)
+                    Dim dpcdS2 As Double = GetdpcdS(S_ele(1), pc_0, beta)
+                    Dim dpcdS3 As Double = GetdpcdS(S_ele(2), pc_0, beta)
+                    Dim dpcdS4 As Double = GetdpcdS(S_ele(3), pc_0, beta)
+                    Dim Dl1 As Double = GetDl(KK, yita_l, dpcdS1, kr1)
+                    Dim Dl2 As Double = GetDl(KK, yita_l, dpcdS2, kr2)
+                    Dim Dl3 As Double = GetDl(KK, yita_l, dpcdS3, kr3)
+                    Dim Dl4 As Double = GetDl(KK, yita_l, dpcdS4, kr4)
+                    Dim f1 As Double = Getf(phi, S_ele(0))
+                    Dim f2 As Double = Getf(phi, S_ele(1))
+                    Dim f3 As Double = Getf(phi, S_ele(2))
+                    Dim f4 As Double = Getf(phi, S_ele(3))
+                    Dim Dv1 As Double = GetDv(rho_v, rho_l, dpcdS1, f1, D, pg)
+                    Dim Dv2 As Double = GetDv(rho_v, rho_l, dpcdS2, f2, D, pg)
+                    Dim Dv3 As Double = GetDv(rho_v, rho_l, dpcdS3, f3, D, pg)
+                    Dim Dv4 As Double = GetDv(rho_v, rho_l, dpcdS4, f4, D, pg)
+                    Dim d1 As Double = Dl1 + Dv1
+                    Dim d2 As Double = Dl2 + Dv2
+                    Dim d3 As Double = Dl3 + Dv3
+                    Dim d4 As Double = Dl4 + Dv4
+                    cieNew = New CIETransNew(
                 Nodes(Elements(i).Node1 - 1).x, Nodes(Elements(i).Node1 - 1).y,
                 Nodes(Elements(i).Node2 - 1).x, Nodes(Elements(i).Node2 - 1).y,
                 Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                 Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
                 d1, d2, d3, d4)
-                        AssembleKg(cieNew.getbe, bg, i)
-                        AssembleKg(cieNew.getAe, Ag, i)
-                    Next
+                    AssembleKg(cieNew.getbe, bg, i)
+                    AssembleKg(cieNew.getAe, Ag, i)
+                Next
 
                 'step 3: now, we have assembled Sg_old, Ag and bg , to get LHS and RHS and solve it
                 getNewLHS(NewLHS, NNodes, phi, Ag, bg, dt)
                 getNewR(NewR, NNodes, phi, Ag, bg, dt)
                 RHS = MultiplyMatrixWithVector(NewR, S_old)
-                    GetX(S_new, NewLHS, RHS)
+                GetX(S_new, NewLHS, RHS)
 
                 'Do
                 '    'step 4: check residual convergence
@@ -929,6 +956,7 @@ Public Class frmTrans2D
                 '    Norm_R = GetNorm(R)
                 '    GetX(S_new, NewLHS, RHS_ite)
                 'Loop Until Norm_R <= tol
+
                 'step 5: data stockage
                 For j = 0 To NNodes - 1
                     If S_new(j) >= 1 Then
@@ -1012,7 +1040,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate
@@ -1329,7 +1357,7 @@ Public Class frmTrans2D
         Dim alpha As Double = 0.85 'hydration degree (-)
         Dim Tk As Double = 293 'temperature in (K), attention, faudrait l'inserer dans le boucle parce que cela va varier en fonction de temps et espace, XC 2020.07.30
         Dim Tc As Double = Tk - 273 'temperature in (C)
-        Dim wsat As Double = GetWsat(Water_tot, C) 'saturated water mass (kg/m3)
+        Dim wsat As Double = GetWsat(Water_tot, C, alpha) 'saturated water mass (kg/m3)
 
         'Geometry parameters for boundary check program
         Dim X_upper As Double = 75 '200'mm, upper bound of X coordinate

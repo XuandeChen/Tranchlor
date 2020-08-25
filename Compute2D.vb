@@ -240,7 +240,7 @@ Public Class Compute2D
 
     Public Sub CalculInitialization()
         Water_tot = W_C_ratio * C 'densite eau (kg/m3)
-        wsat = GetWsat(Water_tot, C) 'teneur en eau sature (kg/m3)
+        wsat = GetWsat(Water_tot, C, alpha) 'teneur en eau sature (kg/m3)
         w = 0 'indicator for isotherm curve, the initial value for desorption (w = 0) or adsorption curve (w = 1) for the first step
         alpha = 0.85 'hydration degree (-)
         day = 0 'age du beton
