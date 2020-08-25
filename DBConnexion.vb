@@ -79,6 +79,8 @@ Public Class DBconnexion
     Public Sub Dispose()
 
         Command.Dispose()
+        Connexion.Close()
+        Connexion.Dispose()
 
     End Sub
 
