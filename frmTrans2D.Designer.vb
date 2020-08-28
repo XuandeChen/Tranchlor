@@ -30,8 +30,6 @@ Partial Class frmTrans2D
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ModelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AnalyseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Diffusion2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Transport2DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ResultsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowNodeNumbersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -114,22 +112,9 @@ Partial Class frmTrans2D
         '
         'AnalyseToolStripMenuItem
         '
-        Me.AnalyseToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Diffusion2DToolStripMenuItem, Me.Transport2DToolStripMenuItem})
         Me.AnalyseToolStripMenuItem.Name = "AnalyseToolStripMenuItem"
         Me.AnalyseToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
         Me.AnalyseToolStripMenuItem.Text = "&Analyse"
-        '
-        'Diffusion2DToolStripMenuItem
-        '
-        Me.Diffusion2DToolStripMenuItem.Name = "Diffusion2DToolStripMenuItem"
-        Me.Diffusion2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.Diffusion2DToolStripMenuItem.Text = "Diffusion 2D"
-        '
-        'Transport2DToolStripMenuItem
-        '
-        Me.Transport2DToolStripMenuItem.Name = "Transport2DToolStripMenuItem"
-        Me.Transport2DToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.Transport2DToolStripMenuItem.Text = "Transport 2D"
         '
         'ToolStripMenuItem2
         '
@@ -390,8 +375,6 @@ Partial Class frmTrans2D
     Friend WithEvents LabelTVal As Label
     Friend WithEvents LabelProgress As Label
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents Diffusion2DToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents Transport2DToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShowExpositionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SlToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -1,4 +1,6 @@
 
+Imports System.Linq
+
 Public Class Compute1D
 
     Public LgLim As Integer = 40
@@ -415,6 +417,76 @@ Public Class Compute1D
 
     End Sub
 
+    Public Function ReadExpo(ByRef INFile As String, ByRef NbreEn As Integer, ByRef Fit As Single, ByRef Temperature() As Single, ByRef Humidite() As Single, ByRef Sel() As Single,
+                             ByRef Msel As Decimal, ByRef Wsat As Single, ByRef TempMin As Decimal, ByRef TempMax As Single, ByRef TempEcart As Single) As Boolean
+
+        Dim nFic As Short = CShort(FreeFile())
+
+        If INFile.Contains(".txt") Then
+
+            Try
+                FileOpen(CInt(nFic), INFile, OpenMode.Input, OpenAccess.Read)
+                Input(CInt(nFic), NbreEn)
+                Input(CInt(nFic), Fit)
+
+                ReDim Humidite(NbreEn)
+                ReDim Sel(NbreEn)
+                ReDim Temperature(NbreEn)
+
+                For j As Integer = 1 To NbreEn
+                    Input(CInt(nFic), Humidite(j))
+                    Input(CInt(nFic), Sel(j))
+                    Input(CInt(nFic), Temperature(j))
+                    If Temperature(CLng(j)) > TempMax Then TempMax = Temperature(CLng(j))
+                    If Temperature(CLng(j)) < TempMin Then TempMin = Temperature(CLng(j))
+                    Sel(j) = Sel(j) * 35.453 / 58.443    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
+                    If Msel < Sel(j) * Wsat Then Msel = Sel(j) * Wsat
+                Next
+                FileClose(CInt(nFic))
+
+            Catch ex As Exception
+                Return False
+            End Try
+
+        Else
+
+            Try
+
+                Dim DBCon As New DBconnexion
+                Dim Expo As New MaterialsData
+
+                DBCon.DBRequest("SELECT * FROM [" + INFile + "]")
+                DBCon.MatFill(Expo, INFile)
+
+                Dim ExpoTable()() As Object = Expo.Tables(INFile).Rows.Cast(Of DataRow).Select(Function(dr) dr.ItemArray).ToArray
+
+                NbreEn = ExpoTable.Count()
+                Fit = 3600
+
+                ReDim Humidite(NbreEn)
+                ReDim Sel(NbreEn)
+                ReDim Temperature(NbreEn)
+
+                For j As Integer = 0 To NbreEn - 1
+                    Humidite(j) = ExpoTable(j)(1)
+                    Sel(j) = ExpoTable(j)(2)
+                    Temperature(j) = ExpoTable(j)(3)
+                    If Temperature(CLng(j)) > TempMax Then TempMax = Temperature(CLng(j))
+                    If Temperature(CLng(j)) < TempMin Then TempMin = Temperature(CLng(j))
+                    Sel(j) = Sel(j) * 35.453 / 58.443    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
+                    If Msel < Sel(j) * Wsat Then Msel = Sel(j) * Wsat
+                Next j
+
+            Catch ex As Exception
+                Return False
+            End Try
+
+        End If
+
+        Return True
+
+    End Function
+
     'Coeur du calcul
     Public Sub Compute_All()
 
@@ -543,9 +615,9 @@ Public Class Compute1D
         Dim testing2 As Single
         Dim testing3 As Single
         'Dim Compteur(5) As Short
-        Dim TempMin As Single
-        Dim TempMax As Single
-        Dim TempEcart As Single
+        Dim TempMin As Single = 40
+        Dim TempMax As Single = -30
+        Dim TempEcart As Single = 0
         Dim NprobHr As Short
         Dim NprobCap As Short
         Dim NprobCl As Short
@@ -831,67 +903,45 @@ Public Class Compute1D
                                 Tteller = CDbl(0)
                                 Carbteller = CDbl(0)
 
-                                GINFile = FileGexpo(Boucle1)
-                                DINFile = FileDexpo(Boucle1)
-                                nFic = CShort(FreeFile())
-                                nFic1 = CShort(FreeFile())
-                                FileOpen(CInt(nFic), GINFile, OpenMode.Input, OpenAccess.Read)
-
-                                TempMin = CSng(40)
-                                TempMax = CSng(-30)
-                                TempEcart = CSng(0)
-                                Input(CInt(nFic), GNbreEn)
-                                Input(CInt(nFic), GFiT)
-                                ReDim GHumidite(GNbreEn)
-                                ReDim GSel(GNbreEn)
-                                ReDim GTemperature(GNbreEn)
-                                For j = 1 To GNbreEn
-                                    Input(CInt(nFic), GHumidite(j))
-                                    Input(CInt(nFic), GSel(j))
-                                    Input(CInt(nFic), GTemperature(j))
-                                    If GTemperature(CLng(j)) > TempMax Then TempMax = GTemperature(CLng(j))
-                                    If GTemperature(CLng(j)) < TempMin Then TempMin = GTemperature(CLng(j))
-                                    GSel(j) = GSel(j) * 35.453 / 58.443    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
-                                    If Msel < GSel(j) * Wsat Then Msel = GSel(j) * Wsat
-                                Next j
-                                FileClose(CInt(nFic))
+                                If ReadExpo(FileGexpo(Boucle1), GNbreEn, GFiT, GTemperature, GHumidite, GSel, Msel, Wsat, TempMin, TempMax, TempEcart) = False Then GoTo BreakBoucle1
 
                                 FiT = GFiT
                                 NbreEn = GNbreEn
-                                If DINFile = "noFile" Then BDlibre = True
-                                If BDlibre = False Then
-                                    FileOpen(CInt(nFic1), DINFile, OpenMode.Input, OpenAccess.Read)
 
-                                    Input(CInt(nFic1), DNbreEn)
-                                    Input(CInt(nFic1), DFiT)
+                                If FileDexpo(Boucle1) = "noFile" Then BDlibre = True
+
+                                If BDlibre = False And ReadExpo(FileDexpo(Boucle1), DNbreEn, DFiT, DTemperature, DHumidite, DSel, Msel, Wsat, TempMin, TempMax, TempEcart) = True Then
+
                                     If GFiT <> DFiT Then MsgBox("fichier d'exposition incompatible", MsgBoxStyle.Information, "Avertissement")
                                     FiT = GFiT
+
                                     If GNbreEn >= DNbreEn Then
                                         NbreEn = GNbreEn
                                     Else
                                         NbreEn = DNbreEn
                                     End If
-                                    ReDim DHumidite(DNbreEn)
-                                    ReDim DSel(DNbreEn)
-                                    ReDim DTemperature(DNbreEn)
+
                                     Hsym = True
                                     Ssym = True
                                     Tsym = True
+
                                     For j = 1 To DNbreEn
-                                        Input(CInt(nFic1), DHumidite(j))
-                                        Input(CInt(nFic1), DSel(j))
-                                        Input(CInt(nFic1), DTemperature(j))
-                                        If DTemperature(CLng(j)) > TempMax Then TempMax = DTemperature(CLng(j))
-                                        If DTemperature(CLng(j)) < TempMin Then TempMin = DTemperature(CLng(j))
-                                        DSel(j) = DSel(j) * 35.453 / 58.443   'calcul de cT à partir de co  à multiplier par w(0) ou (dofs)
+
                                         If Msel < DSel(j) Then Msel = DSel(j)
                                         If DHumidite(j) <> GHumidite(j) Then Hsym = False
                                         If DSel(j) <> GSel(j) Then Ssym = False
                                         If DTemperature(j) <> GTemperature(j) Then Tsym = False
                                     Next j
-                                    FileClose(CInt(nFic1))
+
+                                Else
+
+                                    MsgBox("ERROR: Exposition File at Rigth not considered !")
+                                    BDlibre = True
+
                                 End If
+
                                 TempEcart = TempMax - TempMin
+
                                 If TempEcart = 0 Then       'cas d'essai isotherme
                                     TempEcart = 0.1
                                     TempMax = 30
@@ -1817,6 +1867,7 @@ Again2:                                 If jj = 1 Then
                     Next Boucle4
                 Next Boucle3
             Next Boucle2
+BreakBoucle1:
         Next Boucle1
 
         'programmation pour obtenir des fichiers de comparaison (provisoire)

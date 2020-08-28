@@ -2,6 +2,27 @@
 
 Module Functions2D
     'get the LHS matrix for Gauss matrix resolution
+
+    Public Sub FieldAverage(ByRef Nodes() As NodeTrans, ByRef HRAverage As Double, ByRef SAverage As Double, ByRef WAverage As Double)
+
+        HRAverage = 0
+        SAverage = 0
+        WAverage = 0
+
+        For i As Integer = 0 To Nodes.Length - 1
+
+            HRAverage += Nodes(i).GetHROld()
+            SAverage += Nodes(i).GetSOld()
+            WAverage += Nodes(i).GetWOld()
+
+        Next
+
+        HRAverage /= Nodes.Length
+        SAverage /= Nodes.Length
+        WAverage /= Nodes.Length
+
+    End Sub
+
     Public Function getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim LHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
