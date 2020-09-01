@@ -557,9 +557,9 @@ Public Class frmTrans2D
         Dim rho_l As Double = 1000 'density of liquid (kg/m3)
         Dim rho_c As Double = 2500 'density of concrete (kg/m3)
 
-        'Dim pc_0 As Double = 8.8678 ' parameter for ordinary concrete (Mpa) W/C = 0.73
+        Dim pc_0 As Double = 8.8678 ' parameter for ordinary concrete (Mpa) W/C = 0.73
         'Dim pc_0 As Double = 10.1017 ' parameter for ordinary concrete (Mpa) W/C = 0.6
-        Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
+        'Dim pc_0 As Double = 12.3553 ' parameter for ordinary concrete (Mpa) W/C = 0.52
         'Dim pc_0 As Double = 13.3546 ' parameter for ordinary concrete (Mpa) W/C = 0.5
         'Dim pc_0 As Double = 18.6237 ' parameter for ordinary concrete (Mpa) W/C = 0.44
         'Dim pc_0 As Double = 25.8592 ' parameter for ordinary concrete (Mpa) W/C = 0.4
@@ -574,9 +574,9 @@ Public Class frmTrans2D
         'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.44 dry to 50%RH
         'Dim KK As Double = 0.00000000000000025 'given by the user ,2.5e-16 W/C = 0.73 dry to 50%RH
 
-        Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.44 dry to 25%RH
-        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
-        'Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.73 dry to 25%RH
+        'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.44 dry to 25%RH
+        'Dim KK As Double = 0.0000000000000008 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
+        Dim KK As Double = 0.0000000000000035 'given by the user ,2e-16 W/C = 0.73 dry to 25%RH, not valid
 
         'Dim KK As Double = 0.0000000000000017 'given by the user ,1.7e-15 W/C = 0.5
         'Dim KK As Double = 0.0000000000000015 'given by the user ,1.5e-15 W/C = 0.44 dry to 75%RH
@@ -587,16 +587,16 @@ Public Class frmTrans2D
 
         Dim type As Integer = 1 'cement type (-)
 
-        'Dim W_C_ratio As Double = 0.73 'W/C = 0.73
+        Dim W_C_ratio As Double = 0.73 'W/C = 0.73
         'Dim W_C_ratio As Double = 0.6 'W/C = 0.6
-        Dim W_C_ratio As Double = 0.52 'W/C = 0.52
+        'Dim W_C_ratio As Double = 0.52 'W/C = 0.52
         'Dim W_C_ratio As Double = 0.5 'W/C = 0.5
         'Dim W_C_ratio As Double = 0.44 'W/C = 0.44
         'Dim W_C_ratio As Double = 0.4 'W/C = 0.4
 
-        'Dim C As Double = 250 'density of cement (W/C = 0.73)
+        Dim C As Double = 250 'density of cement (W/C = 0.73)
         'Dim C As Double = 310 'density of cement (W/C = 0.6)
-        Dim C As Double = 375 'density of cement (W/C = 0.52)
+        'Dim C As Double = 375 'density of cement (W/C = 0.52)
         'Dim C As Double = 350 'density of cement (W/C = 0.5)
         'Dim C As Double = 375 'density of cement (W/C = 0.44)
         'Dim C As Double = 400 'density of cement (W/C = 0.4)
@@ -617,9 +617,9 @@ Public Class frmTrans2D
         'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 50%)
         'Dim alpha As Double = 0.6 'hydration degree (W/C=0.73, DC to 50%)
 
-        Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 25%)
+        'Dim alpha As Double = 0.65 'hydration degree (W/C=0.44, DC to 25%)
         'Dim alpha As Double = 0.75 'hydration degree (W/C=0.52, DC to 25%)
-        'Dim alpha As Double = 0.76 'hydration degree (W/C=0.73, DC to 25%)
+        Dim alpha As Double = 0.76 'hydration degree (W/C=0.73, DC to 25%)
 
         'Dim alpha As Double = 0.85 'hydration degree (W/C=0.6,LK)
         'Dim alpha As Double = 0.8 'hydration degree (W/C=0.5,LK)
@@ -640,16 +640,16 @@ Public Class frmTrans2D
         'Dim Y_lower As Double = -75 'mm, upper bound of Y coordinate
 
         'DC A&B
-        Dim X_upper As Double = 15 'mm, upper bound of X coordinate
-        Dim X_lower As Double = -15 'mm, upper bound of X coordinate
-        Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
-        Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
-
-        ''DC C
-        'Dim X_upper As Double = 20 'mm, upper bound of X coordinate
-        'Dim X_lower As Double = -20 'mm, upper bound of X coordinate
+        'Dim X_upper As Double = 15 'mm, upper bound of X coordinate
+        'Dim X_lower As Double = -15 'mm, upper bound of X coordinate
         'Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
         'Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
+
+        ''DC C
+        Dim X_upper As Double = 20 'mm, upper bound of X coordinate
+        Dim X_lower As Double = -20 'mm, upper bound of X coordinate
+        Dim Y_upper As Double = 25 'mm, upper bound of Y coordinate
+        Dim Y_lower As Double = -25 'mm, upper bound of Y coordinate
 
         Dim Expo_X_upper As Boolean = True 'exposure on right most side
         Dim Expo_X_lower As Boolean = True 'exposure on left most side
