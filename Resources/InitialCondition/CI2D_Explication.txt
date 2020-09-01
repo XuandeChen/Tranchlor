@@ -1,3 +1,0 @@
-Hint	'initial relative humidity
-Tint    'inital temperature
-

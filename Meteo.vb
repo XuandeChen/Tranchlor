@@ -1,8 +1,9 @@
 Module Meteo
 
-    Dim arrPanne(440000) As StrctPanne 'matrice d'analyse des pannes, conçu pour 50ans mesure chaque heure
-    Dim arrMatrice(440000) As StrctCalc 'matrice de calcul, conçu pour 50ans mesure chaque heure
-    Dim arrDaten(440000) As StrctMeteo 'matrice input météo, conçu pour 50ans mesure chaque heure
+    Dim DataLength As Integer = 440000
+    Dim arrPanne(DataLength) As StrctPanne 'matrice d'analyse des pannes, conçu pour 50ans mesure chaque heure
+    Dim arrMatrice(DataLength) As StrctCalc 'matrice de calcul, conçu pour 50ans mesure chaque heure
+    Dim arrDaten(DataLength) As StrctMeteo 'matrice input météo, conçu pour 50ans mesure chaque heure
     Dim frmTempSeuil As frmMeteo
     Dim iAnzahl As Integer 'nombre de ligne
     Dim NbrAns As Integer
@@ -81,8 +82,18 @@ Module Meteo
         txtFile = Mid(OutFile, 7, posTxt)
 
         Dim line As String
-        Input(nFic, line) 'lire ligne 1 et 2 de METEO_*.txt et faire rien
-        Input(nFic, line)
+        Input(nFic, line) 'ligne 1 fait rien. Nom d
+
+        Input(nFic, line) 'ligne 2 donne le nombre de lignes
+
+        Try
+            DataLength = CInt(line)
+            ReDim arrPanne(DataLength)
+            ReDim arrMatrice(DataLength)
+            ReDim arrDaten(DataLength)
+        Catch
+        End Try
+
         Input(nFic, line) 'lire linge 3
 
         Dim MyPos6 As Integer = InStr(1, line, "6") 'recherche des titre des colonnes 
@@ -422,8 +433,8 @@ Module Meteo
 
     Public Sub CalculTHS()
 
-        Dim InputMatrice(440000) As Single
-        Dim OutputMatrice(440000) As Single
+        Dim InputMatrice(DataLength) As Single
+        Dim OutputMatrice(DataLength) As Single
 
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         'calcul  T et Ts
@@ -466,7 +477,7 @@ Module Meteo
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         '''
         Dim NbPluie As Short = 0 'Ajout Bitume TSANCHEZ
-        Dim NbPluieMax As Short = InputBox("Bitume Property", "Bitume delay for Humidity (Default: 50 [Salam Bah])", 50)
+        Dim NbPluieMax As Short = InputBox("Bitume delay for Humidity (Default: 50 [Salam Bah])", "Bitume Property", 50)
 
         For i As Integer = 0 To (iAnzahl - 1)
 
@@ -817,7 +828,6 @@ Module Meteo
         Dim Description As String = InputBox("Description of the localisation", "New Exposition in the database", "Swiss Mountain")
         Description = Name + ", " + Description
 
-        Dim PrefixName, Epandage, ExpositionCond, Zone As String
         Dim DBCon As New DBconnexion
 
         WriteExpoToDB(DBCon, Name, Description, "EXPO_M_E_E_", "Manuel", "Eclaboussure", "Ensoleillé")
@@ -914,12 +924,7 @@ Module Meteo
 
     End Sub
 
-
     Public Sub MeteoTreatment()
-
-        ReDim arrPanne(440000)
-        ReDim arrMatrice(440000)
-        ReDim arrDaten(440000)
 
         Dim outfile As String
         Dim PostFile As String
@@ -941,7 +946,7 @@ Module Meteo
         ElseIf Export = "DB" Then
             WriteExpoDatabase()
 
-        Else Msgbox("Error: Don't understand file or Database ??")
+        Else MsgBox("Error: Don't understand file or Database ??")
 
         End If
 

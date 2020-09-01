@@ -54,7 +54,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>TransChlor.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -267,6 +267,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HETrans.vb" />
+    <Compile Include="OutputFile2D.vb" />
     <Compile Include="TransportXC.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
@@ -391,12 +392,9 @@
     <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Database\phreeqc.dat">
+    <Content Include="Resources\PhreeqC\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Exposition\EXPO2D_200Elements_serveurXC.txt" />
-    <Content Include="Resources\Exposition\EXPO2D_Explication.txt" />
-    <Content Include="Resources\Exposition\EXPO2D_200Elements.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_E_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_B_O_DAVOS.txt" />
     <Content Include="Resources\Exposition\EXPO_A_CAC_DAVOS.txt" />
@@ -435,37 +433,16 @@
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Resources\InitialCondition\CI2D_200Elements.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InitialCondition\CI2D_Explication.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Input\SIMU2D.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Input\SIMU2D_Explication.txt">
+    <Content Include="Resources\Input\INPUT2D_Test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Input\INPUT2D_Explication.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Sample btFEM\btfemexample.fem">
+    <Content Include="Resources\MeteoFiles\METEO_Explication.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Sample btFEM\coarse.fem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sample btFEM\notchedspecimen.fem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sample btFEM\plhole.fem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sample btFEM\rect.fem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sample btFEM\smallrect.fem">
+    <Content Include="Resources\MeteoFiles\METEO_MONTREAL.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
