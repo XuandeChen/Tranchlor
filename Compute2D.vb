@@ -107,7 +107,7 @@ Public Class Compute2D
                 D0 = CDbl(reader("Dvap").ToString()) * 1000000.0
                 alpha_0 = CDbl(reader("alpha0").ToString())
                 Hc = CDbl(reader("Hc").ToString())
-                KK = CDbl(reader("KK").ToString())
+                'KK = CDbl(reader("KK").ToString())
                 m = CDbl(reader("m").ToString())
                 pc_0 = CDbl(reader("a").ToString())
                 beta = CDbl(reader("b").ToString())
