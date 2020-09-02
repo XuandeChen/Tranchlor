@@ -11,14 +11,15 @@ Public Class Compute2D
 
     Dim H_int As Double  'initial relative humidity in the material
     Dim Tc As Double 'initial temperature in the material
-    Dim Tk As Double = Tc + 273 '(K)
+    Dim Tk As Double  '(K)
     Dim rho_v As Double = 1 'density of vapor (kg/m3)
     Dim rho_l As Double = 1000 'density of liquid (kg/m3)
+    Dim yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
+    Dim pg As Double = 101325 'atmosphere pressure(pa)
     Dim D0 As Double
     Dim alpha_0 As Double
     Dim Hc As Double
     Dim type As Integer
-
 
     Public LgLim As Integer = 40
     Public pPH As Double = 12.6
@@ -32,18 +33,21 @@ Public Class Compute2D
     Dim Water_tot As Double  'densite eau (kg/m3)
     Dim wsat As Double 'teneur en eau sature (kg/m3)
     Dim phi As Double  'porosity (-)
-    Dim w As Double  'indicator for isotherm curve, judge if we choose to use desorption (w = 1) or adsorption curve (w = 0) 
-    Dim alpha As Double  'hydration degree (-)
+    Dim w As Double  'indicator for isotherm curve, judge if we choose to use desorption (w = 0) or adsorption curve (w = 1) 
+    Dim alpha As Double  'material initial hydration degree (-)
     Dim day As Double  'age du beton
     Dim rho_c As Double  'density of concrete (kg/m3)
-
+    Dim KK As Double 'material's intrinsic permeability (m2)
+    Dim m As Double 'relative permeability parameter
+    Dim pc_0 As Double 'capillary pressure parameter
+    Dim beta As Double 'capillary pressure parameter
     'Dim H_old() As Double
     'Dim H_new() As Double
     'Dim S_old() As Double
     'Dim S_new() As Double
     'Dim w_old() As Double
     'Dim w_new() As Double
-
+    Dim St As Double = 0.2 'capillary pressure residual saturation
     Dim dH_avg As Double
     Dim dw_avg As Double
     Dim dS_avg As Double
@@ -57,7 +61,7 @@ Public Class Compute2D
         Dim Filtre As String = "Text files (INPUT2D_*.txt)|INPUT2D_*.txt"
         Dim Index As Short = 1
         Dim Directoire As Boolean = True
-        Dim Titre As String = "Sélectionner le fichier Input 2D"
+        Dim Titre As String = "Select 2D input file"
         Dim OutFile As String
         Dim Canc As Boolean = False
         Dim nFic As Integer = FreeFile()
@@ -71,13 +75,11 @@ Public Class Compute2D
         Dim NameMat As String
         Input(nFic, NameMat)
         DBInput(NameMat)
-
+        Input(nFic, alpha)
         Input(nFic, H_int)
         Input(nFic, Tc)
-
         Input(nFic, tmax)
         Input(nFic, dt)
-
         Input(nFic, T_sauv)
 
         ind = CInt(tmax / dt)
@@ -105,12 +107,10 @@ Public Class Compute2D
                 D0 = CDbl(reader("Dvap").ToString()) * 1000000.0
                 alpha_0 = CDbl(reader("alpha0").ToString())
                 Hc = CDbl(reader("Hc").ToString())
-                'wc = CDbl(reader("W/C").ToString())
-                'kg = CDbl(reader("kg").ToString())
-                'kl = CDbl(reader("kl").ToString())
-                'a = CDbl(reader("a").ToString())
-                'b = CDbl(reader("b").ToString())
-                'm = CDbl(reader("m").ToString())
+                KK = CDbl(reader("KK").ToString())
+                m = CDbl(reader("m").ToString())
+                pc_0 = CDbl(reader("a").ToString())
+                beta = CDbl(reader("b").ToString())
             End While
 
         Catch ex As SqlException
@@ -119,12 +119,11 @@ Public Class Compute2D
     End Sub
 
     Public Sub CalculInitialization(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef Time() As Double)
-
+        Tk = Tc + 273
         Water_tot = W_C_ratio * C 'densite eau (kg/m3)
         wsat = GetWsat(Water_tot, C, alpha) 'teneur en eau sature (kg/m3)
         w = 0 'indicator for isotherm curve, the initial value for desorption (w = 0) or adsorption curve (w = 1) for the first step
-        alpha = 0.85 'hydration degree (-)
-        day = 0 'age du beton
+        day = 0 'age du beton (problem)
 
         For i As Integer = 0 To NNodes - 1
 
@@ -209,12 +208,11 @@ Public Class Compute2D
 
             frmTrans2D.PlotProgressTime(ind, ti)
 
-            ' step 1: initialisation and boundary check
 
+            ' step 1: initialisation and boundary check
             For i_node As Integer = 0 To NNodes - 1 ''regular loop
                 Nodes(i_node).SetFieldsNewToOld()
             Next
-            'apply BC
 
             'step 2: elemental and global Matrix constructions
             'Matrix assembling
@@ -255,7 +253,7 @@ Public Class Compute2D
             Dim HNew(NNodes - 1) As Double
             GetX(HNew, LHS, RHS)
 
-            'step 5: result check
+            'step 4: result check
             For j As Integer = 0 To NNodes - 1
                 If HNew(j) >= 1 Then
                     HNew(j) = 1
@@ -281,7 +279,7 @@ Public Class Compute2D
 
             Next
 
-            'step 6: Post-process : plot 2D image and export result .txt file 
+            'step 5: Post-process : plot 2D image and export result .txt file 
             For i As Integer = 0 To NElements - 1
 
                 Elements(i).CalcFieldInElement(ti, Nodes)
@@ -305,7 +303,6 @@ Public Class Compute2D
         MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
     End Sub
-
 
     'Assembling global matrix /water diffusion
     Private Shared Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
