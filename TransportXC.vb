@@ -26,19 +26,20 @@
 '    Dim beta As Double = 2.2748 ' 
 
 '    'Dim KK As Double = 0.0000000000000055 'given by the user ,5.5e-15 W/C = 0.73 dry to 75%RH
-'    'Dim KK As Double = 0.0000000000000042 'given by the user ,4.2e-15 W/C = 0.6
 '    'Dim KK As Double = 3.5E-15 'given by the user ,3.5e-15 W/C = 0.52 dry to 75%RH
+'    'Dim KK As Double = 0.0000000000000015 'given by the user ,1.5e-15 W/C = 0.44 dry to 75%RH
 
+'    'Dim KK As Double = 0.00000000000000025 'given by the user ,2.5e-16 W/C = 0.73 dry to 50%RH
 '    'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 50%RH
 '    'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.44 dry to 50%RH
-'    'Dim KK As Double = 0.00000000000000025 'given by the user ,2.5e-16 W/C = 0.73 dry to 50%RH
 
-'    Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.44 dry to 25%RH
-'    'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
 '    'Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.73 dry to 25%RH
+'    'Dim KK As Double = 8.0E-17 'given by the user ,8e-17 W/C = 0.52 dry to 25%RH
+'    Dim KK As Double = 0.0000000000000008 'given by the user ,8e-16 W/C = 0.44 dry to 25%RH
 
+
+'    'Dim KK As Double = 0.0000000000000042 'given by the user ,4.2e-15 W/C = 0.6
 '    'Dim KK As Double = 0.0000000000000017 'given by the user ,1.7e-15 W/C = 0.5
-'    'Dim KK As Double = 0.0000000000000015 'given by the user ,1.5e-15 W/C = 0.44 dry to 75%RH
 '    'Dim KK As Double = 0.00000000000000085 'given by the user ,8.5e-16 W/C = 0.4
 
 '    Dim alpha_int = 0.6

@@ -3,6 +3,7 @@
 '--------------- MATERIAL
 CEMI0.44DC	'Material name in the Database
 alpha       'Cement hydration degree estimated
+w           'Isotherm indicator
 H_int		'Initial relative humidity in the Material [0-1]
 T_int		'Inital temperature in the Material [°C]
 
