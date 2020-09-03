@@ -152,7 +152,7 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         Me.lblCopyright.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblCopyright.Size = New System.Drawing.Size(120, 17)
         Me.lblCopyright.TabIndex = 3
-        Me.lblCopyright.Text = "Copyright  1998-2000"
+        Me.lblCopyright.Text = "Copyright  1998-2020"
         '
         'lblCompany
         '
@@ -165,7 +165,7 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
         Me.lblCompany.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblCompany.Size = New System.Drawing.Size(222, 17)
         Me.lblCompany.TabIndex = 2
-        Me.lblCompany.Text = "EPFL and Laval University"
+        Me.lblCompany.Text = "Laval University && EPFL"
         '
         'lblWarning
         '

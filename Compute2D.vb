@@ -47,7 +47,6 @@ Public Class Compute2D
     'Dim S_new() As Double
     'Dim w_old() As Double
     'Dim w_new() As Double
-    Dim St As Double = 0.2 'capillary pressure residual saturation
     Dim dH_avg As Double
     Dim dw_avg As Double
     Dim dS_avg As Double
@@ -91,7 +90,6 @@ Public Class Compute2D
         Dim con As New SqlConnection("Data Source=GCI-DACON-01.FSG.ULAVAL.CA;Initial Catalog=\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF;Integrated Security=True")
 
         Try
-
             con.Open()
             Dim sql As String = "SELECT * FROM Materials WHERE Name IN ('" + MatName + "')"
             Dim command As New SqlCommand(sql, con)
@@ -124,6 +122,7 @@ Public Class Compute2D
         wsat = GetWsat(Water_tot, C, alpha) 'teneur en eau sature (kg/m3)
         w = 0 'the initial value for desorption (w = 0) or adsorption curve (w = 1) for the first step
         day = 0 'age du beton (problem)
+        Dim St As Double = 0.2 'capillary pressure residual saturation
         Dim w_avg_0, H_avg_0, S_avg_0 As Double
         For i As Integer = 0 To NNodes - 1
             Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)

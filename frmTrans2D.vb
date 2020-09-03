@@ -11,7 +11,7 @@ Public Class frmTrans2D
 
     'This program shows the complete implementation
     'of a 2D finite element program to analyse coupled 
-    'thermo-hygric-chemical chloride transport in concretes .
+    'hygro-thermo-chemical chloride transport in concretes .
     'Copyright © 2020 by Xuande Chen, Thomas Sanchez and David Conciatori
     'Concrete Durability Group
     'Laval Univeristy
@@ -19,17 +19,12 @@ Public Class frmTrans2D
     'Canada
 
     Public Para As Short
-
     Public NNodes, NElements, Nbloc, NPointLoads, NSupports As Integer
     Public ElasticityModulus, Thickness, PoissonRatio As Double
-
     Public Nodes() As NodeTrans
     Public Elements() As ElementTrans
     Public Time() As Double ' heure
-
     Public Expo(1) As Exposition
-
-
     Public PointLoads() As PointLoad
     Public Supports() As Support
     Public Deformations() As Double 'the deformation vector
