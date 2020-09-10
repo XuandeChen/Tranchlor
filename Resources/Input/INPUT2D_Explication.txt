@@ -2,8 +2,10 @@
 
 '--------------- MATERIAL
 CEMI0.44DC	'Material name in the Database
-Hint		'Initial relative humidity in the Material [0-1]
-Tint		'Inital temperature in the Material [°C]
+alpha       'Cement hydration degree estimated
+w           'Isotherm indicator
+H_int		'Initial relative humidity in the Material [0-1]
+T_int		'Inital temperature in the Material [°C]
 
 '--------------- SIMULATION
 TMax	'Maximal time to simulate [s]
