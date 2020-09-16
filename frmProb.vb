@@ -819,16 +819,22 @@ b:
         Dim Titre As String
 
         If PreFile(1) <> "R_Carb_" Then
+
             Request = MsgBox("A partir d'un fichier existant LP_ ?", MsgBoxStyle.YesNo, "Question")
+
             If Request = MsgBoxResult.No Then
+
                 If PreFile(Files) = "R_Carb_" Then Ca = True
                 If Ca = True Then Files = Files - 1 'enlever la partie carbonatation
+
                 If CheckBox8.Checked = True Then
+
                     PosX = 0
                     PosmX = 0
                     Men = CSng(TextBox1.Text)
                     ETen = CSng(TextBox2.Text)
                     Var6 = 0
+
                     Do While PosX < Length
 
                         PosX = PosX + deltaX1
@@ -857,6 +863,7 @@ b:
                         Next o
                         PosmX = PosX
                     Loop
+
                 Else
                     Userinput2 = InputBox("Approche déterministe de l'enrobage, profondeur d'enrobage en [mm], (0," & Length & ") : ", "Profondeur d'enrobage des aciers d'armature", "35")
                     Msg_noEntry(Userinput2, Canc)
@@ -930,6 +937,7 @@ b:
                     Next j
                 End If
                 FileClose(nfic)
+
             Else
                 ''''''''''''''''''''''''''''''''''''''''''''
                 Filtre = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
@@ -1051,6 +1059,32 @@ b:
                             Var5 = PosX
                         Loop
                     Next j
+
+                    ' --- THOMAS : AJOUT PROB CORROSION
+
+                    ' Constant for corrosion properties
+                    Dim jrr2 As Double = 0.8
+                    Dim pr As Integer = 3600
+                    Dim alpha As Double = 0.52
+                    Dim v As Double = 0.18
+
+                    Dim fc As Double = CDbl(InputBox("Compressive Strength [MPa]", "Corrosion propagation", "45.5"))
+                    Dim fct As Double = 0.53 * fc ^ 0.5
+                    Dim Ec As Double = 4600 * fc ^ 0.5
+
+                    'c = Length
+
+                    'For i = 1 To 45
+
+
+                    '    Dim tp44his As Double = pi./ (2 * S1.* jrrorhis * (1 / pr - alpha / ps)).* (1 + v + d ^ 2./ (2.* c1.* (c1 + d))).* (2 * c1.* d + d ^ 2).* fct./ Ec / 2;
+                    '    Dim tmp44his As Double = find(tp44his < (ii - 1 + 0.5) & tp44his > (ii - 1 - 0.5))
+
+                    '    PDF_tp44his(ii,:    ) = length(tmp44his)./n/45
+
+                    'Next
+
+                    ' THOMAS : AJOUT PROB CORROSION -------
 
                     nfic = CShort(FreeFile())
                     FileOpen(CInt(nfic), OT, OpenMode.Output)

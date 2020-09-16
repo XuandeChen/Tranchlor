@@ -64,9 +64,9 @@ Public Class Compute2D
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
-        Dim Postfile As String = frmTrans2D.Directory & "\"
+        directory = frmTrans2D.Directory & "\"
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        FilePost(OutFile, Postfile)
+        FilePost(OutFile, directory)
 
         Dim NameMat As String
         Input(nFic, NameMat)
@@ -161,15 +161,17 @@ Public Class Compute2D
         OutputFile.WriteBlankLine()
 
         'compute variation
-        'dH_avg += H_new.Average - H_old.Average
-        'dw_avg += w_new.Average - w_old.Average
-        'dS_avg += S_new.Average - S_old.Average
+
+        UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg)
+
+        Dim HRAvg, WAvg, SAvg As Double
+        GetNewAverage(Nodes, HRAvg, WAvg, SAvg)
 
         'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
 
-        'OutputFile.WriteField(0, dt / 1000.0, NNodes, dH_avg, H_new)
-        'OutputFile.WriteField(1, dt / 1000.0, NNodes, dw_avg, w_new)
-        'OutputFile.WriteField(2, dt / 1000.0, NNodes, dS_avg, S_new)
+        OutputFile.WriteHR(dt / 1000.0, NNodes, dH_avg, HRAvg, Nodes)
+        OutputFile.WriteW(dt / 1000.0, NNodes, dw_avg, WAvg, Nodes)
+        OutputFile.WriteS(dt / 1000.0, NNodes, dS_avg, SAvg, Nodes)
 
     End Sub
 
@@ -275,14 +277,17 @@ Public Class Compute2D
 
             'compute variation
 
-            'dH_avg += H_new.Average - H_old.Average
-            'dw_avg += w_new.Average - w_old.Average
-            'dS_avg += S_new.Average - S_old.Average
+            UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg)
 
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                'OutputFile.WriteField(0, ti * dt, NNodes, dH_avg, H_new)
-                'OutputFile.WriteField(1, ti * dt, NNodes, dw_avg, w_new)
-                'OutputFile.WriteField(2, ti * dt, NNodes, dS_avg, S_new)
+
+                Dim HRAvg, WAvg, SAvg As Double
+                GetNewAverage(Nodes, HRAvg, WAvg, SAvg)
+
+                OutputFile.WriteHR(ti * dt, NNodes, dH_avg, HRAvg, Nodes)
+                OutputFile.WriteW(ti * dt, NNodes, dw_avg, WAvg, Nodes)
+                OutputFile.WriteS(ti * dt, NNodes, dS_avg, SAvg, Nodes)
+
             End If
         Next
 

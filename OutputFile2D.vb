@@ -60,23 +60,57 @@ Public Class OutputFile2D
     End Sub
 
 
-    Public Sub WriteField(ByRef i As Integer, ByRef Temps As Double, ByRef Dofs As Integer,
-                           ByRef d_avg As Double, ByRef Field() As Double)
+    Public Sub WriteHR(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 0
 
         'Register field values
         Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
-
-        Dim avg_new As Double = Field.Average()
-
-        Print(CInt(nFic(i)), avg_new, ",", d_avg, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
 
         For j As Integer = 0 To Dofs - 1
-            Print(CInt(nFic(i)), Field(j), ",", TAB) '% humidité relative dans le béton
+            Print(CInt(nFic(i)), Nodes(j).GetHRNew(), ",", TAB) '% humidité relative dans le béton
         Next j
 
         PrintLine(CInt(nFic(i)), " ")
 
     End Sub
+
+    Public Sub WriteW(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 1
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetWNew(), ",", TAB) '% humidité relative dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
+
+    Public Sub WriteS(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 2
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetSNew(), ",", TAB) '% humidité relative dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
+
 
     Protected Overrides Sub Finalize()
 

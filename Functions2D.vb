@@ -1,4 +1,5 @@
 ﻿Imports System.Linq
+Imports NodesTrans
 
 Module Functions2D
     'get the LHS matrix for Gauss matrix resolution
@@ -334,5 +335,55 @@ Module Functions2D
         Norm = Math.Sqrt(Norm)
         Return Norm
     End Function
+
+    'get norm of a given vector
+    Public Sub GetNewAverage(ByRef Nodes() As NodeTrans, ByRef Havg As Double, ByRef wavg As Double, ByRef Savg As Double)
+
+        Dim len = Nodes.Length()
+
+        For i As Integer = 0 To len - 1
+
+            Havg += Nodes(i).GetHRNew()
+            wavg += Nodes(i).GetWNew()
+            Savg += Nodes(i).GetSNew()
+
+        Next
+
+        Havg /= len
+        wavg /= len
+        Savg /= len
+
+    End Sub
+
+    Public Sub GetOldAverage(ByRef Nodes() As NodeTrans, ByRef Havg As Double, ByRef wavg As Double, ByRef Savg As Double)
+
+        Dim len = Nodes.Length()
+
+        For i As Integer = 0 To len - 1
+
+            Havg += Nodes(i).GetHROld()
+            wavg += Nodes(i).GetWOld()
+            Savg += Nodes(i).GetSOld()
+
+        Next
+
+        Havg /= len
+        wavg /= len
+        Savg /= len
+
+    End Sub
+
+    Public Sub UpdatediffAverage(ByRef Nodes() As NodeTrans, ByRef dH_avg As Double, ByRef dw_avg As Double, ByRef dS_avg As Double)
+
+        Dim HRNewAv, HROldAv, WNewAv, WOldAv, SNewAv, SOldAv As Double
+
+        GetNewAverage(Nodes, HRNewAv, WNewAv, SNewAv)
+        GetOldAverage(Nodes, HROldAv, WOldAv, SOldAv)
+
+        dH_avg += HRNewAv - HROldAv
+        dw_avg += WNewAv - WOldAv
+        dS_avg += SNewAv - SOldAv
+
+    End Sub
 
 End Module
