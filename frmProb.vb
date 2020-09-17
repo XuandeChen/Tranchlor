@@ -437,12 +437,15 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
     'chargement de la fenêtre
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
         ComboBox1.SelectedIndex = 3
         Button2.Visible = False
+
     End Sub
 
     'click sur traitement
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+    Private Sub ButtonTreatment_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
         Dim Data As Object
         Dim La(1, 1, 1, 1, 1, 1) As Double
         Dim Cpd(2, 2, 2, 2) As Double
@@ -501,6 +504,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Tprob2 = (TProb - 1000 * Tprob1 - Tprob4) / 10
         Tprob3 = CShort(Microsoft.VisualBasic.Right(Tprob2, 1))
         Tprob2 = CShort(Microsoft.VisualBasic.Left(Tprob2, 1))
+
         If Tprob1 = 0 Then
             Tprob1 = 1
         Else
@@ -780,6 +784,7 @@ b:
         Dim KSen(Nline + 2, Files) As Double
         Dim Pf(Nline + 2) As Double
         Dim Pcracks(Nline + 2) As Double
+        Dim Pdelam(Nline + 2) As Double
         Dim Userinput2 As String
         Dim PlFile As String
         Dim OT As String
@@ -1038,8 +1043,8 @@ b:
                     End If
                 Next o
 
+                Dim Temphis(Nline + 2) As Double
                 If PosXTemp = 0 Then
-                    Dim Temphis(Nline + 2) As Double
                     For j = 1 To Nline + 2
                         Temphis(j) = LAen(j, o)
                     Next
@@ -1063,11 +1068,11 @@ b:
 
 
                 If PosX = 0 Then
-                        For j = 1 To Nline + 2
-                            PosX = 0
-                            Var7 = 1
-                            Var5 = 1.0E-300
-                            Var8 = 0
+                    For j = 1 To Nline + 2
+                        PosX = 0
+                        Var7 = 1
+                        Var5 = 1.0E-300
+                        Var8 = 0
                         Do While PosX < 2 Or Var7 >= 0.00001
                             PosX = PosX + deltaCL2
                             Var1 = System.Math.Exp(-0.5 * ((System.Math.Log(PosX) - LAen(j, o)) / KSen(j, o)) ^ 2) / ((2 * System.Math.PI) ^ 0.5 * KSen(j, o) * PosX)            'fs
@@ -1121,24 +1126,23 @@ b:
                     ' Rebar density
                     Dim ps As Integer = 7860
 
-                    Dim temphis As Integer = 20
                     Dim kc As Double
 
-                    Dim tp(j) As Double
+                    Dim tp(Nline + 2) As Double
 
 
-                    Dim dt As Double = Lambda(1, 0, 1) - Lambda(0, 0, 1)
+                    Dim dt As Double = Lambda(10, 0, 1) - Lambda(9, 0, 1)
 
                     For j = 0 To Nline + 2
 
                         If PosXTemp = 0 Then
-                            If temphis < 20 Then
+                            If Temphis(j) < 20 Then
                                 kc = 0.025
                             Else
                                 kc = 0.075
                             End If
 
-                            jr = jrr2 * (1 + kc * (temphis - 20))
+                            jr = jrr2 * (1 + kc * (Temphis(j) - 20))
 
                         Else
 
@@ -1150,20 +1154,24 @@ b:
 
                     Next
 
-                    i = 0
+                    Dim icracks, idelam As Integer
                     For j = 1 To Nline + 2
 
-                        If j < (jcorr + CInt(tp(j) / dt)) Then
+                        If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
                             Pcracks(j) = 0
+                            Pdelam(j) = 0
+                        ElseIf j < (jcorr + CInt(tp(j) / dt)) Then
+                            Pcracks(j) = Pf(icracks)
+                            Pdelam(j) = 0
+                            icracks += 1
                         Else
-                            Pcracks(j) = Pf(i)
-                            i += 1
+                            Pcracks(j) = Pf(icracks)
+                            Pdelam(j) = Pf(idelam)
+                            icracks += 1
+                            idelam += 1
                         End If
 
                     Next
-
-                    Pcracks(j) = Pf(j - jcorr + 1)
-
 
                     ' THOMAS : AJOUT PROB CORROSION -------
 
@@ -1173,7 +1181,7 @@ b:
                     PrintLine(nfic, "temps, temps, Pf, Pcracks")
                     PrintLine(nfic, "années, jours,")
                         For j = 1 To Nline + 2
-                        PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",")
+                        PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
                     Next j
                         FileClose(nfic)
 

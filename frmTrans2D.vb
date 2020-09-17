@@ -123,7 +123,7 @@ Public Class frmTrans2D
 
         PlotInitialization(ind)
 
-        C2D.Compute_All(Expo, NNodes, NElements, Elements, Nodes, Time)
+        C2D.Compute_All(Me, Expo, NNodes, NElements, Elements, Nodes, Time)
 
         Analysed = True
         LabelProgress.Visible = False
