@@ -113,8 +113,8 @@ Public Class frmTrans2D
             Return
         End If
 
-        Dim C2D As New Compute2D
-        'Dim C2D As New Compute2D_trial
+        'Dim C2D As New Compute2D
+        Dim C2D As New Compute2D_trial 'xuande, activate hygro-thermo coupling
         'perform analysis using the finite elemeent method
         Dim ind As Integer = C2D.Read_InputFile()
         For i As Integer = 1 To Expo.Length - 1
