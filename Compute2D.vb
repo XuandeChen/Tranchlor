@@ -181,10 +181,11 @@ Public Class Compute2D
         OutputFile.WriteHR(dt / 1000.0, NNodes, dH_avg, HRAvg, Nodes)
         OutputFile.WriteW(dt / 1000.0, NNodes, dw_avg, WAvg, Nodes)
         OutputFile.WriteS(dt / 1000.0, NNodes, dS_avg, SAvg, Nodes)
-
+        OutputFile.WriteT(dt / 1000.0, NNodes, dT_avg, TAvg, Nodes)
+        OutputFile.WriteCl(dt / 1000.0, NNodes, dCl_avg, ClAvg, Nodes)
     End Sub
 
-    Public Sub Compute_All(ByRef Frm As frmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
+    Public Sub Compute_All(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
 
         Dim LHS(,) As Double
@@ -277,29 +278,22 @@ Public Class Compute2D
             Next
 
             'step 5: Post-process : plot 2D image and export result .txt file 
+            ''Post-process : plot 2D image and export result .txt file 
+            Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
             For i As Integer = 0 To NElements - 1
-
                 Elements(i).CalcFieldInElement(ti, Nodes)
-
             Next
-            Time(ti) = (ti) * dt / 3600 ' Time in hour
-
+            Time(ti) = ti * dt / 3600 ' Time in hour
             'compute variation
             UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg, dT_avg, dCl_avg)
-
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-
-                Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
                 GetNewAverage(Nodes, HRAvg, WAvg, SAvg, TAvg, ClAvg)
                 OutputFile.WriteHR(ti * dt, NNodes, dH_avg, HRAvg, Nodes)
                 OutputFile.WriteW(ti * dt, NNodes, dw_avg, WAvg, Nodes)
                 OutputFile.WriteS(ti * dt, NNodes, dS_avg, SAvg, Nodes)
-
-                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                    'OutputFile.WriteField(0, ti * dt, NNodes, dH_avg, H_new)
-                    'OutputFile.WriteField(1, ti * dt, NNodes, dw_avg, w_new)
-                    'OutputFile.WriteField(2, ti * dt, NNodes, dS_avg, S_new)
-                End If
+                OutputFile.WriteT(ti * dt, NNodes, dT_avg, TAvg, Nodes)
+                OutputFile.WriteCl(ti * dt, NNodes, dCl_avg, ClAvg, Nodes)
+            End If
         Next
 
         MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
