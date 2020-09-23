@@ -123,12 +123,9 @@ Public Class frmTrans2D
 
         PlotInitialization(ind)
         C2D.Compute_All(Expo, NNodes, NElements, Elements, Nodes, Time)
-
         Analysed = True
         LabelProgress.Visible = False
-
         AddRangeValue(Time.Length)
-
         DrawModel()
 
     End Sub

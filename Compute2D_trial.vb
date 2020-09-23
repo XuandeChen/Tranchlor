@@ -56,6 +56,7 @@ Public Class Compute2D_trial
     Dim dCl_avg As Double
     Dim OutputFile As OutputFile2D
 
+
     Public Function Read_InputFile() As Integer
         ''''''''''''''''''''''''''''''''''''''''''''
         Dim Filtre As String = "Text files (INPUT2D_*.txt)|INPUT2D_*.txt"
@@ -147,21 +148,7 @@ Public Class Compute2D_trial
         Next
         MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
     End Sub
-    Public Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
-        Dim i, j As Integer
-        Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
-                                 getDOF(Elements(ElementNo).Node2 - 1),
-                                 getDOF(Elements(ElementNo).Node3 - 1),
-                                 getDOF(Elements(ElementNo).Node4 - 1)}
-        Dim dofi, dofj As Integer
-        For i = 0 To 3 'each dof of the Se
-            dofi = dofs(i)
-            For j = 0 To 3
-                dofj = dofs(j)
-                Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
-            Next
-        Next
-    End Sub
+
     Public Sub CalculInitialization(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef Time() As Double)
         Tc = T_int
         Tk = Tc + 273 '(K) 
@@ -207,88 +194,13 @@ Public Class Compute2D_trial
         UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg, dT_avg, dCl_avg)
         GetNewAverage(Nodes, HRAvg, WAvg, SAvg, TAvg, ClAvg)
         'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
-        OutputFile.WriteHR(dt / 1000.0, NNodes, dH_avg, HRAvg, Nodes)
+        OutputFile.WriteFirstHR(dt / 1000.0, NNodes, dH_avg, HRAvg, Nodes)
         OutputFile.WriteW(dt / 1000.0, NNodes, dw_avg, WAvg, Nodes)
         OutputFile.WriteS(dt / 1000.0, NNodes, dS_avg, SAvg, Nodes)
         OutputFile.WriteT(dt / 1000.0, NNodes, dT_avg, TAvg, Nodes)
         OutputFile.WriteCl(dt / 1000.0, NNodes, dCl_avg, ClAvg, Nodes)
     End Sub
-    Public Sub setVariables(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
-        For i_node As Integer = 0 To NNodes - 1
-            Nodes(i_node).SetFieldsNewToOld()
-        Next
-    End Sub
-    Public Sub updateVariableT(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef TNew() As Double, ByRef ti As Integer)
-        Dim NbExpo As Integer
-        Dim SNew As Double
-        Dim HNew As Double
-        Dim ClNew As Double
-        For j As Integer = 0 To NNodes - 1
-            NbExpo = Nodes(j).NumExpo
-            SNew = Nodes(j).GetSNew()
-            HNew = Nodes(j).GetHRNew()
-            ClNew = Nodes(j).GetClNew()
-            If NbExpo <> 0 Then
-                TNew(j) = Expo(NbExpo).Temperature(CInt(ti))  ' check whether the current boundary is exposed to a boundary condition
-            End If
-            Nodes(j).SetFieldsNew(HNew, SNew, wsat * SNew, TNew(j), ClNew)
-        Next
-    End Sub
-    Public Sub updateVariableH(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef HOld() As Double, ByRef HNew() As Double, ByRef ti As Integer)
-        Dim NbExpo As Integer
-        Dim SNew As Double
-        Dim TNew As Double
-        Dim ClNew As Double
-        For j As Integer = 0 To NNodes - 1
-            NbExpo = Nodes(j).NumExpo
-            SNew = GetHtoS(HNew(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-            TNew = Nodes(j).GetTNew()
-            ClNew = Nodes(j).GetClNew()
-            If HNew(j) >= 1 Then
-                HNew(j) = 1
-            ElseIf HNew(j) <= 0 Then
-                HNew(j) = 0
-            End If
-            If NbExpo <> 0 Then
-                HNew(j) = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
-            End If
-            ''isotherm state check 
-            If w = 0 And HNew(j) > HOld(j) Then 'state change from desorption to adsorption
-                w = 1
-            ElseIf w = 1 And HNew(j) < HOld(j) Then 'adsorption to desorption
-                w = 0
-            End If
-            Nodes(j).SetFieldsNew(HNew(j), SNew, wsat * SNew, TNew, ClNew)
-        Next
-    End Sub
-    Public Sub updateVariableS(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef SOld() As Double, ByRef SNew() As Double, ByRef Node_w() As Integer, ByRef ti As Integer)
-        Dim NbExpo As Integer
-        Dim HNew As Double
-        Dim TNew As Double
-        Dim ClNew As Double
-        For j As Integer = 0 To NNodes - 1
-            NbExpo = Nodes(j).NumExpo
-            HNew = Nodes(j).GetHRNew()
-            TNew = Nodes(j).GetTNew()
-            ClNew = Nodes(j).GetClNew()
-            If SNew(j) >= 1 Then
-                SNew(j) = 1
-            ElseIf SNew(j) <= 0 Then
-                SNew(j) = 0
-            End If
-            If NbExpo <> 0 Then
-                HNew = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
-                SNew(j) = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(j))
-            End If
-            ''isotherm state check 
-            If Node_w(j) = 0 And SNew(j) > SOld(j) Then 'state change from desorption to adsorption
-                Node_w(j) = 1
-            ElseIf Node_w(j) = 1 And SNew(j) < SOld(j) Then 'adsorption to desorption
-                Node_w(j) = 0
-            End If
-            Nodes(j).SetFieldsNew(HNew, SNew(j), wsat * SNew(j), TNew, ClNew)
-        Next
-    End Sub
+
     Public Sub Thermo(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer)
         ''Elemental and global matrix constructions and resolution 
         Dim LHS(,) As Double
@@ -345,6 +257,7 @@ Public Class Compute2D_trial
         'Result check and update
         updateVariableT(Expo, NNodes, Nodes, TNew, ti)
     End Sub
+
     Public Sub Diff(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer)
         ''Elemental and global matrix constructions and resolution 
         Dim LHS(,) As Double
@@ -394,6 +307,7 @@ Public Class Compute2D_trial
         'Result check and update
         updateVariableH(Expo, NNodes, Nodes, HOld, HNew, ti)
     End Sub
+
     Public Sub Cap(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer)
         ''Elemental and global matrix constructions and resolution 
         Dim NewLHS(,) As Double
@@ -472,6 +386,7 @@ Public Class Compute2D_trial
         'Result check and update
         updateVariableS(Expo, NNodes, Nodes, SOld, SNew, Node_w, ti)
     End Sub
+
     'Public Sub Chemo()
     '    ''Elemental and global matrix constructions and resolution 
     '    'Matrix assembling
@@ -538,6 +453,87 @@ Public Class Compute2D_trial
 
     '    Next
     'End Sub
+
+    Public Sub setVariables(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
+        For i_node As Integer = 0 To NNodes - 1
+            Nodes(i_node).SetFieldsNewToOld()
+        Next
+    End Sub
+
+    Public Sub updateVariableT(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef TNew() As Double, ByRef ti As Integer)
+        Dim NbExpo As Integer
+        Dim SNew As Double
+        Dim HNew As Double
+        Dim ClNew As Double
+        For j As Integer = 0 To NNodes - 1
+            NbExpo = Nodes(j).NumExpo
+            SNew = Nodes(j).GetSNew()
+            HNew = Nodes(j).GetHRNew()
+            ClNew = Nodes(j).GetClNew()
+            If NbExpo <> 0 Then
+                TNew(j) = Expo(NbExpo).Temperature(CInt(ti))  ' check whether the current boundary is exposed to a boundary condition
+            End If
+            Nodes(j).SetFieldsNew(HNew, SNew, wsat * SNew, TNew(j), ClNew)
+        Next
+    End Sub
+
+    Public Sub updateVariableH(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef HOld() As Double, ByRef HNew() As Double, ByRef ti As Integer)
+        Dim NbExpo As Integer
+        Dim SNew As Double
+        Dim TNew As Double
+        Dim ClNew As Double
+        For j As Integer = 0 To NNodes - 1
+            NbExpo = Nodes(j).NumExpo
+            SNew = GetHtoS(HNew(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+            TNew = Nodes(j).GetTNew()
+            ClNew = Nodes(j).GetClNew()
+            If HNew(j) >= 1 Then
+                HNew(j) = 1
+            ElseIf HNew(j) <= 0 Then
+                HNew(j) = 0
+            End If
+            If NbExpo <> 0 Then
+                HNew(j) = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
+            End If
+            ''isotherm state check 
+            If w = 0 And HNew(j) > HOld(j) Then 'state change from desorption to adsorption
+                w = 1
+            ElseIf w = 1 And HNew(j) < HOld(j) Then 'adsorption to desorption
+                w = 0
+            End If
+            Nodes(j).SetFieldsNew(HNew(j), SNew, wsat * SNew, TNew, ClNew)
+        Next
+    End Sub
+
+    Public Sub updateVariableS(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef SOld() As Double, ByRef SNew() As Double, ByRef Node_w() As Integer, ByRef ti As Integer)
+        Dim NbExpo As Integer
+        Dim HNew As Double
+        Dim TNew As Double
+        Dim ClNew As Double
+        For j As Integer = 0 To NNodes - 1
+            NbExpo = Nodes(j).NumExpo
+            HNew = Nodes(j).GetHRNew()
+            TNew = Nodes(j).GetTNew()
+            ClNew = Nodes(j).GetClNew()
+            If SNew(j) >= 1 Then
+                SNew(j) = 1
+            ElseIf SNew(j) <= 0 Then
+                SNew(j) = 0
+            End If
+            If NbExpo <> 0 Then
+                HNew = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
+                SNew(j) = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(j))
+            End If
+            ''isotherm state check 
+            If Node_w(j) = 0 And SNew(j) > SOld(j) Then 'state change from desorption to adsorption
+                Node_w(j) = 1
+            ElseIf Node_w(j) = 1 And SNew(j) < SOld(j) Then 'adsorption to desorption
+                Node_w(j) = 0
+            End If
+            Nodes(j).SetFieldsNew(HNew, SNew(j), wsat * SNew(j), TNew, ClNew)
+        Next
+    End Sub
+
     Public Sub Postprocess(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer, ByRef Time() As Double)
         ''Post-process : plot 2D image and export result .txt file 
         Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
@@ -555,6 +551,22 @@ Public Class Compute2D_trial
             OutputFile.WriteT(ti * dt, NNodes, dT_avg, TAvg, Nodes)
             OutputFile.WriteCl(ti * dt, NNodes, dCl_avg, ClAvg, Nodes)
         End If
+    End Sub
+
+    Public Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
+        Dim i, j As Integer
+        Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
+                                 getDOF(Elements(ElementNo).Node2 - 1),
+                                 getDOF(Elements(ElementNo).Node3 - 1),
+                                 getDOF(Elements(ElementNo).Node4 - 1)}
+        Dim dofi, dofj As Integer
+        For i = 0 To 3 'each dof of the Se
+            dofi = dofs(i)
+            For j = 0 To 3
+                dofj = dofs(j)
+                Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
+            Next
+        Next
     End Sub
 End Class
 

@@ -128,7 +128,7 @@ Public Class frmGraph1D : Inherits System.Windows.Forms.Form
         Me.PictureBox6.TabIndex = 25
         Me.PictureBox6.TabStop = False
         '
-        'frmChlor
+        'frmGraph1D
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(984, 436)
@@ -140,7 +140,7 @@ Public Class frmGraph1D : Inherits System.Windows.Forms.Form
         Me.Controls.Add(Me.Command1)
         Me.Controls.Add(Me.PictureBox6)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Name = "frmChlor"
+        Me.Name = "frmGraph1D"
         Me.Text = "Transport 1D"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()

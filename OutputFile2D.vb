@@ -59,9 +59,27 @@ Public Class OutputFile2D
 
     Public Sub WriteBlankLine()
 
-        For i As Integer = 0 To NbFiles - 1
-            PrintLine(CInt(nFic(i)), " ")
-        Next
+        PrintLine(CInt(nFic(0)), " ", TAB)
+        PrintLine(CInt(nFic(1)), " ", TAB)
+        PrintLine(CInt(nFic(2)), " ", TAB)
+        PrintLine(CInt(nFic(3)), " ", TAB)
+        PrintLine(CInt(nFic(4)), " ", TAB)
+    End Sub
+
+    Public Sub WriteFirstHR(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 0
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetHRNew(), ",", TAB) '% humidité relative dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
 
     End Sub
 
