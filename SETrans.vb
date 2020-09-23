@@ -1,5 +1,5 @@
 ﻿Public Class SETrans
-    'Implementation of the 4*1 Elemental vector for relative humidity
+    'Implementation of the 4*1 Elemental vector for saturation degree
     Private s1, s2, s3, s4 As Double
     ''' <summary>
     ''' Initializes a new instance of HE element

@@ -195,6 +195,7 @@
     </Compile>
     <Compile Include="CIETransNew.vb" />
     <Compile Include="Compute2D.vb" />
+    <Compile Include="Compute2D_trial.vb" />
     <Compile Include="DBConnexion.vb" />
     <Compile Include="Exposition.vb" />
     <Compile Include="frmInput2D.vb">
@@ -268,6 +269,7 @@
     </Compile>
     <Compile Include="HETrans.vb" />
     <Compile Include="OutputFile2D.vb" />
+    <Compile Include="TETrans.vb" />
     <Compile Include="TransportXC.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>

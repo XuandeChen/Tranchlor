@@ -44,7 +44,7 @@ Partial Class frmTrans2D
         Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
         Me.HRToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TauXYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator()
         Me.EpsilonXToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EpsilonYToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -172,7 +172,7 @@ Partial Class frmTrans2D
         '
         'ShowToolStripMenuItem
         '
-        Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.XToolStripMenuItem, Me.ToolStripMenuItem4, Me.HRToolStripMenuItem, Me.SlToolStripMenuItem, Me.TauXYToolStripMenuItem, Me.ToolStripMenuItem3, Me.EpsilonXToolStripMenuItem, Me.EpsilonYToolStripMenuItem, Me.GammaXYToolStripMenuItem})
+        Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.XToolStripMenuItem, Me.ToolStripMenuItem4, Me.HRToolStripMenuItem, Me.SlToolStripMenuItem, Me.TToolStripMenuItem, Me.ToolStripMenuItem3, Me.EpsilonXToolStripMenuItem, Me.EpsilonYToolStripMenuItem, Me.GammaXYToolStripMenuItem})
         Me.ShowToolStripMenuItem.Name = "ShowToolStripMenuItem"
         Me.ShowToolStripMenuItem.Size = New System.Drawing.Size(262, 22)
         Me.ShowToolStripMenuItem.Text = "Show Results"
@@ -202,9 +202,9 @@ Partial Class frmTrans2D
         '
         'TauXYToolStripMenuItem
         '
-        Me.TauXYToolStripMenuItem.Name = "TauXYToolStripMenuItem"
-        Me.TauXYToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.TauXYToolStripMenuItem.Text = "XXX"
+        Me.TToolStripMenuItem.Name = "TauXYToolStripMenuItem"
+        Me.TToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.TToolStripMenuItem.Text = "Temperature"
         '
         'ToolStripMenuItem3
         '
@@ -358,7 +358,7 @@ Partial Class frmTrans2D
     Friend WithEvents ShowDeformationsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShowToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HRToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents TauXYToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem3 As ToolStripSeparator
     Friend WithEvents EpsilonXToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EpsilonYToolStripMenuItem As ToolStripMenuItem

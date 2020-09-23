@@ -15,6 +15,8 @@ Public Class OutputFile2D
         outfile(0) = directory & "\" & "R_H_DiffusionModel" & ".txt"
         outfile(1) = directory & "\" & "R_W_DiffusionModel" & ".txt"
         outfile(2) = directory & "\" & "R_S_DiffusionModel" & ".txt"
+        outfile(3) = directory & "\" & "R_T_DiffusionModel" & ".txt"
+        outfile(4) = directory & "\" & "R_Cl_DiffusionModel" & ".txt"
 
         For i As Integer = 0 To NbFiles - 1
             nFic(i) = CShort(FreeFile())
@@ -24,6 +26,8 @@ Public Class OutputFile2D
         Print(nFic(0), "RH", ",", nDof, ",", "Average RH", ",", "dH", ",", TAB)
         Print(nFic(1), "W", ",", nDof, ",", "Average W", ",", "dW", ",", TAB)
         Print(nFic(2), "S", ",", nDof, ",", "Average S", ",", "dS", ",", TAB)
+        Print(nFic(3), "T", ",", nDof, ",", "Average T", ",", "dT", ",", TAB)
+        Print(nFic(4), "Cl", ",", nDof, ",", "Average Cl", ",", "dCl", ",", TAB)
 
         For i As Integer = 0 To NbFiles - 1
             For jj As Integer = 0 To nDof - 1
@@ -35,20 +39,22 @@ Public Class OutputFile2D
 
     End Sub
 
-    Public Sub WriteLine(ByRef H As Double, ByRef w As Double, ByRef S As Double)
+    Public Sub WriteLine(ByRef H As Double, ByRef w As Double, ByRef S As Double, ByRef T As Double, ByRef Cl As Double)
 
         Print(CInt(nFic(0)), H, ",", "0", ",", TAB)
         Print(CInt(nFic(1)), w, ",", "0", ",", TAB)
         Print(CInt(nFic(2)), S, ",", "0", ",", TAB)
-
+        Print(CInt(nFic(3)), T, ",", "0", ",", TAB)
+        Print(CInt(nFic(4)), Cl, ",", "0", ",", TAB)
     End Sub
 
-    Public Sub WriteFirstLine(ByRef H As Double, ByRef w As Double, ByRef S As Double)
+    Public Sub WriteFirstLine(ByRef H As Double, ByRef w As Double, ByRef S As Double, ByRef T As Double, ByRef Cl As Double)
 
         Print(CInt(nFic(0)), H, ",", TAB)
         Print(CInt(nFic(1)), w, ",", TAB)
         Print(CInt(nFic(2)), S, ",", TAB)
-
+        Print(CInt(nFic(3)), T, ",", TAB)
+        Print(CInt(nFic(4)), Cl, ",", TAB)
     End Sub
 
     Public Sub WriteBlankLine()
@@ -59,25 +65,89 @@ Public Class OutputFile2D
 
     End Sub
 
+    Public Sub WriteHR(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
 
-    Public Sub WriteField(ByRef i As Integer, ByRef Temps As Double, ByRef Dofs As Integer,
-                           ByRef d_avg As Double, ByRef Field() As Double)
+        Dim i As Integer = 0
 
         'Register field values
         Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
-
-        Dim avg_new As Double = Field.Average()
-
-        Print(CInt(nFic(i)), avg_new, ",", d_avg, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
 
         For j As Integer = 0 To Dofs - 1
-            Print(CInt(nFic(i)), Field(j), ",", TAB) '% humidité relative dans le béton
+            Print(CInt(nFic(i)), Nodes(j).GetHRNew(), ",", TAB) '% humidité relative dans le béton
         Next j
 
         PrintLine(CInt(nFic(i)), " ")
 
     End Sub
 
+    Public Sub WriteW(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 1
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetWNew(), ",", TAB) '% teneur en eau dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
+
+    Public Sub WriteS(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 2
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetSNew(), ",", TAB) '% saturation de liquid dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
+
+    Public Sub WriteT(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 3
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetTNew(), ",", TAB) '% temperature dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
+    Public Sub WriteCl(ByRef Temps As Double, ByRef Dofs As Integer,
+                           ByRef d_avg As Double, ByRef avg As Double, ByRef Nodes() As NodeTrans)
+
+        Dim i As Integer = 4
+
+        'Register field values
+        Print(CInt(nFic(i)), Temps / 3600, ",", Temps, ",", TAB)
+        Print(CInt(nFic(i)), avg, ",", d_avg, ",", TAB)
+
+        For j As Integer = 0 To Dofs - 1
+            Print(CInt(nFic(i)), Nodes(j).GetClNew(), ",", TAB) '% concentration de chlore dans le béton
+        Next j
+
+        PrintLine(CInt(nFic(i)), " ")
+
+    End Sub
     Protected Overrides Sub Finalize()
 
         For i As Integer = 0 To NbFiles - 1

@@ -1,4 +1,3 @@
-
 Imports System.Data.SqlClient
 Imports System.Linq
 Public Class Compute2D
@@ -22,7 +21,10 @@ Public Class Compute2D
     Dim alpha As Double  'hydration degree(-)
     Dim w As Double 'indicator for isotherm curve
     Dim H_int As Double  'initial relative humidity in the material
+    Dim T_int As Double  'initial temperature in the material
+    Dim Cl_int As Double  'initial chloride concentration in the material
     Dim Tc As Double 'initial temperature in the material
+    Dim Model As Integer 'Computation model
     Dim tmax As Double 'end time (s) 72h
     Dim dt As Double 'time interval (s)
     Dim T_sauv As Double
@@ -50,6 +52,8 @@ Public Class Compute2D
     Dim dH_avg As Double
     Dim dw_avg As Double
     Dim dS_avg As Double
+    Dim dT_avg As Double
+    Dim dCl_avg As Double
     Dim OutputFile As OutputFile2D
 
     Public Function Read_InputFile() As Integer
@@ -64,9 +68,9 @@ Public Class Compute2D
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
-        Dim Postfile As String = frmTrans2D.Directory & "\"
+        directory = frmTrans2D.Directory & "\"
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        FilePost(OutFile, Postfile)
+        FilePost(OutFile, directory)
 
         Dim NameMat As String
         Input(nFic, NameMat)
@@ -75,12 +79,11 @@ Public Class Compute2D
         Input(nFic, w)
         Input(nFic, H_int)
         Input(nFic, Tc)
+        Input(nFic, Model)
         Input(nFic, tmax)
         Input(nFic, dt)
         Input(nFic, T_sauv)
-
         ind = CInt(tmax / dt)
-
         Return ind
 
     End Function
@@ -123,26 +126,32 @@ Public Class Compute2D
         w = 0 'the initial value for desorption (w = 0) or adsorption curve (w = 1) for the first step
         day = 0 'age du beton (problem)
         Dim St As Double = 0.2 'capillary pressure residual saturation
-        Dim w_avg_0, H_avg_0, S_avg_0 As Double
+        Dim w_avg_0, H_avg_0, S_avg_0, T_avg_0, Cl_avg_0 As Double
+        Dim HNew As Double
+        Dim SNew As Double
+        Dim TNew As Double
+        Dim ClNew As Double
+        Dim S_int As Double
+        Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
         For i As Integer = 0 To NNodes - 1
-            Dim S_int As Double = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-            Nodes(i).SetFieldsNew(H_int, S_int, wsat * S_int)
+            S_int = GetHtoS(H_int, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+            Nodes(i).SetFieldsNew(H_int, S_int, wsat * S_int, T_int, Cl_int)
             Nodes(i).SetFieldsNewToOld()
         Next
 
-        FieldAverage(Nodes, H_avg_0, w_avg_0, S_avg_0)
-        OutputFile.WriteLine(H_avg_0, w_avg_0, S_avg_0)
+        FieldAverage(Nodes, H_avg_0, w_avg_0, S_avg_0, T_avg_0, Cl_avg_0)
+        OutputFile.WriteLine(H_avg_0, w_avg_0, S_avg_0, T_avg_0, Cl_avg_0)
 
         'plot initial state
         For i As Integer = 0 To NElements - 1
             Elements(i).ReDimFields(ind + 2)
-            Elements(i).SetFields(0, Nodes(i).GetHRNew() * 100, Nodes(i).GetSNew() * 100)
+            Elements(i).SetFields(0, Nodes(i).GetHRNew() * 100, Nodes(i).GetSNew() * 100, Nodes(i).GetTNew(), Nodes(i).GetClNew())
         Next
 
         'apply BC
         For i_node As Integer = 0 To NNodes - 1
-            OutputFile.WriteFirstLine(Nodes(i_node).GetHROld(), Nodes(i_node).GetWOld(), Nodes(i_node).GetSOld())
-            Dim HNew As Double
+            OutputFile.WriteFirstLine(Nodes(i_node).GetHROld(), Nodes(i_node).GetWOld(), Nodes(i_node).GetSOld(), Nodes(i_node).GetTOld(), Nodes(i_node).GetClOld())
+
             If Nodes(i_node).NumExpo <> 0 Then
                 HNew = Expo(Nodes(i_node).NumExpo).Humidite(0) / 100
             Else
@@ -154,22 +163,22 @@ Public Class Compute2D
             ElseIf w = 1 And Nodes(i_node).GetHRNew() < Nodes(i_node).GetHROld() Then 'adsorption to desorption
                 w = 0
             End If
-            Dim SNew As Double = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-            Nodes(i_node).SetFieldsNew(HNew, SNew, wsat * SNew)
+            SNew = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
+
+            Nodes(i_node).SetFieldsNew(HNew, SNew, wsat * SNew, TNew, ClNew)
         Next
 
         OutputFile.WriteBlankLine()
 
         'compute variation
-        'dH_avg += H_new.Average - H_old.Average
-        'dw_avg += w_new.Average - w_old.Average
-        'dS_avg += S_new.Average - S_old.Average
+        UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg, dT_avg, dCl_avg)
+        GetNewAverage(Nodes, HRAvg, WAvg, SAvg, TAvg, ClAvg)
 
         'imagine BC is applied in very short time (dt/1000), then output the field variables with BC applied on it
 
-        'OutputFile.WriteField(0, dt / 1000.0, NNodes, dH_avg, H_new)
-        'OutputFile.WriteField(1, dt / 1000.0, NNodes, dw_avg, w_new)
-        'OutputFile.WriteField(2, dt / 1000.0, NNodes, dS_avg, S_new)
+        OutputFile.WriteHR(dt / 1000.0, NNodes, dH_avg, HRAvg, Nodes)
+        OutputFile.WriteW(dt / 1000.0, NNodes, dw_avg, WAvg, Nodes)
+        OutputFile.WriteS(dt / 1000.0, NNodes, dS_avg, SAvg, Nodes)
 
     End Sub
 
@@ -185,15 +194,13 @@ Public Class Compute2D
         Dim he As HETrans
         Dim H_ele() As Double
 
-        OutputFile = New OutputFile2D(directory, 3, NNodes)
-
+        OutputFile = New OutputFile2D(directory, 5, NNodes)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
 
         ''Global time loop
         For ti As Integer = 1 To ind
 
             frmTrans2D.PlotProgressTime(ind, ti)
-
 
             ' step 1: initialisation and boundary check
             For i_node As Integer = 0 To NNodes - 1 ''regular loop
@@ -261,7 +268,9 @@ Public Class Compute2D
                 End If
 
                 Dim SNew As Double = GetHtoS(HNew(j), type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, w)
-                Nodes(j).SetFieldsNew(HNew(j), SNew, wsat * SNew)
+                Dim TNew As Double
+                Dim ClNew As Double
+                Nodes(j).SetFieldsNew(HNew(j), SNew, wsat * SNew, TNew, ClNew)
 
             Next
 
@@ -274,19 +283,20 @@ Public Class Compute2D
             Time(ti) = (ti) * dt / 3600 ' Time in hour
 
             'compute variation
-
-            'dH_avg += H_new.Average - H_old.Average
-            'dw_avg += w_new.Average - w_old.Average
-            'dS_avg += S_new.Average - S_old.Average
+            UpdatediffAverage(Nodes, dH_avg, dw_avg, dS_avg, dT_avg, dCl_avg)
 
             If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
-                'OutputFile.WriteField(0, ti * dt, NNodes, dH_avg, H_new)
-                'OutputFile.WriteField(1, ti * dt, NNodes, dw_avg, w_new)
-                'OutputFile.WriteField(2, ti * dt, NNodes, dS_avg, S_new)
+
+                Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
+                GetNewAverage(Nodes, HRAvg, WAvg, SAvg, TAvg, ClAvg)
+                OutputFile.WriteHR(ti * dt, NNodes, dH_avg, HRAvg, Nodes)
+                OutputFile.WriteW(ti * dt, NNodes, dw_avg, WAvg, Nodes)
+                OutputFile.WriteS(ti * dt, NNodes, dS_avg, SAvg, Nodes)
+
             End If
         Next
 
-        MsgBox("End of 2D diffusion", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
+        MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
 
     End Sub
 
@@ -306,6 +316,5 @@ Public Class Compute2D
             Next
         Next
     End Sub
-
 
 End Class

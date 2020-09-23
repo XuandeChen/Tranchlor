@@ -37,6 +37,8 @@ Public Class frmTrans2D
     Public colorMap As ColorMap
     Public HRRange As Range
     Public SlRange As Range
+    Public TRange As Range 'xuande, value range for temperature
+    Public ClRange As Range 'xuande, value range for chlore
     Public Directory As String
     'Private EpsilonXRange, EpsilonYRange, GammaXYRange As Range
 
@@ -44,7 +46,7 @@ Public Class frmTrans2D
         None
         HR
         Sl
-        TauXY
+        T
         EpsilonX
         EpsilonY
         GammaXY
@@ -112,17 +114,14 @@ Public Class frmTrans2D
         End If
 
         Dim C2D As New Compute2D
-
+        'Dim C2D As New Compute2D_trial
         'perform analysis using the finite elemeent method
-
         Dim ind As Integer = C2D.Read_InputFile()
-
         For i As Integer = 1 To Expo.Length - 1
             Expo(i).WriteExpo(ind)
         Next
 
         PlotInitialization(ind)
-
         C2D.Compute_All(Expo, NNodes, NElements, Elements, Nodes, Time)
 
         Analysed = True
@@ -166,23 +165,6 @@ Public Class frmTrans2D
 
         Return ab
     End Function
-
-    Private Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ElementNo As Integer)
-        Dim i, j As Integer
-        Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
-                                 getDOF(Elements(ElementNo).Node2 - 1),
-                                 getDOF(Elements(ElementNo).Node3 - 1),
-                                 getDOF(Elements(ElementNo).Node4 - 1)}
-        Dim dofi, dofj As Integer
-        For i = 0 To 3 'each dof of the Se
-            dofi = dofs(i)
-            For j = 0 To 3
-                dofj = dofs(j)
-                Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
-            Next
-        Next
-    End Sub
-
     Public Function ReadMeshFile(f As String) As Boolean
 
         Try
@@ -537,8 +519,13 @@ Public Class frmTrans2D
                         TimeScrollBar.Visible = True
                         LabelT1.Visible = True
                         LabelTVal.Visible = True
-                        'Case Results.TauXY
-                        'colorMap = New ColorMap(TauXYRange.Max, TauXYRange.Min)
+                    Case Results.T
+                        colorMap = New ColorMap(Math.Round(TRange.Max, 2), Math.Round(TRange.Min, 2))
+                        'TimeScrollBar
+                        TimeScrollBar.Maximum = Time.Length()
+                        TimeScrollBar.Visible = True
+                        LabelT1.Visible = True
+                        LabelTVal.Visible = True
                         'Case Results.EpsilonX
                         'colorMap = New ColorMap(EpsilonXRange.Max, EpsilonXRange.Min)
                         'Case Results.EpsilonY
@@ -564,6 +551,9 @@ Public Class frmTrans2D
                             LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
                         Case Results.Sl
                             eColor = colorMap.getColor(Elements(i).GetS(TimeScrollBar.Value))
+                            LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
+                        Case Results.T
+                            eColor = colorMap.getColor(Elements(i).GetT(TimeScrollBar.Value))
                             LabelTVal.Text = CStr(Time(TimeScrollBar.Value))
                             'eColor = colorMap.getColor(Elements(i).Stresses(1))
                             'eColor = colorMap.getColor(Elements(i).HR(1))
@@ -754,7 +744,7 @@ Public Class frmTrans2D
     End Sub
 
     Private Sub HandleShowResultClick(sender As Object, e As EventArgs) Handles XToolStripMenuItem.Click,
-            HRToolStripMenuItem.Click, SlToolStripMenuItem.Click, TauXYToolStripMenuItem.Click,
+            HRToolStripMenuItem.Click, SlToolStripMenuItem.Click, TToolStripMenuItem.Click,
             EpsilonXToolStripMenuItem.Click, EpsilonYToolStripMenuItem.Click, GammaXYToolStripMenuItem.Click
 
         ShowResult = Results.None
@@ -765,8 +755,8 @@ Public Class frmTrans2D
             ShowResult = Results.HR
         ElseIf sender.Equals(SlToolStripMenuItem) Then
             ShowResult = Results.Sl
-        ElseIf sender.Equals(TauXYToolStripMenuItem) Then
-            ShowResult = Results.TauXY
+        ElseIf sender.Equals(TToolStripMenuItem) Then
+            ShowResult = Results.T
         ElseIf sender.Equals(EpsilonXToolStripMenuItem) Then
             ShowResult = Results.EpsilonX
         ElseIf sender.Equals(EpsilonYToolStripMenuItem) Then
@@ -774,8 +764,8 @@ Public Class frmTrans2D
         ElseIf sender.Equals(GammaXYToolStripMenuItem) Then
             ShowResult = Results.GammaXY
         End If
-
         DrawModel()
+
     End Sub
 
     Private Sub TimeScrollBar_Scroll(sender As Object, e As ScrollEventArgs) Handles TimeScrollBar.Scroll
@@ -790,6 +780,8 @@ Public Class frmTrans2D
 
         HRRange = New Range
         SlRange = New Range
+        TRange = New Range
+        ClRange = New Range
         ReDim Time(ind + 1)
         Time(0) = 0
         LabelProgress.Visible = True
@@ -803,6 +795,8 @@ Public Class frmTrans2D
             For Time As Integer = 0 To ind - 1
                 HRRange.AddValue(Elements(i).GetHR(Time))
                 SlRange.AddValue(Elements(i).GetS(Time))
+                TRange.AddValue(Elements(i).GetT(Time))
+                ClRange.AddValue(Elements(i).GetCl(Time))
             Next
         Next
 
@@ -848,7 +842,7 @@ Public Class frmTrans2D
         XToolStripMenuItem.Checked = False
         HRToolStripMenuItem.Checked = False
         SlToolStripMenuItem.Checked = False
-        TauXYToolStripMenuItem.Checked = False
+        TToolStripMenuItem.Checked = False
         EpsilonXToolStripMenuItem.Checked = False
         EpsilonYToolStripMenuItem.Checked = False
         GammaXYToolStripMenuItem.Checked = False
@@ -860,8 +854,8 @@ Public Class frmTrans2D
                 HRToolStripMenuItem.Checked = True
             Case Results.Sl
                 SlToolStripMenuItem.Checked = True
-            Case Results.TauXY
-                TauXYToolStripMenuItem.Checked = True
+            Case Results.T
+                TToolStripMenuItem.Checked = True
             Case Results.EpsilonX
                 EpsilonXToolStripMenuItem.Checked = True
             Case Results.EpsilonY
@@ -1126,7 +1120,5 @@ Public Class frmTrans2D
     '    'enjoy! :o)
 
     'End Sub
-    ' Program for computation 2D diffusion 
-
 
 End Class
