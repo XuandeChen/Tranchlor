@@ -120,11 +120,13 @@ Public Class Compute2D
     End Sub
 
     Public Sub CalculInitialization(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef Time() As Double)
+
         Tk = Tc + 273 '(K) 
         Water_tot = W_C_ratio * C 'densite eau (kg/m3)
         wsat = GetWsat(Water_tot, C, alpha) 'teneur en eau sature (kg/m3)
         w = 0 'the initial value for desorption (w = 0) or adsorption curve (w = 1) for the first step
         day = 0 'age du beton (problem)
+
         Dim St As Double = 0.2 'capillary pressure residual saturation
         Dim w_avg_0, H_avg_0, S_avg_0, T_avg_0, Cl_avg_0 As Double
         Dim HNew As Double
@@ -182,7 +184,7 @@ Public Class Compute2D
 
     End Sub
 
-    Public Sub Compute_All(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
+    Public Sub Compute_All(ByRef Frm As frmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
 
         Dim LHS(,) As Double
@@ -293,7 +295,11 @@ Public Class Compute2D
                 OutputFile.WriteW(ti * dt, NNodes, dw_avg, WAvg, Nodes)
                 OutputFile.WriteS(ti * dt, NNodes, dS_avg, SAvg, Nodes)
 
-            End If
+                If (ti * dt / T_sauv) = Int(ti * dt / T_sauv) And Int(ti * dt / T_sauv) > 0 Then ' check register time
+                    'OutputFile.WriteField(0, ti * dt, NNodes, dH_avg, H_new)
+                    'OutputFile.WriteField(1, ti * dt, NNodes, dw_avg, w_new)
+                    'OutputFile.WriteField(2, ti * dt, NNodes, dS_avg, S_new)
+                End If
         Next
 
         MsgBox("End of 2D computation", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "End")
