@@ -130,24 +130,6 @@ Public Class frmTrans2D
 
     End Sub
 
-    Private Sub RegisterH(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef H_new() As Double)
-        'Register values
-        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
-        For j As Integer = 0 To Dofs - 1
-            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
-        Next j
-    End Sub
-
-    Private Sub RegisterField(ByRef nFic1 As Short, ByRef Temps As Double, ByRef Dofs As Integer, ByRef d_avg As Double, ByRef H_new() As Double)
-        'Register field values
-        Print(CInt(nFic1), Temps / 3600, ",", Temps, ",", TAB)
-        Dim avg_new As Double = H_new.Average()
-        Print(CInt(nFic1), avg_new, ",", d_avg, ",", TAB)
-        For j As Integer = 0 To Dofs - 1
-            Print(CInt(nFic1), H_new(j), ",", TAB) '% humidité relative dans le béton
-        Next j
-    End Sub
-
     Private Function MultiplyMatrixWithVector(ByRef a(,) As Double, ByRef b() As Double) As Double()
 
         Dim aRows As Integer = a.GetLength(0)

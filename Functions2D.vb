@@ -154,12 +154,19 @@ Module Functions2D
         Return pc
     End Function
     'derivation of the capillary pressure function 
-    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double) As Double
+    Public Function GetdpcdS(ByRef saturation As Double, ByRef pc_0 As Double, ByRef b As Double, ByRef St As Double) As Double
         Dim dpcdS As Double
         Dim S As Double = saturation
         Dim n As Double = 1 / b
+        Dim Pt As Double = pc_0 * (St ^ (-b) - 1) ^ (1 - 1 / b)
+        Dim P As Double = Math.Log(Pt * 1000000.0, 10)
+        Dim gamma As Double = -(Math.Log(1000000000.0, 10) - P) / St
         'dpcdS = (pc_0 * (1 / S ^ (1 / b) - 1) ^ (1 / n)) / (b * n * S * (S ^ (1 / b) - 1))
-        dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
+        If S >= St Then
+            dpcdS = -pc_0 * (b - 1) * S ^ (-b - 1) / ((S ^ -b - 1) ^ -b)
+        Else
+            dpcdS = -10 ^ (-6) * Math.Log(10) * gamma * 10 ^ (gamma * (S - St) + P)
+        End If
         Return dpcdS
     End Function
 
