@@ -11,10 +11,8 @@ Public Class DBconnexion
     Public Sub New()
 
         Dim connected As Boolean = False
-
         Dim ServerName As String = "132.203.36.238"
         Dim DatabaseName As String = "\\GCI-DACON-01\TRANSCHLOR\DATABASE\TRANSCHLORMAT.MDF"
-
         While connected = False
 
             'Dim frm As New FrmLogin

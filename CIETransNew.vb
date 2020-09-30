@@ -111,7 +111,7 @@
     End Function
     Private Function getB(ByRef aa As Double, ByRef bb As Double) As Double(,)
         Dim B(1, 3) As Double
-        Dim zeta As Double = aa
+        Dim epsi As Double = aa
         Dim yita As Double = bb
 
         B(0, 0) = 1 / 4 * (-(1 - yita))
@@ -119,10 +119,10 @@
         B(0, 2) = 1 / 4 * (1 + yita)
         B(0, 3) = 1 / 4 * (-(1 + yita))
 
-        B(1, 0) = 1 / 4 * (-(1 - zeta))
-        B(1, 1) = 1 / 4 * (-(1 + zeta))
-        B(1, 2) = 1 / 4 * (1 + zeta)
-        B(1, 3) = 1 / 4 * (1 - zeta)
+        B(1, 0) = 1 / 4 * (-(1 - epsi))
+        B(1, 1) = 1 / 4 * (-(1 + epsi))
+        B(1, 2) = 1 / 4 * (1 + epsi)
+        B(1, 3) = 1 / 4 * (1 - epsi)
 
         Return B
     End Function

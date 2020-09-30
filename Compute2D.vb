@@ -185,7 +185,7 @@ Public Class Compute2D
         OutputFile.WriteCl(dt / 1000.0, NNodes, dCl_avg, ClAvg, Nodes)
     End Sub
 
-    Public Sub Compute_All(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
+    Public Sub Compute_All(ByRef Frm As frmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
 
         Dim LHS(,) As Double
@@ -203,7 +203,7 @@ Public Class Compute2D
         ''Global time loop
         For ti As Integer = 1 To ind
 
-            frmTrans2D.PlotProgressTime(ind, ti)
+            Frm.PlotProgressTime(ind, ti)
 
             ' step 1: initialisation and boundary check
             For i_node As Integer = 0 To NNodes - 1 ''regular loop

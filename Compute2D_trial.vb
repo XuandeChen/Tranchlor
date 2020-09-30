@@ -38,25 +38,17 @@ Public Class Compute2D_trial
     Dim D0 As Double 'water vapour diffusivity [Bazant model](m2/s)
     Dim alpha_0 As Double 'water vapour diffusivity parameters [Bazant model](-)
     Dim Hc As Double 'water vapour diffusivity parameters [Bazant model](-)
-    Dim kg As Double 'intrinsic permeability to liquid (m2)
+    Dim kg As Double 'intrinsic permeability to gas (m2)
     Dim kl As Double 'intrinsic permeability to liquid (m2)
     Dim pc_0 As Double 'capillary pressure parameter
     Dim beta As Double 'capillary pressure parameter
     Dim m As Double 'relative permeability parameter
-    'Dim H_old() As Double
-    'Dim H_new() As Double
-    'Dim S_old() As Double
-    'Dim S_new() As Double
-    'Dim w_old() As Double
-    'Dim w_new() As Double
     Dim dH_avg As Double
     Dim dw_avg As Double
     Dim dS_avg As Double
     Dim dT_avg As Double
     Dim dCl_avg As Double
     Dim OutputFile As OutputFile2D
-
-
     Public Function Read_InputFile() As Integer
         ''''''''''''''''''''''''''''''''''''''''''''
         Dim Filtre As String = "Text files (INPUT2D_*.txt)|INPUT2D_*.txt"
@@ -118,13 +110,14 @@ Public Class Compute2D_trial
         End Try
     End Sub
 
-    Public Sub Compute_All(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
+    Public Sub Compute_All(ByRef Frm As frmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
         OutputFile = New OutputFile2D(directory, 5, NNodes)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
         ''Global time loop
         For ti As Integer = 1 To ind
-            frmTrans2D.PlotProgressTime(ind, ti)
+
+            Frm.PlotProgressTime(ind, ti)
             ''Field value initialization
             setVariables(NNodes, Nodes)
             If Model = 0 Then
@@ -567,6 +560,10 @@ Public Class Compute2D_trial
                 Kg(dofi, dofj) = Kg(dofi, dofj) + ke(i, j)
             Next
         Next
+    End Sub
+
+    Public Sub DataMonitoring()
+
     End Sub
 End Class
 
