@@ -3,8 +3,8 @@ $MeshFormat
 $EndMeshFormat
 $PhysicalNames
 2
-1 1 EXPO_1_TEHERI
-1 2 EXPO_2_TEHERI
+1 1 F:\Projet-RDC-PICH\Tranchlor\Resources\Exposition\EXPO_1_TEHERI.txt
+1 2 F:\Projet-RDC-PICH\Tranchlor\Resources\Exposition\EXPO_2_TEHERI.txt
 $EndPhysicalNames
 $Entities
 4 4 1 0
