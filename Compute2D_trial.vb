@@ -116,7 +116,6 @@ Public Class Compute2D_trial
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
         ''Global time loop
         For ti As Integer = 1 To ind
-
             Frm.PlotProgressTime(ind, ti)
             ''Field value initialization
             setVariables(NNodes, Nodes)
@@ -148,7 +147,6 @@ Public Class Compute2D_trial
         Water_tot = W_C_ratio * C 'densite eau (kg/m3)
         wsat = GetWsat(Water_tot, C, alpha) 'teneur en eau sature (kg/m3)
         day = 0 'age du beton (problem)
-        Dim St As Double = 0.2 'capillary pressure residual saturation
         Dim w_avg_0, H_avg_0, S_avg_0, T_avg_0, Cl_avg_0 As Double
         Dim HNew As Double
         Dim SNew As Double
@@ -201,6 +199,8 @@ Public Class Compute2D_trial
         Dim RHS() As Double
         Dim bg(NNodes - 1, NNodes - 1) As Double 'Global b matrix
         Dim Ag(NNodes - 1, NNodes - 1) As Double 'Global A matrix
+        Dim JX(NNodes - 1) As Double 'Global x flux vector
+        Dim JY(NNodes - 1) As Double 'Global y flux vector
         Dim cieNew As CIETransNew
         Dim Te As TETrans
         Dim Se As SETrans
@@ -236,6 +236,27 @@ Public Class Compute2D_trial
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
                           d1, d2, d3, d4)
+            'flux model, xuande 2020.08.28
+            Dim J1_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J2_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J3_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim J4_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat1 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat2 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat3 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat4 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim flux_x1 As Double = cieNew.getXFlux(Dmat1(0, 0), T_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x2 As Double = cieNew.getXFlux(Dmat2(0, 0), T_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x3 As Double = cieNew.getXFlux(Dmat3(0, 0), T_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_x4 As Double = cieNew.getXFlux(Dmat4(0, 0), T_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y1 As Double = cieNew.getYFlux(Dmat1(1, 1), T_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y2 As Double = cieNew.getYFlux(Dmat2(1, 1), T_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y3 As Double = cieNew.getYFlux(Dmat3(1, 1), T_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y4 As Double = cieNew.getYFlux(Dmat4(1, 1), T_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim vec_fluxX As Double() = getve(flux_x1, flux_x2, flux_x3, flux_x4)
+            Dim vec_fluxY As Double() = getve(flux_y1, flux_y2, flux_y3, flux_y4)
+            AssembleVg(vec_fluxX, JX, Elements, i)
+            AssembleVg(vec_fluxY, JY, Elements, i)
             AssembleKg(cieNew.getbe, bg, Elements, i)
             AssembleKg(cieNew.getAe, Ag, Elements, i)
         Next
@@ -249,6 +270,7 @@ Public Class Compute2D_trial
         GetX(TNew, LHS, RHS)
         'Result check and update
         updateVariableT(Expo, NNodes, Nodes, TNew, ti)
+        updateThermoFlux(NNodes, Nodes, JX, JY)
     End Sub
 
     Public Sub Diff(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer)
@@ -258,6 +280,8 @@ Public Class Compute2D_trial
         Dim RHS() As Double
         Dim bg(NNodes - 1, NNodes - 1) As Double 'Global b matrix
         Dim Ag(NNodes - 1, NNodes - 1) As Double 'Global A matrix
+        Dim JX(NNodes - 1) As Double 'Global x flux vector
+        Dim JY(NNodes - 1) As Double 'Global y flux vector
         Dim cieNew As CIETransNew
         Dim He As HETrans
         Dim Te As TETrans
@@ -286,6 +310,27 @@ Public Class Compute2D_trial
                           Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
                           Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
                           d1, d2, d3, d4)
+            'flux model, xuande 2020.08.28
+            Dim J1_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J2_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J3_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim J4_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat1 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat2 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat3 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat4 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim flux_x1 As Double = cieNew.getXFlux(Dmat1(0, 0), T_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x2 As Double = cieNew.getXFlux(Dmat2(0, 0), T_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x3 As Double = cieNew.getXFlux(Dmat3(0, 0), T_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_x4 As Double = cieNew.getXFlux(Dmat4(0, 0), T_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y1 As Double = cieNew.getYFlux(Dmat1(1, 1), T_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y2 As Double = cieNew.getYFlux(Dmat2(1, 1), T_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y3 As Double = cieNew.getYFlux(Dmat3(1, 1), T_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y4 As Double = cieNew.getYFlux(Dmat4(1, 1), T_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim vec_fluxX As Double() = getve(flux_x1, flux_x2, flux_x3, flux_x4)
+            Dim vec_fluxY As Double() = getve(flux_y1, flux_y2, flux_y3, flux_y4)
+            AssembleVg(vec_fluxX, JX, Elements, i)
+            AssembleVg(vec_fluxY, JY, Elements, i)
             AssembleKg(cieNew.getbe, bg, Elements, i)
             AssembleKg(cieNew.getAe, Ag, Elements, i)
         Next
@@ -299,6 +344,7 @@ Public Class Compute2D_trial
         GetX(HNew, LHS, RHS)
         'Result check and update
         updateVariableH(Expo, NNodes, Nodes, HOld, HNew, ti)
+        updateDiffusionFlux(NNodes, Nodes, JX, JY)
     End Sub
 
     Public Sub Cap(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer)
@@ -308,6 +354,8 @@ Public Class Compute2D_trial
         Dim RHS() As Double
         Dim bg(NNodes - 1, NNodes - 1) As Double 'Global b matrix
         Dim Ag(NNodes - 1, NNodes - 1) As Double 'Global A matrix
+        Dim JX(NNodes - 1) As Double 'Global x flux vector
+        Dim JY(NNodes - 1) As Double 'Global y flux vector
         Dim cieNew As CIETransNew
         Dim He As HETrans
         Dim Te As TETrans
@@ -365,6 +413,27 @@ Public Class Compute2D_trial
         Nodes(Elements(i).Node3 - 1).x, Nodes(Elements(i).Node3 - 1).y,
         Nodes(Elements(i).Node4 - 1).x, Nodes(Elements(i).Node4 - 1).y,
         d1, d2, d3, d4)
+            'flux model, xuande 2020.08.28
+            Dim J1_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J2_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim J3_inv As Double(,) = cieNew.GetInversedJac(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim J4_inv As Double(,) = cieNew.GetInversedJac(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat1 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat2 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
+            Dim Dmat3 As Double(,) = cieNew.getDmat(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim Dmat4 As Double(,) = cieNew.getDmat(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
+            Dim flux_x1 As Double = cieNew.getXFlux(Dmat1(0, 0), S_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x2 As Double = cieNew.getXFlux(Dmat2(0, 0), S_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_x3 As Double = cieNew.getXFlux(Dmat3(0, 0), S_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_x4 As Double = cieNew.getXFlux(Dmat4(0, 0), S_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y1 As Double = cieNew.getYFlux(Dmat1(1, 1), S_ele, J1_inv, cieNew.getB(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y2 As Double = cieNew.getYFlux(Dmat2(1, 1), S_ele, J2_inv, cieNew.getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3)))
+            Dim flux_y3 As Double = cieNew.getYFlux(Dmat3(1, 1), S_ele, J3_inv, cieNew.getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim flux_y4 As Double = cieNew.getYFlux(Dmat4(1, 1), S_ele, J4_inv, cieNew.getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)))
+            Dim vec_fluxX As Double() = getve(flux_x1, flux_x2, flux_x3, flux_x4)
+            Dim vec_fluxY As Double() = getve(flux_y1, flux_y2, flux_y3, flux_y4)
+            AssembleVg(vec_fluxX, JX, Elements, i)
+            AssembleVg(vec_fluxY, JY, Elements, i)
             AssembleKg(cieNew.getbe, bg, Elements, i)
             AssembleKg(cieNew.getAe, Ag, Elements, i)
         Next
@@ -378,6 +447,7 @@ Public Class Compute2D_trial
         GetX(SNew, NewLHS, RHS)
         'Result check and update
         updateVariableS(Expo, NNodes, Nodes, SOld, SNew, Node_w, ti)
+        updateCapillaryFlux(NNodes, Nodes, JX, JY)
     End Sub
 
     'Public Sub Chemo()
@@ -453,6 +523,28 @@ Public Class Compute2D_trial
         Next
     End Sub
 
+    'flux , xuande 2020.08.28
+    Public Sub setThermoFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
+        For i_node As Integer = 0 To NNodes - 1
+            Nodes(i_node).SetThermoFluxNewToOld()
+        Next
+    End Sub
+    Public Sub setCapillaryFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
+        For i_node As Integer = 0 To NNodes - 1
+            Nodes(i_node).SetCapillaryFluxNewToOld()
+        Next
+    End Sub
+    Public Sub setDiffusionFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
+        For i_node As Integer = 0 To NNodes - 1
+            Nodes(i_node).SetDiffusionFluxNewToOld()
+        Next
+    End Sub
+    Public Sub setIonicFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans)
+        For i_node As Integer = 0 To NNodes - 1
+            Nodes(i_node).SetIonicFluxNewToOld()
+        Next
+    End Sub
+
     Public Sub updateVariableT(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef TNew() As Double, ByRef ti As Integer)
         Dim NbExpo As Integer
         Dim SNew As Double
@@ -469,7 +561,6 @@ Public Class Compute2D_trial
             Nodes(j).SetFieldsNew(HNew, SNew, wsat * SNew, TNew(j), ClNew)
         Next
     End Sub
-
     Public Sub updateVariableH(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef HOld() As Double, ByRef HNew() As Double, ByRef ti As Integer)
         Dim NbExpo As Integer
         Dim SNew As Double
@@ -497,7 +588,6 @@ Public Class Compute2D_trial
             Nodes(j).SetFieldsNew(HNew(j), SNew, wsat * SNew, TNew, ClNew)
         Next
     End Sub
-
     Public Sub updateVariableS(ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef SOld() As Double, ByRef SNew() As Double, ByRef Node_w() As Integer, ByRef ti As Integer)
         Dim NbExpo As Integer
         Dim HNew As Double
@@ -527,6 +617,36 @@ Public Class Compute2D_trial
         Next
     End Sub
 
+    'flux , xuande 2020.08.28
+    Public Sub updateThermoFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef Jx_New() As Double, ByRef Jy_New() As Double)
+
+        For j As Integer = 0 To NNodes - 1
+            Nodes(j).SetThermoFluxNew(Jx_New(j), Jy_New(j))
+        Next
+
+    End Sub
+    Public Sub updateCapillaryFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef Jx_New() As Double, ByRef Jy_New() As Double)
+
+        For j As Integer = 0 To NNodes - 1
+            Nodes(j).SetCapillaryFluxNew(Jx_New(j), Jy_New(j))
+        Next
+
+    End Sub
+    Public Sub updateDiffusionFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef Jx_New() As Double, ByRef Jy_New() As Double)
+
+        For j As Integer = 0 To NNodes - 1
+            Nodes(j).SetDiffusionFluxNew(Jx_New(j), Jy_New(j))
+        Next
+
+    End Sub
+    Public Sub updateIonicFlux(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef Jx_New() As Double, ByRef Jy_New() As Double)
+
+        For j As Integer = 0 To NNodes - 1
+            Nodes(j).SetIonicFluxNew(Jx_New(j), Jy_New(j))
+        Next
+
+    End Sub
+
     Public Sub Postprocess(ByRef NNodes As Integer, ByRef Nodes() As NodeTrans, ByRef NElements As Integer, ByRef Elements() As ElementTrans, ByRef ti As Integer, ByRef Time() As Double)
         ''Post-process : plot 2D image and export result .txt file 
         Dim HRAvg, WAvg, SAvg, TAvg, ClAvg As Double
@@ -545,7 +665,6 @@ Public Class Compute2D_trial
             OutputFile.WriteCl(ti * dt, NNodes, dCl_avg, ClAvg, Nodes)
         End If
     End Sub
-
     Public Sub AssembleKg(ByRef ke(,) As Double, ByRef Kg(,) As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
         Dim i, j As Integer
         Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
@@ -561,7 +680,18 @@ Public Class Compute2D_trial
             Next
         Next
     End Sub
-
+    Public Sub AssembleVg(ByRef ve() As Double, ByRef Vg() As Double, ByRef Elements() As ElementTrans, ElementNo As Integer)
+        Dim i As Integer
+        Dim dofs() As Integer = {getDOF(Elements(ElementNo).Node1 - 1),
+                                 getDOF(Elements(ElementNo).Node2 - 1),
+                                 getDOF(Elements(ElementNo).Node3 - 1),
+                                 getDOF(Elements(ElementNo).Node4 - 1)}
+        Dim dofi As Integer
+        For i = 0 To 3 'each dof of the Se
+            dofi = dofs(i)
+            Vg(dofi) = Vg(dofi) + ve(i)
+        Next
+    End Sub
     Public Sub DataMonitoring()
 
     End Sub

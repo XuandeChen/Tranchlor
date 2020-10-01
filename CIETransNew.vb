@@ -1,6 +1,6 @@
 ﻿Public Class CIETransNew
 
-    'Implementation of the 4*4 Rectangular Elemental Matrix for the chronological integration part
+    'Implementation of the 4*4 Rectangular Elemental Matrix for integration 
     Private x1, y1, x2, y2, x3, y3, x4, y4, DiffCoeff_p1, DiffCoeff_p2, DiffCoeff_p3, DiffCoeff_p4 As Double
 
     ''' <summary>
@@ -55,6 +55,7 @@
         Next
         Return be
     End Function
+
     ''' Returns the integrated [Ae] matrix by Gauss sommation method
     Public Function getAe() As Double(,)
 
@@ -62,7 +63,6 @@
         Dim B2(,) As Double = getB(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
         Dim B3(,) As Double = getB(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
         Dim B4(,) As Double = getB(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
-
         Dim DetJ1 As Double = getDetJ(-1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
         Dim DetJ2 As Double = getDetJ(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
         Dim DetJ3 As Double = getDetJ(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
@@ -73,7 +73,6 @@
         Dim D2(,) As Double = getDmat(1 / Math.Sqrt(3), -1 / Math.Sqrt(3))
         Dim D3(,) As Double = getDmat(1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
         Dim D4(,) As Double = getDmat(-1 / Math.Sqrt(3), 1 / Math.Sqrt(3))
-
         Dim BT1(,) As Double = getBT(B1)
         Dim BT2(,) As Double = getBT(B2)
         Dim BT3(,) As Double = getBT(B3)
@@ -101,7 +100,7 @@
         Next
         Return Ae
     End Function
-    Private Function getDmat(ByRef epsi As Double, yita As Double) As Double(,)
+    Public Function getDmat(ByRef epsi As Double, yita As Double) As Double(,)
         Dim Dmat(1, 1) As Double
         Dmat(0, 0) = getDi(epsi, yita)
         Dmat(0, 1) = 0
@@ -109,7 +108,7 @@
         Dmat(1, 1) = getDi(epsi, yita)
         Return Dmat
     End Function
-    Private Function getB(ByRef aa As Double, ByRef bb As Double) As Double(,)
+    Public Function getB(ByRef aa As Double, ByRef bb As Double) As Double(,)
         Dim B(1, 3) As Double
         Dim epsi As Double = aa
         Dim yita As Double = bb
@@ -157,13 +156,25 @@
 
         Return NTN
     End Function
-    ' get determinant of Jacobien
+
+    ''Jacobien functions
+    'Get Jacobien matrix
+    Private Function getJac(ByRef coorx As Double, ByRef coory As Double) As Double(,)
+        Dim J(1, 1) As Double
+        Dim zeta As Double = coorx
+        Dim yita As Double = coory
+        J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
+        J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
+        Return J
+    End Function
+    'Get determinant of Jacobien matrix
     Private Function getDetJ(ByRef coorx As Double, ByRef coory As Double) As Double
         Dim J(1, 1) As Double
         Dim DetJ As Double
         Dim zeta As Double = coorx
         Dim yita As Double = coory
-
         J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
         J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
         J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
@@ -171,6 +182,43 @@
         DetJ = J(0, 0) * J(1, 1) - J(1, 0) * J(0, 1)
         Return DetJ
     End Function
+    'Get inverse of Jacobien matrix
+    Public Function GetInversedJac(ByRef coorx As Double, ByRef coory As Double) As Double(,)
+        Dim J_inv(1, 1) As Double
+        Dim zeta As Double = coorx
+        Dim yita As Double = coory
+        Dim DetJ As Double
+        J_inv(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        J_inv(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
+        J_inv(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        J_inv(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
+        DetJ = J_inv(0, 0) * J_inv(1, 1) - J_inv(1, 0) * J_inv(0, 1)
+        J_inv(0, 0) = J_inv(1, 1) / DetJ
+        J_inv(0, 1) = -J_inv(0, 1) / DetJ
+        J_inv(1, 0) = -J_inv(1, 0) / DetJ
+        J_inv(1, 1) = J_inv(0, 0) / DetJ
+        Return J_inv
+    End Function
+    'flux functions
+    Public Function getXFlux(ByRef coef As Double, ByRef Var As Double(), ByRef Jac_inv As Double(,), ByRef B As Double(,)) As Double
+        Dim JFlux As Double
+        Dim dN1dx As Double = Jac_inv(0, 0) * B(0, 0) + Jac_inv(0, 1) * B(1, 0)
+        Dim dN2dx As Double = Jac_inv(0, 0) * B(0, 1) + Jac_inv(0, 1) * B(1, 1)
+        Dim dN3dx As Double = Jac_inv(0, 0) * B(0, 2) + Jac_inv(0, 1) * B(1, 2)
+        Dim dN4dx As Double = Jac_inv(0, 0) * B(0, 3) + Jac_inv(0, 1) * B(1, 3)
+        JFlux = coef * (dN1dx * Var(0) + dN2dx * Var(1) + dN3dx * Var(2) + dN4dx * Var(3))
+        Return JFlux
+    End Function
+    Public Function getYFlux(ByRef coef As Double, ByRef Var As Double(), ByRef Jac_inv As Double(,), ByRef B As Double(,)) As Double
+        Dim JFlux As Double
+        Dim dN1dy As Double = Jac_inv(1, 0) * B(0, 0) + Jac_inv(1, 1) * B(1, 0)
+        Dim dN2dy As Double = Jac_inv(1, 0) * B(0, 1) + Jac_inv(1, 1) * B(1, 1)
+        Dim dN3dy As Double = Jac_inv(1, 0) * B(0, 2) + Jac_inv(1, 1) * B(1, 2)
+        Dim dN4dy As Double = Jac_inv(1, 0) * B(0, 3) + Jac_inv(1, 1) * B(1, 3)
+        JFlux = coef * (dN1dy * Var(0) + dN2dy * Var(1) + dN3dy * Var(2) + dN4dy * Var(3))
+        Return JFlux
+    End Function
+
     Private Function getBT(ByRef B(,) As Double) As Double(,)
         'returns the transpose of [B]
         Dim BT(3, 1) As Double

@@ -1,8 +1,16 @@
 ﻿Imports System.Linq
 Imports NodesTrans
 Module Functions2D
+    'get elemental flux vector
+    Public Function getve(ByRef f1 As Double, ByRef f2 As Double, ByRef f3 As Double, ByRef f4 As Double)
+        Dim ve(3) As Double
+        ve(0) = f1
+        ve(1) = f2
+        ve(2) = f3
+        ve(3) = f4
+        Return ve
+    End Function
     'get the LHS matrix for Gauss matrix resolution
-
     Public Sub FieldAverage(ByRef Nodes() As NodeTrans, ByRef HRAverage As Double, ByRef SAverage As Double, ByRef WAverage As Double, ByRef TAverage As Double, ByRef ClAverage As Double)
 
         HRAverage = 0
@@ -25,7 +33,6 @@ Module Functions2D
         TAverage /= Nodes.Length
         ClAverage /= Nodes.Length
     End Sub
-
     Public Function getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim LHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
@@ -35,7 +42,6 @@ Module Functions2D
             Next
         Next
     End Function
-
     Public Function getNewLHS(ByRef NewLHS As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim NewLHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
@@ -46,6 +52,7 @@ Module Functions2D
         Next
         Return NewLHS
     End Function
+
     'Get the RHS matrix For Gauss matrix resolution
     Public Function getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim RHS(NNodes - 1, NNodes - 1)
@@ -56,7 +63,6 @@ Module Functions2D
             Next
         Next
     End Function
-
     Public Function getNewR(ByRef NewR As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim NewR(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
@@ -67,11 +73,13 @@ Module Functions2D
         Next
         Return NewR
     End Function
+
     'Get degree Of freedom /water diffusion
     Public Function getDOF(NodeNo As Integer) As Integer
         Dim nDofsPerNode As Integer = 1
         Return (NodeNo) * nDofsPerNode
     End Function
+
     'matrix multiplying a vector
     Public Function MultiplyMatrixWithVector(ByRef a(,) As Double, ByRef b() As Double) As Double()
 
@@ -87,6 +95,7 @@ Module Functions2D
 
         Return ab
     End Function
+
     'linear matrix system resolution by Gauss elimination
     Public Function GetX(ByRef X As Double(), ByRef A(,) As Double, ByRef b() As Double)
         Dim aRows As Integer = A.GetLength(0)
@@ -177,7 +186,7 @@ Module Functions2D
         Return Dl
     End Function
 
-    'water vapor transport functions: 
+    'water vapor transport functions
     'diffusion coefficient of water vapor  [mm2/s] (Equation and formula from Bazant, 2001)
     Public Function GetDh(ByRef DT0 As Double, ByRef alpha_0 As Double, ByRef Hc As Double, ByRef T As Double, ByRef H As Double) As Double
         Dim n As Integer = 4
@@ -187,6 +196,7 @@ Module Functions2D
         Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
         Return Dh
     End Function
+
     'diffusion coefficient of water vapor or dry air in wet air [cm2/s] (Equation and formula from Marc Mainguy, 2001)
     Public Function GetD(ByRef Tc As Double, ByRef pg As Double) As Double
         Dim Dva As Double
@@ -197,12 +207,14 @@ Module Functions2D
         D = Dva / pg * 0.0001 'convert unit to m2/s
         Return D
     End Function
+
     'diffusion coefficient of water vapor or dry air in wet air [mm2/s] 
     Public Function GetDv(ByRef rho_v As Double, ByRef rho_l As Double, ByRef dpcdS As Double, ByRef f As Double, ByRef D As Double, ByRef pv As Double) As Double
         Dim Dv As Double
         Dv = D / pv * (rho_v / rho_l) ^ 2 * dpcdS * f * 1000000.0 'convert unit to mm2/s
         Return Dv
     End Function
+
     'resistance factor function considering the tortuosity
     Public Function Getf(ByRef phi As Double, ByRef saturation As Double) As Double
         Dim S As Double = saturation
@@ -210,12 +222,14 @@ Module Functions2D
         f = phi ^ (4 / 3) * (1 - S) ^ (10 / 3)
         Return f
     End Function
-    ' saturated water function 
+
+    'saturated water function 
     Public Function GetWsat(ByRef Water_tot As Double, ByRef C As Double, ByRef alpha As Double) As Double
         Dim Wsat As Double = Water_tot - C * 0.2 * alpha
         Return Wsat
     End Function
-    'isotherm function 
+
+    'isotherm functions
     Public Function GetHtoS(ByRef H As Double, ByRef type As Integer, ByRef C As Double, ByRef W_C_ratio As Double, ByRef Tk As Double, ByRef day As Double, ByRef rho_l As Double, ByRef rho_c As Double, ByRef alpha As Double, ByRef w As Double) As Double
         Dim NT As Double = 1
         Dim VT As Double = 1
@@ -329,12 +343,14 @@ Module Functions2D
         Dim Vm As Double = VT * V_EC * V_Ct * V_t 'capacite de la monocouche
         Return Vm
     End Function
+
     'get average of humidity on an element 
     Public Function GetAvgH(ByRef He() As Double) As Double
         Dim H_avg As Double
         H_avg = He.Average()
         Return H_avg
     End Function
+
     'get norm of a given vector
     Public Function GetNorm(ByRef v() As Double) As Double
         Dim Norm As Double
@@ -344,7 +360,8 @@ Module Functions2D
         Norm = Math.Sqrt(Norm)
         Return Norm
     End Function
-    'get norm of a given vector
+
+    'get field average
     Public Sub GetNewAverage(ByRef Nodes() As NodeTrans, ByRef Havg As Double, ByRef wavg As Double, ByRef Savg As Double, ByRef Tavg As Double, ByRef Clavg As Double)
 
         Dim len = Nodes.Length()
@@ -367,7 +384,6 @@ Module Functions2D
         Clavg /= len
 
     End Sub
-
     Public Sub GetOldAverage(ByRef Nodes() As NodeTrans, ByRef Havg As Double, ByRef wavg As Double, ByRef Savg As Double, ByRef Tavg As Double, ByRef Clavg As Double)
 
         Dim len = Nodes.Length()
@@ -388,7 +404,6 @@ Module Functions2D
         Clavg /= len
 
     End Sub
-
     Public Sub UpdatediffAverage(ByRef Nodes() As NodeTrans, ByRef dH_avg As Double, ByRef dw_avg As Double, ByRef dS_avg As Double, ByRef dT_avg As Double, ByRef dCl_avg As Double)
 
         Dim HRNewAv, HROldAv, WNewAv, WOldAv, SNewAv, SOldAv, TNewAv, TOldAv, ClNewAv, ClOldAv As Double
@@ -402,7 +417,7 @@ Module Functions2D
         dT_avg += TNewAv - TOldAv
         dCl_avg += ClNewAv - ClOldAv
     End Sub
-    '' thermo transport functions 
+    ''thermo transport functions 
     Public Function lambtafunc(ByRef Tc As Double, ByRef phi As Double, ByRef Saturation As Double, ByRef Granulat As Double, ByRef Cement As Double) As Double
         Dim Lambta As Double
         Dim Tk As Double = Tc + 273
@@ -425,11 +440,15 @@ Module Functions2D
         rho_Cp = (1 - phi) * rho_solid * rho_Cp_s0 * (1 + Ac * (Tk - Tk_ref)) + phi * Saturation * rho_liq * Cp_liq
         Return rho_Cp
     End Function
-    ' thermodiffusivity
+
+    'thermodiffusivity
     Public Function GetDlambta(ByRef Lambta As Double, ByRef rho_Cp As Double) As Double
         Dim Dlambta As Double
         Dlambta = Lambta / rho_Cp * 1000000.0 'convert To J/(mm.s)
         Return Dlambta
     End Function
+
+    ''ionic transport functions
+    '
 
 End Module
