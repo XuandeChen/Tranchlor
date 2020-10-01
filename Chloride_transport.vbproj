@@ -394,6 +394,8 @@
     <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Exposition\EXPO_1_TEHERI.txt" />
+    <Content Include="Resources\Exposition\EXPO_2_TEHERI.txt" />
     <Content Include="Resources\PhreeqC\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

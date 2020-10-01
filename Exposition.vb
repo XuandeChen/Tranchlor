@@ -58,6 +58,7 @@ Public Class Exposition
         If File <> "" Then
 
             Try
+
                 FileOpen(CInt(nFic), File, OpenMode.Input, OpenAccess.Read)
                 Input(CInt(nFic), NbreEn)
 
