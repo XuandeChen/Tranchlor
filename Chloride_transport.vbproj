@@ -195,6 +195,7 @@
     </Compile>
     <Compile Include="CIETransNew.vb" />
     <Compile Include="Compute2D.vb" />
+    <Compile Include="Compute2D_trial.vb" />
     <Compile Include="DBConnexion.vb" />
     <Compile Include="Exposition.vb" />
     <Compile Include="frmInput2D.vb">
@@ -268,6 +269,7 @@
     </Compile>
     <Compile Include="HETrans.vb" />
     <Compile Include="OutputFile2D.vb" />
+    <Compile Include="TETrans.vb" />
     <Compile Include="TransportXC.vb" />
     <Compile Include="MDIChlor.vb">
       <SubType>Form</SubType>
@@ -392,6 +394,8 @@
     <Content Include="Resources\Docs\ModeEmploi_v4.ppt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Exposition\EXPO_1_TEHERI.txt" />
+    <Content Include="Resources\Exposition\EXPO_2_TEHERI.txt" />
     <Content Include="Resources\PhreeqC\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

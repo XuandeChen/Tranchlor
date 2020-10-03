@@ -417,9 +417,9 @@
 '                End If
 '                ''isotherm state check 
 '                If Node_w(j) = 0 And S_new(j) > S_old(j) Then 'state change from desorption to adsorption
-'                    w = 1
+'                    Node_w(j) = 1
 '                ElseIf Node_w(j) = 1 And S_new(j) < S_old(j) Then 'adsorption to desorption
-'                    w = 0
+'                    Node_w(j) = 0
 '                End If
 '                If Nodes(j).NumExpo <> 0 Then
 '                    X_node = Nodes(j).x
