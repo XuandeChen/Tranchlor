@@ -26,8 +26,6 @@
 
     End Sub
 
-
-
     Public Sub DiplayData(ByRef ExpoName As String)
 
         Try
@@ -159,6 +157,7 @@ B:
 
     End Sub
 
+
     'Private Sub RefreshForm()
 
     '    Dim Frm As New FrmMeteoDatabase
@@ -166,5 +165,6 @@ B:
     '    Me.Close()
 
     'End Sub
+
 
 End Class

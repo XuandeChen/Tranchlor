@@ -336,11 +336,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         frmC.Height = (Me.Height)
         frmC.Width = (Me.Width)
 
-        Using frm03 As New frmGraph1DScale
-            frmC.MdiParent = Me
-            frmC.Show()
-            ProbGraph(frmC, frm03)
-        End Using
+        Dim frm03 As New frmGraph1DScale
+        frmC.MdiParent = Me
+        frmC.Show()
+        ProbGraph(frmC, frm03)
 
     End Sub
 
