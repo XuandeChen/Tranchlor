@@ -364,11 +364,13 @@ Public Class Compute1D
         For i = 1 To Nbre1 - 1
             Var = (Creadtherm(1, i + 1) - Creadtherm(1, i)) / (Creadtherm(0, i + 1) - Creadtherm(0, i))
             Var1 = Creadtherm(1, i) - Var * Creadtherm(0, i)
-            Do While PosProf(j) <= Creadtherm(0, i + 1)
-                Ctherm(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadtherm(0, i + 1)
+                    Ctherm(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Ctherm(Dofs + 1) = Ctherm(Dofs)
         Next
         j = 0
@@ -377,11 +379,13 @@ Public Class Compute1D
         For i = 1 To Nbre2 - 1
             Var = (Creadhydr(1, i + 1) - Creadhydr(1, i)) / (Creadhydr(0, i + 1) - Creadhydr(0, i))
             Var1 = Creadhydr(1, i) - Var * Creadhydr(0, i)
-            Do While PosProf(j) <= Creadhydr(0, i + 1)
-                Chydr(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadhydr(0, i + 1)
+                    Chydr(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Chydr(Dofs + 1) = Chydr(Dofs)
             If j > Dofs + 1 Then Exit For
         Next
@@ -391,11 +395,13 @@ Public Class Compute1D
         For i = 1 To Nbre3 - 1
             Var = (Creadion(1, i + 1) - Creadion(1, i)) / (Creadion(0, i + 1) - Creadion(0, i))
             Var1 = Creadion(1, i) - Var * Creadion(0, i)
-            Do While PosProf(j) <= Creadion(0, i + 1)
-                Cion(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadion(0, i + 1)
+                    Cion(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Cion(Dofs + 1) = Cion(Dofs)
         Next
 

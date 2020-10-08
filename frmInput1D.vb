@@ -6122,6 +6122,7 @@ b:                  frm01.ShowDialog()
 
     'Choix des conditions initiales thermiques
     Private Sub Button6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button6.Click
+
         Dim nFic As Integer = FreeFile()
         Dim OutFile As String
         Dim Filtre As String
@@ -6150,17 +6151,29 @@ b:                  frm01.ShowDialog()
         End If
         ReDim Creadtherm(1, Nbre1)
 
-        For i = 1 To Nbre1
-            Input(nFic, Creadtherm(0, i))
-            Input(nFic, Creadtherm(1, i))
-        Next
+        Dim str As String
+        Dim count As Integer = 0
 
+        For i = 1 To Nbre2
+            Try
+                Input(nFic, str)
+                Creadtherm(0, i) = CDbl(str)
+                Input(nFic, str)
+                Creadtherm(0, i) = CDbl(str)
+                count += 1
+            Catch ex As Exception
+                MsgBox("There is less data than expected! It will work with " + CStr(count) + "data.")
+                GoTo b
+            End Try
+        Next
 b:
         FileClose(nFic)
+
     End Sub
 
     'Choix des conditions initiales hydriques
     Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
+
         Dim nFic As Integer = FreeFile()
         Dim OutFile As String
         Dim Filtre As String
@@ -6189,17 +6202,30 @@ b:
         End If
         ReDim Creadhydr(1, Nbre2)
 
+        Dim str As String
+        Dim count As Integer = 0
+
         For i = 1 To Nbre2
-            Input(nFic, Creadhydr(0, i))
-            Input(nFic, Creadhydr(1, i))
+            Try
+                Input(nFic, str)
+                Creadhydr(0, i) = CDbl(str)
+                Input(nFic, str)
+                Creadhydr(0, i) = CDbl(str)
+                count += 1
+            Catch ex As Exception
+                MsgBox("There is less data than expected! It will work with " + CStr(count) + "data.")
+                GoTo b
+            End Try
         Next
 
 b:
         FileClose(nFic)
+
     End Sub
 
     'Choix des conditions initiales ioniques
     Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
+
         Dim nFic As Integer = FreeFile()
         Dim OutFile As String
         Dim Filtre As String
@@ -6227,14 +6253,26 @@ b:
             GoTo b
         End If
         ReDim Creadion(1, Nbre3)
+        Dim str As String
+        Dim count As Integer = 0
 
         For i = 1 To Nbre3
-            Input(nFic, Creadion(0, i))
-            Input(nFic, Creadion(1, i))
+            Try
+                Input(nFic, str)
+                Creadion(0, i) = CDbl(str)
+                Input(nFic, str)
+                Creadion(1, i) = CDbl(str)
+                count += 1
+            Catch ex As Exception
+                MsgBox("There is less data than expected! It will work with " + CStr(count) + "data.")
+                GoTo b
+            End Try
         Next
+        ReDim Creadion(1, count)
 
 b:
         FileClose(nFic)
+
     End Sub
 
     'si l'approche probabiliste de la vapeur d'eau est cochée

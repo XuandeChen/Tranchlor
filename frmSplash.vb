@@ -272,13 +272,13 @@ Public Class frmSplash : Inherits System.Windows.Forms.Form
 
     'Lorsqu'une touche est frappée
     Public Sub frmSplash_KeyPress(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.KeyPressEventArgs) Handles MyBase.KeyPress
-        Me.Run()
+        Close()
     End Sub
 
     'Lorsqu'un clik est effectué sur la fenêtre
-    Private Sub PictureBox1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles PictureBox1.Click, Frame1.Click, Timer1.Tick
-        Me.Run()
-    End Sub
+    'Private Sub PictureBox1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles PictureBox1.Click, Frame1.Click, Timer1.Tick
+    '    Close()
+    'End Sub
 
     'Gestion de la fenêtre
     Private Sub Run()
