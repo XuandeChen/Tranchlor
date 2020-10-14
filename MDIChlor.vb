@@ -284,13 +284,13 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
         C1D.InitFrmGraph()
 
-        'C1D.Compute_All()
+        C1D.Compute_All()
 
-        Dim myThread As New System.Threading.Thread(AddressOf C1D.Compute_All)
+        'Dim myThread As New System.Threading.Thread(AddressOf C1D.Compute_All)
 
-        If Para5 <> CShort(1) Then
-            myThread.Start()
-        End If
+        'If Para5 <> CShort(1) Then
+        '    myThread.Start()
+        'End If
 
     End Sub
 

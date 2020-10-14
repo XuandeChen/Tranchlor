@@ -6154,18 +6154,19 @@ b:                  frm01.ShowDialog()
         Dim str As String
         Dim count As Integer = 0
 
-        For i = 1 To Nbre2
+        For i = 1 To Nbre1
             Try
                 Input(nFic, str)
                 Creadtherm(0, i) = CDbl(str)
                 Input(nFic, str)
-                Creadtherm(0, i) = CDbl(str)
+                Creadtherm(1, i) = CDbl(str)
                 count += 1
             Catch ex As Exception
                 MsgBox("There is less data than expected! It will work with " + CStr(count) + "data.")
                 GoTo b
             End Try
         Next
+        ReDim Preserve Creadtherm(1, count)
 b:
         FileClose(nFic)
 
@@ -6210,13 +6211,14 @@ b:
                 Input(nFic, str)
                 Creadhydr(0, i) = CDbl(str)
                 Input(nFic, str)
-                Creadhydr(0, i) = CDbl(str)
+                Creadhydr(1, i) = CDbl(str)
                 count += 1
             Catch ex As Exception
                 MsgBox("There is less data than expected! It will work with " + CStr(count) + "data.")
                 GoTo b
             End Try
         Next
+        ReDim Preserve Creadhydr(1, count)
 
 b:
         FileClose(nFic)
@@ -6268,7 +6270,7 @@ b:
                 GoTo b
             End Try
         Next
-        ReDim Creadion(1, count)
+        ReDim Preserve Creadion(1, count)
 
 b:
         FileClose(nFic)
