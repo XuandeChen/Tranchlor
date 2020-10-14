@@ -20,7 +20,7 @@ Public Class Exposition
         Dim nFic As Short = CShort(FreeFile())
         Dim NbreEn As Integer
 
-        If FileExpo.Contains(".txt") Then
+        If FileExpo.Contains(".txt") = True Then
 
             Try
                 FileOpen(CInt(nFic), FileExpo, OpenMode.Input, OpenAccess.Read)

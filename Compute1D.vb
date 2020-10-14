@@ -428,7 +428,7 @@ Public Class Compute1D
 
         Dim nFic As Short = CShort(FreeFile())
 
-        If INFile.Contains(".txt") Then
+        If INFile.Contains(".txt") = True Then
 
             Try
                 FileOpen(CInt(nFic), INFile, OpenMode.Input, OpenAccess.Read)
