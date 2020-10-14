@@ -8,7 +8,7 @@ Module Graph1D
         Dim Directoire As Boolean
         Dim Titre As String
         Dim Canc As Boolean = False
-        Dim OutFile As String
+        Dim OutFile As String = ""
         Dim a As Single
         Dim NoAxeX As Short
         Dim NoAxeY As Short
@@ -371,7 +371,7 @@ b:      'user pressed cancel error
         Dim Directoire As Boolean
         Dim Titre As String
         Dim Canc As Boolean = False
-        Dim OutFile As String
+        Dim OutFile As String = ""
         Dim xMin, xMax, yMin, yMax As Single
         Dim dim1 As Short
         Dim nFic As Short
@@ -767,7 +767,7 @@ b:      'user pressed cancel error
         Dim Npoint(2, 2) As Double
         Dim Tijd As Double
         Dim deltaT As Double
-        Dim Var As String
+        Dim Var As String = ""
         Dim XMA As Double
         Dim XMI As Double
         Dim YMA As Double

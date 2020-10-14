@@ -904,7 +904,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Loop
 
         Dim pd As Double = CDbl(Dim2)
-        Dim Test01 As String
+        Dim Test01 As String = ""
 
         pd_cont = pd_cont + pd  'contrôle
         Cpd(k, j, i, n) = pd
@@ -1319,7 +1319,7 @@ f:
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(nfic, PlFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
 
-        Dim Userinput2 As String
+        Dim Userinput2 As String = ""
         Input(nfic, Userinput2)
         Input(nfic, Userinput2)
         Input(nfic, Userinput2)

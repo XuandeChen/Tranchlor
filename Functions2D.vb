@@ -386,7 +386,7 @@ Module Functions2D
     End Sub
     Public Sub GetOldAverage(ByRef Nodes() As NodeTrans, ByRef Havg As Double, ByRef wavg As Double, ByRef Savg As Double, ByRef Tavg As Double, ByRef Clavg As Double)
 
-        Dim len = Nodes.Length()
+        Dim len As Integer = Nodes.Length()
 
         For i As Integer = 0 To len - 1
 
