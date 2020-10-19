@@ -8,7 +8,7 @@ Module Graph1D
         Dim Directoire As Boolean
         Dim Titre As String
         Dim Canc As Boolean = False
-        Dim OutFile As String
+        Dim OutFile As String = ""
         Dim a As Single
         Dim NoAxeX As Short
         Dim NoAxeY As Short
@@ -371,7 +371,7 @@ b:      'user pressed cancel error
         Dim Directoire As Boolean
         Dim Titre As String
         Dim Canc As Boolean = False
-        Dim OutFile As String
+        Dim OutFile As String = ""
         Dim xMin, xMax, yMin, yMax As Single
         Dim dim1 As Short
         Dim nFic As Short
@@ -758,16 +758,16 @@ b:      'user pressed cancel error
         Dim Canc As Boolean = False
         Dim nFic As Short
 
-        Dim Titres(7) As String
+        Dim Titres(9) As String
         Dim i As Integer
         Dim j As Short
         Dim k As Short
         Dim m As Short
-        Dim Data(70000, 2) As Double
+        Dim Data(70000, 4) As Double
         Dim Npoint(2, 2) As Double
         Dim Tijd As Double
         Dim deltaT As Double
-        Dim Var As String
+        Dim Var As String = ""
         Dim XMA As Double
         Dim XMI As Double
         Dim YMA As Double
@@ -776,7 +776,7 @@ b:      'user pressed cancel error
         Dim NoAxeY As Short
         Dim EctX As Single
         Dim EctY As Single
-        Dim Surf As Double
+        Dim Surf(2) As Double
         Dim NbrePoint As Integer
         Dim Msg As String
         Dim Prov As Double
@@ -793,14 +793,14 @@ b:      'user pressed cancel error
         '''''''''''''''''''''''''''''''''''''''''''''
         nFic = FreeFile()
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
-        For i = 0 To 7      'lecture du fichier
+        For i = 0 To 8      'lecture du fichier
             Input(nFic, Titres(i))
         Next i
         i = 0
         YMI = 9999999999
         YMA = 0
         Do While i >= 0
-            For j = 0 To 2
+            For j = 0 To 4
                 Try
                     Input(nFic, Data(i, j)) 'lecture du fichier résultat
                     If YMI > Data(i, 2) Then YMI = Data(i, 2)
@@ -839,7 +839,7 @@ b:      'user pressed cancel error
         EctY = (YMA - YMI) / 10
 c:      Scale_info(frm02, frm03, Data, 2, 0, 0, 2, NoAxeY, 0, 0, XMI, XMA, YMI, YMA, EctX, EctY)
 
-        Dessin(frm02, 1, i, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Data)
+        Dessin(frm02, 3, i, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Data)
         If Msg = "" Then Msg = " "
         TestB = MsgBox("Changer l'échelle du graphique ?", MsgBoxStyle.YesNo, "Fichier de données")
         If TestB = MsgBoxResult.Yes Then GoTo c
@@ -849,48 +849,68 @@ a:      Try
         Catch ex As Exception
             GoTo b
         End Try
-        Surf = 0
+
+        Surf(0) = 0
+        Surf(1) = 0
+        Surf(2) = 0
         Tijd = 0
         m = 0
         If i + 1 > NbrePoint Then
-            ReDim Npoint(NbrePoint, 3)
+            ReDim Npoint(NbrePoint, 5)
             deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
             For j = 0 To i - 1
-                Surf = 0.5 * (Data(j, 2) + Data(j + 1, 2)) * (Data(j + 1, 1) - Data(j, 1)) + Surf
+
                 Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+
+                For jj As Integer = 0 To 2
+                    Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
+                    If Tijd > deltaT * m + deltaT / 2 Then
+                        Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
+                        Surf(jj) = Surf(jj) - Prov
+                        Npoint(m, 2 + jj) = Surf(jj) / deltaT
+                        If m = 0 Then Npoint(m, 2) = Surf(jj) / (deltaT / 2)
+                        Surf(jj) = Prov
+                    End If
+                Next
+
                 If Tijd > deltaT * m + deltaT / 2 Then
                     Npoint(m, 1) = deltaT * m
                     Npoint(m, 0) = Npoint(m, 1) / 365
-                    Prov = (2 * Data(j + 1, 2) - (Data(j + 1, 2) - Data(j, 2)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
-                    Surf = Surf - Prov
-                    Npoint(m, 2) = Surf / deltaT
-                    If m = 0 Then Npoint(m, 2) = Surf / (deltaT / 2)
-                    m = m + 1
-                    Surf = Prov
+                    m += 1
                 End If
+
             Next
             Npoint(m, 0) = Data(i, 0)
             Npoint(m, 1) = Data(i, 1)
-            Npoint(m, 2) = Surf / deltaT
+
+            For jj As Integer = 0 To 2
+                Npoint(m, 2 + jj) = Surf(jj) / deltaT
+            Next
+
         End If
 
-        Dessin(frm02, 1, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+        Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
         TestB = MsgBox("Changer le nombre de points ?", MsgBoxStyle.YesNo, "Graphique")
         If TestB = MsgBoxResult.Yes Then GoTo a
 
         TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
         If TestB = MsgBoxResult.Yes Then
-            If NoAxeY = 9 Or NoAxeY = 11 Then
-                For j = 1 To NbrePoint
-                    If Npoint(j, 2) > Npoint(j - 1, 2) Then Npoint(j, 2) = Npoint(j - 1, 2)
-                Next
-            Else
-                For j = 1 To NbrePoint
-                    If Npoint(j, 2) < Npoint(j - 1, 2) Then Npoint(j, 2) = Npoint(j - 1, 2)
-                Next
-            End If
+
+            For jj As Integer = 0 To 2
+                If NoAxeY = 9 Or NoAxeY = 11 Then
+                    For j = 1 To NbrePoint
+                        If Npoint(j, 2 + jj) > Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                    Next
+                Else
+                    For j = 1 To NbrePoint
+                        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                    Next
+                End If
+            Next
+
+
         End If
-        Dessin(frm02, 1, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+        Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
 
         OutFile = Right(OutFile, Len(OutFile) - 3)
         OutFile = "FIN_" & OutFile        'enregistrement des données
@@ -942,7 +962,7 @@ b:
         Dim m_Gr As Graphics
         Dim m_Pen As Pen
         'Dim Coloras As System.Drawing.Color
-        Dim Colorbs As System.Drawing.Color
+        Dim Colorbs(3) As System.Drawing.Color
         Dim i As Short
         Dim j As Integer
         Dim m_Facteur As Single
@@ -1047,6 +1067,10 @@ b:
             m_Gr.DrawString(msg, fnt8Arial, Brushes.Black, drawPoint02, Drawformat2)
         Next i
 
+        Colorbs(1) = System.Drawing.Color.Black
+        Colorbs(2) = System.Drawing.Color.DarkGray
+        Colorbs(3) = System.Drawing.Color.Gray
+
         For i = 1 To NTCurve
             ''_________________________________________________
 
@@ -1064,19 +1088,18 @@ b:
             ''_________________________________________________
 
             Try
-                Colorbs = System.Drawing.Color.Black
-                m_Pen = New Pen(Colorbs, 6)
+                m_Pen = New Pen(Colorbs(i), 6)
 
                 'dessin des résultats
                 Dim x_old As Single
                 Dim y_old As Single
 
-                y = m_Y1 - sh * (Data(0, 2) - h1)
+                y = m_Y1 - sh * (Data(0, i + 1) - h1)
                 x = m_X1 + sx * (Data(0, CoorX) - x1)
                 x_old = m_X1
                 y_old = y
                 For j = 1 To Nline
-                    y = m_Y1 - sh * (Data(j, 2) - h1)
+                    y = m_Y1 - sh * (Data(j, i + 1) - h1)
                     x = m_X1 + sx * (Data(j, CoorX) - x1)
                     m_Gr.DrawLine(m_Pen, x_old, y_old, x, y)
                     x_old = x

@@ -364,11 +364,13 @@ Public Class Compute1D
         For i = 1 To Nbre1 - 1
             Var = (Creadtherm(1, i + 1) - Creadtherm(1, i)) / (Creadtherm(0, i + 1) - Creadtherm(0, i))
             Var1 = Creadtherm(1, i) - Var * Creadtherm(0, i)
-            Do While PosProf(j) <= Creadtherm(0, i + 1)
-                Ctherm(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadtherm(0, i + 1)
+                    Ctherm(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Ctherm(Dofs + 1) = Ctherm(Dofs)
         Next
         j = 0
@@ -377,11 +379,13 @@ Public Class Compute1D
         For i = 1 To Nbre2 - 1
             Var = (Creadhydr(1, i + 1) - Creadhydr(1, i)) / (Creadhydr(0, i + 1) - Creadhydr(0, i))
             Var1 = Creadhydr(1, i) - Var * Creadhydr(0, i)
-            Do While PosProf(j) <= Creadhydr(0, i + 1)
-                Chydr(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadhydr(0, i + 1)
+                    Chydr(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Chydr(Dofs + 1) = Chydr(Dofs)
             If j > Dofs + 1 Then Exit For
         Next
@@ -391,11 +395,13 @@ Public Class Compute1D
         For i = 1 To Nbre3 - 1
             Var = (Creadion(1, i + 1) - Creadion(1, i)) / (Creadion(0, i + 1) - Creadion(0, i))
             Var1 = Creadion(1, i) - Var * Creadion(0, i)
-            Do While PosProf(j) <= Creadion(0, i + 1)
-                Cion(j) = Var * PosProf(j) + Var1
-                j = j + 1
-                If j > Dofs Then Exit Do
-            Loop
+            If j <= Dofs Then
+                Do While PosProf(j) <= Creadion(0, i + 1)
+                    Cion(j) = Var * PosProf(j) + Var1
+                    j = j + 1
+                    If j > Dofs Then Exit Do
+                Loop
+            End If
             Cion(Dofs + 1) = Cion(Dofs)
         Next
 
@@ -422,7 +428,7 @@ Public Class Compute1D
 
         Dim nFic As Short = CShort(FreeFile())
 
-        If INFile.Contains(".txt") Then
+        If INFile.Contains(".txt") = True Then
 
             Try
                 FileOpen(CInt(nFic), INFile, OpenMode.Input, OpenAccess.Read)
@@ -903,40 +909,47 @@ Public Class Compute1D
                                 Tteller = CDbl(0)
                                 Carbteller = CDbl(0)
 
-                                If ReadExpo(FileGexpo(Boucle1), GNbreEn, GFiT, GTemperature, GHumidite, GSel, Msel, Wsat, TempMin, TempMax, TempEcart) = False Then GoTo BreakBoucle1
+                                If ReadExpo(FileGexpo(Boucle1), GNbreEn, GFiT, GTemperature, GHumidite, GSel, Msel, Wsat, TempMin, TempMax, TempEcart) = False Then
+                                    MsgBox("ERROR: Exposition File not found!")
+                                    GoTo BreakBoucle1
+                                End If
 
                                 FiT = GFiT
                                 NbreEn = GNbreEn
 
                                 If FileDexpo(Boucle1) = "noFile" Then BDlibre = True
 
-                                If BDlibre = False And ReadExpo(FileDexpo(Boucle1), DNbreEn, DFiT, DTemperature, DHumidite, DSel, Msel, Wsat, TempMin, TempMax, TempEcart) = True Then
+                                If BDlibre = False Then
 
-                                    If GFiT <> DFiT Then MsgBox("fichier d'exposition incompatible", MsgBoxStyle.Information, "Avertissement")
-                                    FiT = GFiT
+                                    If ReadExpo(FileDexpo(Boucle1), DNbreEn, DFiT, DTemperature, DHumidite, DSel, Msel, Wsat, TempMin, TempMax, TempEcart) = True Then
 
-                                    If GNbreEn >= DNbreEn Then
-                                        NbreEn = GNbreEn
+                                        If GFiT <> DFiT Then MsgBox("fichier d'exposition incompatible", MsgBoxStyle.Information, "Avertissement")
+                                        FiT = GFiT
+
+                                        If GNbreEn >= DNbreEn Then
+                                            NbreEn = GNbreEn
+                                        Else
+                                            NbreEn = DNbreEn
+                                        End If
+
+                                        Hsym = True
+                                        Ssym = True
+                                        Tsym = True
+
+                                        For j = 1 To DNbreEn
+
+                                            If Msel < DSel(j) Then Msel = DSel(j)
+                                            If DHumidite(j) <> GHumidite(j) Then Hsym = False
+                                            If DSel(j) <> GSel(j) Then Ssym = False
+                                            If DTemperature(j) <> GTemperature(j) Then Tsym = False
+                                        Next j
+
                                     Else
-                                        NbreEn = DNbreEn
+
+                                        MsgBox("ERROR: Exposition File at Rigth not considered!")
+                                        BDlibre = True
+
                                     End If
-
-                                    Hsym = True
-                                    Ssym = True
-                                    Tsym = True
-
-                                    For j = 1 To DNbreEn
-
-                                        If Msel < DSel(j) Then Msel = DSel(j)
-                                        If DHumidite(j) <> GHumidite(j) Then Hsym = False
-                                        If DSel(j) <> GSel(j) Then Ssym = False
-                                        If DTemperature(j) <> GTemperature(j) Then Tsym = False
-                                    Next j
-
-                                Else
-
-                                    MsgBox("ERROR: Exposition File at Rigth not considered !")
-                                    BDlibre = True
 
                                 End If
 

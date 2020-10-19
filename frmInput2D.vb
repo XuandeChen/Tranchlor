@@ -4565,7 +4565,7 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
 #End Region
 
     Dim Var03 As Short = 0
-    Const Mat = 40
+    Const Mat As Integer = 40
     Dim Bara1(Mat, 10000) As String
     Dim ChoixRep As Short
     Dim nChmt As Short
@@ -4888,7 +4888,7 @@ b:
         Dim Directoire As Boolean
         Dim Titre As String
         Dim Canc As Boolean = False
-        Dim OutFile As String
+        Dim OutFile As String = ""
 
         CheckBox5.Enabled = False
 
@@ -5008,7 +5008,7 @@ b:
         Dim Carbsauv As Single
         Dim capCal As Single
         Dim nFic As Integer = FreeFile()
-        Dim OutFile As String
+        Dim OutFile As String = ""
         Dim Filtre As String
         Dim Index As Short
         Dim Directoire As Boolean
@@ -5836,7 +5836,7 @@ b:
     End Sub
 
     'sous routine controlant la validité des paramètres introduits
-    Private Sub CtrlParam(ByRef Message)
+    Private Sub CtrlParam(ByRef Message As String)
 
         Dim Canc As Boolean = False
         Dim Dim1 As String
@@ -6015,14 +6015,14 @@ b:
     End Sub
 
     'effacement d'une ligne de paramètres dans une variable bara1
-    Private Sub EffPara(ByRef rt)
+    Private Sub EffPara(ByRef rt As Integer)
         For i = 1 To Mat
             Bara1(i, rt) = Bara1(i, rt + 1)
         Next
     End Sub
 
     'stockage des paramètres dans une variable bara1
-    Private Sub StPara(ByRef rt)
+    Private Sub StPara(ByRef rt As Integer)
         Dim sm As Double
         Dim sp As Double
         Dim i As Integer
