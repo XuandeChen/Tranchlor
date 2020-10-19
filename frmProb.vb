@@ -1176,80 +1176,80 @@ b:
                     ' THOMAS : AJOUT PROB CORROSION -------
 
                     nfic = CShort(FreeFile())
-                        FileOpen(CInt(nfic), OT, OpenMode.Output)
-                        PrintLine(CInt(nfic), "Probabilité d'initiation de la corrosion due à la présence de ions chlorures")
+                    FileOpen(CInt(nfic), OT, OpenMode.Output)
+                    PrintLine(CInt(nfic), "Probabilité d'initiation de la corrosion due à la présence de ions chlorures")
                     PrintLine(nfic, "temps, temps, Pf, Pcracks")
                     PrintLine(nfic, "années, jours,")
-                        For j = 1 To Nline + 2
+                    For j = 1 To Nline + 2
                         PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
                     Next j
-                        FileClose(nfic)
+                    FileClose(nfic)
 
-                        OT = "BCL_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
-                        ''''''''''''''''''''''''''''''''''
-                        Filtre = "txt files (BCL_*.txt)|BCL_*.txt|All files (*.*)|*.*"
-                        Index = CShort(1)
-                        Directoire = True
-                        Titre = "Indice de fiabilité (Cl-)"
-                        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
-                        If Canc = True Then GoTo d
-                        ''''''''''''''''''''''''''''''''''
-                        For j = 1 To Nline + 2  'calcul de l'indice de fiabilité bêta
-                            Var1 = -4           'beta
-                            Var2 = 4            'delta beta
-                            Var4 = 10
-                            Spos = False
-                            Spos_old = False
-                            Do While System.Math.Abs(Var2) > 0.001
-                                If Var4 <> 10 Then Var1 = Var1 + Var2
-                                If Var1 >= 0 Then
-                                    Var3 = 1 / (1 + 0.3275911 * Var1)
-                                    Var3 = 1 - (0.254829592 * Var3 - 0.284496736 * Var3 ^ 2 + 1.421413741 * Var3 ^ 3 - 1.453152027 * Var3 ^ 4 + 1.061405429 * Var3 ^ 5) * System.Math.Exp(-Var1 ^ 2)
-                                    Var3 = 0.5 * (1 - Var3)         'pf approximé
-                                Else
-                                    Var3 = 1 / (1 + 0.3275911 * (-Var1))
-                                    Var3 = 1 - (0.254829592 * Var3 - 0.284496736 * Var3 ^ 2 + 1.421413741 * Var3 ^ 3 - 1.453152027 * Var3 ^ 4 + 1.061405429 * Var3 ^ 5) * System.Math.Exp(-Var1 ^ 2)
-                                    Var3 = 0.5 * (1 + Var3)         'pf approximé
-                                End If
-                                Var4 = Pf(j) - Var3
-                                If Var4 < 0 Then
-                                    Spos = False
-                                Else
-                                    Spos = True
-                                End If
-                                If Spos <> Spos_old Then
-                                    Var2 = -Var2 / 10
-                                End If
-                                Spos_old = Spos
-                                If Pf(j) = 0 Then
-                                    Var1 = 20
-                                    Exit Do
-                                End If
-                                If Var1 < -20 Then
-                                    Var1 = -20
-                                    Exit Do
-                                End If
-                            Loop
-                            KSen(j, 0) = Var1           'indice de fiabilité bêta
-                        Next j
+                    OT = "BCL_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
+                    ''''''''''''''''''''''''''''''''''
+                    Filtre = "txt files (BCL_*.txt)|BCL_*.txt|All files (*.*)|*.*"
+                    Index = CShort(1)
+                    Directoire = True
+                    Titre = "Indice de fiabilité (Cl-)"
+                    SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+                    If Canc = True Then GoTo d
+                    ''''''''''''''''''''''''''''''''''
+                    For j = 1 To Nline + 2  'calcul de l'indice de fiabilité bêta
+                        Var1 = -4           'beta
+                        Var2 = 4            'delta beta
+                        Var4 = 10
+                        Spos = False
+                        Spos_old = False
+                        Do While System.Math.Abs(Var2) > 0.001
+                            If Var4 <> 10 Then Var1 = Var1 + Var2
+                            If Var1 >= 0 Then
+                                Var3 = 1 / (1 + 0.3275911 * Var1)
+                                Var3 = 1 - (0.254829592 * Var3 - 0.284496736 * Var3 ^ 2 + 1.421413741 * Var3 ^ 3 - 1.453152027 * Var3 ^ 4 + 1.061405429 * Var3 ^ 5) * System.Math.Exp(-Var1 ^ 2)
+                                Var3 = 0.5 * (1 - Var3)         'pf approximé
+                            Else
+                                Var3 = 1 / (1 + 0.3275911 * (-Var1))
+                                Var3 = 1 - (0.254829592 * Var3 - 0.284496736 * Var3 ^ 2 + 1.421413741 * Var3 ^ 3 - 1.453152027 * Var3 ^ 4 + 1.061405429 * Var3 ^ 5) * System.Math.Exp(-Var1 ^ 2)
+                                Var3 = 0.5 * (1 + Var3)         'pf approximé
+                            End If
+                            Var4 = Pf(j) - Var3
+                            If Var4 < 0 Then
+                                Spos = False
+                            Else
+                                Spos = True
+                            End If
+                            If Spos <> Spos_old Then
+                                Var2 = -Var2 / 10
+                            End If
+                            Spos_old = Spos
+                            If Pf(j) = 0 Then
+                                Var1 = 20
+                                Exit Do
+                            End If
+                            If Var1 < -20 Then
+                                Var1 = -20
+                                Exit Do
+                            End If
+                        Loop
+                        KSen(j, 0) = Var1           'indice de fiabilité bêta
+                    Next j
 
-                        nfic = CShort(FreeFile())
-                        FileOpen(CInt(nfic), OT, OpenMode.Output)
-                        PrintLine(CInt(nfic), "Indice de fiabilité pour la corrosion due à la présence de ions chlorures")
-                        PrintLine(nfic, "temps, temps, Bêta,")
-                        PrintLine(nfic, "années, jours,")
+                    nfic = CShort(FreeFile())
+                    FileOpen(CInt(nfic), OT, OpenMode.Output)
+                    PrintLine(CInt(nfic), "Indice de fiabilité pour la corrosion due à la présence de ions chlorures")
+                    PrintLine(nfic, "temps, temps, Bêta,")
+                    PrintLine(nfic, "années, jours,")
 
-                        For j = 1 To Nline + 2
-                            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", KSen(j, 0), ",")
-                            LAen(j, 0) = 0
-                            LAen(j, 1) = 0
-                        Next j
+                    For j = 1 To Nline + 2
+                        PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", KSen(j, 0), ",")
+                        LAen(j, 0) = 0
+                        LAen(j, 1) = 0
+                    Next j
 
-                        FileClose(nfic)
+                    FileClose(nfic)
 d:
-                    End If
                 End If
-            Else
+            End If
+        Else
             Ca = True
         End If
 
