@@ -2,7 +2,7 @@
 Imports NodesTrans
 Module Functions2D
     'get elemental flux vector
-    Public Function getve(ByRef f1 As Double, ByRef f2 As Double, ByRef f3 As Double, ByRef f4 As Double)
+    Public Function getve(ByRef f1 As Double, ByRef f2 As Double, ByRef f3 As Double, ByRef f4 As Double) As Double()
         Dim ve(3) As Double
         ve(0) = f1
         ve(1) = f2
@@ -33,7 +33,7 @@ Module Functions2D
         TAverage /= Nodes.Length
         ClAverage /= Nodes.Length
     End Sub
-    Public Function getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    Public Sub getLHS(ByRef LHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim LHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
@@ -41,8 +41,8 @@ Module Functions2D
                 LHS(i, j) = A(i, j) / 2 + b(i, j) / dt
             Next
         Next
-    End Function
-    Public Function getNewLHS(ByRef NewLHS As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    End Sub
+    Public Function getNewLHS(ByRef NewLHS As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double) As Double(,)
         ReDim NewLHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
@@ -54,7 +54,7 @@ Module Functions2D
     End Function
 
     'Get the RHS matrix For Gauss matrix resolution
-    Public Function getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    Public Sub getRHS(ByRef RHS As Double(,), ByRef NNodes As Integer, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
         ReDim RHS(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
@@ -62,8 +62,8 @@ Module Functions2D
                 RHS(i, j) = b(i, j) / dt - A(i, j) / 2
             Next
         Next
-    End Function
-    Public Function getNewR(ByRef NewR As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double)
+    End Sub
+    Public Function getNewR(ByRef NewR As Double(,), ByRef NNodes As Integer, ByRef phi As Double, ByRef A(,) As Double, ByRef b(,) As Double, ByRef dt As Double) As Double(,)
         ReDim NewR(NNodes - 1, NNodes - 1)
         Dim i, j As Integer
         For i = 0 To NNodes - 1
@@ -97,7 +97,7 @@ Module Functions2D
     End Function
 
     'linear matrix system resolution by Gauss elimination
-    Public Function GetX(ByRef X As Double(), ByRef A(,) As Double, ByRef b() As Double)
+    Public Sub GetX(ByRef X As Double(), ByRef A(,) As Double, ByRef b() As Double)
         Dim aRows As Integer = A.GetLength(0)
         Dim aCols As Integer = A.GetLength(1)
         Dim bRows As Integer = b.GetLength(0)
@@ -127,7 +127,7 @@ Module Functions2D
             Next
             X(i) = (b(i) - sum) / A(i, i)
         Next
-    End Function
+    End Sub
 
     ''liquid water transport functions: (Equation and formula from Marc Mainguy, 2001)
     'relative permeability function (Equation and formula from Marc Mainguy, 2001 & derived from VanGnuchten, 1980) 

@@ -134,7 +134,7 @@ Public Class Compute1D
                 Input(nFic, Le(1))
                 Para1 = CSng(0)
                 Para2 = CSng(0)
-                For i = CShort(1) To Ne / CShort(2) - CShort(1)
+                For i = CShort(1) To CShort(Ne / 2 - 1)
                     Para1 = Para1 + CSng(1)
                     Para2 = Para2 + Para1
                 Next i
@@ -143,7 +143,7 @@ Public Class Compute1D
                 PosProf(2) = Le(1)
                 PosProf(Ne + CShort(1)) = CDec(Length)
                 PosProf(Ne) = CDec(Length) - Le(1)
-                For i = CShort(2) To Ne / CShort(2)
+                For i = CShort(2) To CShort(Ne / 2)
                     Le(i) = Le(1) + (CDec(i) - CDec(1)) * CDec(Para1)
                     PosProf(i + CShort(1)) = PosProf(i) + Le(i)
                     Le(Ne - i) = Le(i)
@@ -157,9 +157,9 @@ Public Class Compute1D
                 Do While System.Math.Abs(test) > 0.0001
                     Para1 = CSng(1) - Length / (CSng(2) * CSng(Le(1)))
                     Para2 = CSng(1)
-                    For i = CShort(1) To Ne / CShort(2) - CShort(1)
-                        Para1 = Para1 + Para3 ^ CSng(i)
-                        If i < Ne / CShort(2) - CShort(1) Then Para2 = Para2 + (CSng(i) + CSng(1)) * Para3 ^ CSng(i)
+                    For i = CShort(1) To CShort(Ne / 2 - 1)
+                        Para1 += CSng(Para3 ^ i)
+                        If i < Ne / CShort(2) - CShort(1) Then Para2 += CSng((i + 1) * Para3 ^ i)
                     Next i
                     Para4 = Para3 - Para1 / Para2
                     test = Para4 - Para3
@@ -168,8 +168,8 @@ Public Class Compute1D
                 PosProf(2) = Le(1)
                 PosProf(Ne + CShort(1)) = CDec(Length)
                 PosProf(Ne) = CDec(Length) - Le(1)
-                For i = CShort(2) To Ne / CShort(2)
-                    Le(i) = Le(1) * CDec(Para4) ^ (CDec(i) - CDec(1))
+                For i = CShort(2) To CShort(Ne / 2)
+                    Le(i) = CDec(Le(1) * Para4 ^ (i - 1))
                     PosProf(i + CShort(1)) = PosProf(i) + Le(i)
                     Le(Ne - i) = Le(i)
                     PosProf(Ne + CShort(1) - i) = PosProf(Ne + CShort(2) - i) - Le(i)
@@ -423,7 +423,7 @@ Public Class Compute1D
 
     End Sub
 
-    Public Function ReadExpo(ByRef INFile As String, ByRef NbreEn As Integer, ByRef Fit As Single, ByRef Temperature() As Single, ByRef Humidite() As Single, ByRef Sel() As Single,
+    Public Function ReadExpo(ByRef INFile As String, ByRef NbreEn As Integer, ByRef Fit As Single, ByRef Temperature() As Decimal, ByRef Humidite() As Single, ByRef Sel() As Single,
                              ByRef Msel As Decimal, ByRef Wsat As Single, ByRef TempMin As Decimal, ByRef TempMax As Single, ByRef TempEcart As Single) As Boolean
 
         Dim nFic As Short = CShort(FreeFile())
@@ -443,10 +443,10 @@ Public Class Compute1D
                     Input(CInt(nFic), Humidite(j))
                     Input(CInt(nFic), Sel(j))
                     Input(CInt(nFic), Temperature(j))
-                    If Temperature(CLng(j)) > TempMax Then TempMax = Temperature(CLng(j))
-                    If Temperature(CLng(j)) < TempMin Then TempMin = Temperature(CLng(j))
-                    Sel(j) = Sel(j) * 35.453 / 58.443    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
-                    If Msel < Sel(j) * Wsat Then Msel = Sel(j) * Wsat
+                    If Temperature(j) > TempMax Then TempMax = Temperature(j)
+                    If Temperature(j) < TempMin Then TempMin = Temperature(j)
+                    Sel(j) *= CSng(35.453 / 58.443)    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
+                    If Msel < Sel(j) * Wsat Then Msel = CDec(Sel(j) * Wsat)
                 Next
                 FileClose(CInt(nFic))
 
@@ -474,13 +474,13 @@ Public Class Compute1D
                 ReDim Temperature(NbreEn)
 
                 For j As Integer = 0 To NbreEn - 1
-                    Humidite(j) = ExpoTable(j)(1)
-                    Sel(j) = ExpoTable(j)(2)
-                    Temperature(j) = ExpoTable(j)(3)
-                    If Temperature(CLng(j)) > TempMax Then TempMax = Temperature(CLng(j))
-                    If Temperature(CLng(j)) < TempMin Then TempMin = Temperature(CLng(j))
-                    Sel(j) = Sel(j) * 35.453 / 58.443    'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
-                    If Msel < Sel(j) * Wsat Then Msel = Sel(j) * Wsat
+                    Humidite(j) = CSng(ExpoTable(j)(1))
+                    Sel(j) = CSng(ExpoTable(j)(2))
+                    Temperature(j) = CDec(ExpoTable(j)(3))
+                    If Temperature(j) > TempMax Then TempMax = Temperature(j)
+                    If Temperature(j) < TempMin Then TempMin = Temperature(j)
+                    Sel(j) *= CSng(35.453 / 58.443) 'calcul de cT à partir de co à multiplier par w(0) ou (dofs)
+                    If Msel < Sel(j) * Wsat Then Msel = CDec(Sel(j) * Wsat)
                 Next j
 
             Catch ex As Exception
@@ -551,10 +551,10 @@ Public Class Compute1D
         Dim Tteller As Double
         Dim Carbteller As Double
         Dim affiche As Double
-        Dim GTemperature(1) As Single
+        Dim GTemperature(1) As Decimal
         Dim GHumidite(1) As Single
         Dim GSel(1) As Single
-        Dim DTemperature(1) As Single
+        Dim DTemperature(1) As Decimal
         Dim DHumidite(1) As Single
         Dim DSel(1) As Single
         Dim GINFile As String

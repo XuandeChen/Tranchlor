@@ -4585,54 +4585,54 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
 
         CheckBox1.Checked = False
         Option4.Checked = True
-        Text1.Text = 0
-        TextC.Text = 0
+        Text1.Text = CStr(0)
+        TextC.Text = CStr(0)
         Text3.Text = ""
         Text4.Text = ""
-        Text44.Text = 0
-        Text45.Text = 0
-        Label92.Text = 2550
-        TextBoxRho_c.Text = 2550
-        TextBox2.Text = 0
-        TextBox3.Text = 0
-        Text5.Text = 73000
-        Text6.Text = 3600
-        Text10.Text = 8760
-        Text11.Text = 8760
-        Text12.Text = 8760
-        TextBox27.Text = 8760
-        Text13.Text = 8760
-        Text14.Text = 8760
-        Text15.Text = 720
-        Text16.Text = 5
-        Text17.Text = 0.4
-        Text18.Text = 0.1
-        Text19.Text = 50
-        Text20.Text = 10
-        Text21.Text = 0
-        Text22.Text = 1
-        Text23.Text = 0
-        Text24.Text = 5
-        Text26.Text = 1
-        Text30.Text = 0
-        Text31.Text = 0.05
-        Text32.Text = 0.75
-        TextBox4.Text = 0
-        TextBox5.Text = 293.16
+        Text44.Text = CStr(0)
+        Text45.Text = CStr(0)
+        Label92.Text = CStr(2550)
+        TextBoxRho_c.Text = CStr(2550)
+        TextBox2.Text = CStr(0)
+        TextBox3.Text = CStr(0)
+        Text5.Text = CStr(73000)
+        Text6.Text = CStr(3600)
+        Text10.Text = CStr(8760)
+        Text11.Text = CStr(8760)
+        Text12.Text = CStr(8760)
+        TextBox27.Text = CStr(8760)
+        Text13.Text = CStr(8760)
+        Text14.Text = CStr(8760)
+        Text15.Text = CStr(720)
+        Text16.Text = CStr(5)
+        Text17.Text = CStr(0.4)
+        Text18.Text = CStr(0.1)
+        Text19.Text = CStr(50)
+        Text20.Text = CStr(10)
+        Text21.Text = CStr(0)
+        Text22.Text = CStr(1)
+        Text23.Text = CStr(0)
+        Text24.Text = CStr(5)
+        Text26.Text = CStr(1)
+        Text30.Text = CStr(0)
+        Text31.Text = CStr(0.05)
+        Text32.Text = CStr(0.75)
+        TextBox4.Text = CStr(0)
+        TextBox5.Text = CStr(293.16)
         Label56.Text = "Lunk"
-        TextBox21.Text = 0.95
-        TextBox22.Text = 0.09
-        TextBox26.Text = 3150
-        TextBox23.Text = 0.036
-        TextBox24.Text = 0.036
-        TextBox8.Text = 0.026
-        TextBox9.Text = 20
-        Text48.Text = 0.8
-        Text49.Text = 0.7
-        Text40.Text = 3.57
-        TextBox28.Text = 0.56
-        TextBox29.Text = 0
-        TextBox30.Text = 293.16
+        TextBox21.Text = CStr(0.95)
+        TextBox22.Text = CStr(0.09)
+        TextBox26.Text = CStr(3150)
+        TextBox23.Text = CStr(0.036)
+        TextBox24.Text = CStr(0.036)
+        TextBox8.Text = CStr(0.026)
+        TextBox9.Text = CStr(20)
+        Text48.Text = CStr(0.8)
+        Text49.Text = CStr(0.7)
+        Text40.Text = CStr(3.57)
+        TextBox28.Text = CStr(0.56)
+        TextBox29.Text = CStr(0)
+        TextBox30.Text = CStr(293.16)
         Label48.Text = ""
         Label64.Text = ""
         Label69.Text = ""
@@ -4723,7 +4723,7 @@ Public Class frmInput2D : Inherits System.Windows.Forms.Form
         CmtTextProb10()
 
         If CheckBox6.Checked = True Then
-            Text46.Text = CStr(0.0943 * System.Math.Exp(CDbl(TextBox3.Text) * 7.899)) * 0.000001
+            Text46.Text = CStr((0.0943 * System.Math.Exp(CDbl(TextBox3.Text) * 7.899)) * 0.000001)
         End If
 
     End Sub
@@ -4819,7 +4819,7 @@ b:
     'Click sur new dans materials
     Private Sub Command3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Command3.Click
 
-        Dim Message As String = 0
+        Dim Message As String = ""
         If Label48.Text = "" Or Label64.Text = "" Or Label69.Text = "" Then
             MsgBox("Manque les conditions initiales", MsgBoxStyle.Information, "Avertissement")
             Exit Sub
@@ -4831,7 +4831,7 @@ b:
             Exit Sub
         End If
 
-        Var03 = Var03 + 1
+        Var03 = Var03 + CShort(1)
 
         If Var03 > 0 Then
             DesChamp()
@@ -4851,21 +4851,21 @@ b:
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
 
         Dim PosNum As Short
-        Dim Can As Short
+        Dim Can As MsgBoxResult
 
-        PosNum = ComboBox2.SelectedIndex
+        PosNum = CShort(ComboBox2.SelectedIndex)
 
         Can = MsgBox("Voulez-vous vraiment effacer cette exposition ?", MsgBoxStyle.YesNo, "Avertissment")
         If Can = MsgBoxResult.No Then GoTo b
 
-        For i = PosNum + 1 To Var03 'ici ce n'est pas Var03-1, ceci évite de mettre des zéros à la dernière ligne var03
-            EffPara(i)
+        For i = PosNum + CShort(1) To Var03 'ici ce n'est pas Var03-1, ceci évite de mettre des zéros à la dernière ligne var03
+            EffPara(CInt(i))
         Next
 
-        Var03 = Var03 - 1
+        Var03 = Var03 - CShort(1)
 
         ComboBox2.Items.Clear()
-        For i = 1 To Var03 - 1
+        For i = 1 To Var03 - CShort(1)
             ComboBox2.Items.Add("Material " & i)
         Next
         ComboBox2.SelectedIndex = PosNum - 1
@@ -4892,7 +4892,7 @@ b:
 
         CheckBox5.Enabled = False
 
-        NEXPO = NEXPO + 1
+        NEXPO = NEXPO + CShort(1)
         ReDim Preserve FileGexpo(NEXPO)
         ReDim Preserve FileDexpo(NEXPO)
 
@@ -4937,19 +4937,19 @@ b:
     'Click sur delete dans exposition
     Private Sub Button5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button5.Click
         Dim PosNum As Short
-        Dim Can As Short
+        Dim Can As MsgBoxResult
 
 
-        PosNum = ComboBox3.SelectedIndex
+        PosNum = CShort(ComboBox3.SelectedIndex)
 
         Can = MsgBox("Voulez-vous vraiment effacer cette exposition ?", MsgBoxStyle.YesNo, "Avertissment")
         If Can = MsgBoxResult.No Then GoTo b
 
-        For i = PosNum + 1 To NEXPO - 1
+        For i = PosNum + CShort(1) To NEXPO - CShort(1)
             FileGexpo(i) = FileGexpo(i + 1)
             FileDexpo(i) = FileDexpo(i + 1)
         Next
-        NEXPO = NEXPO - 1
+        NEXPO = NEXPO - CShort(1)
         ReDim Preserve FileDexpo(NEXPO)
         ReDim Preserve FileGexpo(NEXPO)
 
@@ -5196,7 +5196,7 @@ b:
         Label69.Text = "CII_.txt"
         Label103.Text = "Number of exposition(s) : " & NEXPO
         Label102.Text = "Number of material(s) : " & Var03
-        Var03 = Var03 + 1
+        Var03 = Var03 + CShort(1)
         ComboBox2.SelectedIndex = Var03 - 2
         ComboBox3.SelectedIndex = NEXPO - 1
         ComboBox7.SelectedIndex = NEXPO - 1
@@ -5219,16 +5219,16 @@ b:
     Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button9.Click
 
         If Label56.Text = "Lunk" Then
-            TextBox21.Text = 0.97
-            TextBox22.Text = 0.05
+            TextBox21.Text = CStr(0.97)
+            TextBox22.Text = CStr(0.05)
             Label56.Text = "Mayer"
         ElseIf Label56.Text = "Mayer" Then
-            TextBox21.Text = 0.97
-            TextBox22.Text = 0.09
+            TextBox21.Text = CStr(0.97)
+            TextBox22.Text = CStr(0.09)
             Label56.Text = "essai DC"
         ElseIf Label56.Text = "essai DC" Then
-            TextBox21.Text = 0.95
-            TextBox22.Text = 0.09
+            TextBox21.Text = CStr(0.95)
+            TextBox22.Text = CStr(0.09)
             Label56.Text = "Lunk"
         End If
 
@@ -5238,12 +5238,12 @@ b:
     Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button10.Click
         Dim UserInput As String
         Dim canc As Boolean
-        Dim Can As Short
+        Dim Can As MsgBoxResult
         UserInput = InputBox("Paramètre kT [10-16m2] :", "Essai de perméabilité à l'air Torrent, valeur corrigée", CStr(0))
         Msg_noEntry(UserInput, canc)
         If canc = False Then Msg_noNumeric(UserInput, canc)
         If canc = True Then Exit Sub
-        UserInput = CSng(0.0866383424571846 * System.Math.Log(UserInput) + 0.72509628011073)
+        UserInput = CStr(0.0866383424571846 * System.Math.Log(CDbl(UserInput)) + 0.72509628011073)
         Can = MsgBox("Voulez-vous changer le rapport massique de l'eau sur le ciment (E / C = " & UserInput & ") ?", MsgBoxStyle.YesNo, "Avertissment ")
         If Can = MsgBoxResult.Yes Then TextBox3.Text = UserInput
     End Sub
@@ -5252,7 +5252,7 @@ b:
     Private Sub ComboBox2_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox2.SelectedIndexChanged
         Dim PosNum As Short
 
-        PosNum = ComboBox2.SelectedIndex + 1
+        PosNum = CShort(ComboBox2.SelectedIndex + 1)
 
         WrPara(PosNum)
         Option4.Checked = True
@@ -5412,14 +5412,14 @@ b:
 
     'changement de la liste des conditions de bord gauche
     Private Sub ComboBox3_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ComboBox3.SelectedIndexChanged
-        Dim Nbre As Short
+        Dim Nbre As Integer
         Nbre = ComboBox3.SelectedIndex
         ComboBox7.SelectedIndex = Nbre
     End Sub
 
     'changement de la liste des conditions de bord droit
     Private Sub ComboBox7_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ComboBox7.SelectedIndexChanged
-        Dim Nbre As Short
+        Dim Nbre As Integer
         Nbre = ComboBox7.SelectedIndex
         ComboBox3.SelectedIndex = Nbre
     End Sub
@@ -5428,25 +5428,25 @@ b:
     Private Sub ComboBox10_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox10.SelectedIndexChanged
         Select Case ComboBox10.Text
             Case "basalte"
-                TextBox25.Text = 2850
+                TextBox25.Text = CStr(2850)
             Case "silex"
-                TextBox25.Text = 2550
+                TextBox25.Text = CStr(2550)
             Case "gabbro"
-                TextBox25.Text = 2950
+                TextBox25.Text = CStr(2950)
             Case "granite"
-                TextBox25.Text = 2690
+                TextBox25.Text = CStr(2690)
             Case "gravillon"
-                TextBox25.Text = 2670
+                TextBox25.Text = CStr(2670)
             Case "cornéenne"
-                TextBox25.Text = 2880
+                TextBox25.Text = CStr(2880)
             Case "calcaire"
-                TextBox25.Text = 2690
+                TextBox25.Text = CStr(2690)
             Case "porphyre"
-                TextBox25.Text = 2660
+                TextBox25.Text = CStr(2660)
             Case "quartzite"
-                TextBox25.Text = 2620
+                TextBox25.Text = CStr(2620)
             Case "schiste"
-                TextBox25.Text = 2760
+                TextBox25.Text = CStr(2760)
         End Select
     End Sub
 
@@ -5454,11 +5454,11 @@ b:
     Private Sub ComboBox8_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox8.SelectedIndexChanged
         Select Case ComboBox8.Text
             Case "campagne"
-                TextBox24.Text = 0.015
+                TextBox24.Text = CStr(0.015)
             Case "centre ville"
-                TextBox24.Text = 0.036
+                TextBox24.Text = CStr(0.036)
             Case "zone industrielle"
-                TextBox24.Text = 0.045
+                TextBox24.Text = CStr(0.045)
         End Select
     End Sub
 
@@ -5466,69 +5466,69 @@ b:
     Private Sub ComboBox9_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox9.SelectedIndexChanged
         Select Case ComboBox9.Text
             Case "campagne"
-                TextBox23.Text = 0.015
+                TextBox23.Text = CStr(0.015)
             Case "centre ville"
-                TextBox23.Text = 0.036
+                TextBox23.Text = CStr(0.036)
             Case "zone industrielle"
-                TextBox23.Text = 0.045
+                TextBox23.Text = CStr(0.045)
         End Select
     End Sub
 
     'Choix des caractéristiques de perméabilité du béton
     Private Sub OptionCheckedChanged(ByVal Sender As System.Object, ByVal e As System.EventArgs) Handles Option1.CheckedChanged, Option2.CheckedChanged, Option3.CheckedChanged
-        Select Case Sender.name
-            Case "Option1"
-                Text4.Text = "bon_béton"
-                Text3.Text = "bon"
-                Text30.Text = CStr(0.00006)   'coefficient de diffusion de vapeur d'eau
-                Text46.Text = CStr(0.000006)    'coefficient de diffusion des ions chlorures
-                Text25.Text = CStr(0.7)         'capacité calorifique des granulats
-                Text39.Text = CStr(1.0#)        'coefficient de transfert de surface hydrique
-                Text26.Text = CStr(1.0#)        'coefficient de transfert de surface thermique
-                TextC.Text = CStr(375)          'teneur en ciment en kg/m3
-                TextBox3.Text = CStr(0.42)      'rapport eau/ciment
-                TextBoxRho_c.Text = CStr(2450)      'masse volumique du béton
-                Text44.Text = CStr(0.8)         'taux d'hydratation
-                TextBox2.Text = CStr(1.5)       'teneur en air
-                TextBox4.Text = CStr(0)         'vapeur d'eau : énergie d'activation pour la température
-                TextBox5.Text = CStr(293.16)    'vapeur d'eau : température de référence
-                TextBox8.Text = CStr(0)         'chlorures : énergie d'activation pour la température
-                TextBox9.Text = CStr(293.16)    'chlorures : température de référence
-            Case "Option2"
-                Text4.Text = "béton_moyen"
-                Text3.Text = "moyen"
-                Text30.Text = CStr(0.00013)
-                Text46.Text = CStr(0.000013)
-                Text25.Text = CStr(0.7)
-                Text39.Text = CStr(1.0#)
-                Text26.Text = CStr(1.0#)
-                TextC.Text = CStr(375)
-                TextBox3.Text = CStr(0.52)
-                TextBoxRho_c.Text = CStr(2384)
-                Text44.Text = CStr(0.9)
-                TextBox2.Text = CStr(1.5)
-                TextBox4.Text = CStr(0)
-                TextBox5.Text = CStr(293.16)
-                TextBox8.Text = CStr(0)
-                TextBox9.Text = CStr(293.16)
-            Case "Option3"
-                Text4.Text = "béton_mauvais"
-                Text3.Text = "mauvais"
-                Text30.Text = CStr(0.0002)
-                Text46.Text = CStr(0.00002)
-                Text25.Text = CStr(0.7)
-                Text39.Text = CStr(1.0#)
-                Text26.Text = CStr(1.0#)
-                TextC.Text = CStr(250)
-                TextBox3.Text = CStr(0.73)
-                TextBoxRho_c.Text = CStr(2387)
-                Text44.Text = CStr(0.9)
-                TextBox2.Text = CStr(1.5)
-                TextBox4.Text = CStr(0)
-                TextBox5.Text = CStr(293.16)
-                TextBox8.Text = CStr(0)
-                TextBox9.Text = CStr(293.16)
-        End Select
+
+        If Option1.Checked = True Then
+            Text4.Text = "bon_béton"
+            Text3.Text = "bon"
+            Text30.Text = CStr(0.00006)   'coefficient de diffusion de vapeur d'eau
+            Text46.Text = CStr(0.000006)    'coefficient de diffusion des ions chlorures
+            Text25.Text = CStr(0.7)         'capacité calorifique des granulats
+            Text39.Text = CStr(1.0#)        'coefficient de transfert de surface hydrique
+            Text26.Text = CStr(1.0#)        'coefficient de transfert de surface thermique
+            TextC.Text = CStr(375)          'teneur en ciment en kg/m3
+            TextBox3.Text = CStr(0.42)      'rapport eau/ciment
+            TextBoxRho_c.Text = CStr(2450)      'masse volumique du béton
+            Text44.Text = CStr(0.8)         'taux d'hydratation
+            TextBox2.Text = CStr(1.5)       'teneur en air
+            TextBox4.Text = CStr(0)         'vapeur d'eau : énergie d'activation pour la température
+            TextBox5.Text = CStr(293.16)    'vapeur d'eau : température de référence
+            TextBox8.Text = CStr(0)         'chlorures : énergie d'activation pour la température
+            TextBox9.Text = CStr(293.16)    'chlorures : température de référence
+        ElseIf Option2.Checked = True Then
+            Text4.Text = "béton_moyen"
+            Text3.Text = "moyen"
+            Text30.Text = CStr(0.00013)
+            Text46.Text = CStr(0.000013)
+            Text25.Text = CStr(0.7)
+            Text39.Text = CStr(1.0#)
+            Text26.Text = CStr(1.0#)
+            TextC.Text = CStr(375)
+            TextBox3.Text = CStr(0.52)
+            TextBoxRho_c.Text = CStr(2384)
+            Text44.Text = CStr(0.9)
+            TextBox2.Text = CStr(1.5)
+            TextBox4.Text = CStr(0)
+            TextBox5.Text = CStr(293.16)
+            TextBox8.Text = CStr(0)
+            TextBox9.Text = CStr(293.16)
+        Else
+            Text4.Text = "béton_mauvais"
+            Text3.Text = "mauvais"
+            Text30.Text = CStr(0.0002)
+            Text46.Text = CStr(0.00002)
+            Text25.Text = CStr(0.7)
+            Text39.Text = CStr(1.0#)
+            Text26.Text = CStr(1.0#)
+            TextC.Text = CStr(250)
+            TextBox3.Text = CStr(0.73)
+            TextBoxRho_c.Text = CStr(2387)
+            Text44.Text = CStr(0.9)
+            TextBox2.Text = CStr(1.5)
+            TextBox4.Text = CStr(0)
+            TextBox5.Text = CStr(293.16)
+            TextBox8.Text = CStr(0)
+            TextBox9.Text = CStr(293.16)
+        End If
 
         Text4.Enabled = False
         Text3.Enabled = False
@@ -5554,7 +5554,8 @@ b:
 
     'Choix des caractéristiques du béton = autres
     Private Sub Option4_CheckedChanged_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Option4.CheckedChanged
-        If sender.Checked Then
+
+        If Option4.Checked = True Then
             Text4.Enabled = True
             Text3.Enabled = True
             TextBox3.Enabled = True
@@ -5583,14 +5584,14 @@ b:
         Text1.Text = CStr(CSng(TextC.Text) * CSng(TextBox3.Text) - CSng(0.17) * CSng(Text44.Text) * CSng(TextC.Text) + CSng(10) * CSng(TextBox2.Text))
         Label92.Text = CStr((1 - CSng(TextC.Text) / CSng(TextBox26.Text) - CSng(TextBox3.Text) * CSng(TextC.Text) / 1000 - CSng(TextBox2.Text) / 100) * CSng(TextBox25.Text))
         TextBoxRho_c.Text = CStr(CSng(TextC.Text) + CSng(Label92.Text) + CSng(TextBox3.Text) * CSng(TextC.Text))
-        a = 0.0000625 * CDec(TextBox3.Text) ^ 2 - 0.000104 * CDec(TextBox3.Text) + 0.00003
-        b = -0.015547 * CDec(TextBox3.Text) ^ 2 + 0.0216515 * CDec(TextBox3.Text) - 0.005652
+        a = CDec(0.0000625 * CDec(TextBox3.Text) ^ 2 - 0.000104 * CDec(TextBox3.Text) + 0.00003)
+        b = CDec(-0.015547 * CDec(TextBox3.Text) ^ 2 + 0.0216515 * CDec(TextBox3.Text) - 0.005652)
         Label105.Text = CStr(CSng(a * 100 + b))
         If CheckBox6.Checked = True Then
             Text46.Text = CStr(CSng(0.0943 * System.Math.Exp(CDbl(TextBox3.Text) * 7.899) * 0.000001))
         End If
         If CheckBox7.Checked = True Then
-            Label147.Text = 2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2
+            Label147.Text = CStr(2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2)
         End If
     End Sub
 
@@ -5696,7 +5697,7 @@ b:
 
     'Copies du temps de stockage dans d'autres éléments
     Private Sub Text10_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles Text10.Validating
-        Dim TesGraph As Short
+        Dim TesGraph As MsgBoxResult
         TesGraph = MsgBox("Valeurs identiques pour les autres fichiers résultats ?", MsgBoxStyle.YesNo, "Données")
         If CInt(TesGraph) = MsgBoxResult.Yes Then
             Text11.Text = Text10.Text
@@ -5708,7 +5709,7 @@ b:
     End Sub
 
     'Lecture du formulaire
-    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
+    Private Sub Lecture(ByRef Length As Single, ByRef Ne As Short, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef capCal As Single, ByRef GyCO2 As Single, ByRef DyCO2 As Single, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
 
         TimeMax = CSng(Text5.Text)
         DeltaT = CSng(Text6.Text)
@@ -5753,7 +5754,7 @@ b:
     End Sub
 
     'Sauvegarde du formulaire dans un fichier
-    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As String, ByRef GyCO2 As String, ByRef DyCO2 As String, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
+    Private Sub Ecriture(ByRef nFic As Short, ByRef OutFile As String, ByRef Length As Single, ByRef Ne As Short, ByRef Le() As Decimal, ByRef TimeMax As Single, ByRef DeltaT As Single, ByRef taff As Single, ByRef Hsauv As Single, ByRef Wsauv As Single, ByRef CTsauv As Single, ByRef CLsauv As Single, ByRef Tsauv As Single, ByRef hMin As Single, ByRef hEcart As Single, ByRef wMin As Single, ByRef wEcart As Single, ByRef CTmin As Single, ByRef CTecart As Single, ByRef CLmin As Single, ByRef CLecart As Single, ByRef Tecart As Single, ByRef aa As Single, ByRef Hc As Single, ByRef ab As Single, ByRef tc As Single, ByRef H_snap As Single, ByRef Retard As Single, ByRef aOH As Single, ByRef EbG As Single, ByRef toG As Single, ByRef faG As Single, ByRef NEXPO As Short, ByRef capCal As Single, ByRef GyCO2 As Single, ByRef DyCO2 As Single, ByRef Carbsauv As Single, ByRef ImpHydr As Boolean)
         nFic = CShort(FreeFile())
         FileOpen(CInt(nFic), OutFile, OpenMode.Output)
 
@@ -5796,7 +5797,7 @@ b:
             PrintLine(CInt(nFic), FileDexpo(i))
         Next i
 
-        Var03 = Var03 - 1
+        Var03 = Var03 - CShort(1)
         PrintLine(CInt(nFic), Var03)
         For i = CShort(1) To Var03
             For j = CShort(1) To Mat
@@ -5830,7 +5831,7 @@ b:
         Dim Dim1 As String
 
         Dim1 = " "
-        iPos = InStr(1, Num, Dim1, CompareMethod.Text)
+        iPos = CShort(InStr(1, Num, Dim1, CompareMethod.Text))
         Num = Microsoft.VisualBasic.Left(Num, iPos - 1)
 
     End Sub
@@ -5842,12 +5843,12 @@ b:
         Dim Dim1 As String
         Try
             'Matériaux ... Béton
-            If TextBoxRho_c.Text <= 0 Or Not IsNumeric(TextBoxRho_c.Text) Or TextBoxRho_c.Text = "" Then Message = "La " & Label89.Text & " est non valide !"
-            If TextC.Text <= 0 Or Not IsNumeric(TextC.Text) Or TextC.Text = "" Then Message = "La " & Label3.Text & " est non valide !"
-            If TextBox2.Text < 0 Or Not IsNumeric(TextBox2.Text) Or TextBox2.Text = "" Then Message = "La " & Label95.Text & " est non valide !"
-            If TextBox3.Text <= 0 Or Not IsNumeric(TextBox3.Text) Or TextBox3.Text = "" Then Message = "La " & Label83.Text & " est non valide !"
-            If Text45.Text < 0 Or Not IsNumeric(Text45.Text) Or Text45.Text = "" Then Message = "L'" & Label84.Text & " est non valide !"
-            If Text44.Text <= 0 Or Not IsNumeric(Text44.Text) Or Text44.Text = "" Then Message = "Le " & Label97.Text & " est non valide !"
+            If CDbl(TextBoxRho_c.Text) <= 0 Or Not IsNumeric(TextBoxRho_c.Text) Or TextBoxRho_c.Text = "" Then Message = "La " & Label89.Text & " est non valide !"
+            If CDbl(TextC.Text) <= 0 Or Not IsNumeric(TextC.Text) Or TextC.Text = "" Then Message = "La " & Label3.Text & " est non valide !"
+            If CDbl(TextBox2.Text) < 0 Or Not IsNumeric(TextBox2.Text) Or TextBox2.Text = "" Then Message = "La " & Label95.Text & " est non valide !"
+            If CDbl(TextBox3.Text) <= 0 Or Not IsNumeric(TextBox3.Text) Or TextBox3.Text = "" Then Message = "La " & Label83.Text & " est non valide !"
+            If CDbl(Text45.Text) < 0 Or Not IsNumeric(Text45.Text) Or Text45.Text = "" Then Message = "L'" & Label84.Text & " est non valide !"
+            If CDbl(Text44.Text) <= 0 Or Not IsNumeric(Text44.Text) Or Text44.Text = "" Then Message = "Le " & Label97.Text & " est non valide !"
 
             'Matériaux ... Nom
             Dim1 = " "
@@ -5855,76 +5856,76 @@ b:
             If InStr(1, Text4.Text, Dim1, CompareMethod.Text) <> 0 Or Text4.Text = "" Then Message = "Le " & Label6.Text & " contient des espacements !"
 
             'Paramètres du programme ... Temps
-            If Text5.Text <= 0 Or Not IsNumeric(Text5.Text) Or Text5.Text = "" Then Message = "Le " & Label11.Text & " est non valide !"
-            If Text6.Text <= 0 Or Not IsNumeric(Text6.Text) Or Text6.Text = "" Then Message = "Le " & Label12.Text & " est non valide !"
+            If CDbl(Text5.Text) <= 0 Or Not IsNumeric(Text5.Text) Or Text5.Text = "" Then Message = "Le " & Label11.Text & " est non valide !"
+            If CDbl(Text6.Text) <= 0 Or Not IsNumeric(Text6.Text) Or Text6.Text = "" Then Message = "Le " & Label12.Text & " est non valide !"
             'If CSng(Text47.Text) * CSng(60) - CSng(Text6.Text) < CSng(0) Then Message = "Le pas de temps des conditions aux limites doit être inférieur au pas de temps de calcul"
             'If Text47.Text <= 0 Or Not IsNumeric(Text47.Text) Or Text47.Text = "" Then Message = "Le " & Label87.Text & " est non valide !"
 
             'Paramètres du programme ... Fichier résultat
-            If Text10.Text < 0 Or Not IsNumeric(Text10.Text) Or Text10.Text = "" Then Message = "Le " & Label26.Text & " est non valide !"
-            If Text11.Text < 0 Or Not IsNumeric(Text11.Text) Or Text11.Text = "" Then Message = "Le " & Label23.Text & " est non valide !"
-            If Text12.Text < 0 Or Not IsNumeric(Text12.Text) Or Text12.Text = "" Then Message = "Le " & Label24.Text & " est non valide !"
-            If Text13.Text < 0 Or Not IsNumeric(Text13.Text) Or Text13.Text = "" Then Message = "Le " & Label25.Text & " est non valide !"
-            If Text14.Text < 0 Or Not IsNumeric(Text14.Text) Or Text14.Text = "" Then Message = "Le " & Label27.Text & " est non valide !"
-            If TextBox27.Text < 0 Or Not IsNumeric(TextBox27.Text) Or TextBox27.Text = "" Then Message = "Le " & Label124.Text & " est non valide !"
+            If CDbl(Text10.Text) < 0 Or Not IsNumeric(Text10.Text) Or Text10.Text = "" Then Message = "Le " & Label26.Text & " est non valide !"
+            If CDbl(Text11.Text) < 0 Or Not IsNumeric(Text11.Text) Or Text11.Text = "" Then Message = "Le " & Label23.Text & " est non valide !"
+            If CDbl(Text12.Text) < 0 Or Not IsNumeric(Text12.Text) Or Text12.Text = "" Then Message = "Le " & Label24.Text & " est non valide !"
+            If CDbl(Text13.Text) < 0 Or Not IsNumeric(Text13.Text) Or Text13.Text = "" Then Message = "Le " & Label25.Text & " est non valide !"
+            If CDbl(Text14.Text) < 0 Or Not IsNumeric(Text14.Text) Or Text14.Text = "" Then Message = "Le " & Label27.Text & " est non valide !"
+            If CDbl(TextBox27.Text) < 0 Or Not IsNumeric(TextBox27.Text) Or TextBox27.Text = "" Then Message = "Le " & Label124.Text & " est non valide !"
 
             'Paramètres du programme ... Affichage
-            If Text15.Text < 0 Or Not IsNumeric(Text15.Text) Or Text15.Text = "" Then Message = "Le " & Label13.Text & " est non valide !"
-            If Text16.Text <= 0 Or Not IsNumeric(Text16.Text) Or Text16.Text = "" Then Message = "Le paramètre d'affichage pour la " & Label14.Text & " est non valide !"
-            If Text17.Text < 0 Or Not IsNumeric(Text17.Text) Or Text17.Text = "" Then Message = "Le paramètre d'affichage de l'" & Label15.Text & " est non valide !"
-            If Text18.Text <= 0 Or Not IsNumeric(Text18.Text) Or Text18.Text = "" Then Message = "Le paramètre d'affichage pour l'" & Label16.Text & " est non valide !"
-            If Text19.Text < 0 Or Not IsNumeric(Text19.Text) Or Text19.Text = "" Then Message = "Le paramètre d'affichage de la " & Label17.Text & " est non valide !"
-            If Text20.Text <= 0 Or Not IsNumeric(Text20.Text) Or Text20.Text = "" Then Message = "Le paramètre d'affichage pour la " & Label18.Text & " est non valide !"
-            If Text21.Text < 0 Or Not IsNumeric(Text21.Text) Or Text21.Text = "" Then Message = "Le paramètre d'affichage des " & Label19.Text & " est non valide !"
-            If Text22.Text <= 0 Or Not IsNumeric(Text22.Text) Or Text22.Text = "" Then Message = "Le paramètre d'affichage pour les " & Label20.Text & " est non valide !"
-            If Text23.Text < 0 Or Not IsNumeric(Text23.Text) Or Text23.Text = "" Then Message = "Le paramètre d'affichage des " & Label21.Text & " est non valide !"
-            If Text24.Text <= 0 Or Not IsNumeric(Text24.Text) Or Text24.Text = "" Then Message = "Le paramètre d'affichage pour les " & Label22.Text & " est non valide !"
+            If CDbl(Text15.Text) < 0 Or Not IsNumeric(Text15.Text) Or Text15.Text = "" Then Message = "Le " & Label13.Text & " est non valide !"
+            If CDbl(Text16.Text) <= 0 Or Not IsNumeric(Text16.Text) Or Text16.Text = "" Then Message = "Le paramètre d'affichage pour la " & Label14.Text & " est non valide !"
+            If CDbl(Text17.Text) < 0 Or Not IsNumeric(Text17.Text) Or Text17.Text = "" Then Message = "Le paramètre d'affichage de l'" & Label15.Text & " est non valide !"
+            If CDbl(Text18.Text) <= 0 Or Not IsNumeric(Text18.Text) Or Text18.Text = "" Then Message = "Le paramètre d'affichage pour l'" & Label16.Text & " est non valide !"
+            If CDbl(Text19.Text) < 0 Or Not IsNumeric(Text19.Text) Or Text19.Text = "" Then Message = "Le paramètre d'affichage de la " & Label17.Text & " est non valide !"
+            If CDbl(Text20.Text) <= 0 Or Not IsNumeric(Text20.Text) Or Text20.Text = "" Then Message = "Le paramètre d'affichage pour la " & Label18.Text & " est non valide !"
+            If CDbl(Text21.Text) < 0 Or Not IsNumeric(Text21.Text) Or Text21.Text = "" Then Message = "Le paramètre d'affichage des " & Label19.Text & " est non valide !"
+            If CDbl(Text22.Text) <= 0 Or Not IsNumeric(Text22.Text) Or Text22.Text = "" Then Message = "Le paramètre d'affichage pour les " & Label20.Text & " est non valide !"
+            If CDbl(Text23.Text) < 0 Or Not IsNumeric(Text23.Text) Or Text23.Text = "" Then Message = "Le paramètre d'affichage des " & Label21.Text & " est non valide !"
+            If CDbl(Text24.Text) <= 0 Or Not IsNumeric(Text24.Text) Or Text24.Text = "" Then Message = "Le paramètre d'affichage pour les " & Label22.Text & " est non valide !"
 
             'Transport thermique ... Capacité calorifique
-            If Text25.Text < 0.7 Or Text25.Text > 0.9 Or Not IsNumeric(Text25.Text) Or Text25.Text = "" Then Message = "La capacité calorifique des " & Label28.Text & " est non valide !"
+            If CDbl(Text25.Text) < 0.7 Or CDbl(Text25.Text) > 0.9 Or Not IsNumeric(Text25.Text) Or Text25.Text = "" Then Message = "La capacité calorifique des " & Label28.Text & " est non valide !"
             If CSng(Text25.Text) = CSng(0) Then MsgBox("pas de tranport thermique !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Transport thermique ... Transfert à la surface
-            If Text26.Text < 0 Or Text26.Text > 1 Or Not IsNumeric(Text26.Text) Or Text26.Text = "" Then Message = "La " & Label46.Text & " thermique est non valide !"
+            If CDbl(Text26.Text) < 0 Or CDbl(Text26.Text) > 1 Or Not IsNumeric(Text26.Text) Or Text26.Text = "" Then Message = "La " & Label46.Text & " thermique est non valide !"
             If CSng(Text26.Text) = CSng(0) Then MsgBox("pas de transport thermique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Transport hydrique ... Diffusion hydrique
-            If Text30.Text < 0 Or Not IsNumeric(Text30.Text) Or Text30.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label51.Text & " est non valide !"
+            If CDbl(Text30.Text) < 0 Or Not IsNumeric(Text30.Text) Or Text30.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label51.Text & " est non valide !"
             If CSng(Text30.Text) = CSng(0) Then MsgBox("pas de transport de vapeur d'eau !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
             If Not IsNumeric(Text31.Text) Or Text31.Text = "" Then Message = "Le paramètre de diffusion hydrique, " & Label52.Text & " est non valide !"
-            If Text32.Text < 0 Or Text32.Text = 1 Or Not IsNumeric(Text32.Text) Or Text32.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label53.Text & " est non valide !"
+            If CDbl(Text32.Text) < 0 Or CDbl(Text32.Text) = 1 Or Not IsNumeric(Text32.Text) Or Text32.Text = "" Then Message = "Le coefficient de diffusion hydrique, " & Label53.Text & " est non valide !"
             If Not IsNumeric(TextBox4.Text) Or TextBox4.Text = "" Then Message = "Le coefficient Ed dans la partie diffusion hydrique"
-            If TextBox5.Text < 0 Or Not IsNumeric(TextBox5.Text) Or TextBox5.Text = "" Then Message = "La température To dans la partie diffusion hydrique"
+            If CDbl(TextBox5.Text) < 0 Or Not IsNumeric(TextBox5.Text) Or TextBox5.Text = "" Then Message = "La température To dans la partie diffusion hydrique"
 
             'Transport hydrique ... Transfert à la surface
-            If Text39.Text < 0 Or Text39.Text > 1 Or Not IsNumeric(Text39.Text) Or Text39.Text = "" Then Message = "Le " & Label66.Text & " hydrique est non valide !"
+            If CDbl(Text39.Text) < 0 Or CDbl(Text39.Text) > 1 Or Not IsNumeric(Text39.Text) Or Text39.Text = "" Then Message = "Le " & Label66.Text & " hydrique est non valide !"
             If CSng(Text39.Text) = CSng(0) Then MsgBox("pas de transport hydrique (! mettre les conditions aux limites à zéro) !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
 
             'Carbonatation ...  Masse volumique des composants du béton
-            If TextBox25.Text <= 0 Or Not IsNumeric(TextBox25.Text) Or TextBox25.Text = "" Then Message = "La " & Label57.Text & " est non valide !"
-            If TextBox26.Text <= 0 Or Not IsNumeric(TextBox26.Text) Or TextBox26.Text = "" Then Message = "La " & Label58.Text & " est non valide !"
+            If CDbl(TextBox25.Text) <= 0 Or Not IsNumeric(TextBox25.Text) Or TextBox25.Text = "" Then Message = "La " & Label57.Text & " est non valide !"
+            If CDbl(TextBox26.Text) <= 0 Or Not IsNumeric(TextBox26.Text) Or TextBox26.Text = "" Then Message = "La " & Label58.Text & " est non valide !"
 
             'Carbonatation ...  Atmosphère
-            If TextBox24.Text <= 0 Or Not IsNumeric(TextBox24.Text) Or TextBox24.Text = "" Or TextBox23.Text <= 0 Or TextBox23.Text > 1 Or Not IsNumeric(TextBox23.Text) Or TextBox23.Text = "" Then Message = "La " & Label60.Text & " est non valide !"
+            If CDbl(TextBox24.Text) <= 0 Or Not IsNumeric(TextBox24.Text) Or TextBox24.Text = "" Or CDbl(TextBox23.Text) <= 0 Or CDbl(TextBox23.Text) > 1 Or Not IsNumeric(TextBox23.Text) Or TextBox23.Text = "" Then Message = "La " & Label60.Text & " est non valide !"
 
             'Transport ionique chlorures ... Convection par l'eau
-            If Text49.Text < 0 Or Not IsNumeric(Text49.Text) Or Text49.Text = "" Then Message = "Le " & Label82.Text & " est non valide !"
-            If Text48.Text < 0 Or Text48.Text > 1 Or Not IsNumeric(Text48.Text) Or Text48.Text = "" Then Message = "La " & Label81.Text & " est non valide !"
+            If CDbl(Text49.Text) < 0 Or Not IsNumeric(Text49.Text) Or Text49.Text = "" Then Message = "Le " & Label82.Text & " est non valide !"
+            If CDbl(Text48.Text) < 0 Or CDbl(Text48.Text) > 1 Or Not IsNumeric(Text48.Text) Or Text48.Text = "" Then Message = "La " & Label81.Text & " est non valide !"
 
             'Transport ionique chlorures ... Diffusion dans l'eau
-            If Text46.Text < 0 Or Not IsNumeric(Text46.Text) Or Text46.Text = "" Then Message = "Le " & Label78.Text & " des ions chlorures dans l'eau est non valide !"
+            If CDbl(Text46.Text) < 0 Or Not IsNumeric(Text46.Text) Or Text46.Text = "" Then Message = "Le " & Label78.Text & " des ions chlorures dans l'eau est non valide !"
             If CSng(Text46.Text) = CSng(0) Then MsgBox("pas de tranport des ions de chlorures par diffusion dans l'eau !", MsgBoxStyle.OkOnly And MsgBoxStyle.Exclamation, "Avertissement")
             If Not IsNumeric(TextBox8.Text) Or TextBox8.Text = "" Then Message = "Le coefficient Ed dans la partie diffusion hydrique"
-            If TextBox9.Text < 0 Or Not IsNumeric(TextBox9.Text) Or TextBox9.Text = "" Then Message = "La température To dans la partie diffusion hydrique"
+            If CDbl(TextBox9.Text) < 0 Or Not IsNumeric(TextBox9.Text) Or TextBox9.Text = "" Then Message = "La température To dans la partie diffusion hydrique"
 
             'Transport ionique chlorures ... Relation entre chlorures libres et liées
-            If TextBox28.Text < 0 Or Not IsNumeric(TextBox28.Text) Or TextBox28.Text = "" Then Message = "La relation entre ions libres et liées, " & Label125.Text & " est non valide !"
-            If TextBox29.Text < 0 Or Not IsNumeric(TextBox29.Text) Or TextBox29.Text = "" Then Message = "La relation entre ions libres et liées, " & Label126.Text & " est non valide !"
-            If Text40.Text < 0 Or Not IsNumeric(Text40.Text) Or Text40.Text = "" Then Message = "La relation entre ions libres et liées, " & Label67.Text & " est non valide !"
-            If TextBox30.Text < 0 Or Not IsNumeric(TextBox30.Text) Or TextBox30.Text = "" Then Message = "La relation entre ions libres et liées, " & Label127.Text & " est non valide !"
+            If CDbl(TextBox28.Text) < 0 Or Not IsNumeric(TextBox28.Text) Or TextBox28.Text = "" Then Message = "La relation entre ions libres et liées, " & Label125.Text & " est non valide !"
+            If CDbl(TextBox29.Text) < 0 Or Not IsNumeric(TextBox29.Text) Or TextBox29.Text = "" Then Message = "La relation entre ions libres et liées, " & Label126.Text & " est non valide !"
+            If CDbl(Text40.Text) < 0 Or Not IsNumeric(Text40.Text) Or Text40.Text = "" Then Message = "La relation entre ions libres et liées, " & Label67.Text & " est non valide !"
+            If CDbl(TextBox30.Text) < 0 Or Not IsNumeric(TextBox30.Text) Or TextBox30.Text = "" Then Message = "La relation entre ions libres et liées, " & Label127.Text & " est non valide !"
 
             'Analyse probabiliste ... 
-            If TextBox10.Text < 0 Or TextBox15.Text < 0 Or TextBox19.Text < 0 Or Not IsNumeric(TextBox10.Text) Or Not IsNumeric(TextBox15.Text) Or Not IsNumeric(TextBox19.Text) Or TextBox10.Text = "" Or TextBox15.Text = "" Or TextBox19.Text = "" Then Message = "Problème dans les écarts types de l'approche probabiliste !"
+            If CDbl(TextBox10.Text) < 0 Or CDbl(TextBox15.Text) < 0 Or CDbl(TextBox19.Text) < 0 Or Not IsNumeric(TextBox10.Text) Or Not IsNumeric(TextBox15.Text) Or Not IsNumeric(TextBox19.Text) Or TextBox10.Text = "" Or TextBox15.Text = "" Or TextBox19.Text = "" Then Message = "Problème dans les écarts types de l'approche probabiliste !"
         Catch e As Exception
             Message = "Manque une donnée !"
         Finally
@@ -6062,93 +6063,93 @@ b:
 
         If CheckBox2.Checked = False Then
             For i = 21 To 25
-                Bara1(i, rt) = 0
+                Bara1(i, rt) = CStr(0)
             Next
         Else
             If ComboBox4.Text = "loi normale" Then
-                Bara1(21, rt) = 1
-                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) - CDbl(TextBox10.Text)))
-                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) + CDbl(TextBox10.Text)))
-                Bara1(24, rt) = 0.5
-                Bara1(25, rt) = 0.5
+                Bara1(21, rt) = CStr(1)
+                Bara1(22, rt) = CStr(CDbl(Label55.Text) / (CDbl(Label55.Text) - CDbl(TextBox10.Text)))
+                Bara1(23, rt) = CStr(CDbl(Label55.Text) / (CDbl(Label55.Text) + CDbl(TextBox10.Text)))
+                Bara1(24, rt) = CStr(0.5)
+                Bara1(25, rt) = CStr(0.5)
             Else
-                Bara1(21, rt) = 2
-                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) - CDbl(Label104.Text))))
-                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) + CDbl(Label104.Text))))
+                Bara1(21, rt) = CStr(2)
+                Bara1(22, rt) = CStr(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) - CDbl(Label104.Text))))
+                Bara1(23, rt) = CStr(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) + CDbl(Label104.Text))))
                 sm = System.Math.Exp(CDbl(Label59.Text)) * (1 - System.Math.Exp(-CDbl(Label104.Text)))
                 sp = System.Math.Exp(CDbl(Label59.Text)) * (System.Math.Exp(CDbl(Label104.Text)) - 1)
-                Bara1(24, rt) = CSng(sp / (sp + sm))
-                Bara1(25, rt) = CSng(sm / (sp + sm))
+                Bara1(24, rt) = CStr(sp / (sp + sm))
+                Bara1(25, rt) = CStr(sm / (sp + sm))
             End If
         End If
         If CheckBox3.Checked = False Then
             For i = 26 To 30
-                Bara1(i, rt) = 0
+                Bara1(i, rt) = CStr(0)
             Next
         Else
             If ComboBox5.Text = "loi normale" Then
-                Bara1(26, rt) = 1
-                Bara1(27, rt) = CSng(CDbl(Label105.Text) / (CDbl(Label105.Text) - CDbl(TextBox15.Text)))
-                Bara1(28, rt) = CSng(CDbl(Label105.Text) / (CDbl(Label105.Text) + CDbl(TextBox15.Text)))
-                Bara1(29, rt) = 0.5
-                Bara1(30, rt) = 0.5
+                Bara1(26, rt) = CStr(1)
+                Bara1(27, rt) = CStr(CDbl(Label105.Text) / (CDbl(Label105.Text) - CDbl(TextBox15.Text)))
+                Bara1(28, rt) = CStr(CDbl(Label105.Text) / (CDbl(Label105.Text) + CDbl(TextBox15.Text)))
+                Bara1(29, rt) = CStr(0.5)
+                Bara1(30, rt) = CStr(0.5)
             Else
-                Bara1(26, rt) = 2
-                Bara1(27, rt) = CSng(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) - CDbl(Label130.Text))))
-                Bara1(28, rt) = CSng(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) + CDbl(Label130.Text))))
+                Bara1(26, rt) = CStr(2)
+                Bara1(27, rt) = CStr(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) - CDbl(Label130.Text))))
+                Bara1(28, rt) = CStr(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) + CDbl(Label130.Text))))
                 sm = System.Math.Exp(CDbl(Label107.Text)) * (1 - System.Math.Exp(-CDbl(Label130.Text)))
                 sp = System.Math.Exp(CDbl(Label107.Text)) * (System.Math.Exp(CDbl(Label130.Text)) - 1)
-                Bara1(29, rt) = CSng(sp / (sp + sm))
-                Bara1(30, rt) = CSng(sm / (sp + sm))
+                Bara1(29, rt) = CStr(sp / (sp + sm))
+                Bara1(30, rt) = CStr(sm / (sp + sm))
             End If
         End If
         If CheckBox4.Checked = False Then
             For i = 31 To 35
-                Bara1(i, rt) = 0
+                Bara1(i, rt) = CStr(0)
             Next
         Else
             If ComboBox6.Text = "loi normale" Then
-                Bara1(31, rt) = 1
-                Bara1(32, rt) = CSng(CDbl(Label131.Text) / (CDbl(Label131.Text) - CDbl(TextBox19.Text)))
-                Bara1(33, rt) = CSng(CDbl(Label131.Text) / (CDbl(Label131.Text) + CDbl(TextBox19.Text)))
-                Bara1(34, rt) = 0.5
-                Bara1(35, rt) = 0.5
+                Bara1(31, rt) = CStr(1)
+                Bara1(32, rt) = CStr(CDbl(Label131.Text) / (CDbl(Label131.Text) - CDbl(TextBox19.Text)))
+                Bara1(33, rt) = CStr(CDbl(Label131.Text) / (CDbl(Label131.Text) + CDbl(TextBox19.Text)))
+                Bara1(34, rt) = CStr(0.5)
+                Bara1(35, rt) = CStr(0.5)
             Else
-                Bara1(31, rt) = 2
-                Bara1(32, rt) = CSng(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) - CDbl(Label133.Text))))
-                Bara1(33, rt) = CSng(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) + CDbl(Label133.Text))))
+                Bara1(31, rt) = CStr(2)
+                Bara1(32, rt) = CStr(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) - CDbl(Label133.Text))))
+                Bara1(33, rt) = CStr(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) + CDbl(Label133.Text))))
                 sm = System.Math.Exp(CDbl(Label132.Text)) * (1 - System.Math.Exp(-CDbl(Label133.Text)))
                 sp = System.Math.Exp(CDbl(Label132.Text)) * (System.Math.Exp(CDbl(Label133.Text)) - 1)
-                Bara1(34, rt) = CSng(sp / (sp + sm))
-                Bara1(35, rt) = CSng(sm / (sp + sm))
+                Bara1(34, rt) = CStr(sp / (sp + sm))
+                Bara1(35, rt) = CStr(sm / (sp + sm))
             End If
         End If
         If CheckBox7.Checked = False Then
             For i = 36 To 40
-                Bara1(i, rt) = 0
+                Bara1(i, rt) = CStr(0)
             Next
         Else
             If ComboBox11.Text = "loi normale" Then
-                Bara1(36, rt) = 1
-                Bara1(37, rt) = CSng(CDbl(Label147.Text) / (CDbl(Label147.Text) - CDbl(TextBox6.Text)))
-                Bara1(38, rt) = CSng(CDbl(Label147.Text) / (CDbl(Label147.Text) + CDbl(TextBox6.Text)))
-                Bara1(39, rt) = 0.5
-                Bara1(40, rt) = 0.5
+                Bara1(36, rt) = CStr(1)
+                Bara1(37, rt) = CStr(CDbl(Label147.Text) / (CDbl(Label147.Text) - CDbl(TextBox6.Text)))
+                Bara1(38, rt) = CStr(CDbl(Label147.Text) / (CDbl(Label147.Text) + CDbl(TextBox6.Text)))
+                Bara1(39, rt) = CStr(0.5)
+                Bara1(40, rt) = CStr(0.5)
             Else
-                Bara1(36, rt) = 2
-                Bara1(37, rt) = CSng(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) - CDbl(Label145.Text))))
-                Bara1(38, rt) = CSng(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) + CDbl(Label145.Text))))
+                Bara1(36, rt) = CStr(2)
+                Bara1(37, rt) = CStr(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) - CDbl(Label145.Text))))
+                Bara1(38, rt) = CStr(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) + CDbl(Label145.Text))))
                 sm = System.Math.Exp(CDbl(Label146.Text)) * (1 - System.Math.Exp(-CDbl(Label145.Text)))
                 sp = System.Math.Exp(CDbl(Label146.Text)) * (System.Math.Exp(CDbl(Label145.Text)) - 1)
-                Bara1(39, rt) = CSng(sp / (sp + sm))
-                Bara1(40, rt) = CSng(sm / (sp + sm))
+                Bara1(39, rt) = CStr(sp / (sp + sm))
+                Bara1(40, rt) = CStr(sm / (sp + sm))
             End If
         End If
 
     End Sub
 
     'écriture des paramètres dans les champ provenant de bara1
-    Private Sub WrPara(ByRef rt)
+    Private Sub WrPara(ByRef rt As Short)
         Dim p As Double
         Dim q As Double
         Text4.Text = Bara1(1, rt)
@@ -6170,9 +6171,9 @@ b:
         TextBox25.Text = Bara1(19, rt)
         TextBox26.Text = Bara1(20, rt)
 
-        TextBox10.Text = 0.0002308
-        TextBox15.Text = 0.00005962
-        TextBox19.Text = 0.000005772
+        TextBox10.Text = CStr(0.0002308)
+        TextBox15.Text = CStr(0.00005962)
+        TextBox19.Text = CStr(0.000005772)
         MsgBox("Les écarts-types ont été réinitialisé", MsgBoxStyle.Information And MsgBoxStyle.OkOnly, "Avertissement")
     End Sub
 
@@ -6303,7 +6304,7 @@ b:
             Label144.Visible = True
             TextBox6.Visible = True
             If CheckBox7.Checked = True Then
-                Label147.Text = 2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2
+                Label147.Text = CStr(2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2)
             End If
         Else
             ComboBox11.Visible = False
@@ -6336,14 +6337,14 @@ b:
     Private Sub TextBox3_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles TextBox3.TextChanged
         Dim a As Decimal
         Dim b As Decimal
-        a = 0.0000625 * CDec(TextBox3.Text) ^ 2 - 0.000104 * CDec(TextBox3.Text) + 0.00003
-        b = -0.015547 * CDec(TextBox3.Text) ^ 2 + 0.021655 * CDec(TextBox3.Text) - 0.005652
+        a = CDec(0.0000625 * CDec(TextBox3.Text) ^ 2 - 0.000104 * CDec(TextBox3.Text) + 0.00003)
+        b = CDec(-0.015547 * CDec(TextBox3.Text) ^ 2 + 0.021655 * CDec(TextBox3.Text) - 0.005652)
         Label105.Text = CStr(CSng(a * 100 + b))
         If CheckBox6.Checked = True Then
             Text46.Text = CStr(CSng(0.0943 * System.Math.Exp(CDbl(TextBox3.Text) * 7.899) * 0.000001))
         End If
         If CheckBox7.Checked = True Then
-            Label147.Text = 2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2
+            Label147.Text = CStr(2.8 * (CDbl(TextBox26.Text) * (CDbl(TextBox3.Text) - 0.3) * (1 - 0.7) / (1000 * (1 + CDbl(TextBox26.Text) * CDbl(TextBox3.Text) / 1000))) ^ 2)
         End If
     End Sub
 

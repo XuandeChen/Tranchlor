@@ -1,7 +1,7 @@
 Public Class frmProb : Inherits System.Windows.Forms.Form
 
     Dim Length As Single
-    Dim Labe(1) As Object
+    Dim Labe(1) As Double
     Dim Lambda(1, 1, 1) As Double
     Dim Ksi(1, 1, 1) As Double
     Dim Nline As Short
@@ -678,14 +678,14 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         For o As Short = 1 To Files
             pd_cont = 0
             cpt2 = 0
-            ProgressBarFile.Value = 100 * o / Files
+            ProgressBarFile.Value = CInt(100 * o / Files)
 
             For n As Short = 1 To Tprob4
                 For i As Short = 1 To Tprob3
                     For j As Short = 1 To Tprob2
                         For k As Short = 1 To Tprob1
 
-                            cpt2 += 1
+                            cpt2 = CShort(1)
 
                             If Tprob1 = 1 Then k = 0
                             If Tprob2 = 1 Then j = 0
@@ -694,10 +694,10 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
                             Dim OutF As String = prefFile & PreFile(o) & OutFile & k & j & i & n & ".txt"
 
-                            If k = 0 Then k += 1
-                            If j = 0 Then j += 1
-                            If i = 0 Then i += 1
-                            If n = 0 Then n += 1
+                            If k = 0 Then k += CShort(1)
+                            If j = 0 Then j += CShort(1)
+                            If i = 0 Then i += CShort(1)
+                            If n = 0 Then n += CShort(1)
 
                             ReadRFile(OutF, cpt1, cpt2, o, p, La, i, j, k, n, pd_cont, Cpd, Ncol)
 
@@ -710,7 +710,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
                 For i As Short = 1 To Tprob3
                     For j As Short = 1 To Tprob2
                         For k As Short = 1 To Tprob1
-                            For l As Short = 1 To Nline + 2
+                            For l As Short = 1 To Nline + CShort(2)
                                 For m As Short = 2 To Ncol - p
                                     Ksi(l, m, o) = Ksi(l, m, o) + Cpd(k, j, i, n) * (System.Math.Log(CDbl(La(l, m, k, j, i, n))) - Lambda(l, m, o)) ^ 2
                                 Next m
@@ -723,7 +723,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
     End Sub
 
-    Private Function ManageRFiles(ByRef cpt1 As Short, ByRef Tprob1 As Short, ByRef Tprob2 As Short, ByRef Tprob3 As Short, ByRef Tprob4 As Short, ByRef prefFile As String, ByRef Canc As Boolean)
+    Private Sub ManageRFiles(ByRef cpt1 As Short, ByRef Tprob1 As Short, ByRef Tprob2 As Short, ByRef Tprob3 As Short, ByRef Tprob4 As Short, ByRef prefFile As String, ByRef Canc As Boolean)
 
         Dim Filtre As String = "txt files (R_*.txt)|R_*.txt|All files (*.*)|*.*"
         Dim Index As Short = CShort(1)
@@ -743,14 +743,14 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         OutFile = Microsoft.VisualBasic.Right(OutFile, Len(OutFile) - 2)
 
         Dim Dim1 As String = "_"
-        Dim iPos As Short = InStr(1, OutFile, Dim1, CompareMethod.Text) 'position de "_"
+        Dim iPos As Short = CShort(InStr(1, OutFile, Dim1, CompareMethod.Text)) 'position de "_"
 
         OutFile = Microsoft.VisualBasic.Right(OutFile, Len(OutFile) - iPos)
         Tprob1 = CShort(Microsoft.VisualBasic.Left(TProb, 1))
         Tprob4 = CShort(Microsoft.VisualBasic.Right(TProb, 1))
-        Tprob2 = (TProb - 1000 * Tprob1 - Tprob4) / 10
-        Tprob3 = CShort(Microsoft.VisualBasic.Right(Tprob2, 1))
-        Tprob2 = CShort(Microsoft.VisualBasic.Left(Tprob2, 1))
+        Tprob2 = CShort((CShort(TProb) - 1000 * Tprob1 - Tprob4) / 10)
+        Tprob3 = CShort(Microsoft.VisualBasic.Right(CStr(Tprob2), 1))
+        Tprob2 = CShort(Microsoft.VisualBasic.Left(CStr(Tprob2), 1))
 
         Dim cpt2 As Short = 0
 
@@ -764,68 +764,68 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
             Tprob2 = 1
         Else
             Tprob2 = 2
-            cpt1 = cpt1 * 2
+            cpt1 = cpt1 * CShort(2)
             If cpt1 = 0 Then cpt1 = 2
         End If
         If Tprob3 = 0 Then
             Tprob3 = 1
         Else
             Tprob3 = 2
-            cpt1 = cpt1 * 2
+            cpt1 = cpt1 * CShort(2)
             If cpt1 = 0 Then cpt1 = 2
         End If
         If Tprob4 = 0 Then
             Tprob4 = 1
         Else
             Tprob4 = 2
-            cpt1 = cpt1 * 2
+            cpt1 = cpt1 * CShort(2)
             If cpt1 = 0 Then cpt1 = 2
         End If
 
         Files = 0
         If CheckBoxTemp.Checked = True Then
-            Files = Files + 1
+            Files += CShort(1)
             PreFile(Files) = "R_T_"
         End If
         If CheckBoxRH.Checked = True Then
-            Files = Files + 1
+            Files += CShort(1)
             PreFile(Files) = "R_H_"
         End If
         If CheckBoxWater.Checked = True Then
-            Files = Files + 1
+            Files = Files + CShort(1)
             PreFile(Files) = "R_W_"
         End If
         If CheckBoxPH.Checked = True Then
-            Files = Files + 1
+            Files = Files + CShort(1)
             PreFile(Files) = "R_PH_"
         End If
         If CheckBoxFreeCl.Checked = True Then
-            Files = Files + 1
+            Files = Files + CShort(1)
             PreFile(Files) = "R_CL_"
         End If
         If CheckBoxTotCl.Checked = True Then
-            Files = Files + 1
+            Files = Files + CShort(1)
             PreFile(Files) = "R_CT_"
         End If
         If CheckBoxCarb.Checked = True Then
-            Files = Files + 1
+            Files = Files + CShort(1)
             PreFile(Files) = "R_Carb_"
         End If
 
-    End Function
+    End Sub
 
-    Private Function ReadRFile(ByRef OutF As String, ByRef cpt1 As Short, ByRef cpt2 As Short, ByRef o As Short, ByRef p As Short, ByRef La(,,,,,) As Double,
+    Private Sub ReadRFile(ByRef OutF As String, ByRef cpt1 As Short, ByRef cpt2 As Short, ByRef o As Short, ByRef p As Short, ByRef La(,,,,,) As Double,
                                ByRef i As Short, ByRef j As Short, ByRef k As Short, ByRef n As Short, ByRef pd_cont As Double, ByRef Cpd(,,,) As Double, ByRef Ncol As Short)
 
-        Dim Data As Object
-        Dim nFic As Short = FreeFile()
+        Dim Data As String
+        Dim nFic As Short = CShort(FreeFile())
         FileOpen(nFic, OutF, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
 
         Dim Dim1, Dim2 As String
         Input(nFic, Dim1) 'nbre de ligne
         Input(nFic, Dim2) 'nbre de colonnes
         Dim1 = "_"
-        Dim iPos As Short = InStr(1, Dim2, Dim1, CompareMethod.Text) 'position de "_"
+        Dim iPos As Short = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text)) 'position de "_"
 
         If cpt2 = 1 Then Nline = CShort(Mid(Dim2, 1, iPos - 1))
         Dim2 = CStr(Mid(Dim2, iPos + 1))
@@ -833,9 +833,9 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         iPos = 1
 
         Do While iPos = 1
-            iPos = InStr(1, Dim2, Dim1, CompareMethod.Text)
+            iPos = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text))
             Dim2 = CStr(Mid(Dim2, iPos + 1))
-            iPos = InStr(1, Dim2, Dim1, CompareMethod.Text)
+            iPos = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text))
         Loop
 
         If cpt2 = 1 Then Ncol = CShort(Mid(Dim2, 1, iPos + 1))
@@ -846,14 +846,14 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
             ReDim Lambda(Nline + 2, Ncol - 2, Files)
             ReDim Ksi(Nline + 2, Ncol - 2, Files)
             ReDim La(Nline + 2, Ncol - 2, 2, 2, 2, 2)
-            Nc = Ncol - 2
+            Nc = Ncol - CShort(2)
 
             If PreFile(o) = "R_H_" Or PreFile(o) = "R_W_" Then
                 ReDim Lambda(Nline + 2, Ncol - 3, Files)
                 ReDim Ksi(Nline + 2, Ncol - 3, Files)
                 ReDim La(Nline + 2, Ncol - 3, 2, 2, 2, 2)
                 ReDim Labe(Ncol - 3)
-                Nc = Ncol - 3
+                Nc = Ncol - CShort(3)
             End If
 
             If PreFile(o) = "R_Carb_" Then
@@ -872,11 +872,11 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
                 p = 2
             End If
 
-            For l As Short = 2 To Ncol - 1
+            For l As Short = 2 To Ncol - CShort(1)
                 Input(nFic, Data)
                 If l <= Ncol - p Then
                     Length = CSng(Data)
-                    Labe(l) = Data
+                    Labe(l) = CDbl(Data)
                 End If
             Next l
 
@@ -885,22 +885,22 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
             If PreFile(o) = "R_Carb_" Then Ncol = 5
 
             Dim Poub As String
-            For l As Short = 2 To Ncol - 1
+            For l As Short = 2 To Ncol - CShort(1)
                 Input(nFic, Poub)
             Next l
 
         End If
 
         Dim1 = "_"  'poids des fonctions probabilistes
-        iPos = InStr(1, Dim2, Dim1, CompareMethod.Text) 'position de "_"
+        iPos = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text)) 'position de "_"
         Dim2 = Microsoft.VisualBasic.Right(Dim2, Len(Dim2) - iPos)
         Dim1 = " "
         iPos = 1
 
         Do While iPos = 1
-            iPos = InStr(1, Dim2, Dim1, CompareMethod.Text)
+            iPos = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text))
             Dim2 = CStr(Mid(Dim2, iPos + 1))
-            iPos = InStr(1, Dim2, Dim1, CompareMethod.Text)
+            iPos = CShort(InStr(1, Dim2, Dim1, CompareMethod.Text))
         Loop
 
         Dim pd As Double = CDbl(Dim2)
@@ -930,11 +930,11 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         ProgressBarLine.Minimum = 0
         ProgressBarLine.Maximum = 100
 
-        For l As Short = 1 To Nline + 2         'lecture du fichier résultat
+        For l As Short = 1 To Nline + CShort(2)        'lecture du fichier résultat
 
-            ProgressBarLine.Value = 100 * l / (Nline + 2)
+            ProgressBarLine.Value = CInt(100 * l / (Nline + 2))
 
-            For m As Short = 0 To Ncol - 1
+            For m As Short = 0 To Ncol - CShort(1)
 
                 Try
                     Input(nFic, Data)
@@ -947,7 +947,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
                     If m <= 1 Then
                         Lambda(l, m, o) = CDbl(Data)
                     Else
-                        If Data <= 0 Then Data = 1.0E-300 'annuler les problèmes numériques
+                        If CDbl(Data) <= 0 Then Data = "1.0E-300" 'annuler les problèmes numériques
                         Lambda(l, m, o) = Lambda(l, m, o) + pd * System.Math.Log(CDbl(Data))
                         La(l, m, k, j, i, n) = CDbl(Data)
                     End If
@@ -967,7 +967,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         End If
 
 
-    End Function
+    End Sub
 
     'click sur sortir
     Private Sub ButtonExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonExit.Click
@@ -1035,8 +1035,8 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
     Private Sub AcierChange(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextBoxClMean.TextChanged, TextBoxClEcar.TextChanged
 
         If TextBoxClMean.Text = "" Or TextBoxClEcar.Text = "" Then Exit Sub
-        LabelLambda.Text = System.Math.Log(CDbl(TextBoxClMean.Text) ^ 2 / (CDbl(TextBoxClMean.Text) ^ 2 + CDbl(TextBoxClEcar.Text) ^ 2) ^ 0.5)
-        LabelXsi.Text = (System.Math.Log(CDbl(TextBoxClEcar.Text) ^ 2 / CDbl(TextBoxClMean.Text) ^ 2 + 1)) ^ 0.5
+        LabelLambda.Text = CStr(System.Math.Log(CDbl(TextBoxClMean.Text) ^ 2 / (CDbl(TextBoxClMean.Text) ^ 2 + CDbl(TextBoxClEcar.Text) ^ 2) ^ 0.5))
+        LabelXsi.Text = CStr((System.Math.Log(CDbl(TextBoxClEcar.Text) ^ 2 / CDbl(TextBoxClMean.Text) ^ 2 + 1)) ^ 0.5)
 
     End Sub
 
@@ -1048,7 +1048,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Dim Pf(Nline + 2) As Double
 
         Dim deltaX3 As Single = 0.01
-        Dim Request As Short
+        Dim Request As MsgBoxResult
 
         Dim PosXi As Single
         Dim PosmX As Single = 0
@@ -1065,7 +1065,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
             If Request = MsgBoxResult.No Then
 
                 If PreFile(Files) = "R_Carb_" Then Ca = True
-                If Ca = True Then Files = Files - 1 'enlever la partie carbonatation
+                If Ca = True Then Files = Files - CShort(1) 'enlever la partie carbonatation
 
                 If CheckBoxProb.Checked = True Then
 
@@ -1165,9 +1165,9 @@ f:
 
             For o As Short = 1 To Files
 
-                ProgressBarLine2.Value = o * 100 / Files
+                ProgressBarLine2.Value = CInt(o * 100 / Files)
 
-                For j As Short = 1 To Nline + 2
+                For j As Short = 1 To Nline + CShort(2)
                     Var4 = (Lambda(j, i, o) - Lambda(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Lambda(j, i, o)
                     Var5 = (Ksi(j, i, o) - Ksi(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Ksi(j, i, o)
                     LAen(j, o) = LAen(j, o) + Var4 * Var3
@@ -1192,7 +1192,7 @@ f:
         Msg_noEntry(Userinput2, Canc)
 
         If Canc = False Then Msg_noNumeric(Userinput2, Canc)
-        If Userinput2 < 0 Or Userinput2 > Length Then Canc = True
+        If CDbl(Userinput2) < 0 Or CDbl(Userinput2) > Length Then Canc = True
         If Canc = True Then Exit Sub
         PosXi = CShort(Userinput2)
 
@@ -1208,9 +1208,9 @@ f:
 
         For o As Short = 1 To Files
 
-            ProgressBarLine2.Value = o * 100 / Files
+            ProgressBarLine2.Value = CInt(o * 100 / Files)
 
-            For j As Short = 1 To Nline + 2
+            For j As Short = 1 To Nline + CShort(2)
                 LAen(j, o) = (Lambda(j, i, o) - Lambda(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Lambda(j, i, o)
                 KSen(j, o) = (Ksi(j, i, o) - Ksi(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Ksi(j, i, o)
             Next j
@@ -1248,22 +1248,22 @@ f:
 
             Print(nfic, "temps, temps,")
 
-            For o As Short = 1 To Files + 1
+            For o As Short = 1 To Files + CShort(1)
                 Print(nfic, PreFile(o), ",", PreFile(o), ",")
             Next o
 
             PrintLine(nfic, PreFile(Files + 1), ",", PreFile(Files + 1), ",")
             Print(nfic, "années, jours,")
 
-            For o As Short = 1 To Files + 2
+            For o As Short = 1 To Files + CShort(2)
                 Print(nfic, "lambda,ksi,")
             Next
 
             PrintLine(nfic, "")
 
-            For j As Short = 1 To Nline + 2
+            For j As Short = 1 To Nline + CShort(2)
 
-                ProgressBarLine2.Value = j * 100 / (Nline + 2)
+                ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
 
                 Print(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",")
                 For o As Short = 1 To Files
@@ -1289,9 +1289,9 @@ f:
 
             PrintLine(nfic, "")
 
-            For j As Short = 1 To Nline + 2
+            For j As Short = 1 To Nline + CShort(2)
 
-                ProgressBarLine2.Value = j * 100 / (Nline + 2)
+                ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
 
                 Print(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",")
                 For o As Short = 1 To Files
@@ -1326,7 +1326,7 @@ f:
         Input(nfic, Userinput2)
         Input(nfic, Userinput2)
 
-        Dim cpt As Short = 1
+        Dim cpt As Integer = 1
         Dim val As Short = 0
 
         Do While Microsoft.VisualBasic.Left(Userinput2, 2) = "R_"
@@ -1339,18 +1339,18 @@ f:
         Loop
 
         cpt -= 1
-        Files = cpt / 2 - val
+        Files = CShort(cpt / 2 - val)
 
         If val = 0 Then Ca = False
         If Ca = True Then
 
-            For o As Short = 1 To (Files + 3) * 2 + 1
+            For o As Short = 1 To CShort((Files + 3) * 2 + 1)
                 Input(nfic, Userinput2)
             Next o
 
             Dim j As Short = 0
             Do While Userinput2 <> "-10"
-                j += 1
+                j += CShort(1)
                 Try
                     Input(nfic, Userinput2)
                 Catch ex As Exception When Userinput2 = ""
@@ -1370,13 +1370,13 @@ f:
 
         Else
 
-            For o As Short = 1 To Files * 2 + 1
+            For o As Short = 1 To CShort(Files * 2 + 1)
                 Input(nfic, Userinput2)
             Next o
 
             Dim j As Short = 0
             Do While Userinput2 <> "-10"
-                j += 1
+                j += CShort(1)
                 Try
                     Input(nfic, Userinput2)
                 Catch ex As Exception When Userinput2 = ""
@@ -1403,7 +1403,7 @@ f:
 
         Dim Var3 As Double
 
-        For j As Short = 1 To Nline + 2  'calcul de l'indice de fiabilité bêta
+        For j As Short = 1 To Nline + CShort(2)  'calcul de l'indice de fiabilité bêta
 
             Dim Var1 As Double = -4           'beta
             Dim Var2 As Double = 4            'delta beta
@@ -1451,7 +1451,7 @@ f:
 
     End Sub
 
-    Private Sub CalcProbInit(ByRef Carb As Boolean, ByRef PosmX As Double, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
+    Private Sub CalcProbInit(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
         Dim deltaCL2 As Single = 0.005
         If Ca = True And CheckBoxProb.Checked = True Then
@@ -1462,7 +1462,7 @@ f:
         Dim o As Short
 
         If Carb = True Then
-            If PreFile(1) = "R_Carb_" Then Files = Files - 1
+            If PreFile(1) = "R_Carb_" Then Files = Files - CShort(1)
         End If
 
         For o = 1 To Files
@@ -1485,12 +1485,12 @@ f:
         ProgressBarLine2.Minimum = 0
         ProgressBarLine2.Maximum = 100
 
-        For j As Short = 1 To Nline + 2
+        For j As Short = 1 To Nline + CShort(2)
 
-            ProgressBarLine2.Value = j * 100 / (Nline + 2)
+            ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
 
             If j = 1 Then PosmX = deltaCL2
-            deltaCL2 = PosmX
+            deltaCL2 = CSng(PosmX)
 
             PosX = 0
             Dim Var7 As Double = 1
@@ -1578,10 +1578,10 @@ f:
 
         ' AJOUT PROB CORROSION On considere initiation des 1% de probabilité
         Dim ti As Double = 0
-        Dim jcorr As Integer = 0
+        Dim jcorr As Short = 0
         Dim Pseuil As Double = 0.01
 
-        For j As Short = 1 To Nline + 2
+        For j As Short = 1 To Nline + CShort(2)
             If Pf(j) > Pseuil Then
                 ti = Lambda(j, 0, 1)
                 jcorr = j
@@ -1605,7 +1605,7 @@ alpha:
 
         Dim Temphis(Nline + 2) As Double
         If PosXTemp = 0 Then
-            For j As Short = 1 To Nline + 2
+            For j As Short = 1 To Nline + CShort(2)
                 Temphis(j) = LAen(j, o)
             Next
         End If
@@ -1624,7 +1624,7 @@ alpha:
         Dim tp(Nline + 2) As Double
         Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
 
-        For j As Short = jcorr To Nline + 2
+        For j As Short = jcorr To Nline + CShort(2)
 
             If PosXTemp = 0 Then
                 If Temphis(j) < 20 Then
@@ -1648,7 +1648,7 @@ alpha:
         Next
 
         Dim icracks, idelam As Integer
-        For j As Short = 1 To Nline + 2
+        For j As Short = 1 To Nline + CShort(2)
 
             If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
                 Pcracks(j) = 0
@@ -1668,7 +1668,7 @@ alpha:
 
     End Sub
 
-    Private Sub WritePFCFile(ByRef Carb As Boolean, ByRef PosmX As Double, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
+    Private Sub WritePFCFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
         Dim OT As String
         Dim Filtre As String
@@ -1712,7 +1712,7 @@ alpha:
         PrintLine(nfic, "temps, temps, Pf, Pcracks, Pdelam")
         PrintLine(nfic, "années, jours,")
 
-        For j As Short = 1 To Nline + 2
+        For j As Short = 1 To Nline + CShort(2)
             PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
         Next j
 
@@ -1757,7 +1757,7 @@ alpha:
         PrintLine(nfic, "temps, temps, Bêta,")
         PrintLine(nfic, "années, jours,")
 
-        For j As Short = 1 To Nline + 2
+        For j As Short = 1 To Nline + CShort(2)
             PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", KSen(j, 0), ",")
             LAen(j, 0) = 0
             LAen(j, 1) = 0
@@ -1771,9 +1771,9 @@ alpha:
     Private Sub CheckBoxProb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxProb.CheckedChanged
 
         If CheckBoxProb.Checked = True Then
-            TextBoxPosMean.Text = 35
+            TextBoxPosMean.Text = CStr(35)
             TextBoxPosMean.Enabled = True
-            TextBoxPosEcart.Text = 23
+            TextBoxPosEcart.Text = CStr(23)
             TextBoxPosEcart.Enabled = True
         Else
             TextBoxPosMean.Text = ""
