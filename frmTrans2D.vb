@@ -7,7 +7,7 @@ Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TransChlor.My
 
-Public Class frmTrans2D
+Public Class FrmTrans2D
 
     'This program shows the complete implementation
     'of a 2D finite element program to analyse coupled 
@@ -60,7 +60,7 @@ Public Class frmTrans2D
     Private gr As Graphics
     Private bmp As Bitmap
 
-    Private Sub frmTrans2D_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub FrmTrans2D_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         bmp = New Bitmap(pbModel.Width, pbModel.Height, pbModel.CreateGraphics)
         gr = Graphics.FromImage(bmp)
         TimeScrollBar.Visible = False
@@ -82,11 +82,10 @@ Public Class frmTrans2D
 
     Private Sub OpenMeshFile_Click(sender As Object, e As EventArgs) Handles OpenMeshFile.Click
 
-        Dim d As New OpenFileDialog
-        'd.Title = "Open FEM file"
-        d.Title = "Open Mesh file"
-        'd.Filter = "FEm Files (*.fem)|*.fem|All Files|*.*"
-        d.Filter = "Mesh Files (*.msh)|*.msh"
+        Dim d As New OpenFileDialog With {
+            .Title = "Open Mesh file",
+            .Filter = "Mesh Files (*.msh)|*.msh"
+        }
 
         If d.ShowDialog = DialogResult.OK Then
             ClearAnalysisOutput()
@@ -167,38 +166,38 @@ Public Class frmTrans2D
             Dim bloc_element As Integer
 
             'Skip the version data
-            Temp = readLine(sr)
+            Temp = ReadLine(sr)
 
             Do While Temp <> "$PhysicalNames"
                 Temp = sr.ReadLine.Trim
             Loop
 
-            Dim NbExpo As Integer = readLine(sr)
+            Dim NbExpo As Integer = ReadLine(sr)
             ReDim Expo(NbExpo)
 
             For i = 0 To NbExpo - 1
 
-                s = readLine(sr)
+                s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 Expo(Integer.Parse(Arr(1))) = New Exposition(Arr(2))
 
             Next
 
-            Temp = readLine(sr)
+            Temp = ReadLine(sr)
             Do While Temp <> "$Entities"
                 Temp = sr.ReadLine.Trim
             Loop
 
-            s = readLine(sr)
+            s = ReadLine(sr)
             Arr = Split(s, " "c)
             Dim Npoints As Integer = Integer.Parse(Arr(0))
             Dim NumExpo(Integer.Parse(Arr(1)) - 1) As Integer
 
             For i = 0 To Npoints - 1
-                s = readLine(sr)
+                s = ReadLine(sr)
             Next
             For i = 0 To NumExpo.Length() - 1
-                s = readLine(sr)
+                s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 NumExpo(i) = Integer.Parse(Arr(7))
             Next
@@ -209,7 +208,7 @@ Public Class frmTrans2D
             Loop
 
             'Read total number of nodes and blocks 
-            s = readLine(sr)
+            s = ReadLine(sr)
             Arr = Split(s, " "c)
             Try
                 Nbloc = Integer.Parse(Arr(0))
@@ -225,7 +224,7 @@ Public Class frmTrans2D
 
             For i = 0 To Nbloc - 1
                 'read bloc information for how many nodes should be read inside
-                s = readLine(sr)
+                s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 bloc_type = Integer.Parse(Arr(0))
                 bloc_node = Integer.Parse(Arr(3))
@@ -235,7 +234,7 @@ Public Class frmTrans2D
                 ReDim ZZ(bloc_node - 1)
                 For j = 0 To bloc_node - 1
                     'read first lines of node number
-                    s = readLine(sr)
+                    s = ReadLine(sr)
                     Arr = Split(s, " "c)
                     n = Integer.Parse(Arr(0))
                     NN(j) = n
@@ -249,7 +248,7 @@ Public Class frmTrans2D
                         NExpo = 0
                     End If
                     'read corresponding lines of coordinates
-                    s = readLine(sr)
+                    s = ReadLine(sr)
                     Arr = Split(s, " "c)
                     x = CDbl(Arr(0))
                     XX(k) = x
@@ -264,11 +263,11 @@ Public Class frmTrans2D
 
             Next
 
-            s = readLine(sr)
-            s = readLine(sr)
+            s = ReadLine(sr)
+            s = ReadLine(sr)
 
             'Read total number of elements and blocks 
-            s = readLine(sr)
+            s = ReadLine(sr)
             Arr = Split(s, " "c)
             Try
                 Nbloc = Integer.Parse(Arr(0))
@@ -281,17 +280,17 @@ Public Class frmTrans2D
             'Read element connectivity block by block
             For i = 0 To Nbloc - 1
                 'read bloc information for how many nodes should be read inside
-                s = readLine(sr)
+                s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 bloc_type = Integer.Parse(Arr(0))
                 bloc_element = Integer.Parse(Arr(3))
                 If bloc_type = 0 Then
-                    Temp = readLine(sr)
+                    Temp = ReadLine(sr)
                 End If
 
                 If bloc_type = 1 Then
                     For j = 0 To bloc_element - 1
-                        Temp = readLine(sr)
+                        Temp = ReadLine(sr)
                         Arr = Split(Temp, " "c)
                         n0 = Integer.Parse(Arr(0))
                     Next
@@ -301,7 +300,7 @@ Public Class frmTrans2D
                     NElements = bloc_element
                     ReDim Elements(NElements - 1)
                     For jj = 0 To bloc_element - 1
-                        s = readLine(sr)
+                        s = ReadLine(sr)
                         Arr = Split(s, " "c)
                         n = Integer.Parse(Arr(0)) - n0
                         n1 = Integer.Parse(Arr(1))
@@ -320,22 +319,22 @@ Public Class frmTrans2D
         Return True
     End Function
 
-    Private Sub btnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
+    Private Sub BtnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
         zoom = 1
         hs.Value = 0
         vs.Value = 0
         DrawModel()
     End Sub
 
-    Private Sub vs_Scroll(sender As Object, e As ScrollEventArgs) Handles vs.Scroll
+    Private Sub Vs_Scroll(sender As Object, e As ScrollEventArgs) Handles vs.Scroll
         DrawModel()
     End Sub
 
-    Private Sub hs_Scroll(sender As Object, e As ScrollEventArgs) Handles hs.Scroll
+    Private Sub Hs_Scroll(sender As Object, e As ScrollEventArgs) Handles hs.Scroll
         DrawModel()
     End Sub
 
-    Private Function readLine(ByRef sr As StreamReader) As String
+    Private Function ReadLine(ByRef sr As StreamReader) As String
         Dim s As String
         If sr.EndOfStream = True Then Return ""
         While sr.EndOfStream = False
@@ -669,9 +668,12 @@ Public Class frmTrans2D
     End Sub
 
     Private Sub SaveImageAsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveImageAsToolStripMenuItem.Click
-        Dim d As New SaveFileDialog
-        d.Title = "Save Image As"
-        d.Filter = "PNG Files|*.png|JPEG Files|*.jpg|BMP Files|*.bmp|TIFF FIles|*.tiff|All Files|*.*"
+
+        Dim d As New SaveFileDialog With {
+            .Title = "Save Image As",
+            .Filter = "PNG Files|*.png|JPEG Files|*.jpg|BMP Files|*.bmp|TIFF FIles|*.tiff|All Files|*.*"
+        }
+
         If d.ShowDialog = DialogResult.OK Then
             Try
 
@@ -788,13 +790,13 @@ Public Class frmTrans2D
 
     End Sub
 
-    Private Sub pbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
+    Private Sub PbModel_Paint(sender As Object, e As PaintEventArgs) Handles pbModel.Paint
         If bmp IsNot Nothing Then
             e.Graphics.DrawImage(bmp, 0, 0)
         End If
     End Sub
 
-    Private Sub pbModel_Resize(sender As Object, e As EventArgs) Handles pbModel.Resize
+    Private Sub PbModel_Resize(sender As Object, e As EventArgs) Handles pbModel.Resize
         If bmp IsNot Nothing Then
             bmp.Dispose()
         End If
@@ -806,12 +808,12 @@ Public Class frmTrans2D
         DrawModel()
     End Sub
 
-    Private Sub pbModel_MouseDown(sender As Object, e As MouseEventArgs) Handles pbModel.MouseDown
+    Private Sub PbModel_MouseDown(sender As Object, e As MouseEventArgs) Handles pbModel.MouseDown
         If e.Button = MouseButtons.Left Then
             'zoom in
-            zoom = zoom * 1.1
+            zoom *= 1.1
         ElseIf e.Button = MouseButtons.Right Then
-            zoom = zoom / 1.1
+            zoom /= 1.1
         End If
         DrawModel()
     End Sub
@@ -852,7 +854,7 @@ Public Class frmTrans2D
         ShowElementsOnDeformedShapeToolStripMenuItem.Checked = ShowElementsOnDeformedShape
     End Sub
 
-    Private Sub pbModel_MouseWheel(sender As Object, e As MouseEventArgs) Handles pbModel.MouseWheel
+    Private Sub PbModel_MouseWheel(sender As Object, e As MouseEventArgs) Handles pbModel.MouseWheel
 
         If e.Delta = 120 Then
 
