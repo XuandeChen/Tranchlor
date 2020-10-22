@@ -21,7 +21,7 @@
         ComboBoxMat.DisplayMember = "Name"
         ComboBoxMat.ValueMember = "Id"
 
-        Dim oData As DataRowView = ComboBoxMat.SelectedItem
+        Dim oData As DataRowView = CType(ComboBoxMat.SelectedItem, DataRowView)
         ExpoName = oData.Row("Name").ToString()
 
     End Sub
@@ -54,7 +54,7 @@
     Private Sub ButtonSave_Click(sender As Object, e As EventArgs) Handles ButtonSave.Click
 
 
-        Dim oData As DataRowView = ComboBoxMat.SelectedItem
+        Dim oData As DataRowView = CType(ComboBoxMat.SelectedItem, DataRowView)
         ExpoName = oData.Row("Name").ToString()
 
         DBCon.VerifyConnexion()
@@ -80,7 +80,7 @@ B:
     Private Sub ButtonDelete_Click(sender As Object, e As EventArgs) Handles ButtonDelete.Click
 
 
-        Dim oData As DataRowView = ComboBoxMat.SelectedItem
+        Dim oData As DataRowView = CType(ComboBoxMat.SelectedItem, DataRowView)
         Dim MatName As String = oData.Row("Name").ToString()
 
         DBCon.VerifyConnexion()
@@ -112,7 +112,7 @@ B:
 
     Private Sub KeyPaste(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles DataGridView.KeyDown
 
-        If e.KeyCode = Keys.V And Keys.ControlKey Then
+        If CBool(CType(e.KeyCode = Keys.V, Keys) And Keys.ControlKey) Then
             Paste()
         End If
 
@@ -124,18 +124,18 @@ B:
         Dim arT() As String
         Dim c, cc, r As Integer
 
-        tArr = Clipboard.GetText().Split(Environment.NewLine)
+        tArr = Clipboard.GetText().Split(CChar(Environment.NewLine))
 
         r = DataGridView.SelectedCells(0).RowIndex
         c = DataGridView.SelectedCells(0).ColumnIndex
 
         For i As Integer = 0 To tArr.Length - 2
-            arT = tArr(i).Split(vbTab)
+            arT = tArr(i).Split(CChar(vbTab))
             cc = c
             For ii As Integer = 0 To arT.Length - 1
                 If cc > DataGridView.ColumnCount - 1 Then Exit For
                 If r > DataGridView.Rows.Count - 1 Then
-                    Dim Row As DataGridViewRow = DataGridView.Rows(0).Clone()
+                    Dim Row As DataGridViewRow = CType(DataGridView.Rows(0).Clone(), DataGridViewRow)
                     DataGridView.Rows.Add(Row)
                 End If
 
@@ -150,7 +150,7 @@ B:
 
     Private Sub ComboBoxMat_SelectedValueChanged(sender As Object, e As EventArgs) Handles ComboBoxMat.SelectedValueChanged
 
-        Dim oData As DataRowView = ComboBoxMat.SelectedItem
+        Dim oData As DataRowView = CType(ComboBoxMat.SelectedItem, DataRowView)
         ExpoName = oData.Row("Name").ToString()
 
         If ExpoName <> ExpoNameOld Then DiplayData(ExpoName)
