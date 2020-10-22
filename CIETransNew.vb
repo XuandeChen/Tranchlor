@@ -160,44 +160,44 @@
     ''Jacobien functions
     'Get Jacobien matrix
     Private Function getJac(ByRef coorx As Double, ByRef coory As Double) As Double(,)
-        Dim J(1, 1) As Double
+        Dim Jac(1, 1) As Double
         Dim zeta As Double = coorx
         Dim yita As Double = coory
-        J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
-        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
-        J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
-        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
-        Return J
+        Jac(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        Jac(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
+        Jac(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        Jac(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
+        Return Jac
     End Function
     'Get determinant of Jacobien matrix
     Private Function getDetJ(ByRef coorx As Double, ByRef coory As Double) As Double
-        Dim J(1, 1) As Double
+        Dim Jac(1, 1) As Double
         Dim DetJ As Double
         Dim zeta As Double = coorx
         Dim yita As Double = coory
-        J(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
-        J(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
-        J(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
-        J(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
-        DetJ = J(0, 0) * J(1, 1) - J(1, 0) * J(0, 1)
+        Jac(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        Jac(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
+        Jac(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        Jac(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
+        DetJ = Jac(0, 0) * Jac(1, 1) - Jac(1, 0) * Jac(0, 1)
         Return DetJ
     End Function
     'Get inverse of Jacobien matrix
     Public Function GetInversedJac(ByRef coorx As Double, ByRef coory As Double) As Double(,)
-        Dim J_inv(1, 1) As Double
+        Dim Jac_inv(1, 1) As Double
         Dim zeta As Double = coorx
         Dim yita As Double = coory
         Dim DetJ As Double
-        J_inv(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
-        J_inv(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
-        J_inv(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
-        J_inv(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
-        DetJ = J_inv(0, 0) * J_inv(1, 1) - J_inv(1, 0) * J_inv(0, 1)
-        J_inv(0, 0) = J_inv(1, 1) / DetJ
-        J_inv(0, 1) = -J_inv(0, 1) / DetJ
-        J_inv(1, 0) = -J_inv(1, 0) / DetJ
-        J_inv(1, 1) = J_inv(0, 0) / DetJ
-        Return J_inv
+        Jac_inv(0, 0) = 1 / 4 * (-(1 - yita) * x1 + (1 - yita) * x2 + (1 + yita) * x3 - (1 + yita) * x4)
+        Jac_inv(1, 0) = 1 / 4 * (-(1 - zeta) * x1 - (1 + zeta) * x2 + (1 + zeta) * x3 + (1 - zeta) * x4)
+        Jac_inv(0, 1) = 1 / 4 * (-(1 - yita) * y1 + (1 - yita) * y2 + (1 + yita) * y3 - (1 + yita) * y4)
+        Jac_inv(1, 1) = 1 / 4 * (-(1 - zeta) * y1 - (1 + zeta) * y2 + (1 + zeta) * y3 + (1 - zeta) * y4)
+        DetJ = Jac_inv(0, 0) * Jac_inv(1, 1) - Jac_inv(1, 0) * Jac_inv(0, 1)
+        Jac_inv(0, 0) = Jac_inv(1, 1) / DetJ
+        Jac_inv(0, 1) = -Jac_inv(0, 1) / DetJ
+        Jac_inv(1, 0) = -Jac_inv(1, 0) / DetJ
+        Jac_inv(1, 1) = Jac_inv(0, 0) / DetJ
+        Return Jac_inv
     End Function
     'flux functions
     Public Function getXFlux(ByRef coef As Double, ByRef Var As Double(), ByRef Jac_inv As Double(,), ByRef B As Double(,)) As Double
