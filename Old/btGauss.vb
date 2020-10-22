@@ -19,13 +19,13 @@ Imports System.Threading.Tasks
 'http://web.mit.edu/10.001/Web/Course_Notes/GaussElimPivoting.html
 'http://www.math.iitb.ac.in/~neela/partialpivot.pdf
 
-Public Class btGauss
+Public Class BtGauss
 
     Private Const Tiny As Double = 0.0000000001
 
-    Private nVariables As Integer
-    Private HalfBandWidth As Integer 'Half band width
-    Private a(,) As Double 'The coefficient matrix a
+    Private ReadOnly nVariables As Integer
+    Private ReadOnly HalfBandWidth As Integer 'Half band width
+    Private ReadOnly a(,) As Double 'The coefficient matrix a
 
     Public Err As Boolean = False
 

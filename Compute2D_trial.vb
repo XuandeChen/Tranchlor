@@ -61,7 +61,7 @@ Public Class Compute2D_trial
         OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
         If Canc = True Then End
         ''''''''''''''''''''''''''''''''''''''''''''
-        directory = frmTrans2D.Directory & "\"
+        directory = FrmTrans2D.Directory & "\"
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         FilePost(OutFile, directory)
 
@@ -110,7 +110,7 @@ Public Class Compute2D_trial
         End Try
     End Sub
 
-    Public Sub Compute_All(ByRef Frm As frmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
+    Public Sub Compute_All(ByRef Frm As FrmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
         OutputFile = New OutputFile2D(directory, 5, NNodes)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)

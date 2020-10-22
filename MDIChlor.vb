@@ -224,7 +224,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Dim Para5 As Short = 0
     Public Prefile As String
 
-    Dim frm2D As New frmTrans2D
+    Dim frm2D As New FrmTrans2D
 
     'Dim diff As New DiffusionXC
     'Dim transport As New HydriqueXC

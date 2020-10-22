@@ -1,7 +1,7 @@
 ﻿Public Class FrmMeteoDatabase
 
-    Dim DBCon As New DBconnexion
-    Dim Expo As New MaterialsData
+    ReadOnly DBCon As New DBconnexion
+    ReadOnly Expo As New MaterialsData
     'Private bindingSource As New BindingSource()
 
     Dim ExpoName As String
