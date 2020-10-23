@@ -61,25 +61,28 @@ Public Class Exposition
 
                 FileOpen(CInt(nFic), File, OpenMode.Input, OpenAccess.Read)
                 Input(CInt(nFic), NbreEn)
-
-                If NbreEn >= ind Then
-                    NbreEn = ind
-
-                Else
-                    MsgBox("Exposition File too short")
-
-                End If
-
                 Input(CInt(nFic), Dt)
 
-                ReDim Humidite(NbreEn)
-                ReDim Sel(NbreEn)
-                ReDim Temperature(NbreEn)
+                ReDim Humidite(ind - 1)
+                ReDim Sel(ind - 1)
+                ReDim Temperature(ind - 1)
 
-                For j As Integer = 0 To NbreEn - 1
-                    Input(CInt(nFic), Humidite(j))
-                    Input(CInt(nFic), Sel(j))
-                    Input(CInt(nFic), Temperature(j))
+                Dim j As Integer = 0
+                Dim nbboucle As Integer = 1
+                For i As Integer = 0 To ind - 1
+
+                    If i < (NbreEn - 1) * nbboucle Then
+                        j += 1
+                    Else
+                        MsgBox("Exposition File too short. Copying the exposition in loop.")
+                        j = 1
+                        nbboucle += 1
+                    End If
+
+                    Input(CInt(nFic), Humidite(j - 1))
+                    Input(CInt(nFic), Sel(j - 1))
+                    Input(CInt(nFic), Temperature(j - 1))
+
                 Next
 
                 FileClose(CInt(nFic))
