@@ -71,13 +71,12 @@ Public Class Exposition
                 Dim nbboucle As Integer = 1
                 For i As Integer = 0 To ind - 1
 
-                    If i < (NbreEn - 1) Then
-                        j += 1
+                    If i <= (NbreEn - 1) Then
                         Input(CInt(nFic), Humidite(i))
                         Input(CInt(nFic), Sel(i))
                         Input(CInt(nFic), Temperature(i))
-
-                    ElseIf i < (NbreEn - 1) * nbboucle Then
+                        j += 1
+                    ElseIf i <= (NbreEn * nbboucle - 1) Then
                         Humidite(i) = Humidite(j)
                         Sel(i) = Sel(j)
                         Temperature(i) = Temperature(j)
@@ -89,9 +88,8 @@ Public Class Exposition
                         Humidite(i) = Humidite(j)
                         Sel(i) = Sel(j)
                         Temperature(i) = Temperature(j)
+                        j += 1
                     End If
-
-
                 Next
 
                 FileClose(CInt(nFic))
@@ -123,20 +121,26 @@ Public Class Exposition
                 Dim nbboucle As Integer = 1
                 For i As Integer = 0 To ind - 1
 
-                    If i < (NbreEn - 1) * nbboucle Then
+                    If i <= (NbreEn - 1) Then
+                        Humidite(j) = ExpoTable(i)(1)
+                        Sel(j) = ExpoTable(i)(2)
+                        Temperature(j) = ExpoTable(i)(3)
+                        j += 1
+                    ElseIf i <= (NbreEn * nbboucle - 1) Then
+                        Humidite(i) = Humidite(j)
+                        Sel(i) = Sel(j)
+                        Temperature(i) = Temperature(j)
                         j += 1
                     Else
-                        MsgBox("Exposition File too short. Copying the exposition in loop.")
-                        j = 1
+                        If nbboucle = 1 Then MsgBox("Exposition File too short. Copying the exposition in loop.")
+                        j = 0
                         nbboucle += 1
+                        Humidite(i) = Humidite(j)
+                        Sel(i) = Sel(j)
+                        Temperature(i) = Temperature(j)
+                        j += 1
                     End If
-
-                    Humidite(j - 1) = ExpoTable(j - 1)(1)
-                    Sel(j - 1) = ExpoTable(j - 1)(2)
-                    Temperature(j - 1) = ExpoTable(j - 1)(3)
-
                 Next
-
 
             Catch ex As Exception
                 End
