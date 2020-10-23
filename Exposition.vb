@@ -80,8 +80,8 @@ Public Class Exposition
                     End If
 
                     Input(CInt(nFic), Humidite(j - 1))
-                Input(CInt(nFic), Sel(j - 1))
-                Input(CInt(nFic), Temperature(j - 1))
+                    Input(CInt(nFic), Sel(j - 1))
+                    Input(CInt(nFic), Temperature(j - 1))
 
                 Next
 
