@@ -112,7 +112,7 @@ Public Class Compute2D_trial
 
     Public Sub Compute_All(ByRef Frm As FrmTrans2D, ByRef Expo() As Exposition, ByRef NNodes As Integer, ByRef NElements As Integer,
                            ByRef Elements() As ElementTrans, ByRef Nodes() As NodeTrans, ByRef Time() As Double)
-        OutputFile = New OutputFile2D(directory, 5, NNodes)
+        OutputFile = New OutputFile2D(directory, 5, NNodes, Model)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
         ''Global time loop
         For ti As Integer = 1 To ind

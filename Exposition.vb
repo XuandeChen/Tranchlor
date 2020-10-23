@@ -62,10 +62,12 @@ Public Class Exposition
                 FileOpen(CInt(nFic), File, OpenMode.Input, OpenAccess.Read)
                 Input(CInt(nFic), NbreEn)
 
-                If NbreEn > ind Then
+                If NbreEn >= ind Then
                     NbreEn = ind
+
                 Else
                     MsgBox("Exposition File too short")
+
                 End If
 
                 Input(CInt(nFic), Dt)
