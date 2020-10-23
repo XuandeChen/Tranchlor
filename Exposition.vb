@@ -71,18 +71,21 @@ Public Class Exposition
                 Dim nbboucle As Integer = 1
                 For i As Integer = 0 To ind - 1
 
-                    If i < (NbreEn - 1) * nbboucle Then
+                    If i <= (NbreEn - 1) * nbboucle Then
                         j += 1
+                        Input(CInt(nFic), Humidite(j - 1))
+                        Input(CInt(nFic), Sel(j - 1))
+                        Input(CInt(nFic), Temperature(j - 1))
                     Else
-                        MsgBox("Exposition File too short. Copying the exposition in loop.")
+                        If nbboucle = 1 Then
+                            MsgBox("Exposition File too short. Copying the exposition in loop.")
+                        End If
                         j = 1
                         nbboucle += 1
+                        Humidite(i) = Humidite(j - 1)
+                        Sel(i) = Sel(j - 1)
+                        Temperature(i) = Temperature(j - 1)
                     End If
-
-                    Input(CInt(nFic), Humidite(j - 1))
-                    Input(CInt(nFic), Sel(j - 1))
-                    Input(CInt(nFic), Temperature(j - 1))
-
                 Next
 
                 FileClose(CInt(nFic))
