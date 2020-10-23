@@ -71,13 +71,13 @@ Public Class Exposition
                 Dim nbboucle As Integer = 1
                 For i As Integer = 0 To ind - 1
 
-                    If i < (NbreEn - 1) Then
-                        j += 1
+                    If i <= (NbreEn - 1) Then
                         Input(CInt(nFic), Humidite(i))
                         Input(CInt(nFic), Sel(i))
                         Input(CInt(nFic), Temperature(i))
+                        j += 1
 
-                    ElseIf i < (NbreEn - 1) * nbboucle Then
+                    ElseIf i <= (NbreEn * nbboucle - 1) Then
                         Humidite(i) = Humidite(j)
                         Sel(i) = Sel(j)
                         Temperature(i) = Temperature(j)
@@ -89,6 +89,7 @@ Public Class Exposition
                         Humidite(i) = Humidite(j)
                         Sel(i) = Sel(j)
                         Temperature(i) = Temperature(j)
+                        j += 1
                     End If
 
 
