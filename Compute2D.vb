@@ -197,7 +197,7 @@ Public Class Compute2D
         Dim he As HETrans
         Dim H_ele() As Double
 
-        OutputFile = New OutputFile2D(directory, 5, NNodes)
+        OutputFile = New OutputFile2D(directory, 5, NNodes, Model)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
 
         ''Global time loop

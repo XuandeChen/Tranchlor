@@ -6,17 +6,26 @@ Public Class OutputFile2D
     Dim outfile() As String
     Dim nFic() As Short
 
-    Public Sub New(ByRef directory As String, ByRef NbFiles As Single, ByRef nDof As Integer)
+    Public Sub New(ByRef directory As String, ByRef NbFiles As Single, ByRef nDof As Integer, ByRef Model As Integer)
 
         ReDim outfile(NbFiles - 1)
         ReDim nFic(NbFiles - 1)
 
-        ''Creating output .txt computation result file 2020-07-17 Xuande 
-        outfile(0) = directory & "\" & "R_H_DiffusionModel" & ".txt"
-        outfile(1) = directory & "\" & "R_W_DiffusionModel" & ".txt"
-        outfile(2) = directory & "\" & "R_S_DiffusionModel" & ".txt"
-        outfile(3) = directory & "\" & "R_T_DiffusionModel" & ".txt"
-        outfile(4) = directory & "\" & "R_Cl_DiffusionModel" & ".txt"
+        If Model = 0 Then
+            ''Creating output .txt computation result file 2020-07-17 Xuande 
+            outfile(0) = directory & "\" & "R_H_DiffusionModel" & ".txt"
+            outfile(1) = directory & "\" & "R_W_DiffusionModel" & ".txt"
+            outfile(2) = directory & "\" & "R_S_DiffusionModel" & ".txt"
+            outfile(3) = directory & "\" & "R_T_DiffusionModel" & ".txt"
+            outfile(4) = directory & "\" & "R_Cl_DiffusionModel" & ".txt"
+        ElseIf Model = 1 Then
+            ''Creating output .txt computation result file 2020-10-23 Xuande 
+            outfile(0) = directory & "\" & "R_H_CapillaryModel" & ".txt"
+            outfile(1) = directory & "\" & "R_W_CapillaryModel" & ".txt"
+            outfile(2) = directory & "\" & "R_S_CapillaryModel" & ".txt"
+            outfile(3) = directory & "\" & "R_T_CapillaryModel" & ".txt"
+            outfile(4) = directory & "\" & "R_Cl_CapillaryModel" & ".txt"
+        End If
 
         For i As Integer = 0 To NbFiles - 1
             nFic(i) = CShort(FreeFile())
