@@ -132,4 +132,6 @@ b:
 
     End Sub
 
+    'Private Declare Sub lfGetDe3Info Lib "C:\mmsprog\Lecfin.dll" (ByVal strde3 As String, ByVal ilen As Long, ByRef max_de3_step As Long, ByRef Lib As Long, ByRef nodmax As Long)
+
 End Class
