@@ -115,7 +115,7 @@ Public Class Compute2D_trial
         OutputFile = New OutputFile2D(directory, 5, NNodes, Model)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
         ''Global time loop
-        For ti As Integer = 1 To ind
+        For ti As Integer = 1 To ind - 1
             Frm.PlotProgressTime(ind, ti)
             ''Field value initialization
             setVariables(NNodes, Nodes)
