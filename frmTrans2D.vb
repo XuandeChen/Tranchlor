@@ -272,25 +272,25 @@ Public Class FrmTrans2D
                     If bloc_type = 0 Then
                         NExpo = NumExpo(bloc_index - 1)
 
-                        Select Case Table(NExpo).ExpoFile
-                            Case Table(NExpo).ExpoFile.Contains("Neumann")
-                                TypeExpo = "Neumann"
-                            Case Else
-                                TypeExpo = "Dirichlet"
-                        End Select
+
+                        If Table(NExpo).ExpoFile.Contains("Neumann") Then
+                            TypeExpo = "Neumann"
+                        Else
+                            TypeExpo = "Dirichlet"
+                        End If
 
                     ElseIf bloc_type = 1 Then
-                        NExpo = NumExpo(Npoints + bloc_index - 1)
+                            NExpo = NumExpo(Npoints + bloc_index - 1)
 
-                        Select Case Table(NExpo).ExpoFile
-                            Case Table(NExpo).ExpoFile.Contains("Neumann")
-                                TypeExpo = "Neumann"
-                            Case Else
-                                TypeExpo = "Dirichlet"
-                        End Select
+                        If Table(NExpo).ExpoFile.Contains("Neumann") Then
+                            TypeExpo = "Neumann"
+                        Else
+                            TypeExpo = "Dirichlet"
+                        End If
 
                     ElseIf bloc_type = 2 Then
                             NExpo = 0
+                        TypeExpo = "Null"
                     End If
 
                     'read corresponding lines of coordinates

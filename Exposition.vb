@@ -5,6 +5,10 @@ Public Class Exposition
     Public Property Humidite() As Double()
     Public Property Sel() As Double()
     Public Property Temperature() As Double()
+    'Xuande 2020.10.28
+    Public Property JHumidite() As Double() 'Humidity boundary flux
+    Public Property JSel() As Double() 'Chloride boundary flux
+    Public Property JTemperature() As Double() 'Temperature boundary flux
 
     Private Dt As Single
     Private Name As String
@@ -105,9 +109,14 @@ Public Class Exposition
 
         ElseIf File.Contains("Neumann") = True Then 'Xuande 2020.10.27 case zeroGradient BC applied
             Try 'do nothing
-                ReDim Humidite(ind - 1)
-                ReDim Sel(ind - 1)
-                ReDim Temperature(ind - 1)
+                ReDim JHumidite(ind - 1)
+                ReDim JSel(ind - 1)
+                ReDim JTemperature(ind - 1)
+                For i As Integer = 0 To ind - 1
+                    JHumidite(i) = 0
+                    JSel(i) = 0
+                    JTemperature(i) = 0
+                Next
             Catch ex As Exception
                 End
             End Try
