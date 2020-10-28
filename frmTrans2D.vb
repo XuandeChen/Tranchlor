@@ -272,17 +272,16 @@ Public Class FrmTrans2D
                     If bloc_type = 0 Then
                         NExpo = NumExpo(bloc_index - 1)
 
-
-                        If Table(NExpo).ExpoFile.Contains("Neumann") Then
+                        If Table(NExpo - 1).ExpoFile.Contains("Neumann") Then
                             TypeExpo = "Neumann"
                         Else
                             TypeExpo = "Dirichlet"
                         End If
 
                     ElseIf bloc_type = 1 Then
-                            NExpo = NumExpo(Npoints + bloc_index - 1)
+                        NExpo = NumExpo(Npoints + bloc_index - 1)
 
-                        If Table(NExpo).ExpoFile.Contains("Neumann") Then
+                        If Table(NExpo - 1).ExpoFile.Contains("Neumann") Then
                             TypeExpo = "Neumann"
                         Else
                             TypeExpo = "Dirichlet"
