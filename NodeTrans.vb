@@ -7,6 +7,7 @@ Public Class NodeTrans
     Public Property z As Double
 
     Public Property NumExpo As Integer
+    Public Property TypeExpo As String 'Xuande 2020.10.27
 
     Private HR(1) As Double
     Private Sl(1) As Double
@@ -22,13 +23,14 @@ Public Class NodeTrans
     Private Jy_thm(1) As Double 'xuande, flux de diffusion thermique direction y
     Private Jx_ion(1) As Double 'xuande, flux ionique direction x
     Private Jy_ion(1) As Double 'xuande, flux ionique direction y
-    Public Sub New(nn As Integer, x As Double, y As Double, z As Double, NumExpo As Integer)
+    Public Sub New(nn As Integer, x As Double, y As Double, z As Double, NumExpo As Integer, TypeExpo As String)
 
         _NodeNumber = nn
         _x = x
         _y = y
         _z = z
         _NumExpo = NumExpo
+        _TypeExpo = TypeExpo
 
     End Sub
 

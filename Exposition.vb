@@ -21,7 +21,6 @@ Public Class Exposition
         Dim NbreEn As Integer
 
         If FileExpo.Contains(".txt") = True Then
-
             Try
                 FileOpen(CInt(nFic), FileExpo, OpenMode.Input, OpenAccess.Read)
                 FileClose(CInt(nFic))
@@ -34,10 +33,16 @@ Public Class Exposition
                 End
             End Try
 
-        Else
-
+        ElseIf FileExpo.Contains("Neumann") = True Then 'Xuande 2020.10.27 case zeroGradient BC applied
             Try
+                File = FileExpo
+                Name = FileExpo
+            Catch ex As Exception
+                End
+            End Try
 
+        Else
+            Try
                 Dim DBCon As New DBconnexion
                 DBCon.DBRequest("SELECT '" + FileExpo + "' FROM ExpositionList")
                 Name = FileExpo
@@ -55,7 +60,7 @@ Public Class Exposition
         Dim nFic As Short = CShort(FreeFile())
         Dim NbreEn As Integer
 
-        If File <> "" Then
+        If File.Contains(".txt") = True Then
 
             Try
 
@@ -98,6 +103,14 @@ Public Class Exposition
                 End
             End Try
 
+        ElseIf File.Contains("Neumann") = True Then 'Xuande 2020.10.27 case zeroGradient BC applied
+            Try 'do nothing
+                ReDim Humidite(ind - 1)
+                ReDim Sel(ind - 1)
+                ReDim Temperature(ind - 1)
+            Catch ex As Exception
+                End
+            End Try
         Else
 
             Try

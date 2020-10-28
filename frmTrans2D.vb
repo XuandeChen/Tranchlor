@@ -23,6 +23,7 @@ Public Class FrmTrans2D
     Public ElasticityModulus, Thickness, PoissonRatio As Double
     Public Nodes() As NodeTrans
     Public Elements() As ElementTrans
+    Public Table() As TableTrans 'Xuande 2020.10.27
     Public Time() As Double ' heure
     Public Expo(1) As Exposition
     Public PointLoads() As PointLoad
@@ -82,6 +83,20 @@ Public Class FrmTrans2D
 
     Private Sub OpenMeshFile_Click(sender As Object, e As EventArgs) Handles OpenMeshFile.Click
 
+        'Xuande 2020.10.27 Lecture table de connectivité groupes physiques et expositions
+        Dim c As New OpenFileDialog With {
+            .Title = "Open Physical Exposure Connect file",
+            .Filter = "Physical Exposure Files (*.txt)|*.txt"
+        }
+
+        If c.ShowDialog = DialogResult.OK Then
+            If ReadTable(c.FileName) = False Then
+                MsgBox("Error with Physical Exposure file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Physical Exposure file")
+                Return
+            End If
+        End If
+        'Xuande 2020.10.27 Lecture table de connectivité groupes physiques et expositions
+
         Dim d As New OpenFileDialog With {
             .Title = "Open Mesh file",
             .Filter = "Mesh Files (*.msh)|*.msh"
@@ -90,12 +105,9 @@ Public Class FrmTrans2D
         If d.ShowDialog = DialogResult.OK Then
             ClearAnalysisOutput()
             If ReadMeshFile(d.FileName) = False Then
-                'MeshFileOk = False
                 MsgBox("Error with Mesh file.", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
                 Return
             End If
-            '        MsgBox("Mesh file imported successfully!", MsgBoxStyle.OkOnly And MsgBoxStyle.Information, "Mesh file")
-            'MeshFileOk = True
             Directory = Path.GetDirectoryName(d.FileName) ' Thomas : Ligne pour récuperer le chemin du fichier
             DrawModel()
 
@@ -151,6 +163,7 @@ Public Class FrmTrans2D
             Dim s As String
             Dim Arr() As String
             Dim Temp As String
+            Dim GroupExpo As String 'Xuande 2020.10.27
             Dim i As Integer
             Dim j As Integer
             Dim jj As Integer
@@ -163,6 +176,7 @@ Public Class FrmTrans2D
             Dim NExpo As Integer
             Dim bloc_node As Integer
             Dim bloc_type As Integer
+            Dim bloc_index As Integer
             Dim bloc_element As Integer
 
             'Skip the version data
@@ -172,15 +186,17 @@ Public Class FrmTrans2D
                 Temp = sr.ReadLine.Trim
             Loop
 
-            Dim NbExpo As Integer = ReadLine(sr)
-            ReDim Expo(NbExpo)
-
-            For i = 0 To NbExpo - 1
+            'Dim NbExpo As Integer = ReadLine(sr) 'old code
+            'ReDim Expo(NbExpo)
+            Dim NPhysGroup As Integer = ReadLine(sr) 'Xuande 2020.10.27 number of physical groups
+            ReDim Expo(NPhysGroup)
+            For i = 0 To NPhysGroup - 1
 
                 s = ReadLine(sr)
                 Arr = Split(s, " "c)
-                Expo(Integer.Parse(Arr(1))) = New Exposition(Arr(2))
-
+                'Expo(Integer.Parse(Arr(1))) = New Exposition(Arr(2)) 'old code
+                GroupExpo = Table(i).ExpoFile 'Xuande 2020.10.27
+                Expo(Integer.Parse(Arr(1))) = New Exposition(GroupExpo) 'Xuande 2020.10.27
             Next
 
             Temp = ReadLine(sr)
@@ -191,17 +207,27 @@ Public Class FrmTrans2D
             s = ReadLine(sr)
             Arr = Split(s, " "c)
             Dim Npoints As Integer = Integer.Parse(Arr(0))
-            Dim NumExpo(Integer.Parse(Arr(1)) - 1) As Integer
-
+            'Dim NumExpo(Integer.Parse(Arr(1)) - 1) As Integer 'old code
+            Dim Nlines As Integer = Integer.Parse(Arr(1)) 'Xuande 2020.10.27
+            Dim Nsurfaces As Integer = Integer.Parse(Arr(2)) 'Xuande 2020.10.27
+            Dim Nvolumes As Integer = Integer.Parse(Arr(3)) 'Xuande 2020.10.27
+            Dim NumExpo(NPhysGroup - 1) As Integer
+            Dim TypeExpo As String
             For i = 0 To Npoints - 1
                 s = ReadLine(sr)
+                Arr = Split(s, " "c)
+                NumExpo(i) = Integer.Parse(Arr(5))
             Next
-            For i = 0 To NumExpo.Length() - 1
+            For i = 0 To Nlines - 1
                 s = ReadLine(sr)
                 Arr = Split(s, " "c)
-                NumExpo(i) = Integer.Parse(Arr(7))
+                NumExpo(i + Npoints) = Integer.Parse(Arr(8))
             Next
-
+            For i = 0 To Nsurfaces - 1
+                s = ReadLine(sr)
+                Arr = Split(s, " "c)
+                NumExpo(i + Npoints + Nlines) = Integer.Parse(Arr(8))
+            Next
             'Skip the unnecessary first few lines
             Do While Temp <> "$Nodes"
                 Temp = sr.ReadLine.Trim
@@ -227,6 +253,7 @@ Public Class FrmTrans2D
                 s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 bloc_type = Integer.Parse(Arr(0))
+                bloc_index = Integer.Parse(Arr(1))
                 bloc_node = Integer.Parse(Arr(3))
                 ReDim NN(bloc_node - 1)
                 ReDim XX(bloc_node - 1)
@@ -242,11 +269,30 @@ Public Class FrmTrans2D
                 'read corresponding lines of coordinates
                 For k = 0 To bloc_node - 1
                     'judging wether points of current block belongs to the boundary
-                    If bloc_type = 1 Then
-                        NExpo = NumExpo(NBord)
-                    Else
-                        NExpo = 0
+                    If bloc_type = 0 Then
+                        NExpo = NumExpo(bloc_index - 1)
+
+                        Select Case Table(NExpo).ExpoFile
+                            Case Table(NExpo).ExpoFile.Contains("Neumann")
+                                TypeExpo = "Neumann"
+                            Case Else
+                                TypeExpo = "Dirichlet"
+                        End Select
+
+                    ElseIf bloc_type = 1 Then
+                        NExpo = NumExpo(Npoints + bloc_index - 1)
+
+                        Select Case Table(NExpo).ExpoFile
+                            Case Table(NExpo).ExpoFile.Contains("Neumann")
+                                TypeExpo = "Neumann"
+                            Case Else
+                                TypeExpo = "Dirichlet"
+                        End Select
+
+                    ElseIf bloc_type = 2 Then
+                            NExpo = 0
                     End If
+
                     'read corresponding lines of coordinates
                     s = ReadLine(sr)
                     Arr = Split(s, " "c)
@@ -256,15 +302,16 @@ Public Class FrmTrans2D
                     YY(k) = y
                     z = CDbl(Arr(2))
                     ZZ(k) = z
-                    Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), NExpo)
+                    Nodes(NN(k) - 1) = New NodeTrans(NN(k), XX(k), YY(k), ZZ(k), NExpo, TypeExpo)
                 Next
 
-                If bloc_type = 1 Then NBord += 1
+                'If bloc_type = 1 Then NBord += 1 'old code
 
             Next
 
-            s = ReadLine(sr)
-            s = ReadLine(sr)
+            Do While Temp <> "$Elements"
+                Temp = sr.ReadLine.Trim
+            Loop
 
             'Read total number of elements and blocks 
             s = ReadLine(sr)
@@ -283,23 +330,19 @@ Public Class FrmTrans2D
                 s = ReadLine(sr)
                 Arr = Split(s, " "c)
                 bloc_type = Integer.Parse(Arr(0))
+                bloc_index = Integer.Parse(Arr(1))
                 bloc_element = Integer.Parse(Arr(3))
+
                 If bloc_type = 0 Then
                     Temp = ReadLine(sr)
-                End If
-
-                If bloc_type = 1 Then
+                ElseIf bloc_type = 1 Then
                     For j = 0 To bloc_element - 1
                         Temp = ReadLine(sr)
-                        Arr = Split(Temp, " "c)
-                        n0 = Integer.Parse(Arr(0))
                     Next
-                End If
-
-                If bloc_type = 2 Then
+                ElseIf bloc_type = 2 Then
                     NElements = bloc_element
                     ReDim Elements(NElements - 1)
-                    For jj = 0 To bloc_element - 1
+                    For jj = 0 To NElements - 1
                         s = ReadLine(sr)
                         Arr = Split(s, " "c)
                         n = Integer.Parse(Arr(0)) - n0
@@ -317,6 +360,36 @@ Public Class FrmTrans2D
             Return False
         End Try
         Return True
+    End Function
+
+    Public Function ReadTable(file As String) As Boolean
+
+        Try
+            Dim sr As New StreamReader(file)
+            Dim s As String
+            Dim num As Integer
+            Dim Arr() As String
+            Dim n As Integer
+            Dim f As String
+            s = ReadLine(sr)
+            Arr = Split(s, " "c)
+            num = Integer.Parse(Arr(0)) 'total number of exposures to be given
+            ReDim Table(num - 1)
+            For i As Integer = 0 To num - 1
+                s = ReadLine(sr)
+                Arr = Split(s, " "c)
+                n = Integer.Parse(Arr(0))
+                f = String.Copy(Arr(1))
+                Table(i) = New TableTrans(n, f)
+            Next
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Return False
+        End Try
+
+        Return True
+
     End Function
 
     Private Sub BtnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click

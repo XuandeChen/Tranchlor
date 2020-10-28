@@ -288,6 +288,7 @@
     </Compile>
     <Compile Include="HETrans.vb" />
     <Compile Include="OutputFile2D.vb" />
+    <Compile Include="Table_PHYS_EXPO.vb" />
     <Compile Include="TETrans.vb" />
     <Compile Include="TransportXC.vb" />
     <Compile Include="MDIChlor.vb">
