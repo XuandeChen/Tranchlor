@@ -416,6 +416,15 @@
     </Content>
     <Content Include="Resources\Exposition\EXPO_1_TEHERI.txt" />
     <Content Include="Resources\Exposition\EXPO_2_TEHERI.txt" />
+    <Content Include="Resources\Exposition\EXPO_Drying100Days_75RH_DC.txt" />
+    <Content Include="Resources\Exposition\EXPO_Drying300Days_75RH_DC.txt" />
+    <Content Include="Resources\Exposition\EXPO_Drying450Days_75RH_DC.txt" />
+    <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic1.txt" />
+    <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic2.txt" />
+    <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic3.txt" />
+    <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Resine.txt" />
+    <Content Include="Resources\Exposition\EXPO_Wetting3Days_from75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_Cyclic.txt" />
     <Content Include="Resources\PhreeqC\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
