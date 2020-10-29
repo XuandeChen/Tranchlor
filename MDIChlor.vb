@@ -56,6 +56,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem13 As MenuItem
     Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
+    Friend WithEvents MenuItem16 As MenuItem
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -66,6 +67,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me._MnuProject_5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem1 = New System.Windows.Forms.MenuItem()
         Me.MenuItem2 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem7 = New System.Windows.Forms.MenuItem()
         Me.MenuItem5 = New System.Windows.Forms.MenuItem()
         Me.MenuItem6 = New System.Windows.Forms.MenuItem()
         Me.MenuCalcul1D = New System.Windows.Forms.MenuItem()
@@ -81,7 +83,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem7 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -123,6 +125,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem2.Index = 0
         Me.MenuItem2.Text = "Meteo File"
         '
+        'MenuItem7
+        '
+        Me.MenuItem7.Index = 1
+        Me.MenuItem7.Text = "Expo Database"
+        '
         'MenuItem5
         '
         Me.MenuItem5.Index = 2
@@ -163,7 +170,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem3
         '
         Me.MenuItem3.Index = 4
-        Me.MenuItem3.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem4, Me.MenuItem9})
+        Me.MenuItem3.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItem4, Me.MenuItem9, Me.MenuItem16})
         Me.MenuItem3.Text = "Probabilistic"
         '
         'MenuItem4
@@ -174,7 +181,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         'MenuItem9
         '
         Me.MenuItem9.Index = 1
-        Me.MenuItem9.Text = "Graph"
+        Me.MenuItem9.Text = "Graph Pf"
         '
         'MenuItem10
         '
@@ -197,10 +204,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
         '
-        'MenuItem7
+        'MenuItem16
         '
-        Me.MenuItem7.Index = 1
-        Me.MenuItem7.Text = "Expo Database"
+        Me.MenuItem16.Index = 2
+        Me.MenuItem16.Text = "Graph A,B,C,D"
         '
         'MDIChlor
         '
@@ -339,7 +346,7 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Dim frm03 As New frmGraph1DScale
         frmC.MdiParent = Me
         frmC.Show()
-        ProbGraph(frmC, frm03)
+        ProbGraphPf(frmC, frm03)
 
     End Sub
 
@@ -440,6 +447,21 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Using frm As New FrmMeteoDatabase
             frm.ShowDialog()
         End Using
+
+    End Sub
+
+    Private Sub MenuItem16_Click(sender As Object, e As EventArgs) Handles MenuItem16.Click
+
+        Dim frmC As New frmGraph1D
+        frmC.Left = 0
+        frmC.Top = 0
+        frmC.Height = (Me.Height)
+        frmC.Width = (Me.Width)
+
+        Dim frm03 As New frmGraph1DScale
+        frmC.MdiParent = Me
+        frmC.Show()
+        ProbGraphABCD(frmC, frm03)
 
     End Sub
 

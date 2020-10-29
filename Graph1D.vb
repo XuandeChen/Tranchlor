@@ -747,7 +747,7 @@ b:      'user pressed cancel error
     End Sub
 
     'Enlever les bruits du à l'approche probabiliste
-    Public Sub ProbGraph(ByRef frm02 As frmGraph1D, ByRef frm03 As frmGraph1DScale)
+    Public Sub ProbGraphPf(ByRef frm02 As frmGraph1D, ByRef frm03 As frmGraph1DScale)
 
         Dim Filtre As String
         Dim Index As Short
@@ -955,6 +955,216 @@ b:
         frm02.Close()
 
     End Sub
+
+    Public Sub ProbGraphABCD(ByRef frm02 As frmGraph1D, ByRef frm03 As frmGraph1DScale)
+
+        Dim Filtre As String
+        Dim Index As Short
+        Dim Directoire As Boolean
+        Dim Titre As String
+        Dim OutFile As String
+        Dim PostFile As String
+        Dim Canc As Boolean = False
+        Dim nFic As Short
+
+        Dim Titres(9) As String
+        Dim i As Integer
+        Dim j As Short
+        Dim k As Short
+        Dim m As Short
+        Dim Data(70000, 4) As Double
+        Dim Npoint(2, 2) As Double
+        Dim Tijd As Double
+        Dim deltaT As Double
+        Dim Var As String = ""
+        Dim XMA As Double
+        Dim XMI As Double
+        Dim YMA As Double
+        Dim YMI As Double
+        Dim TestB As String
+        Dim NoAxeY As Short
+        Dim EctX As Single
+        Dim EctY As Single
+        Dim Surf(2) As Double
+        Dim NbrePoint As Integer
+        Dim Msg As String
+        Dim Prov As Double
+        'Dim Tst As Boolean
+        'Dim F1 As Worksheet
+        'Dim F2 As Worksheet
+
+        Filtre = "txt files |BCa_*.txt;BCL_*.txt;PFCa_*.txt;PFCL_*.txt|All files (*.*)|*.*"
+        Index = CShort(1)
+        Directoire = True
+        Titre = "Sélectionner un fichier résultat à traiter"
+        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then GoTo b
+        '''''''''''''''''''''''''''''''''''''''''''''
+        nFic = FreeFile()
+        FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+        For i = 0 To 8      'lecture du fichier
+            Input(nFic, Titres(i))
+        Next i
+        i = 0
+        YMI = 9999999999
+        YMA = 0
+        Do While i >= 0
+            For j = 0 To 4
+                Try
+                    Input(nFic, Data(i, j)) 'lecture du fichier résultat
+                    If YMI > Data(i, 2) Then YMI = Data(i, 2)
+                    If YMA < Data(i, 2) Then YMA = Data(i, 2)
+                Catch ex As Exception
+                    Exit Do
+                End Try
+            Next j
+            Input(nFic, Var)
+            i = i + 1
+        Loop
+        FileClose(nFic)
+        i = i - 1
+        TestB = MsgBox("L'échelle du temps en jours ?", MsgBoxStyle.YesNo, "Axe des abcisses")
+        If TestB = MsgBoxResult.Yes Then
+            XMI = Data(0, 1)
+            XMA = Data(i, 1)
+            k = 1
+        Else
+            XMI = Data(0, 0)
+            XMA = Data(i, 0)
+            k = 0
+        End If
+        FileOnly(OutFile)
+        If Left(OutFile, 1) = "B" Then
+            OutFile = Right(OutFile, Len(OutFile) - 1)
+            NoAxeY = 9
+            YMA = 6.0
+            YMI = -6.0
+        Else
+            OutFile = Right(OutFile, Len(OutFile) - 2)
+            NoAxeY = 8
+        End If
+        If Left(OutFile, 2) = "Ca" Then NoAxeY = NoAxeY + 2
+        EctX = (XMA - XMI) / 10
+        EctY = (YMA - YMI) / 10
+c:      Scale_info(frm02, frm03, Data, 2, 0, 0, 2, NoAxeY, 0, 0, XMI, XMA, YMI, YMA, EctX, EctY)
+
+        Dessin(frm02, 3, i, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Data)
+        If Msg = "" Then Msg = " "
+        TestB = MsgBox("Changer l'échelle du graphique ?", MsgBoxStyle.YesNo, "Fichier de données")
+        If TestB = MsgBoxResult.Yes Then GoTo c
+
+a:      Try
+            NbrePoint = InputBox("Nombre de points totaux sur le graphique", "Choix", i + 1)
+        Catch ex As Exception
+            GoTo b
+        End Try
+
+        Surf(0) = 0
+        Surf(1) = 0
+        Surf(2) = 0
+        Tijd = 0
+        m = 0
+        If i + 1 > NbrePoint Then
+            ReDim Npoint(NbrePoint, 5)
+            deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
+            For j = 0 To i - 1
+
+                Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+
+                For jj As Integer = 0 To 2
+                    Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
+                    If Tijd > deltaT * m + deltaT / 2 Then
+                        Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
+                        Surf(jj) = Surf(jj) - Prov
+                        Npoint(m, 2 + jj) = Surf(jj) / deltaT
+                        If m = 0 Then Npoint(m, 2) = Surf(jj) / (deltaT / 2)
+                        Surf(jj) = Prov
+                    End If
+                Next
+
+                If Tijd > deltaT * m + deltaT / 2 Then
+                    Npoint(m, 1) = deltaT * m
+                    Npoint(m, 0) = Npoint(m, 1) / 365
+                    m += 1
+                End If
+
+            Next
+            Npoint(m, 0) = Data(i, 0)
+            Npoint(m, 1) = Data(i, 1)
+
+            For jj As Integer = 0 To 2
+                Npoint(m, 2 + jj) = Surf(jj) / deltaT
+            Next
+
+        End If
+
+        Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+        TestB = MsgBox("Changer le nombre de points ?", MsgBoxStyle.YesNo, "Graphique")
+        If TestB = MsgBoxResult.Yes Then GoTo a
+
+        TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
+        If TestB = MsgBoxResult.Yes Then
+
+            For jj As Integer = 0 To 2
+                If NoAxeY = 9 Or NoAxeY = 11 Then
+                    For j = 1 To NbrePoint
+                        If Npoint(j, 2 + jj) > Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                    Next
+                Else
+                    For j = 1 To NbrePoint
+                        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                    Next
+                End If
+            Next
+
+
+        End If
+        Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+
+        OutFile = Right(OutFile, Len(OutFile) - 3)
+        OutFile = "FIN_" & OutFile        'enregistrement des données
+        ''''''''''''''''''''''''''''''''''
+        Filtre = "txt files (FIN_*.txt)|FIN_*.txt|All files (*.*)|*.*"
+        Index = CShort(1)
+        Directoire = True
+        Titre = "Paramètres des lois probabilistes"
+        SaveDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then GoTo d
+        ''''''''''''''''''''''''''''''''''
+        nFic = CShort(FreeFile())
+        FileOpen(CInt(nFic), OutFile, OpenMode.Output)
+        PrintLine(CInt(nFic), Titres(0))
+        PrintLine(CInt(nFic), Titres(1), ",", Titres(2), ",", Titres(3), ",")
+        PrintLine(CInt(nFic), Titres(5), ",", Titres(6), ",")
+        For i = 0 To NbrePoint - 1
+            PrintLine(CInt(nFic), Npoint(i, 0), ",", Npoint(i, 1), ",", Npoint(i, 2), ",")
+        Next i
+        FileClose(nFic)
+
+d:      FileOnly(OutFile)
+        OutFile = Right(OutFile, Len(OutFile) - 4)
+        OutFile = Left(OutFile, Len(OutFile) - 4)
+        ''''''''''''''''''''''''''''''''''
+        Filtre = "txt files (GR_*.BMP)|GR_*.BMP"    'enregistrement du graph
+        Index = 1
+        Directoire = True
+        Titre = "Enregistrer le graphique"
+        SaveDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then GoTo b
+
+        ''''''''''''''''''''''''''''''''''
+        FilePost(OutFile, PostFile)
+        FileOnly(OutFile)
+        OutFile = "GR_" & OutFile
+        frm02.PictureBox1.Image.Save(OutFile)
+
+b:
+        frm02.PictureBox6.Visible = True
+        frm02.Hide()
+        frm02.Close()
+
+    End Sub
+
 
     'Dessin des courbes probabilistiques
     Public Sub Dessin(ByRef frm As frmGraph1D, ByRef NTCurve As Short, ByRef Nline As Integer, ByRef CoorX As Single, ByRef Message3 As String, ByRef NoAxex As Short, ByRef NoAxey As Short, ByRef x1 As Single, ByRef x2 As Single, ByRef h1 As Single, ByRef h2 As Single, ByRef EctX As Single, ByRef EctY As Single, ByRef Data(,) As Double)
