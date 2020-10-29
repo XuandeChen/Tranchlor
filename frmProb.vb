@@ -1,3 +1,5 @@
+Imports System.Linq.Expressions
+
 Public Class frmProb : Inherits System.Windows.Forms.Form
 
     Dim Length As Single
@@ -685,7 +687,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
                     For j As Short = 1 To Tprob2
                         For k As Short = 1 To Tprob1
 
-                            cpt2 = CShort(1)
+                            cpt2 += CShort(1)
 
                             If Tprob1 = 1 Then k = 0
                             If Tprob2 = 1 Then j = 0
@@ -1563,7 +1565,7 @@ f:
 
     End Sub
 
-    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
+    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef Pdestruct() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
 
         ' Constant for corrosion properties
         Dim jrr2 As Double = 0.8
@@ -1621,8 +1623,10 @@ alpha:
         Dim ps As Double = CDbl(TextBoxDensity.Text)
 
         Dim kc As Double
-        Dim tp(Nline + 2) As Double
+        Dim tp(Nline + 2) As Double 'Delamination
+        Dim tp_2(Nline + 2) As Double 'First Cracks
         Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
+        Dim EndTime As Double = Lambda(Nline + CShort(2), 1, 1) / 365
 
         For j As Short = jcorr To Nline + CShort(2)
 
@@ -1642,29 +1646,90 @@ alpha:
             End If
 
             tp(j) = System.Math.PI / (2 * muS * jr * (1 / pr - alpha / ps)) * (1 + v + d ^ 2 / (2 * c2 * (c2 + d))) * (2 * c2 * d + d ^ 2) * fct / Ec
+            tp_2(j) = tp(j) / 2
 
             If tp(j) < 0 Then tp(j) = 10000
+            If tp_2(j) < 0 Then tp(j) = 10000
 
         Next
 
-        Dim icracks, idelam As Integer
+        Dim tmp44his As Integer
+        Dim PDF_tp44his(Nline + CShort(2)) As Double
+        For i As Short = 1 To Nline + CShort(2)
+
+            tmp44his = 0
+            For j As Short = 1 To Nline + CShort(2)
+                If tp_2(j) < (j - 1 + 0.5) And tp_2(j) > (j - 1 - 0.5) Then
+                    tmp44his += 1
+                End If
+            Next
+            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
+
+        Next
+
+        Dim PDF_tp4his(Nline + CShort(2)) As Double
+        For i As Short = 1 To Nline + CShort(2)
+
+            tmp44his = 0
+            For j As Short = 1 To Nline + CShort(2)
+                If tp(j) < (j - 1 + 0.5) And tp(j) > (j - 1 - 0.5) Then
+                    tmp44his += 1
+                End If
+            Next
+            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
+
+        Next
+
+        Dim fp_tmp111125his, fp_tmp11125his, Fi_tmp111125his, Fi_tmp11125his As Double
+        Dim Ft111125his(Nline + CShort(2)), Ft11125his(Nline + CShort(2)) As Double
+        For itt As Integer = 1 To Nline + CShort(2)
+
+            For itp As Integer = 1 To itt
+
+                fp_tmp111125his = PDF_tp44his(itp)
+                fp_tmp11125his = PDF_tp4his(itp)
+
+                If itt = itp Then
+                    Fi_tmp111125his = 0
+                    Fi_tmp11125his = 0
+                Else
+                    Fi_tmp111125his = Pf(itt - itp)
+                    Fi_tmp11125his = Pf(itt - itp)
+                End If
+
+                Ft111125his(itt) += fp_tmp111125his * Fi_tmp111125his
+                Ft11125his(itt) += fp_tmp11125his * Fi_tmp11125his
+
+            Next
+
+        Next
+
         For j As Short = 1 To Nline + CShort(2)
 
-            If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
-                Pcracks(j) = 0
-                Pdelam(j) = 0
-            ElseIf j >= (jcorr + CInt(tp(j) / 2 / dt)) And j < (jcorr + CInt(tp(j) / dt)) Then
-                Pcracks(j) = Pf(icracks)
-                Pdelam(j) = 0
-                icracks += 1
-            Else
-                Pcracks(j) = Pf(icracks)
-                Pdelam(j) = Pf(idelam)
-                icracks += 1
-                idelam += 1
-            End If
+            Pcracks(j) = Pf(j) - Ft111125his(j)
+            Pdelam(j) = Ft111125his(j) - Ft11125his(j)
+            Pdestruct(j) = Ft11125his(j)
 
         Next
+
+        'Dim icracks, idelam As Integer
+        'For j As Short = 1 To Nline + CShort(2)
+
+        '    If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
+        '        Pcracks(j) = 0
+        '        Pdelam(j) = 0
+        '    ElseIf j >= (jcorr + CInt(tp(j) / 2 / dt)) And j < (jcorr + CInt(tp(j) / dt)) Then
+        '        Pcracks(j) = Pf(icracks)
+        '        Pdelam(j) = 0
+        '        icracks += 1
+        '    Else
+        '        Pcracks(j) = Pf(icracks)
+        '        Pdelam(j) = Pf(idelam)
+        '        icracks += 1
+        '        idelam += 1
+        '    End If
+
+        'Next
 
     End Sub
 
@@ -1702,18 +1767,22 @@ alpha:
 
         Dim Pcracks(Nline + 2) As Double
         Dim Pdelam(Nline + 2) As Double
+        Dim Pdestroy(Nline + 2) As Double
 
-        CalcProbCorr(Pf, Pcracks, Pdelam, LAen, Canc)
+        CalcProbCorr(Pf, Pcracks, Pdelam, Pdestroy, LAen, Canc)
         If Canc = True Then End
 
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(CInt(nfic), OT, OpenMode.Output)
-        PrintLine(CInt(nfic), "Probabilité de la corrosion due à la présence de ions chlorures")
-        PrintLine(nfic, "temps, temps, Pf, Pcracks, Pdelam")
+        'PrintLine(CInt(nfic), "Probabilité de la corrosion due à la présence de ions chlorures")
+        PrintLine(CInt(nfic), "Pourcentage d'état de dégradation A, B, C")
+        'PrintLine(nfic, "temps, temps, Pf, Pcracks, Pdelam")
+        PrintLine(nfic, "temps, temps, A, B, C, D")
         PrintLine(nfic, "années, jours,")
 
         For j As Short = 1 To Nline + CShort(2)
-            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
+            'PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
+            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", 1 - Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
         Next j
 
         FileClose(nfic)
