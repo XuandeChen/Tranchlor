@@ -5,6 +5,10 @@ Public Class Exposition
     Public Property Humidite() As Double()
     Public Property Sel() As Double()
     Public Property Temperature() As Double()
+    'Xuande 2020.10.28
+    Public Property JHumidite() As Double() 'Humidity boundary flux
+    Public Property JSel() As Double() 'Chloride boundary flux
+    Public Property JTemperature() As Double() 'Temperature boundary flux
 
     Private Dt As Single
     Private Name As String
@@ -21,7 +25,6 @@ Public Class Exposition
         Dim NbreEn As Integer
 
         If FileExpo.Contains(".txt") = True Then
-
             Try
                 FileOpen(CInt(nFic), FileExpo, OpenMode.Input, OpenAccess.Read)
                 FileClose(CInt(nFic))
@@ -34,10 +37,16 @@ Public Class Exposition
                 End
             End Try
 
-        Else
-
+        ElseIf FileExpo.Contains("Neumann") = True Then 'Xuande 2020.10.27 case zeroGradient BC applied
             Try
+                File = FileExpo
+                Name = FileExpo
+            Catch ex As Exception
+                End
+            End Try
 
+        Else
+            Try
                 Dim DBCon As New DBconnexion
                 DBCon.DBRequest("SELECT '" + FileExpo + "' FROM ExpositionList")
                 Name = FileExpo
@@ -55,7 +64,7 @@ Public Class Exposition
         Dim nFic As Short = CShort(FreeFile())
         Dim NbreEn As Integer
 
-        If File <> "" Then
+        If File.Contains(".txt") = True Then
 
             Try
 
@@ -98,6 +107,19 @@ Public Class Exposition
                 End
             End Try
 
+        ElseIf File.Contains("Neumann") = True Then 'Xuande 2020.10.27 case zeroGradient BC applied
+            Try 'do nothing
+                ReDim JHumidite(ind - 1)
+                ReDim JSel(ind - 1)
+                ReDim JTemperature(ind - 1)
+                For i As Integer = 0 To ind - 1
+                    JHumidite(i) = 0
+                    JSel(i) = 0
+                    JTemperature(i) = 0
+                Next
+            Catch ex As Exception
+                End
+            End Try
         Else
 
             Try

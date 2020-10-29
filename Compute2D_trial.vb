@@ -115,7 +115,7 @@ Public Class Compute2D_trial
         OutputFile = New OutputFile2D(directory, 5, NNodes, Model)
         CalculInitialization(Expo, NNodes, Nodes, NElements, Elements, Time)
         ''Global time loop
-        For ti As Integer = 1 To ind
+        For ti As Integer = 1 To ind - 1
             Frm.PlotProgressTime(ind, ti)
             ''Field value initialization
             setVariables(NNodes, Nodes)
@@ -170,7 +170,7 @@ Public Class Compute2D_trial
         'apply initial boundary condition to all nodes
         For i_node As Integer = 0 To NNodes - 1
             OutputFile.WriteFirstLine(Nodes(i_node).GetHROld(), Nodes(i_node).GetWOld(), Nodes(i_node).GetSOld(), Nodes(i_node).GetTOld(), Nodes(i_node).GetClOld())
-            If Nodes(i_node).NumExpo <> 0 Then
+            If Nodes(i_node).TypeExpo.Contains("Dirichlet") Then
                 HNew = Expo(Nodes(i_node).NumExpo).Humidite(0) / 100
                 TNew = Expo(Nodes(i_node).NumExpo).Temperature(0)
             Else
@@ -555,8 +555,10 @@ Public Class Compute2D_trial
             SNew = Nodes(j).GetSNew()
             HNew = Nodes(j).GetHRNew()
             ClNew = Nodes(j).GetClNew()
-            If NbExpo <> 0 Then
-                TNew(j) = Expo(NbExpo).Temperature(CInt(ti))  ' check whether the current boundary is exposed to a boundary condition
+            If Nodes(j).NumExpo <> 0 Then
+                If Nodes(j).TypeExpo.Contains("Dirichlet") = True Then
+                    TNew(j) = Expo(NbExpo).Temperature(CInt(ti))  ' check whether the current boundary is exposed to a boundary condition
+                End If
             End If
             Nodes(j).SetFieldsNew(HNew, SNew, wsat * SNew, TNew(j), ClNew)
         Next
@@ -576,8 +578,10 @@ Public Class Compute2D_trial
             ElseIf HNew(j) <= 0 Then
                 HNew(j) = 0
             End If
-            If NbExpo <> 0 Then
-                HNew(j) = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
+            If Nodes(j).NumExpo <> 0 Then
+                If Nodes(j).TypeExpo.Contains("Dirichlet") = True Then
+                    HNew(j) = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
+                End If
             End If
             ''isotherm state check 
             If w = 0 And HNew(j) > HOld(j) Then 'state change from desorption to adsorption
@@ -603,9 +607,11 @@ Public Class Compute2D_trial
             ElseIf SNew(j) <= 0 Then
                 SNew(j) = 0
             End If
-            If NbExpo <> 0 Then
-                HNew = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
-                SNew(j) = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(j))
+            If Nodes(j).NumExpo <> 0 Then
+                If Nodes(j).TypeExpo.Contains("Dirichlet") = True Then
+                    HNew = Expo(NbExpo).Humidite(CInt(ti)) / 100 ' check whether the current boundary is exposed to a boundary condition
+                    SNew(j) = GetHtoS(HNew, type, C, W_C_ratio, Tk, day, rho_l, rho_c, alpha, Node_w(j))
+                End If
             End If
             ''isotherm state check 
             If Node_w(j) = 0 And SNew(j) > SOld(j) Then 'state change from desorption to adsorption
