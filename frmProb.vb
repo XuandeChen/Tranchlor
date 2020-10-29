@@ -1095,9 +1095,12 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 b:
             If TextBoxClMean.Text <> "" And TextBoxClEcar.Text <> "" Then         'calcul de la probabilité d'initiation de la corrosion due à la présence de ions chlorures
 
-                WritePFCFile(False, PosmX, Pf, LAen, KSen, Canc)
+                WritePFFile(False, PosmX, Pf, LAen, KSen, Canc)
                 If Canc = True Then GoTo d
                 ProgressBarFile2.Value = 75
+
+                WriteABCDFile(True, PosmX, Pf, LAen, KSen, Canc)
+                If Canc = True Then GoTo f
 
                 WriteBCFile(False, Pf, LAen, KSen, Canc)
                 If Canc = True Then GoTo d
@@ -1112,7 +1115,10 @@ d:
 
         If Ca = True And CheckBoxProb.Checked = True Then          'approche probabiliste pour la carbonatation
 
-            WritePFCFile(True, PosmX, Pf, LAen, KSen, Canc)
+            WritePFFile(True, PosmX, Pf, LAen, KSen, Canc)
+            If Canc = True Then GoTo f
+
+            WriteABCDFile(True, PosmX, Pf, LAen, KSen, Canc)
             If Canc = True Then GoTo f
 
             WriteBCFile(True, Pf, LAen, KSen, Canc)
@@ -1733,7 +1739,7 @@ alpha:
 
     End Sub
 
-    Private Sub WritePFCFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
+    Private Sub WritePFFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
         Dim OT As String
         Dim Filtre As String
@@ -1765,6 +1771,37 @@ alpha:
         CalcProbInit(Carb, PosmX, Pf, LAen, KSen, Canc)
         If Canc = True Then End
 
+        Dim nfic As Short = CShort(FreeFile())
+        FileOpen(CInt(nfic), OT, OpenMode.Output)
+        PrintLine(CInt(nfic), "Probabilité d'initiation de corrosion due à la présence de ions chlorures,")
+        PrintLine(nfic, "temps, temps, Pf,")
+        PrintLine(nfic, "années, jours,")
+
+        For j As Short = 1 To Nline + CShort(2)
+            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",")
+        Next j
+
+        FileClose(nfic)
+
+    End Sub
+
+    Private Sub WriteABCDFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
+
+        Dim OT As String
+        Dim Filtre As String
+        Dim Index As Short
+        Dim Directoire As Boolean
+        Dim Titre As String
+
+        OT = "PABCD_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la présence des ions chlorures
+        Filtre = "txt files (PABCD_*.txt)|PFCL_*.txt|All files (*.*)|*.*"
+        Index = CShort(1)
+        Directoire = True
+        Titre = "Probabilités d'états A, B, C, D"
+
+        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+        If Canc = True Then End
+
         Dim Pcracks(Nline + 2) As Double
         Dim Pdelam(Nline + 2) As Double
         Dim Pdestroy(Nline + 2) As Double
@@ -1774,14 +1811,11 @@ alpha:
 
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(CInt(nfic), OT, OpenMode.Output)
-        'PrintLine(CInt(nfic), "Probabilité de la corrosion due à la présence de ions chlorures")
-        PrintLine(CInt(nfic), "Pourcentage d'état de dégradation A, B, C")
-        'PrintLine(nfic, "temps, temps, Pf, Pcracks, Pdelam")
+        PrintLine(CInt(nfic), "Pourcentage d'états A B C D")
         PrintLine(nfic, "temps, temps, A, B, C, D")
         PrintLine(nfic, "années, jours,")
 
         For j As Short = 1 To Nline + CShort(2)
-            'PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",")
             PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", 1 - Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
         Next j
 
