@@ -1118,9 +1118,6 @@ d:
             WritePFFile(True, PosmX, Pf, LAen, KSen, Canc)
             If Canc = True Then GoTo f
 
-            WriteABCDFile(True, PosmX, Pf, LAen, KSen, Canc)
-            If Canc = True Then GoTo f
-
             WriteBCFile(True, Pf, LAen, KSen, Canc)
             If Canc = True Then GoTo f
 
