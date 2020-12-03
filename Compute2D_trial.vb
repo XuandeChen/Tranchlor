@@ -8,27 +8,28 @@ Public Class Compute2D_trial
     Dim Tk As Double
     Dim day As Double
     'Constant parameters
-    Public rho_v As Double = 1 'density of vapor (kg/m3)
-    Public rho_l As Double = 1000 'density of liquid (kg/m3)
+    Public rho_v As Double = 1 'density of vapor water (kg/m3)
+    Public rho_l As Double = 1000 'density of liquid water (kg/m3)
     Public yita_l As Double = 0.00089 'viscosity of water (kg/m.s=pa.s)
     Public pg As Double = 101325 'atmosphere pressure(pa)
     Public LgLim As Integer = 40
     Public pPH As Double = 12.6
     Public mPh As Double = 6.5
-    Public RoW As Integer = 1000        'kg/m3
-    Public R As Double = 8.3145        'J/mol.K
-    'Parameters from input file (Eriture à l'ordre de lecture)
+    Public RoW As Integer = 1000 '(kg/m3)
+    Public R As Double = 8.3145 '(J/mol.K)
+    Public Mw As Double = 0.018 'molecular mass of water (kg/mol)
+    'Computation parameters from input file (Eriture à l'ordre de lecture)
     Dim alpha As Double  'hydration degree(-)
-    Dim w As Double 'indicator for isotherm curve
-    Dim H_int As Double  'initial relative humidity in the material
-    Dim T_int As Double  'initial temperature in the material
-    Dim Cl_int As Double  'initial chloride concentration in the material
-    Dim Tc As Double 'initial temperature in the material
-    Dim Model As Integer 'Computation model
-    Dim tmax As Double 'end time (s) 72h
+    Dim w As Double 'indicator for isotherm curve (0 or 1, -)
+    Dim H_int As Double  'initial relative humidity in the material (-)
+    Dim T_int As Double  'initial temperature in the material (celcius degree C)
+    Dim Cl_int As Double  'initial chloride concentration in the material (mol/L)
+    Dim Tc As Double 'initial temperature in the material (celcius degree C)
+    Dim Model As Integer 'Computation mode (-)
+    Dim tmax As Double 'end time (s) (hour)
     Dim dt As Double 'time interval (s)
     Dim T_sauv As Double
-    'Material data from database (Eriture à l'ordre de lecture)
+    'Material parameters from database (Eriture à l'ordre de lecture)
     Dim Des As String 'material description (-)
     Dim type As Integer 'cement type (-)
     Dim W_C_ratio As Double  'ratio E/C (kg/m3)
@@ -40,9 +41,11 @@ Public Class Compute2D_trial
     Dim Hc As Double 'water vapour diffusivity parameters [Bazant model](-)
     Dim kg As Double 'intrinsic permeability to gas (m2)
     Dim kl As Double 'intrinsic permeability to liquid (m2)
-    Dim pc_0 As Double 'capillary pressure parameter
-    Dim beta As Double 'capillary pressure parameter
-    Dim m As Double 'relative permeability parameter
+    Dim pc_0 As Double 'capillary pressure parameter (Mpa)
+    Dim beta As Double 'capillary pressure parameter (-)
+    Dim m As Double 'relative permeability parameter (-)
+    Dim G As Double 'granulat content (kg/m3)
+    'Other non-constant parameters
     Dim dH_avg As Double
     Dim dw_avg As Double
     Dim dS_avg As Double

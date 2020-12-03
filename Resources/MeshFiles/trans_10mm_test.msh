@@ -2,9 +2,16 @@ $MeshFormat
 4.1 0 8
 $EndMeshFormat
 $PhysicalNames
-2
-1 1 D:\Xuande\DevXC\Resources\Exposition\EXPO_Ref_Capillary_Resine.txt
-1 2 D:\Xuande\DevXC\Resources\Exposition\EXPO_Ref_Capillary_Cyclic_test.txt
+9
+0 1 "BottomLeft"
+0 2 "TopRight"
+0 3 "BottomRight"
+0 4 "TopLeft"
+1 5 "Bottom"
+1 6 "Top"
+1 7 "Right"
+1 8 "Left"
+2 9 "Surface"
 $EndPhysicalNames
 $Entities
 4 4 1 0
