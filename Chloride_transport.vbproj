@@ -483,6 +483,8 @@
     <None Include="Resources\MeshFiles\test_375ele_DC_AandB.msh" />
     <None Include="Resources\MeshFiles\test_500ele_DC_C.msh" />
     <None Include="Resources\MeshFiles\test_500ele_DC_C_new.msh" />
+    <None Include="Resources\MeshFiles\test_60ele_DC_AB_new.msh" />
+    <None Include="Resources\MeshFiles\test_80ele_DC_C_new.msh" />
     <None Include="Resources\MeshFiles\test_900ele_LUNK_BO.msh" />
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
