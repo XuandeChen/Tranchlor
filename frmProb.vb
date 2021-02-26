@@ -1637,7 +1637,7 @@ alpha:
                 If Temphis(j) < 20 Then
                     kc = 0.025
                 Else
-                    kc = 0.075
+                    kc = 0.073
                 End If
 
                 jr = jrr2 * (1 + kc * (Temphis(j) - 20))
@@ -1662,11 +1662,11 @@ alpha:
 
             tmp44his = 0
             For j As Short = 1 To Nline + CShort(2)
-                If tp_2(j) < (j - 1 + 0.5) And tp_2(j) > (j - 1 - 0.5) Then
+                If tp_2(j) < (i - 1 + 0.5) And tp_2(j) > (i - 1 - 0.5) Then
                     tmp44his += 1
                 End If
             Next
-            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
+            PDF_tp44his(i) = tmp44his / (Nline + CShort(2))  'PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
 
         Next
 
@@ -1675,11 +1675,11 @@ alpha:
 
             tmp44his = 0
             For j As Short = 1 To Nline + CShort(2)
-                If tp(j) < (j - 1 + 0.5) And tp(j) > (j - 1 - 0.5) Then
+                If tp(j) < (i - 1 + 0.5) And tp(j) > (i - 1 - 0.5) Then
                     tmp44his += 1
                 End If
             Next
-            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
+            PDF_tp4his(i) = tmp44his / (Nline + CShort(2))  'PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
 
         Next
 
@@ -1709,9 +1709,9 @@ alpha:
 
         For j As Short = 1 To Nline + CShort(2)
 
-            Pcracks(j) = Pf(j) - Ft111125his(j)
-            Pdelam(j) = Ft111125his(j) - Ft11125his(j)
-            Pdestruct(j) = Ft11125his(j)
+            Pcracks(j) = Math.Abs(Pf(j) - Ft111125his(j))
+            Pdelam(j) = Math.Abs(Ft111125his(j) - Ft11125his(j))
+            Pdestruct(j) = Math.Abs(Ft11125his(j))
 
         Next
 

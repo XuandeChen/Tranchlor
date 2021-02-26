@@ -734,6 +734,10 @@ b:      'user pressed cancel error
                 Titel = "Evolution de la sécurité structurale (carbonatation)"
                 hEcart = 0.1
                 LibelY = "Indice de fiabilité"
+            Case 12
+                Titel = "Evolution de la sécurité structurale (ions chlorures)"
+                hEcart = 0.1
+                LibelY = "Probabilité d'états A (Vert), B (Jaune), C (Orange) et D (Rouge)"
         End Select
 
     End Sub
@@ -1051,7 +1055,7 @@ b:
             YMI = -6.0
         Else
             OutFile = Right(OutFile, Len(OutFile) - 2)
-            NoAxeY = 8
+            NoAxeY = 12
         End If
         If Left(OutFile, 2) = "Ca" Then NoAxeY = NoAxeY + 2
         EctX = (XMA - XMI) / 10
@@ -1110,24 +1114,41 @@ a:      Try
         TestB = MsgBox("Changer le nombre de points ?", MsgBoxStyle.YesNo, "Graphique")
         If TestB = MsgBoxResult.Yes Then GoTo a
 
-        'TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
-        'If TestB = MsgBoxResult.Yes Then
+        TestB = MsgBox("Linéariser le graphique ?", MsgBoxStyle.YesNo, "Graphique")
+        If TestB = MsgBoxResult.Yes Then
 
-        '    For jj As Integer = 0 To 3
-        '        If NoAxeY = 9 Or NoAxeY = 11 Then
-        '            For j = 1 To NbrePoint
-        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj
-        '            Next
-        '        Else
-        '            For j = 1 To NbrePoint
-        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
-        '            Next
-        '        End If
-        '    Next
+            For jj As Integer = 0 To NbCurves - 1
+                Dim NpointMax As Double = 0
+                Dim jMax As Short = 1
+                For j = 1 To NbrePoint
+                    If Npoint(j, 2 + jj) > NpointMax Then
+                        NpointMax = Npoint(j, 2 + jj)
+                        jMax = j
+                    End If
+                Next
 
+                For j = 1 To jMax
+                    If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                Next
 
-        'End If
-        'Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+                For j = jMax + 1 To NbrePoint
+                    If Npoint(j, 2 + jj) > Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+                Next
+
+            Next
+
+            'If NoAxeY = 9 Or NoAxeY = 11 Then
+            '    For j = 1 To NbrePoint
+            '        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+            '    Next
+            'Else
+            '    For j = 1 To NbrePoint
+            '        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+            '    Next
+            'End If
+
+        End If
+        Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
 
         OutFile = Right(OutFile, Len(OutFile) - 3)
         OutFile = "FIN_" & OutFile        'enregistrement des données
