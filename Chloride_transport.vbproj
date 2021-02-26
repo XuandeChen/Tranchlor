@@ -411,14 +411,39 @@
     <Content Include="Resources\Exposition\EXPO_1_TEHERI.txt" />
     <Content Include="Resources\Exposition\EXPO_2_TEHERI.txt" />
     <Content Include="Resources\Exposition\EXPO_Drying100Days_75RH_DC.txt" />
-    <Content Include="Resources\Exposition\EXPO_Drying300Days_75RH_DC.txt" />
-    <Content Include="Resources\Exposition\EXPO_Drying450Days_75RH_DC.txt" />
+    <Content Include="Resources\Exposition\EXPO_Drying300Days_50RH_DC.txt" />
+    <Content Include="Resources\Exposition\EXPO_Drying450Days_25RH_DC.txt" />
     <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic1.txt" />
     <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic2.txt" />
     <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Cyclic3.txt" />
     <Content Include="Resources\Exposition\EXPO_Ref_Capillary_Resine.txt" />
-    <Content Include="Resources\Exposition\EXPO_Wetting3Days_from75RH.txt" />
-    <Content Include="Resources\Input\INPUT2D_Cyclic.txt" />
+    <Content Include="Resources\Exposition\EXPO_SECHAGE25RH_CONSTANT_500H.txt" />
+    <Content Include="Resources\Exposition\EXPO_SECHAGE50RH_CONSTANT_500H.txt" />
+    <Content Include="Resources\Exposition\EXPO_SECHAGE75RH_CONSTANT_500H.txt" />
+    <Content Include="Resources\Exposition\EXPO_Wetting3Days_LK.txt" />
+    <Content Include="Resources\Exposition\EXPO_Wetting7Days_DC.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_CyclicLi.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_A25RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_A50RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_A75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_B25RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_B50RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_B75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_C25RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_C50RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingDC_C75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingLK_A75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingLK_B75RH.txt" />
+    <Content Include="Resources\Input\INPUT2D_DEFAULT_WettingLK_C75RH.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_Cyclic1.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_Cyclic2.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_Cyclic3.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_Explication.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_RadiationalDrying25RH.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_RadiationalDrying50RH.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_RadiationalDrying75RH.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_UniWettingDC.txt" />
+    <Content Include="Resources\MeshFiles\TABLE_DEFAULT_UniWettingLK.txt" />
     <Content Include="Resources\PhreeqC\Database\phreeqc.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -453,9 +478,13 @@
     <None Include="Resources\MeshFiles\test8ele.msh" />
     <None Include="Resources\MeshFiles\test_100ele_LUNK_BO.msh" />
     <None Include="Resources\MeshFiles\test_1800ele_Teheri_Thermo.msh" />
+    <None Include="Resources\MeshFiles\test_2000ele_DC_C_new.msh" />
     <None Include="Resources\MeshFiles\test_36ele_LUNK_BO.msh" />
     <None Include="Resources\MeshFiles\test_375ele_DC_AandB.msh" />
     <None Include="Resources\MeshFiles\test_500ele_DC_C.msh" />
+    <None Include="Resources\MeshFiles\test_500ele_DC_C_new.msh" />
+    <None Include="Resources\MeshFiles\test_60ele_DC_AB_new.msh" />
+    <None Include="Resources\MeshFiles\test_80ele_DC_C_new.msh" />
     <None Include="Resources\MeshFiles\test_900ele_LUNK_BO.msh" />
     <None Include="Resources\PhreeqC\NaClReaction.phr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
