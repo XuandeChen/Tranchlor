@@ -6002,14 +6002,14 @@ b:                  frm01.ShowDialog()
         Else
             If ComboBox4.Text = "loi normale" Then
                 Bara1(21, rt) = 1
-                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) - CDbl(TextBox10.Text))) ' PROBLEME LOI NORMALE
-                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) + CDbl(TextBox10.Text))) ' PROBLEME LOI NORMALE
+                Bara1(22, rt) = CSng((CDbl(Label55.Text) - CDbl(TextBox10.Text)) / CDbl(Label55.Text))
+                Bara1(23, rt) = CSng((CDbl(Label55.Text) + CDbl(TextBox10.Text)) / CDbl(Label55.Text))
                 Bara1(24, rt) = 0.5
                 Bara1(25, rt) = 0.5
             Else
                 Bara1(21, rt) = 2
-                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) - CDbl(Label104.Text))))
-                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (System.Math.Exp(CDbl(Label59.Text) + CDbl(Label104.Text))))
+                Bara1(22, rt) = CSng((System.Math.Exp(CDbl(Label59.Text) - CDbl(Label104.Text))) / CDbl(Label55.Text))
+                Bara1(23, rt) = CSng((System.Math.Exp(CDbl(Label59.Text) + CDbl(Label104.Text))) / CDbl(Label55.Text))
                 sm = System.Math.Exp(CDbl(Label59.Text)) * (1 - System.Math.Exp(-CDbl(Label104.Text)))
                 sp = System.Math.Exp(CDbl(Label59.Text)) * (System.Math.Exp(CDbl(Label104.Text)) - 1)
                 Bara1(24, rt) = CSng(sp / (sp + sm))
@@ -6023,14 +6023,14 @@ b:                  frm01.ShowDialog()
         Else
             If ComboBox5.Text = "loi normale" Then
                 Bara1(26, rt) = 1
-                Bara1(27, rt) = CSng(CDbl(Label105.Text) / (CDbl(Label105.Text) - CDbl(TextBox15.Text)))
-                Bara1(28, rt) = CSng(CDbl(Label105.Text) / (CDbl(Label105.Text) + CDbl(TextBox15.Text)))
+                Bara1(27, rt) = CSng((CDbl(Label105.Text) - CDbl(TextBox15.Text)) / CDbl(Label105.Text))
+                Bara1(28, rt) = CSng((CDbl(Label105.Text) + CDbl(TextBox15.Text)) / CDbl(Label105.Text))
                 Bara1(29, rt) = 0.5
                 Bara1(30, rt) = 0.5
             Else
                 Bara1(26, rt) = 2
-                Bara1(27, rt) = CSng(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) - CDbl(Label130.Text))))
-                Bara1(28, rt) = CSng(CDbl(Label105.Text) / (System.Math.Exp(CDbl(Label107.Text) + CDbl(Label130.Text))))
+                Bara1(27, rt) = CSng((System.Math.Exp(CDbl(Label107.Text) - CDbl(Label130.Text))) / CDbl(Label105.Text))
+                Bara1(28, rt) = CSng((System.Math.Exp(CDbl(Label107.Text) + CDbl(Label130.Text))) / CDbl(Label105.Text))
                 sm = System.Math.Exp(CDbl(Label107.Text)) * (1 - System.Math.Exp(-CDbl(Label130.Text)))
                 sp = System.Math.Exp(CDbl(Label107.Text)) * (System.Math.Exp(CDbl(Label130.Text)) - 1)
                 Bara1(29, rt) = CSng(sp / (sp + sm))
@@ -6044,14 +6044,14 @@ b:                  frm01.ShowDialog()
         Else
             If ComboBox6.Text = "loi normale" Then
                 Bara1(31, rt) = 1
-                Bara1(32, rt) = CSng(CDbl(Label131.Text) / (CDbl(Label131.Text) - CDbl(TextBox19.Text)))
-                Bara1(33, rt) = CSng(CDbl(Label131.Text) / (CDbl(Label131.Text) + CDbl(TextBox19.Text)))
+                Bara1(32, rt) = CSng((CDbl(Label131.Text) - CDbl(TextBox19.Text)) / CDbl(Label131.Text))
+                Bara1(33, rt) = CSng((CDbl(Label131.Text) + CDbl(TextBox19.Text)) / CDbl(Label131.Text))
                 Bara1(34, rt) = 0.5
                 Bara1(35, rt) = 0.5
             Else
                 Bara1(31, rt) = 2
-                Bara1(32, rt) = CSng(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) - CDbl(Label133.Text))))
-                Bara1(33, rt) = CSng(CDbl(Label131.Text) / (System.Math.Exp(CDbl(Label132.Text) + CDbl(Label133.Text))))
+                Bara1(32, rt) = CSng((System.Math.Exp(CDbl(Label132.Text) - CDbl(Label133.Text))) / CDbl(Label131.Text))
+                Bara1(33, rt) = CSng((System.Math.Exp(CDbl(Label132.Text) + CDbl(Label133.Text))) / CDbl(Label131.Text))
                 sm = System.Math.Exp(CDbl(Label132.Text)) * (1 - System.Math.Exp(-CDbl(Label133.Text)))
                 sp = System.Math.Exp(CDbl(Label132.Text)) * (System.Math.Exp(CDbl(Label133.Text)) - 1)
                 Bara1(34, rt) = CSng(sp / (sp + sm))
@@ -6065,14 +6065,14 @@ b:                  frm01.ShowDialog()
         Else
             If ComboBox11.Text = "loi normale" Then
                 Bara1(36, rt) = 1
-                Bara1(37, rt) = CSng(CDbl(Label147.Text) / (CDbl(Label147.Text) - CDbl(TextBox6.Text)))
-                Bara1(38, rt) = CSng(CDbl(Label147.Text) / (CDbl(Label147.Text) + CDbl(TextBox6.Text)))
+                Bara1(37, rt) = CSng((CDbl(Label147.Text) - CDbl(TextBox6.Text)) / CDbl(Label147.Text))
+                Bara1(38, rt) = CSng((CDbl(Label147.Text) + CDbl(TextBox6.Text)) / CDbl(Label147.Text))
                 Bara1(39, rt) = 0.5
                 Bara1(40, rt) = 0.5
             Else
                 Bara1(36, rt) = 2
-                Bara1(37, rt) = CSng(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) - CDbl(Label145.Text))))
-                Bara1(38, rt) = CSng(CDbl(Label147.Text) / (System.Math.Exp(CDbl(Label146.Text) + CDbl(Label145.Text))))
+                Bara1(37, rt) = CSng((System.Math.Exp(CDbl(Label146.Text) - CDbl(Label145.Text))) / CDbl(Label147.Text))
+                Bara1(38, rt) = CSng((System.Math.Exp(CDbl(Label146.Text) + CDbl(Label145.Text))) / CDbl(Label147.Text))
                 sm = System.Math.Exp(CDbl(Label146.Text)) * (1 - System.Math.Exp(-CDbl(Label145.Text)))
                 sp = System.Math.Exp(CDbl(Label146.Text)) * (System.Math.Exp(CDbl(Label145.Text)) - 1)
                 Bara1(39, rt) = CSng(sp / (sp + sm))
