@@ -1770,7 +1770,7 @@ alpha:
 
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(CInt(nfic), OT, OpenMode.Output)
-        PrintLine(CInt(nfic), "Probabilité d'initiation de corrosion due à la présence de ions chlorures,")
+        PrintLine(CInt(nfic), "Probabilité d'initiation de la corrosion due à la présence de ions chlorures,")
         PrintLine(nfic, "temps, temps, Pf,")
         PrintLine(nfic, "années, jours,")
 

@@ -6002,8 +6002,8 @@ b:                  frm01.ShowDialog()
         Else
             If ComboBox4.Text = "loi normale" Then
                 Bara1(21, rt) = 1
-                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) - CDbl(TextBox10.Text)))
-                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) + CDbl(TextBox10.Text)))
+                Bara1(22, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) - CDbl(TextBox10.Text))) ' PROBLEME LOI NORMALE
+                Bara1(23, rt) = CSng(CDbl(Label55.Text) / (CDbl(Label55.Text) + CDbl(TextBox10.Text))) ' PROBLEME LOI NORMALE
                 Bara1(24, rt) = 0.5
                 Bara1(25, rt) = 0.5
             Else

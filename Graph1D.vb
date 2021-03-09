@@ -759,7 +759,7 @@ b:      'user pressed cancel error
     'Enlever les bruits du à l'approche probabiliste
     Public Sub ProbGraphPf(ByRef frm02 As frmGraph1D, ByRef frm03 As frmGraph1DScale)
 
-        Dim NbTitre As Integer = 7
+        Dim NbTitre As Integer = 10
         Dim NbCurves As Integer = 1
 
         Dim Filtre As String
@@ -809,8 +809,13 @@ b:      'user pressed cancel error
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         For i = 0 To NbTitre     'lecture du fichier
             Input(nFic, Titres(i))
+            If Titres(i) = "jours" Then
+                NbTitre = i
+                Input(nFic, Titres(i + 1))
+                GoTo e
+            End If
         Next i
-        i = 0
+e:      i = 0
         YMI = 9999999999
         YMA = 0
         Do While i >= 0
