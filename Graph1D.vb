@@ -797,6 +797,7 @@ b:      'user pressed cancel error
         'Dim Tst As Boolean
         'Dim F1 As Worksheet
         'Dim F2 As Worksheet
+        ''''
 
         Filtre = "txt files |BCa_*.txt;BCL_*.txt;PFCa_*.txt;PFCL_*.txt|All files (*.*)|*.*"
         Index = CShort(1)
