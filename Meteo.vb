@@ -6,7 +6,7 @@ Module Meteo
     Dim arrDaten(DataLength) As StrctMeteo 'matrice input météo, conçu pour 50ans mesure chaque heure
     Dim frmTempSeuil As frmMeteo
     Dim iAnzahl As Integer 'nombre de ligne
-    Dim NbrAns As Integer
+    Dim NbrAns As Double
     Dim Export As String
     Dim CasInput As Short
 
@@ -301,8 +301,9 @@ Module Meteo
         End If
 
         IntLong = finmax - startmax
-        IntLong = Fix(IntLong / 8760)
-        iAnzahl = 8760 * IntLong
+        'IntLong = Fix(IntLong / 8760)
+        'iAnzahl = CInt(8760 * IntLong)
+        iAnzahl = CInt(IntLong)
 
         strDebut = arrMatrice(startmax).day & "." & arrMatrice(startmax).month & "." & arrMatrice(startmax).year1 & " à " & arrMatrice(startmax).hour & "H  "
         strFin = arrMatrice(startmax + iAnzahl - 1).day & "." & arrMatrice(startmax + iAnzahl - 1).month & "." & arrMatrice(startmax + iAnzahl - 1).year1 & " à " & arrMatrice(startmax + iAnzahl - 1).hour & "H  "
