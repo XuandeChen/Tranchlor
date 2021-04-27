@@ -1671,8 +1671,7 @@ alpha:
                     tmp44his += 1
                 End If
             Next
-            PDF_tp44his(i) = tmp44his / (Nline + CShort(2))  'PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
-
+            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime  'PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
         Next
 
         Dim PDF_tp4his(Nline + CShort(2)) As Double
@@ -1684,8 +1683,7 @@ alpha:
                     tmp44his += 1
                 End If
             Next
-            PDF_tp4his(i) = tmp44his / (Nline + CShort(2))  'PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
-
+            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime 'PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
         Next
 
         Dim fp_tmp111125his, fp_tmp11125his, Fi_tmp111125his, Fi_tmp11125his As Double
