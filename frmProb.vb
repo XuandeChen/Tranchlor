@@ -1138,9 +1138,6 @@ f:
         Dim Var4 As Double
         Dim Var5 As Double
         Dim Var6 As Double = 0
-        Dim Var7 As Double
-        Dim Var8 As Double
-        Dim Var9 As Double
         Dim i As Short
 
         Dim deltaX1 As Single = 0.01
@@ -1151,7 +1148,7 @@ f:
 
         Do While PosX < Length
 
-            PosX = PosX + deltaX1
+            PosX += deltaX1
 
             If PosX >= Length Then PosX = Length
 
@@ -1240,9 +1237,9 @@ f:
         Dim ETen As Single = CSng(TextBoxPosEcart.Text)
 
         If CheckBoxProb.Checked = True Then
-            PrintLine(CInt(nfic), "Approche probabiliste , enrobage moyen ", Men, " écart-type de l'enrobage ", ETen)
+            PrintLine(CInt(nfic), "Approche probabiliste, enrobage moyen ", Men, " écart-type de l'enrobage ", ETen)
         Else
-            PrintLine(CInt(nfic), "Approche déterministe de l'enrobage , valeur ", PosXi)
+            PrintLine(CInt(nfic), "Approche déterministe de l'enrobage, valeur ", PosXi)
         End If
 
         ProgressBarLine2.Value = 0
@@ -1261,7 +1258,7 @@ f:
             Print(nfic, "années, jours,")
 
             For o As Short = 1 To Files + CShort(2)
-                Print(nfic, "lambda,ksi,")
+                Print(nfic, "lambda, ksi,")
             Next
 
             PrintLine(nfic, "")
@@ -1289,7 +1286,7 @@ f:
             Print(nfic, "années, jours,")
 
             For o As Short = 1 To Files
-                Print(nfic, "lambda,ksi,")
+                Print(nfic, "lambda, ksi,")
             Next
 
             PrintLine(nfic, "")
@@ -1334,7 +1331,7 @@ f:
         Dim cpt As Integer = 1
         Dim val As Short = 0
 
-        Do While Microsoft.VisualBasic.Left(Userinput2, 2) = "R_"
+        Do While Userinput2.Contains("R_")
             Input(nfic, Userinput2)
             If Userinput2 = "R_Carb_" Then
                 val = 2
@@ -1349,7 +1346,7 @@ f:
         If val = 0 Then Ca = False
         If Ca = True Then
 
-            For o As Short = 1 To CShort((Files + 3) * 2 + 1)
+            For o As Short = 1 To CShort((Files + 3) * 2 + 3)
                 Input(nfic, Userinput2)
             Next o
 
@@ -1363,19 +1360,25 @@ f:
                 End Try
                 Input(nfic, Userinput2)
                 For o As Short = 1 To Files
-                    Input(nfic, LAen(j, o))
-                    Input(nfic, KSen(j, o))
+                    Input(nfic, Userinput2)
+                    LAen(j, o) = CDbl(Userinput2)
+                    Input(nfic, Userinput2)
+                    KSen(j, o) = CDbl(Userinput2)
                 Next o
-                Input(nfic, Lambda(j, 2, Files + 1))
-                Input(nfic, Ksi(j, 2, Files + 1))
-                Input(nfic, Lambda(j, 3, Files + 1))
-                Input(nfic, Ksi(j, 3, Files + 1))
+                Input(nfic, Userinput2)
+                Lambda(j, 2, Files + 1) = CDbl(Userinput2)
+                Input(nfic, Userinput2)
+                Ksi(j, 2, Files + 1) = CDbl(Userinput2)
+                Input(nfic, Userinput2)
+                Lambda(j, 3, Files + 1) = CDbl(Userinput2)
+                Input(nfic, Userinput2)
+                Ksi(j, 3, Files + 1) = CDbl(Userinput2)
                 Input(nfic, Userinput2)
             Loop
 
         Else
 
-            For o As Short = 1 To CShort(Files * 2 + 1)
+            For o As Short = 1 To CShort(Files * 2 + 3)
                 Input(nfic, Userinput2)
             Next o
 
@@ -1390,8 +1393,10 @@ f:
                 Input(nfic, Userinput2)
                 For o As Short = 1 To Files
                     Try
-                        Input(nfic, LAen(j, o))
-                        Input(nfic, KSen(j, o))
+                        Input(nfic, Userinput2)
+                        LAen(j, o) = CDbl(Userinput2)
+                        Input(nfic, Userinput2)
+                        KSen(j, o) = CDbl(Userinput2)
                     Catch
                         Exit Do
                     End Try
@@ -1556,7 +1561,7 @@ f:
                     Pf(j) += Var7
                 End If
 
-                Var8 = Var8 + Var3
+                Var8 += Var3
                 Var4 = Var9
                 Var5 = PosX
 
@@ -1637,7 +1642,7 @@ alpha:
                 If Temphis(j) < 20 Then
                     kc = 0.025
                 Else
-                    kc = 0.075
+                    kc = 0.073
                 End If
 
                 jr = jrr2 * (1 + kc * (Temphis(j) - 20))
@@ -1662,12 +1667,11 @@ alpha:
 
             tmp44his = 0
             For j As Short = 1 To Nline + CShort(2)
-                If tp_2(j) < (j - 1 + 0.5) And tp_2(j) > (j - 1 - 0.5) Then
+                If tp_2(j) < (i - 1 + 0.5) And tp_2(j) > (i - 1 - 0.5) Then
                     tmp44his += 1
                 End If
             Next
-            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
-
+            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime  'PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
         Next
 
         Dim PDF_tp4his(Nline + CShort(2)) As Double
@@ -1675,12 +1679,11 @@ alpha:
 
             tmp44his = 0
             For j As Short = 1 To Nline + CShort(2)
-                If tp(j) < (j - 1 + 0.5) And tp(j) > (j - 1 - 0.5) Then
+                If tp(j) < (i - 1 + 0.5) And tp(j) > (i - 1 - 0.5) Then
                     tmp44his += 1
                 End If
             Next
-            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
-
+            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime 'PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
         Next
 
         Dim fp_tmp111125his, fp_tmp11125his, Fi_tmp111125his, Fi_tmp11125his As Double
@@ -1709,9 +1712,9 @@ alpha:
 
         For j As Short = 1 To Nline + CShort(2)
 
-            Pcracks(j) = Pf(j) - Ft111125his(j)
-            Pdelam(j) = Ft111125his(j) - Ft11125his(j)
-            Pdestruct(j) = Ft11125his(j)
+            Pcracks(j) = Math.Abs(Pf(j) - Ft111125his(j))
+            Pdelam(j) = Math.Abs(Ft111125his(j) - Ft11125his(j))
+            Pdestruct(j) = Math.Abs(Ft11125his(j))
 
         Next
 
@@ -1770,7 +1773,7 @@ alpha:
 
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(CInt(nfic), OT, OpenMode.Output)
-        PrintLine(CInt(nfic), "Probabilité d'initiation de corrosion due à la présence de ions chlorures,")
+        PrintLine(CInt(nfic), "Probabilité d'initiation de la corrosion due à la présence de ions chlorures,")
         PrintLine(nfic, "temps, temps, Pf,")
         PrintLine(nfic, "années, jours,")
 

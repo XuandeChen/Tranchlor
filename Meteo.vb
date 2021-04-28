@@ -6,7 +6,7 @@ Module Meteo
     Dim arrDaten(DataLength) As StrctMeteo 'matrice input météo, conçu pour 50ans mesure chaque heure
     Dim frmTempSeuil As frmMeteo
     Dim iAnzahl As Integer 'nombre de ligne
-    Dim NbrAns As Integer
+    Dim NbrAns As Double
     Dim Export As String
     Dim CasInput As Short
 
@@ -301,8 +301,9 @@ Module Meteo
         End If
 
         IntLong = finmax - startmax
-        IntLong = Fix(IntLong / 8760)
-        iAnzahl = 8760 * IntLong
+        'IntLong = Fix(IntLong / 8760)
+        'iAnzahl = CInt(8760 * IntLong)
+        iAnzahl = CInt(IntLong)
 
         strDebut = arrMatrice(startmax).day & "." & arrMatrice(startmax).month & "." & arrMatrice(startmax).year1 & " à " & arrMatrice(startmax).hour & "H  "
         strFin = arrMatrice(startmax + iAnzahl - 1).day & "." & arrMatrice(startmax + iAnzahl - 1).month & "." & arrMatrice(startmax + iAnzahl - 1).year1 & " à " & arrMatrice(startmax + iAnzahl - 1).hour & "H  "
@@ -343,13 +344,19 @@ Module Meteo
             Cpt = Cpt + 1
         Next
 
+        frmTempSeuil = New frmMeteo
+        frmTempSeuil.Label12.Text = NbrAns
+
+        If Math.Round(NbrAns, 1) > Math.Round(NbrAns, 0) Then
+            NbrAns = Math.Round(NbrAns, 0) + 1
+        Else
+            NbrAns = Math.Round(NbrAns, 0)
+        End If
         NDH = NDH / NbrAns  'nombre de jours hivernaux par ans
+
         Dim qNaCl1 As Single = 20.83519974 * NDH + 211.3117439   'quantité par an en g/m2 de sel déversé sur la chaussée
         Dim qNaCl2 As Single = 20.83519974 * NDH - 72.9892168  'quantité par an en g/m2 de sel déversé sur la chaussée
 
-        frmTempSeuil = New frmMeteo
-
-        frmTempSeuil.Label12.Text = NbrAns
         frmTempSeuil.Label3.Text = CInt(qNaCl1)
         frmTempSeuil.Label74.Text = CInt(qNaCl2)
         frmTempSeuil.NumericUpDown1.Text = 10
@@ -953,7 +960,7 @@ Module Meteo
     End Sub
 
     Public Sub WCal()
-        Dim NbrAns As Integer '[-]
+        Dim NbrAns As Double '[-]
         Dim i As Integer '[-]
         Dim DureeIntrvent As Integer '[h]
         Dim nbrInt1 As Long = 0
@@ -977,9 +984,9 @@ Module Meteo
         nbrInt2 = CInt(frmTempSeuil.Label74.Text / (frmTempSeuil.NumericUpDown24.Value * frmTempSeuil.NumericUpDown25.Value))
         frmTempSeuil.Label6.Text = nbrInt1
         frmTempSeuil.Label76.Text = nbrInt2
-        NbrAns = CInt(frmTempSeuil.Label12.Text)
-        nbrInt1 = nbrInt1 * NbrAns
-        nbrInt2 = nbrInt2 * NbrAns
+        NbrAns = frmTempSeuil.Label12.Text
+        nbrInt1 = CInt(nbrInt1 * NbrAns)
+        nbrInt2 = CInt(nbrInt2 * NbrAns)
         HRseuil = frmTempSeuil.NumericUpDown3.Value
         Do While Nint1 < nbrInt1
             Nint1 = 0
@@ -988,11 +995,11 @@ Module Meteo
                 If Dint <> 0 Then Dint = Dint + 1
                 If Dint >= DureeIntrvent Then Dint = 0
                 If Dint = 0 And arrDaten(i).moy6 / 10 < Tseuil1 And (arrDaten(i).moy13 / 10 >= HRseuil Or arrDaten(i).moy17 / 10 > 0) Then
-                    Nint1 = Nint1 + 1
-                    Dint = Dint + 1
+                    Nint1 += 1
+                    Dint += 1
                 End If
             Next
-            Tseuil1 = Tseuil1 + 0.1
+            Tseuil1 += 0.1
         Loop
         frmTempSeuil.Label22.Text = CInt(Tseuil1 * 10) / 10
         Do While Nint2 < nbrInt2

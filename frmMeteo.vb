@@ -416,7 +416,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         '
         Me.Label69.Location = New System.Drawing.Point(370, 20)
         Me.Label69.Name = "Label69"
-        Me.Label69.Size = New System.Drawing.Size(40, 20)
+        Me.Label69.Size = New System.Drawing.Size(64, 20)
         Me.Label69.TabIndex = 86
         Me.Label69.Text = " [g/m2]"
         '
@@ -424,7 +424,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         '
         Me.Label70.Location = New System.Drawing.Point(370, 50)
         Me.Label70.Name = "Label70"
-        Me.Label70.Size = New System.Drawing.Size(40, 20)
+        Me.Label70.Size = New System.Drawing.Size(60, 20)
         Me.Label70.TabIndex = 83
         Me.Label70.Text = " [g/m2]"
         '
@@ -577,7 +577,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         '
         Me.Label29.Location = New System.Drawing.Point(370, 20)
         Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(40, 20)
+        Me.Label29.Size = New System.Drawing.Size(74, 20)
         Me.Label29.TabIndex = 70
         Me.Label29.Text = " [g/m2]"
         '
@@ -585,7 +585,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         '
         Me.Label14.Location = New System.Drawing.Point(370, 50)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(40, 20)
+        Me.Label14.Size = New System.Drawing.Size(74, 20)
         Me.Label14.TabIndex = 67
         Me.Label14.Text = " [g/m2]"
         '

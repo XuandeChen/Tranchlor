@@ -734,6 +734,10 @@ b:      'user pressed cancel error
                 Titel = "Evolution de la sécurité structurale (carbonatation)"
                 hEcart = 0.1
                 LibelY = "Indice de fiabilité"
+            Case 12
+                Titel = "Evolution de la sécurité structurale (ions chlorures)"
+                hEcart = 0.1
+                LibelY = "Probabilité d'états A (Vert), B (Jaune), C (Orange) et D (Rouge)"
         End Select
 
     End Sub
@@ -755,14 +759,14 @@ b:      'user pressed cancel error
     'Enlever les bruits du à l'approche probabiliste
     Public Sub ProbGraphPf(ByRef frm02 As frmGraph1D, ByRef frm03 As frmGraph1DScale)
 
-        Dim NbTitre As Integer = 8
+        Dim NbTitre As Integer = 10
         Dim NbCurves As Integer = 1
 
         Dim Filtre As String
         Dim Index As Short
         Dim Directoire As Boolean
         Dim Titre As String
-        Dim OutFile As String
+        Dim OutFile As String = CurDir("C:\Users")
         Dim PostFile As String
         Dim Canc As Boolean = False
         Dim nFic As Short
@@ -789,9 +793,11 @@ b:      'user pressed cancel error
         Dim NbrePoint As Integer
         Dim Msg As String
         Dim Prov As Double
+        Dim NpointMaxError As Double
         'Dim Tst As Boolean
         'Dim F1 As Worksheet
         'Dim F2 As Worksheet
+        ''''
 
         Filtre = "txt files |BCa_*.txt;BCL_*.txt;PFCa_*.txt;PFCL_*.txt|All files (*.*)|*.*"
         Index = CShort(1)
@@ -804,8 +810,13 @@ b:      'user pressed cancel error
         FileOpen(nFic, OutFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
         For i = 0 To NbTitre     'lecture du fichier
             Input(nFic, Titres(i))
+            If Titres(i) = "jours" Then
+                NbTitre = i
+                Input(nFic, Titres(i + 1))
+                GoTo e
+            End If
         Next i
-        i = 0
+e:      i = 0
         YMI = 9999999999
         YMA = 0
         Do While i >= 0
@@ -853,71 +864,107 @@ c:      Scale_info(frm02, Data, 2, 0, 0, 2, NoAxeY, 0, 0, XMI, XMA, YMI, YMA, Ec
         TestB = MsgBox("Changer l'échelle du graphique ?", MsgBoxStyle.YesNo, "Fichier de données")
         If TestB = MsgBoxResult.Yes Then GoTo c
 
+        NbrePoint = i + 1
 a:      Try
             NbrePoint = InputBox("Nombre de points totaux sur le graphique", "Choix", i + 1)
-        Catch ex As Exception
-            GoTo b
-        End Try
 
-        Tijd = 0
-        m = 0
-        If i + 1 > NbrePoint Then
-            ReDim Npoint(NbrePoint, NbCurves + 1)
-            deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
-            For j = 0 To i - 1
+            Tijd = 0
+            m = 0
+            If i + 1 > NbrePoint Then
+                ReDim Npoint(NbrePoint, NbCurves + 1)
+                deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
+                For j = 0 To i - 1
 
-                Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+                    Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+
+                    For jj As Integer = 0 To NbCurves - 1
+                        Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
+                        If Tijd > deltaT * m + deltaT / 2 Then
+                            Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
+                            Surf(jj) = Surf(jj) - Prov
+                            Npoint(m, 2 + jj) = Surf(jj) / deltaT
+                            If m = 0 Then Npoint(m, 2 + jj) = Data(j, 2 + jj)
+                            Surf(jj) = Prov
+                        End If
+                    Next
+
+                    If Tijd > deltaT * m + deltaT / 2 Then
+                        Npoint(m, 1) = deltaT * m
+                        Npoint(m, 0) = Npoint(m, 1) / 365
+                        m += 1
+                    End If
+
+                Next
+                Npoint(m, 0) = Data(i, 0)
+                Npoint(m, 1) = Data(i, 1)
 
                 For jj As Integer = 0 To NbCurves - 1
-                    Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
-                    If Tijd > deltaT * m + deltaT / 2 Then
-                        Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
-                        Surf(jj) = Surf(jj) - Prov
-                        Npoint(m, 2 + jj) = Surf(jj) / deltaT
-                        If m = 0 Then Npoint(m, 2 + jj) = Data(j, 2 + jj)
-                        Surf(jj) = Prov
-                    End If
+                    Npoint(m, 2 + jj) = Surf(jj) / deltaT
                 Next
+                Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
 
-                If Tijd > deltaT * m + deltaT / 2 Then
-                    Npoint(m, 1) = deltaT * m
-                    Npoint(m, 0) = Npoint(m, 1) / 365
-                    m += 1
-                End If
+            End If
 
-            Next
-            Npoint(m, 0) = Data(i, 0)
-            Npoint(m, 1) = Data(i, 1)
+        Catch ex As Exception
+            GoTo a2
+        End Try
 
-            For jj As Integer = 0 To NbCurves - 1
-                Npoint(m, 2 + jj) = Surf(jj) / deltaT
-            Next
-
-        End If
-
-        Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
         TestB = MsgBox("Changer le nombre de points ?", MsgBoxStyle.YesNo, "Graphique")
         If TestB = MsgBoxResult.Yes Then GoTo a
 
-        TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
-        If TestB = MsgBoxResult.Yes Then
+a2:     Try
+            NpointMaxError = InputBox("Erreur Max entre 2 points (entre 0.01 et 1)", "Choix", 0.01)
+            Dim NpointClean(NbrePoint, NbCurves + 1) As Double
 
-            For jj As Integer = 0 To NbCurves - 1
-                If NoAxeY = 9 Or NoAxeY = 11 Then
-                    For j = 1 To NbrePoint
-                        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
-                    Next
-                Else
-                    For j = 1 To NbrePoint
-                        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
-                    Next
-                End If
+            For j = 1 To NbrePoint
+                NpointClean(j, 0) = Data(j, 0)
+                NpointClean(j, 1) = Data(j, 1)
             Next
 
-        End If
-        Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+            For jj As Integer = 0 To NbCurves - 1
+                For j = 0 To 1
+                    NpointClean(j, 2 + jj) = Data(0, 2 + jj)
+                Next
+            Next
 
-        OutFile = Right(OutFile, Len(OutFile) - 3)
+            For jj As Integer = 0 To NbCurves - 1
+                For j = 1 + 1 To NbrePoint
+                    If Math.Abs(Data(j + 1, 2 + jj) - Data(j - 1, 2 + jj)) < NpointMaxError Then
+                        NpointClean(j, 2 + jj) = Data(j, 2 + jj)
+                    Else
+                        NpointClean(j, 2 + jj) = NpointClean(j - 1, 2 + jj)
+                    End If
+                Next
+            Next
+
+            Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, NpointClean)
+
+        Catch ex As Exception
+            GoTo a3
+        End Try
+
+        TestB = MsgBox("Suppression du bruit sur le graphique ?", MsgBoxStyle.YesNo, "Graphique")
+        If TestB = MsgBoxResult.Yes Then GoTo a2
+
+        'TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
+        'If TestB = MsgBoxResult.Yes Then
+
+        '    For jj As Integer = 0 To NbCurves - 1
+        '        If NoAxeY = 9 Or NoAxeY = 11 Then
+        '            For j = 1 To NbrePoint
+        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '            Next
+        '        Else
+        '            For j = 1 To NbrePoint
+        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '            Next
+        '        End If
+        '    Next
+
+        'End If
+        'Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+
+a3:     OutFile = Right(OutFile, Len(OutFile) - 3)
         OutFile = "FIN_" & OutFile        'enregistrement des données
         ''''''''''''''''''''''''''''''''''
         Filtre = "txt files (FIN_*.txt)|FIN_*.txt|All files (*.*)|*.*"
@@ -984,6 +1031,7 @@ b:
         Dim m As Short
         Dim Data(70000, 5) As Double
         Dim Npoint(2, 2) As Double
+        Dim NpointClean(2, 2) As Double
         Dim Tijd As Double
         Dim deltaT As Double
         Dim Var As String = ""
@@ -999,6 +1047,7 @@ b:
         Dim NbrePoint As Integer
         Dim Msg As String
         Dim Prov As Double
+        Dim NpointMaxError As Double
         'Dim Tst As Boolean
         'Dim F1 As Worksheet
         'Dim F2 As Worksheet
@@ -1051,7 +1100,7 @@ b:
             YMI = -6.0
         Else
             OutFile = Right(OutFile, Len(OutFile) - 2)
-            NoAxeY = 8
+            NoAxeY = 12
         End If
         If Left(OutFile, 2) = "Ca" Then NoAxeY = NoAxeY + 2
         EctX = (XMA - XMI) / 10
@@ -1063,73 +1112,121 @@ c:      Scale_info(frm02, Data, 2, 0, 0, 2, NoAxeY, 0, 0, XMI, XMA, YMI, YMA, Ec
         TestB = MsgBox("Changer l'échelle du graphique ?", MsgBoxStyle.YesNo, "Fichier de données")
         If TestB = MsgBoxResult.Yes Then GoTo c
 
-a:      Try
+        NbrePoint = i + 1
+a : Try
             NbrePoint = InputBox("Nombre de points totaux sur le graphique", "Choix", i + 1)
-        Catch ex As Exception
-            GoTo b
-        End Try
 
-        Tijd = 0
-        m = 0
-        If i + 1 > NbrePoint Then
-            ReDim Npoint(NbrePoint, NbCurves + 1)
-            deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
-            For j = 0 To i - 1
+            Tijd = 0
+            m = 0
+            If i + 1 > NbrePoint Then
+                ReDim Npoint(NbrePoint, NbCurves + 1)
+                deltaT = (Data(i, 1) - Data(0, 1)) / (NbrePoint - 1)
+                For j = 0 To i - 1
 
-                Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+                    Tijd = Tijd + Data(j + 1, 1) - Data(j, 1)
+
+                    For jj As Integer = 0 To NbCurves - 1
+                        Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
+                        If Tijd > deltaT * m + deltaT / 2 Then
+                            Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
+                            Surf(jj) = Surf(jj) - Prov
+                            Npoint(m, 2 + jj) = Surf(jj) / deltaT
+                            If m = 0 Then Npoint(m, 2 + jj) = Data(j, 2 + jj)
+                            Surf(jj) = Prov
+                        End If
+                    Next
+
+                    If Tijd > deltaT * m + deltaT / 2 Then
+                        Npoint(m, 1) = deltaT * m
+                        Npoint(m, 0) = Npoint(m, 1) / 365
+                        m += 1
+                    End If
+
+                Next
+                Npoint(m, 0) = Data(i, 0)
+                Npoint(m, 1) = Data(i, 1)
 
                 For jj As Integer = 0 To NbCurves - 1
-                    Surf(jj) += 0.5 * (Data(j, 2 + jj) + Data(j + 1, 2 + jj)) * (Data(j + 1, 1) - Data(j, 1))
-                    If Tijd > deltaT * m + deltaT / 2 Then
-                        Prov = (2 * Data(j + 1, 2 + jj) - (Data(j + 1, 2 + jj) - Data(j, 2 + jj)) * (Tijd - (deltaT * m + deltaT / 2)) / (Tijd - (Tijd - (Data(j + 1, 1) - Data(j, 1))))) * 0.5 * (Tijd - (deltaT * m + deltaT / 2))
-                        Surf(jj) = Surf(jj) - Prov
-                        Npoint(m, 2 + jj) = Surf(jj) / deltaT
-                        If m = 0 Then Npoint(m, 2 + jj) = Data(j, 2 + jj)
-                        Surf(jj) = Prov
-                    End If
+                    Npoint(m, 2 + jj) = Surf(jj) / deltaT
                 Next
+                Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
 
+            End If
 
-                If Tijd > deltaT * m + deltaT / 2 Then
-                    Npoint(m, 1) = deltaT * m
-                    Npoint(m, 0) = Npoint(m, 1) / 365
-                    m += 1
-                End If
+        Catch ex As Exception
+            GoTo a2 'b
+        End Try
 
-            Next
-            Npoint(m, 0) = Data(i, 0)
-            Npoint(m, 1) = Data(i, 1)
-
-            For jj As Integer = 0 To NbCurves - 1
-                Npoint(m, 2 + jj) = Surf(jj) / deltaT
-            Next
-
-        End If
-
-        Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
         TestB = MsgBox("Changer le nombre de points ?", MsgBoxStyle.YesNo, "Graphique")
         If TestB = MsgBoxResult.Yes Then GoTo a
 
-        'TestB = MsgBox("Empêcher un accroissement de la résistance ?", MsgBoxStyle.YesNo, "Graphique")
-        'If TestB = MsgBoxResult.Yes Then
+a2:     Try
+            NpointMaxError = InputBox("Erreur Max entre 2 points (entre 0.01 et 1)", "Choix", 0.01)
+            ReDim NpointClean(NbrePoint, NbCurves + 1)
 
-        '    For jj As Integer = 0 To 3
-        '        If NoAxeY = 9 Or NoAxeY = 11 Then
-        '            For j = 1 To NbrePoint
-        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj
-        '            Next
-        '        Else
-        '            For j = 1 To NbrePoint
-        '                If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
-        '            Next
+            For j = 1 To NbrePoint
+                NpointClean(j, 0) = Data(j, 0)
+                NpointClean(j, 1) = Data(j, 1)
+            Next
+
+            For jj As Integer = 0 To NbCurves - 1
+                For j = 0 To 1
+                    NpointClean(j, 2 + jj) = Data(0, 2 + jj)
+                Next
+            Next
+
+            For jj As Integer = 0 To NbCurves - 1
+                For j = 1 + 1 To NbrePoint
+                    If Math.Abs(Data(j + 1, 2 + jj) - Data(j - 1, 2 + jj)) < NpointMaxError Then
+                        NpointClean(j, 2 + jj) = Data(j, 2 + jj)
+                    Else
+                        NpointClean(j, 2 + jj) = NpointClean(j - 1, 2 + jj)
+                    End If
+                Next
+            Next
+
+            Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, NpointClean)
+
+        Catch ex As Exception
+            GoTo a3
+        End Try
+
+        TestB = MsgBox("Suppression du bruit sur le graphique ?", MsgBoxStyle.YesNo, "Graphique")
+        If TestB = MsgBoxResult.Yes Then GoTo a2
+
+        'For jj As Integer = 0 To NbCurves - 1
+        '    Dim NpointMax As Double = 0
+        '    Dim jMax As Short = 1
+        '    For j = 1 To NbrePoint
+        '        If Npoint(j, 2 + jj) > NpointMax Then
+        '            NpointMax = Npoint(j, 2 + jj)
+        '            jMax = j
         '        End If
         '    Next
 
+        '    For j = 1 To jMax
+        '        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '    Next
 
+        '    For j = jMax + 1 To NbrePoint
+        '        If Npoint(j, 2 + jj) > Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '    Next
+
+        'Next
+
+        'If NoAxeY = 9 Or NoAxeY = 11 Then
+        '    For j = 1 To NbrePoint
+        '        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '    Next
+        'Else
+        '    For j = 1 To NbrePoint
+        '        If Npoint(j, 2 + jj) < Npoint(j - 1, 2 + jj) Then Npoint(j, 2 + jj) = Npoint(j - 1, 2 + jj)
+        '    Next
         'End If
-        'Dessin(frm02, 3, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
 
-        OutFile = Right(OutFile, Len(OutFile) - 3)
+        'Dessin(frm02, NbCurves, NbrePoint - 1, k, Msg, 2, NoAxeY, XMI, XMA, YMI, YMA, EctX, EctY, Npoint)
+
+a3:     OutFile = Right(OutFile, Len(OutFile) - 3)
         OutFile = "FIN_" & OutFile        'enregistrement des données
         ''''''''''''''''''''''''''''''''''
         Filtre = "txt files (FIN_*.txt)|FIN_*.txt|All files (*.*)|*.*"
