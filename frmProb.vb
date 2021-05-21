@@ -1573,7 +1573,7 @@ f:
 
     End Sub
 
-    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef Pdestruct() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
+    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pini() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef Pdestruct() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
 
         ' Constant for corrosion properties
         Dim jrr2 As Double = 0.8
@@ -1696,7 +1696,7 @@ alpha:
 
         For itt As Integer = 1 To Nline + CShort(2)
             For itp As Integer = 1 To itt
-                If itt <> itp Then Ft_2(itt) += PDF_tp_2(itp) * Pf(itt - itp / 2)
+                If itt <> itp Then Ft_2(itt) += PDF_tp_2(itp) * Pf(itt - itp)
             Next
         Next
 
@@ -1708,9 +1708,10 @@ alpha:
 
         For j As Short = 1 To Nline + CShort(2)
 
-            Pcracks(j) = Math.Abs(Pf(j) - Ft_2(j))
-            Pdelam(j) = Math.Abs(Ft_2(j) - Ft(j))
-            Pdestruct(j) = Math.Abs(Ft(j))
+            Pini(j) = 1 - Pf(j)
+            Pcracks(j) = 1 - Pini(j) + Ft_2(j)
+            Pdelam(j) = 1 - Pcracks(j) + Ft(j)
+            Pdestruct(j) = 1 - Pini(j) - Pcracks(j) - Pdelam(j)
 
         Next
 
@@ -1815,11 +1816,12 @@ alpha:
         If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
         If (OFDia.ShowDialog() <> DialogResult.OK) Then End
 
+        Dim Pini(Nline + 2) As Double
         Dim Pcracks(Nline + 2) As Double
         Dim Pdelam(Nline + 2) As Double
         Dim Pdestroy(Nline + 2) As Double
 
-        CalcProbCorr(Pf, Pcracks, Pdelam, Pdestroy, LAen, Canc)
+        CalcProbCorr(Pf, Pini, Pcracks, Pdelam, Pdestroy, LAen, Canc)
         If Canc = True Then End
 
         Dim nfic As Short = CShort(FreeFile())
@@ -1829,7 +1831,7 @@ alpha:
         PrintLine(nfic, "années, jours,")
 
         For j As Short = 1 To Nline + CShort(2)
-            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", 1 - Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
+            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pini(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
         Next j
 
         FileClose(nfic)
