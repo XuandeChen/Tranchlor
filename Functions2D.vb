@@ -192,8 +192,8 @@ Module Functions2D
         Dim n As Integer = 4
         Dim Q As Double = 40000 ' [mol/J] energie d'activation du modele Arrhenius
         Dim R As Double = 8.31451
-        Dim T_0 As Double = 20  '[C] temperature de base du beton lors de la determination de Q et de DT_0
-        Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / T))))
+        Dim T_0 As Double = 22 + 273  '[K] temperature de base du beton lors de la determination de Q et de DT_0
+        Dim Dh As Double = DT0 * ((alpha_0 + (1 - alpha_0) / (1 + ((1 - H) / (1 - Hc)) ^ n)) * Math.Exp((Q / R * (1 / T_0 - 1 / (T + 273)))))
         Return Dh
     End Function
 
