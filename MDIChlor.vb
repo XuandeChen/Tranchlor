@@ -57,6 +57,9 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
     Friend WithEvents MenuItem15 As MenuItem
     Friend WithEvents MenuItem7 As MenuItem
     Friend WithEvents MenuItem16 As MenuItem
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents ProgressBar As ToolStripProgressBar
+    Friend WithEvents MainLabel As ToolStripStatusLabel
     Friend WithEvents MenuItem9 As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -78,12 +81,16 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem9 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.MenuItem10 = New System.Windows.Forms.MenuItem()
         Me.MenuItem11 = New System.Windows.Forms.MenuItem()
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
+        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+        Me.ProgressBar = New System.Windows.Forms.ToolStripProgressBar()
+        Me.MainLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -183,6 +190,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem9.Index = 1
         Me.MenuItem9.Text = "Graph Pf"
         '
+        'MenuItem16
+        '
+        Me.MenuItem16.Index = 2
+        Me.MenuItem16.Text = "Graph A,B,C,D"
+        '
         'MenuItem10
         '
         Me.MenuItem10.Index = 5
@@ -204,24 +216,43 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
         '
-        'MenuItem16
+        'StatusStrip1
         '
-        Me.MenuItem16.Index = 2
-        Me.MenuItem16.Text = "Graph A,B,C,D"
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ProgressBar, Me.MainLabel})
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 423)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New System.Drawing.Size(773, 22)
+        Me.StatusStrip1.TabIndex = 3
+        Me.StatusStrip1.Text = "StatusStrip1"
+        '
+        'ProgressBar
+        '
+        Me.ProgressBar.Name = "ProgressBar"
+        Me.ProgressBar.Size = New System.Drawing.Size(100, 16)
+        '
+        'MainLabel
+        '
+        Me.MainLabel.Name = "MainLabel"
+        Me.MainLabel.Size = New System.Drawing.Size(79, 17)
+        Me.MainLabel.Text = "Work Folder ?"
         '
         'MDIChlor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.BackColor = System.Drawing.SystemColors.AppWorkspace
         Me.ClientSize = New System.Drawing.Size(773, 445)
+        Me.Controls.Add(Me.StatusStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.IsMdiContainer = True
         Me.Location = New System.Drawing.Point(11, 57)
         Me.Menu = Me.MainMenu1
         Me.Name = "MDIChlor"
-        Me.Text = "EPFL  Chloride Ion Penetration Model"
+        Me.Text = "TransChlor - Chloride Ion Penetration Model"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
+        Me.StatusStrip1.ResumeLayout(False)
+        Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -462,6 +493,37 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         ProbGraphABCD(frmC)
 
     End Sub
+
+    Public Sub ChangeProgressBar(ByRef value As Double)
+
+        ProgressBar.Value = value
+        Me.Refresh()
+
+    End Sub
+
+    Public Sub ChangeMainLabel(ByRef text As String)
+
+        MainLabel.Text = text
+        Me.Refresh()
+
+    End Sub
+
+    Private Sub MainLabel_Click(sender As Object, e As EventArgs) Handles MainLabel.Click
+        Dim folderDlg As New FolderBrowserDialog With {
+            .ShowNewFolderButton = True
+        }
+
+        If (folderDlg.ShowDialog() = DialogResult.OK) Then
+
+            Dim WorkFolder As String = folderDlg.SelectedPath + "\"
+            ChangeMainLabel(WorkFolder)
+
+            Dim root As Environment.SpecialFolder = folderDlg.RootFolder
+
+        End If
+    End Sub
+
+
 
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
     'Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
