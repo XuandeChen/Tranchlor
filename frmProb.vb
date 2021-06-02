@@ -28,6 +28,8 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
     Friend WithEvents TextBoxCompressiveStrengh As TextBox
     Friend WithEvents Label20 As Label
     Friend WithEvents Label21 As Label
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Labeltp As Label
     Dim Ca As Boolean = False
 
 #Region " Windows Form Designer generated code "
@@ -138,6 +140,8 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.ButtonTreatment = New System.Windows.Forms.Button()
         Me.ButtonAnalyse = New System.Windows.Forms.Button()
         Me.ButtonExit = New System.Windows.Forms.Button()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Labeltp = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -580,11 +584,31 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.ButtonExit.TabIndex = 5
         Me.ButtonExit.Text = "Sortir"
         '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(305, 269)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(29, 13)
+        Me.Label23.TabIndex = 7
+        Me.Label23.Text = "Tp ="
+        '
+        'Labeltp
+        '
+        Me.Labeltp.AutoSize = True
+        Me.Labeltp.Location = New System.Drawing.Point(340, 269)
+        Me.Labeltp.Name = "Labeltp"
+        Me.Labeltp.Size = New System.Drawing.Size(13, 13)
+        Me.Labeltp.TabIndex = 8
+        Me.Labeltp.Text = "0"
+        '
         'frmProb
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(648, 296)
+        Me.Controls.Add(Me.Labeltp)
+        Me.Controls.Add(Me.Label23)
         Me.Controls.Add(Me.ButtonExit)
         Me.Controls.Add(Me.ButtonAnalyse)
         Me.Controls.Add(Me.ButtonTreatment)
@@ -600,6 +624,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -1286,7 +1311,7 @@ f:
         OFDia.Filter = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
         OFDia.Title = "Sélectionner un fichier résultat à traiter"
         If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
-        If (OFDia.ShowDialog() = DialogResult.OK) Then OutFile = OFDia.FileName Else End
+        If (OFDia.ShowDialog() = DialogResult.OK) Then MDIChlor.MainLabel.Text = OFDia.InitialDirectory Else End
 
         Dim nfic As Short = CShort(FreeFile())
         FileOpen(nfic, OFDia.FileName, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
@@ -1463,30 +1488,58 @@ f:
 
         ' Garde le max de concentration de Cl pour lisser la courbe de probabilité
 
+        'Dim LAenNew(Nline + CShort(2)) As Double
+        'Dim MoyCl(Nline + CShort(2)) As Double
+        'Dim MoyClNew(Nline + CShort(2)) As Double
+        'Dim KSenNew(Nline + CShort(2)) As Double
+
         Dim LAenNew(Nline + CShort(2)) As Double
-        Dim MoyCl(Nline + CShort(2)) As Double
-        Dim MoyClNew(Nline + CShort(2)) As Double
         Dim KSenNew(Nline + CShort(2)) As Double
+        Dim itmp As Short = 1
 
-        LAenNew(0) = -100000
-        For j As Short = 1 To Nline + CShort(2)
+        For j As Short = 1 To (Nline + CShort(2)) / 24
 
-            If LAen(j, o) > LAenNew(j - 1) Then
-                LAenNew(j) = LAen(j, o)
-                KSenNew(j) = KSen(j, o)
-            Else
-                LAenNew(j) = LAenNew(j - 1)
-                KSenNew(j) = KSenNew(j - 1)
-            End If
+            For i As Short = itmp To itmp + 23
+                LAenNew(j) += LAen(i, o)
+                KSenNew(j) += KSen(i, o)
+            Next
+            LAenNew(j) /= 24
+            KSenNew(j) /= 24
+            itmp += 24
+
+        Next
+
+        itmp = 1
+        For j As Short = 1 To (Nline + CShort(2)) / 24
+
+            For i As Short = itmp To itmp + 23
+                LAen(i, o) = LAenNew(j)
+                KSen(i, o) = KSenNew(j)
+            Next
+            itmp += 24
 
         Next
 
-        For j As Short = 1 To Nline + CShort(2)
+        'LAenNew(0) = -100000
 
-            LAen(j, o) = LAenNew(j)
-            KSen(j, o) = KSenNew(j)
+        'For j As Short = 1 To Nline + CShort(2)
 
-        Next
+        '    If LAen(j, o) > LAenNew(j - 1) Then
+        '        LAenNew(j) = LAen(j, o)
+        '        KSenNew(j) = KSen(j, o)
+        '    Else
+        '        LAenNew(j) = LAenNew(j - 1)
+        '        KSenNew(j) = KSenNew(j - 1)
+        '    End If
+
+        'Next
+
+        'For j As Short = 1 To Nline + CShort(2)
+
+        '    LAen(j, o) = LAenNew(j)
+        '    KSen(j, o) = KSenNew(j)
+
+        'Next
 
         ' FIN Garde le max de concentration de Cl pour lisser la courbe de probabilité
 
@@ -1587,17 +1640,6 @@ f:
         Dim Ec As Double = 4600 * fc ^ 0.5
 
         ' AJOUT PROB CORROSION On considere initiation des 1% de probabilité
-        Dim ti As Double = 0
-        Dim jcorr As Short = 0
-        Dim Pseuil As Double = 0.01
-
-        'For j As Short = 1 To Nline + CShort(2)
-        '    If Pf(j) > Pseuil Then
-        '        ti = Lambda(j, 0, 1)
-        '        jcorr = j
-        '        GoTo alpha
-        '    End If
-        'Next j
 
 alpha:
 
@@ -1637,8 +1679,8 @@ alpha:
         Dim kc As Double
         Dim tp(Nline + 2) As Double 'Delamination
         Dim tp_2(Nline + 2) As Double 'First Cracks
-        Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
-        Dim EndTime As Double = Lambda(Nline + CShort(2), 1, 1) / 365
+        'Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
+        'Dim EndTime As Double = Lambda(Nline + CShort(2), 1, 1) / 365
 
         For j As Short = 1 To Nline + CShort(2)
 
@@ -1660,6 +1702,9 @@ alpha:
             End If
 
             tp(j) = System.Math.PI / (2 * muS * jr * (1 / pr - alpha / ps)) * (1 + v + d ^ 2 / (2 * c2 * (c2 + d))) * (2 * c2 * d + d ^ 2) * fct / Ec
+
+            Labeltp.Text = tp(j)
+            tp(j) *= 24
             tp_2(j) = tp(j) / 2.0
 
             If tp(j) < 0 Then tp(j) = 10000
@@ -1667,72 +1712,48 @@ alpha:
 
         Next
 
-        Dim tmphis As Integer
+        Dim tmphis_2, tmphis As Integer
         Dim PDF_tp_2(Nline + CShort(2)) As Double
+        Dim PDF_tp(Nline + CShort(2)) As Double
+
         For i As Short = 1 To Nline + CShort(2)
 
+            tmphis_2 = 0
             tmphis = 0
-            For j As Short = 0 To Nline + 1
-                If tp_2(j) < (i + 0.5) And tp_2(j) > (i - 0.5) Then
-                    tmphis += 1
-                End If
-            Next
-            PDF_tp_2(i) = tmphis / (Nline + CShort(2)) / (Nline + CShort(2))
-        Next
 
-        Dim PDF_tp(Nline + CShort(2)) As Double
-        For i As Short = 0 To Nline + 1
-
-            tmphis = 0
             For j As Short = 1 To Nline + CShort(2)
-                If tp(j) < (i + 0.5) And tp(j) > (i - 0.5) Then
+                If tp_2(j) < (i + 1.5) And tp_2(j) > (i - 1.5) Then
+                    tmphis_2 += 1
+                End If
+                If tp(j) < (i + 1.5) And tp(j) > (i - 1.5) Then
                     tmphis += 1
                 End If
             Next
-            PDF_tp(i) = tmphis / (Nline + CShort(2)) / (Nline + CShort(2))
+
+            PDF_tp_2(i) = tmphis_2 / (Nline + CShort(2))
+            PDF_tp(i) = tmphis / (Nline + CShort(2))
+
         Next
 
         Dim Ft_2(Nline + CShort(2)), Ft(Nline + CShort(2)) As Double
 
         For itt As Integer = 1 To Nline + CShort(2)
             For itp As Integer = 1 To itt
-                If itt <> itp Then Ft_2(itt) += PDF_tp_2(itp) * Pf(itt - itp)
-            Next
-        Next
-
-        For itt As Integer = 1 To Nline + CShort(2)
-            For itp As Integer = 1 To itt
-                If itt <> itp Then Ft(itt) += PDF_tp(itp) * Pf(itt - itp)
+                If itt <> itp Then
+                    Ft_2(itt) += PDF_tp_2(itp) * Pf(itt - itp)
+                    Ft(itt) += PDF_tp(itp) * Pf(itt - itp)
+                End If
             Next
         Next
 
         For j As Short = 1 To Nline + CShort(2)
 
             Pini(j) = 1 - Pf(j)
-            Pcracks(j) = 1 - Pini(j) + Ft_2(j)
-            Pdelam(j) = 1 - Pcracks(j) + Ft(j)
-            Pdestruct(j) = 1 - Pini(j) - Pcracks(j) - Pdelam(j)
+            Pdelam(j) = Ft_2(j) - Ft(j)    'Ft_2(j) - Ft(j)
+            Pdestruct(j) = Ft(j)   'Ft(j)
+            Pcracks(j) = 1 - Pini(j) - Pdelam(j) - Pdestruct(j)  'Pf(j) - Ft_2(j)
 
         Next
-
-        'Dim icracks, idelam As Integer
-        'For j As Short = 1 To Nline + CShort(2)
-
-        '    If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
-        '        Pcracks(j) = 0
-        '        Pdelam(j) = 0
-        '    ElseIf j >= (jcorr + CInt(tp(j) / 2 / dt)) And j < (jcorr + CInt(tp(j) / dt)) Then
-        '        Pcracks(j) = Pf(icracks)
-        '        Pdelam(j) = 0
-        '        icracks += 1
-        '    Else
-        '        Pcracks(j) = Pf(icracks)
-        '        Pdelam(j) = Pf(idelam)
-        '        icracks += 1
-        '        idelam += 1
-        '    End If
-
-        'Next
 
     End Sub
 
