@@ -957,6 +957,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
         End If
 
+        MDIChlor.ChangeProgressBar(0)
 
     End Sub
 
@@ -1496,52 +1497,35 @@ f:
         Dim LAenNew(Nline + CShort(2)) As Double
         Dim KSenNew(Nline + CShort(2)) As Double
         Dim itmp As Short = 1
+        Dim nbmoyenne As Integer = 24
 
-        For j As Short = 1 To (Nline + CShort(2)) / 24
+        ' MOYENNAGE DE LA COURBE DE CHLORE
+        If (MsgBox("Moyenner la courbe sur 1 an ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes) Then
 
-            For i As Short = itmp To itmp + 23
-                LAenNew(j) += LAen(i, o)
-                KSenNew(j) += KSen(i, o)
+            For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
+
+                For i As Short = itmp To itmp + nbmoyenne - 1
+                    LAenNew(j) += LAen(i, o)
+                    KSenNew(j) += KSen(i, o)
+                Next
+                LAenNew(j) /= nbmoyenne
+                KSenNew(j) /= nbmoyenne
+                itmp += nbmoyenne
+
             Next
-            LAenNew(j) /= 24
-            KSenNew(j) /= 24
-            itmp += 24
 
-        Next
+            itmp = 1
+            For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
 
-        itmp = 1
-        For j As Short = 1 To (Nline + CShort(2)) / 24
+                For i As Short = itmp To itmp + nbmoyenne - 1
+                    LAen(i, o) = LAenNew(j)
+                    KSen(i, o) = KSenNew(j)
+                Next
+                itmp += nbmoyenne
 
-            For i As Short = itmp To itmp + 23
-                LAen(i, o) = LAenNew(j)
-                KSen(i, o) = KSenNew(j)
             Next
-            itmp += 24
 
-        Next
-
-        'LAenNew(0) = -100000
-
-        'For j As Short = 1 To Nline + CShort(2)
-
-        '    If LAen(j, o) > LAenNew(j - 1) Then
-        '        LAenNew(j) = LAen(j, o)
-        '        KSenNew(j) = KSen(j, o)
-        '    Else
-        '        LAenNew(j) = LAenNew(j - 1)
-        '        KSenNew(j) = KSenNew(j - 1)
-        '    End If
-
-        'Next
-
-        'For j As Short = 1 To Nline + CShort(2)
-
-        '    LAen(j, o) = LAenNew(j)
-        '    KSen(j, o) = KSenNew(j)
-
-        'Next
-
-        ' FIN Garde le max de concentration de Cl pour lisser la courbe de probabilité
+        End If
 
         MDIChlor.ChangeProgressBar(0)
 
@@ -1622,7 +1606,37 @@ f:
                 Pf(j) = 1
             End If
 
+            If Pf(j) < 0.01 Then
+                For k As Short = 1 To j
+                    Pf(k) = 0
+                Next
+            End If
+
         Next j
+
+        ' MAXIMUM DE LA COURBE DE CHLORE
+        Dim PfNew(Nline + CShort(2)) As Double
+
+        If (MsgBox("Garder le max (conseillé si grosses fluctuations)?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes) Then
+
+            PfNew(0) = -100000
+
+            For j As Short = 1 To Nline + CShort(2)
+
+                If Pf(j) > PfNew(j - 1) Then
+                    PfNew(j) = Pf(j)
+                Else
+                    PfNew(j) = PfNew(j - 1)
+                End If
+
+            Next
+
+            For j As Short = 1 To Nline + CShort(2) 
+                Pf(j) = PfNew(j)
+            Next
+
+        End If
+        ' FIN Garde le max de concentration de Cl pour lisser la courbe de probabilité
 
     End Sub
 
@@ -1744,14 +1758,28 @@ alpha:
                     Ft(itt) += PDF_tp(itp) * Pf(itt - itp)
                 End If
             Next
+
         Next
 
         For j As Short = 1 To Nline + CShort(2)
 
             Pini(j) = 1 - Pf(j)
+            If Pini(j) < 0 Then Pini(j) = 0
+
+            Pcracks(j) = Pf(j) - Ft_2(j)  'Pf(j) - Ft_2(j)
+            If Pcracks(j) < 0 Then Pcracks(j) = 0
+
             Pdelam(j) = Ft_2(j) - Ft(j)    'Ft_2(j) - Ft(j)
+            If Pdelam(j) < 0 Then Pdelam(j) = 0
+
             Pdestruct(j) = Ft(j)   'Ft(j)
-            Pcracks(j) = 1 - Pini(j) - Pdelam(j) - Pdestruct(j)  'Pf(j) - Ft_2(j)
+            If Pdestruct(j) < 0 Then Pdestruct(j) = 0
+
+            Dim PTot = Pini(j) + Pcracks(j) + Pdelam(j) + Pdestruct(j)
+            Pini(j) /= PTot
+            Pcracks(j) /= PTot
+            Pdelam(j) /= PTot
+            Pdestruct(j) /= PTot
 
         Next
 
