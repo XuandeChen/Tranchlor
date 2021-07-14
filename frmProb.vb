@@ -1489,20 +1489,14 @@ f:
 
         ' Garde le max de concentration de Cl pour lisser la courbe de probabilité
 
-        'Dim LAenNew(Nline + CShort(2)) As Double
-        'Dim MoyCl(Nline + CShort(2)) As Double
-        'Dim MoyClNew(Nline + CShort(2)) As Double
-        'Dim KSenNew(Nline + CShort(2)) As Double
-
         Dim LAenNew(Nline + CShort(2)) As Double
         Dim KSenNew(Nline + CShort(2)) As Double
         Dim itmp As Short = 1
         Dim nbmoyenne As Integer = 24
 
         ' MOYENNAGE DE LA COURBE DE CHLORE
-        If (MsgBox("Moyenner la courbe sur 1 an ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes) Then
 
-            For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
+        For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
 
                 For i As Short = itmp To itmp + nbmoyenne - 1
                     LAenNew(j) += LAen(i, o)
@@ -1512,10 +1506,10 @@ f:
                 KSenNew(j) /= nbmoyenne
                 itmp += nbmoyenne
 
-            Next
+        Next
 
-            itmp = 1
-            For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
+        itmp = 1
+        For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
 
                 For i As Short = itmp To itmp + nbmoyenne - 1
                     LAen(i, o) = LAenNew(j)
@@ -1523,9 +1517,7 @@ f:
                 Next
                 itmp += nbmoyenne
 
-            Next
-
-        End If
+        Next
 
         MDIChlor.ChangeProgressBar(0)
 
@@ -1606,22 +1598,13 @@ f:
                 Pf(j) = 1
             End If
 
-            If Pf(j) < 0.01 Then
-                For k As Short = 1 To j
-                    Pf(k) = 0
-                Next
-            End If
-
         Next j
 
-        ' MAXIMUM DE LA COURBE DE CHLORE
+        ' Rendre Pf monotonique décroissante
         Dim PfNew(Nline + CShort(2)) As Double
+        PfNew(0) = -100000
 
-        If (MsgBox("Garder le max (conseillé si grosses fluctuations)?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes) Then
-
-            PfNew(0) = -100000
-
-            For j As Short = 1 To Nline + CShort(2)
+        For j As Short = 1 To Nline + CShort(2)
 
                 If Pf(j) > PfNew(j - 1) Then
                     PfNew(j) = Pf(j)
@@ -1631,12 +1614,9 @@ f:
 
             Next
 
-            For j As Short = 1 To Nline + CShort(2) 
+            For j As Short = 1 To Nline + CShort(2)
                 Pf(j) = PfNew(j)
             Next
-
-        End If
-        ' FIN Garde le max de concentration de Cl pour lisser la courbe de probabilité
 
     End Sub
 
@@ -1652,8 +1632,6 @@ f:
         Dim fc As Double = CDbl(TextBoxCompressiveStrengh.Text)
         Dim fct As Double = 0.53 * fc ^ 0.5
         Dim Ec As Double = 4600 * fc ^ 0.5
-
-        ' AJOUT PROB CORROSION On considere initiation des 1% de probabilité
 
 alpha:
 
@@ -1693,9 +1671,8 @@ alpha:
         Dim kc As Double
         Dim tp(Nline + 2) As Double 'Delamination
         Dim tp_2(Nline + 2) As Double 'First Cracks
-        'Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
-        'Dim EndTime As Double = Lambda(Nline + CShort(2), 1, 1) / 365
 
+        ' Corrosion propagation
         For j As Short = 1 To Nline + CShort(2)
 
             If PosXTemp = 0 Then
@@ -1736,10 +1713,10 @@ alpha:
             tmphis = 0
 
             For j As Short = 1 To Nline + CShort(2)
-                If tp_2(j) < (i + 1.5) And tp_2(j) > (i - 1.5) Then
+                If tp_2(j) < (i - 0.5) And tp_2(j) > (i - 1.5) Then
                     tmphis_2 += 1
                 End If
-                If tp(j) < (i + 1.5) And tp(j) > (i - 1.5) Then
+                If tp(j) < (i - 0.5) And tp(j) > (i - 1.5) Then
                     tmphis += 1
                 End If
             Next
@@ -1758,28 +1735,14 @@ alpha:
                     Ft(itt) += PDF_tp(itp) * Pf(itt - itp)
                 End If
             Next
-
         Next
 
         For j As Short = 1 To Nline + CShort(2)
 
             Pini(j) = 1 - Pf(j)
-            If Pini(j) < 0 Then Pini(j) = 0
-
             Pcracks(j) = Pf(j) - Ft_2(j)  'Pf(j) - Ft_2(j)
-            If Pcracks(j) < 0 Then Pcracks(j) = 0
-
             Pdelam(j) = Ft_2(j) - Ft(j)    'Ft_2(j) - Ft(j)
-            If Pdelam(j) < 0 Then Pdelam(j) = 0
-
             Pdestruct(j) = Ft(j)   'Ft(j)
-            If Pdestruct(j) < 0 Then Pdestruct(j) = 0
-
-            Dim PTot = Pini(j) + Pcracks(j) + Pdelam(j) + Pdestruct(j)
-            Pini(j) /= PTot
-            Pcracks(j) /= PTot
-            Pdelam(j) /= PTot
-            Pdestruct(j) /= PTot
 
         Next
 
