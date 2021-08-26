@@ -1,4 +1,5 @@
 Imports System.Linq.Expressions
+Imports MathNet.Numerics.Distributions
 
 Public Class frmProb : Inherits System.Windows.Forms.Form
 
@@ -27,10 +28,8 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
     Friend WithEvents TextBoxCompressiveStrengh As TextBox
     Friend WithEvents Label20 As Label
     Friend WithEvents Label21 As Label
-    Friend WithEvents ProgressBarFile As ProgressBar
-    Friend WithEvents ProgressBarLine As ProgressBar
-    Friend WithEvents ProgressBarLine2 As ProgressBar
-    Friend WithEvents ProgressBarFile2 As ProgressBar
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Labeltp As Label
     Dim Ca As Boolean = False
 
 #Region " Windows Form Designer generated code "
@@ -141,10 +140,8 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.ButtonTreatment = New System.Windows.Forms.Button()
         Me.ButtonAnalyse = New System.Windows.Forms.Button()
         Me.ButtonExit = New System.Windows.Forms.Button()
-        Me.ProgressBarFile = New System.Windows.Forms.ProgressBar()
-        Me.ProgressBarLine = New System.Windows.Forms.ProgressBar()
-        Me.ProgressBarLine2 = New System.Windows.Forms.ProgressBar()
-        Me.ProgressBarFile2 = New System.Windows.Forms.ProgressBar()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Labeltp = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -587,43 +584,31 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.ButtonExit.TabIndex = 5
         Me.ButtonExit.Text = "Sortir"
         '
-        'ProgressBarFile
+        'Label23
         '
-        Me.ProgressBarFile.Location = New System.Drawing.Point(89, 264)
-        Me.ProgressBarFile.Name = "ProgressBarFile"
-        Me.ProgressBarFile.Size = New System.Drawing.Size(62, 13)
-        Me.ProgressBarFile.TabIndex = 6
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(305, 269)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(29, 13)
+        Me.Label23.TabIndex = 7
+        Me.Label23.Text = "Tp ="
         '
-        'ProgressBarLine
+        'Labeltp
         '
-        Me.ProgressBarLine.Location = New System.Drawing.Point(89, 277)
-        Me.ProgressBarLine.Name = "ProgressBarLine"
-        Me.ProgressBarLine.Size = New System.Drawing.Size(62, 10)
-        Me.ProgressBarLine.TabIndex = 7
-        '
-        'ProgressBarLine2
-        '
-        Me.ProgressBarLine2.Location = New System.Drawing.Point(281, 277)
-        Me.ProgressBarLine2.Name = "ProgressBarLine2"
-        Me.ProgressBarLine2.Size = New System.Drawing.Size(62, 10)
-        Me.ProgressBarLine2.TabIndex = 9
-        '
-        'ProgressBarFile2
-        '
-        Me.ProgressBarFile2.Location = New System.Drawing.Point(281, 264)
-        Me.ProgressBarFile2.Name = "ProgressBarFile2"
-        Me.ProgressBarFile2.Size = New System.Drawing.Size(62, 13)
-        Me.ProgressBarFile2.TabIndex = 8
+        Me.Labeltp.AutoSize = True
+        Me.Labeltp.Location = New System.Drawing.Point(340, 269)
+        Me.Labeltp.Name = "Labeltp"
+        Me.Labeltp.Size = New System.Drawing.Size(13, 13)
+        Me.Labeltp.TabIndex = 8
+        Me.Labeltp.Text = "0"
         '
         'frmProb
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(648, 296)
-        Me.Controls.Add(Me.ProgressBarLine2)
-        Me.Controls.Add(Me.ProgressBarFile2)
-        Me.Controls.Add(Me.ProgressBarLine)
-        Me.Controls.Add(Me.ProgressBarFile)
+        Me.Controls.Add(Me.Labeltp)
+        Me.Controls.Add(Me.Label23)
         Me.Controls.Add(Me.ButtonExit)
         Me.Controls.Add(Me.ButtonAnalyse)
         Me.Controls.Add(Me.ButtonTreatment)
@@ -639,6 +624,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -673,14 +659,12 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Dim p As Short
         Dim Ncol As Short
 
-        ProgressBarFile.Value = 0
-        ProgressBarFile.Minimum = 0
-        ProgressBarFile.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         For o As Short = 1 To Files
             pd_cont = 0
             cpt2 = 0
-            ProgressBarFile.Value = CInt(100 * o / Files)
+            MDIChlor.ChangeProgressBar(100 * o / Files)
 
             For n As Short = 1 To Tprob4
                 For i As Short = 1 To Tprob3
@@ -727,17 +711,24 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
     Private Sub ManageRFiles(ByRef cpt1 As Short, ByRef Tprob1 As Short, ByRef Tprob2 As Short, ByRef Tprob3 As Short, ByRef Tprob4 As Short, ByRef prefFile As String, ByRef Canc As Boolean)
 
-        Dim Filtre As String = "txt files (R_*.txt)|R_*.txt|All files (*.*)|*.*"
-        Dim Index As Short = CShort(1)
-        Dim Directoire As Boolean = True
-        Dim Titre As String = "Sélectionner un fichier résultat à traiter"
+        'Dim Filtre As String = "txt files (R_*.txt)|R_*.txt|All files (*.*)|*.*"
+        'Dim Index As Short = CShort(1)
+        'Dim Directoire As Boolean = True
+        'Dim Titre As String = "Sélectionner un fichier résultat à traiter"
 
-        OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        'OpenDialog(OutFile, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
+
+        Dim OFDia As New OpenFileDialog
+        OFDia.Filter = "txt files (R_*.txt)|R_*.txt|All files (*.*)|*.*"
+        OFDia.Title = "Sélectionner un fichier résultat à traiter"
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() = DialogResult.OK) Then OutFile = OFDia.FileName Else End
 
         prefFile = OutFile
         FileOnly(OutFile)
         prefFile = Microsoft.VisualBasic.Left(prefFile, CInt(Len(prefFile) - Len(OutFile)))
+        MDIChlor.MainLabel.Text = prefFile
         OutFile = Microsoft.VisualBasic.Left(OutFile, Len(OutFile) - 4)
 
         Dim TProb As String = Microsoft.VisualBasic.Right(OutFile, 4)
@@ -928,13 +919,11 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
             p = 2
         End If
 
-        ProgressBarLine.Value = 0
-        ProgressBarLine.Minimum = 0
-        ProgressBarLine.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         For l As Short = 1 To Nline + CShort(2)        'lecture du fichier résultat
 
-            ProgressBarLine.Value = CInt(100 * l / (Nline + 2))
+            MDIChlor.ChangeProgressBar(100 * l / (Nline + 2))
 
             For m As Short = 0 To Ncol - CShort(1)
 
@@ -968,6 +957,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
         End If
 
+        MDIChlor.ChangeProgressBar(0)
 
     End Sub
 
@@ -1056,9 +1046,7 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
         Dim PosmX As Single = 0
         Dim Canc As Boolean = False
 
-        ProgressBarFile2.Value = 0
-        ProgressBarFile2.Minimum = 0
-        ProgressBarFile2.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         If PreFile(1) <> "R_Carb_" Then
 
@@ -1079,16 +1067,16 @@ Public Class frmProb : Inherits System.Windows.Forms.Form
 
                 End If
 
-                ProgressBarFile2.Value = 25
+                MDIChlor.ChangeProgressBar(25)
                 WriteLPFile(PosXi, LAen, KSen, Canc)
                 If Canc = True Then GoTo b
-                ProgressBarFile2.Value = 50
+                MDIChlor.ChangeProgressBar(50)
 
             Else
 
                 ReadLPFile(LAen, KSen, Canc)
                 If Canc = True Then GoTo b
-                ProgressBarFile2.Value = 50
+                MDIChlor.ChangeProgressBar(50)
 
             End If
 
@@ -1097,14 +1085,14 @@ b:
 
                 WritePFFile(False, PosmX, Pf, LAen, KSen, Canc)
                 If Canc = True Then GoTo d
-                ProgressBarFile2.Value = 75
+                MDIChlor.ChangeProgressBar(75)
 
                 WriteABCDFile(True, PosmX, Pf, LAen, KSen, Canc)
                 If Canc = True Then GoTo f
 
                 WriteBCFile(False, Pf, LAen, KSen, Canc)
                 If Canc = True Then GoTo d
-                ProgressBarFile2.Value = 100
+                MDIChlor.ChangeProgressBar(75)
 d:
             End If
 
@@ -1142,9 +1130,7 @@ f:
 
         Dim deltaX1 As Single = 0.01
 
-        ProgressBarLine2.Value = 0
-        ProgressBarLine2.Minimum = 0
-        ProgressBarLine2.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         Do While PosX < Length
 
@@ -1167,7 +1153,7 @@ f:
 
             For o As Short = 1 To Files
 
-                ProgressBarLine2.Value = CInt(o * 100 / Files)
+                MDIChlor.ChangeProgressBar(o * 100 / Files)
 
                 For j As Short = 1 To Nline + CShort(2)
                     Var4 = (Lambda(j, i, o) - Lambda(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Lambda(j, i, o)
@@ -1204,13 +1190,11 @@ f:
             If Labe(i) > PosXi Then Exit For
         Next i
 
-        ProgressBarLine2.Value = 0
-        ProgressBarLine2.Minimum = 0
-        ProgressBarLine2.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         For o As Short = 1 To Files
 
-            ProgressBarLine2.Value = CInt(o * 100 / Files)
+            MDIChlor.ChangeProgressBar(o * 100 / Files)
 
             For j As Short = 1 To Nline + CShort(2)
                 LAen(j, o) = (Lambda(j, i, o) - Lambda(j, i - 1, o)) * (PosXi - Labe(i)) / (Labe(i) - Labe(i - 1)) + Lambda(j, i, o)
@@ -1222,16 +1206,24 @@ f:
 
     Private Sub WriteLPFile(ByRef PosXi As Single, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
-        Dim OT As String = "LP_" & OutFile        'enregistrement intermédiaire
-        Dim Filtre As String = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
-        Dim Index As Short = CShort(1)
-        Dim Directoire As Boolean = True
-        Dim Titre As String = "Paramètres des lois probabilistes"
+        Dim OFDia As New SaveFileDialog
+        OFDia.FileName = "LP_" & OutFile
+        OFDia.Filter = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
+        OFDia.Title = "Paramètres des lois probabilistes"
 
-        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        'Dim OT As String = "LP_" & OutFile        'enregistrement intermédiaire
+        'Dim Filtre As String = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
+        'Dim Index As Short = CShort(1)
+        'Dim Directoire As Boolean = True
+        'Dim Titre As String = "Paramètres des lois probabilistes"
+
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() <> DialogResult.OK) Then End
+
+        'SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
         Dim nfic As Short = CShort(FreeFile())
-        FileOpen(CInt(nfic), OT, OpenMode.Output)
+        FileOpen(CInt(nfic), OFDia.FileName, OpenMode.Output)
 
         Dim Men As Single = CSng(TextBoxPosMean.Text)
         Dim ETen As Single = CSng(TextBoxPosEcart.Text)
@@ -1242,9 +1234,7 @@ f:
             PrintLine(CInt(nfic), "Approche déterministe de l'enrobage, valeur ", PosXi)
         End If
 
-        ProgressBarLine2.Value = 0
-        ProgressBarLine2.Minimum = 0
-        ProgressBarLine2.Maximum = 100
+        MDIChlor.ChangeProgressBar(0)
 
         If Ca = True Then
 
@@ -1265,7 +1255,7 @@ f:
 
             For j As Short = 1 To Nline + CShort(2)
 
-                ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
+                MDIChlor.ChangeProgressBar(j * 100 / (Nline + 2))
 
                 Print(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",")
                 For o As Short = 1 To Files
@@ -1293,7 +1283,7 @@ f:
 
             For j As Short = 1 To Nline + CShort(2)
 
-                ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
+                MDIChlor.ChangeProgressBar(j * 100 / (Nline + 2))
 
                 Print(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",")
                 For o As Short = 1 To Files
@@ -1309,17 +1299,23 @@ f:
 
     Private Sub ReadLPFile(ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
-        Dim Filtre As String = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
-        Dim Index As Short = CShort(1)
-        Dim Directoire As Boolean = True
-        Dim Titre As String = "Sélectionner un fichier résultat à traiter"
+        'Dim Filtre As String = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
+        'Dim Index As Short = CShort(1)
+        'Dim Directoire As Boolean = True
+        'Dim Titre As String = "Sélectionner un fichier résultat à traiter"
 
-        Dim PlFile As String
-        OpenDialog(PlFile, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        'Dim PlFile As String
+        'OpenDialog(PlFile, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
+
+        Dim OFDia As New OpenFileDialog
+        OFDia.Filter = "txt files (LP_*.txt)|LP_*.txt|All files (*.*)|*.*"
+        OFDia.Title = "Sélectionner un fichier résultat à traiter"
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() = DialogResult.OK) Then MDIChlor.MainLabel.Text = OFDia.InitialDirectory Else End
 
         Dim nfic As Short = CShort(FreeFile())
-        FileOpen(nfic, PlFile, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
+        FileOpen(nfic, OFDia.FileName, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
 
         Dim Userinput2 As String = ""
         Input(nfic, Userinput2)
@@ -1491,13 +1487,43 @@ f:
 
         Dim Var4 As Double = 0
 
-        ProgressBarLine2.Value = 0
-        ProgressBarLine2.Minimum = 0
-        ProgressBarLine2.Maximum = 100
+        ' Garde le max de concentration de Cl pour lisser la courbe de probabilité
+
+        Dim LAenNew(Nline + CShort(2)) As Double
+        Dim KSenNew(Nline + CShort(2)) As Double
+        Dim itmp As Short = 1
+        Dim nbmoyenne As Integer = 24
+
+        ' MOYENNAGE DE LA COURBE DE CHLORE
+
+        For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
+
+                For i As Short = itmp To itmp + nbmoyenne - 1
+                    LAenNew(j) += LAen(i, o)
+                    KSenNew(j) += KSen(i, o)
+                Next
+                LAenNew(j) /= nbmoyenne
+                KSenNew(j) /= nbmoyenne
+                itmp += nbmoyenne
+
+        Next
+
+        itmp = 1
+        For j As Short = 1 To (Nline + CShort(2)) / nbmoyenne
+
+                For i As Short = itmp To itmp + nbmoyenne - 1
+                    LAen(i, o) = LAenNew(j)
+                    KSen(i, o) = KSenNew(j)
+                Next
+                itmp += nbmoyenne
+
+        Next
+
+        MDIChlor.ChangeProgressBar(0)
 
         For j As Short = 1 To Nline + CShort(2)
 
-            ProgressBarLine2.Value = CInt(j * 100 / (Nline + 2))
+            MDIChlor.ChangeProgressBar(j * 100 / (Nline + 2))
 
             If j = 1 Then PosmX = deltaCL2
             deltaCL2 = CSng(PosmX)
@@ -1568,36 +1594,44 @@ f:
             Loop
 
             LAen(j, 0) = LAen(j, 0) / Var8  'correction due au troncage de l'épaisseur du mur
+            If Pf(j) > 1 Then
+                Pf(j) = 1
+            End If
 
         Next j
 
+        ' Rendre Pf monotonique décroissante
+        Dim PfNew(Nline + CShort(2)) As Double
+        PfNew(0) = -100000
+
+        For j As Short = 1 To Nline + CShort(2)
+
+                If Pf(j) > PfNew(j - 1) Then
+                    PfNew(j) = Pf(j)
+                Else
+                    PfNew(j) = PfNew(j - 1)
+                End If
+
+            Next
+
+            For j As Short = 1 To Nline + CShort(2)
+                Pf(j) = PfNew(j)
+            Next
+
     End Sub
 
-    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef Pdestruct() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
+    Private Sub CalcProbCorr(ByRef Pf() As Double, ByRef Pini() As Double, ByRef Pcracks() As Double, ByRef Pdelam() As Double, ByRef Pdestruct() As Double, ByRef LAen(,) As Double, ByRef Canc As Boolean)
 
         ' Constant for corrosion properties
         Dim jrr2 As Double = 0.8
         Dim jr As Double
         Dim pr As Integer = 3600
         Dim alpha As Double = 0.52
-        Dim v As Double = 0.18
+        Dim v As Double
 
         Dim fc As Double = CDbl(TextBoxCompressiveStrengh.Text)
         Dim fct As Double = 0.53 * fc ^ 0.5
         Dim Ec As Double = 4600 * fc ^ 0.5
-
-        ' AJOUT PROB CORROSION On considere initiation des 1% de probabilité
-        Dim ti As Double = 0
-        Dim jcorr As Short = 0
-        Dim Pseuil As Double = 0.01
-
-        For j As Short = 1 To Nline + CShort(2)
-            If Pf(j) > Pseuil Then
-                ti = Lambda(j, 0, 1)
-                jcorr = j
-                GoTo alpha
-            End If
-        Next j
 
 alpha:
 
@@ -1618,6 +1652,10 @@ alpha:
             For j As Short = 1 To Nline + CShort(2)
                 Temphis(j) = LAen(j, o)
             Next
+        Else
+            For j As Short = 1 To Nline + CShort(2)
+                Temphis(j) = 20
+            Next
         End If
 
         ' Rebar Spacing
@@ -1633,16 +1671,17 @@ alpha:
         Dim kc As Double
         Dim tp(Nline + 2) As Double 'Delamination
         Dim tp_2(Nline + 2) As Double 'First Cracks
-        Dim dt As Double = (Lambda(10, 1, 1) - Lambda(9, 1, 1)) / 365
-        Dim EndTime As Double = Lambda(Nline + CShort(2), 1, 1) / 365
 
-        For j As Short = jcorr To Nline + CShort(2)
+        ' Corrosion propagation
+        For j As Short = 1 To Nline + CShort(2)
 
             If PosXTemp = 0 Then
                 If Temphis(j) < 20 Then
                     kc = 0.025
+                    v = 0.2
                 Else
                     kc = 0.073
+                    v = 0.4
                 End If
 
                 jr = jrr2 * (1 + kc * (Temphis(j) - 20))
@@ -1654,125 +1693,105 @@ alpha:
             End If
 
             tp(j) = System.Math.PI / (2 * muS * jr * (1 / pr - alpha / ps)) * (1 + v + d ^ 2 / (2 * c2 * (c2 + d))) * (2 * c2 * d + d ^ 2) * fct / Ec
-            tp_2(j) = tp(j) / 2
+
+            Labeltp.Text = tp(j)
+            tp(j) *= 24
+            tp_2(j) = tp(j) / 2.0
 
             If tp(j) < 0 Then tp(j) = 10000
             If tp_2(j) < 0 Then tp(j) = 10000
 
         Next
 
-        Dim tmp44his As Integer
-        Dim PDF_tp44his(Nline + CShort(2)) As Double
+        Dim tmphis_2, tmphis As Integer
+        Dim PDF_tp_2(Nline + CShort(2)) As Double
+        Dim PDF_tp(Nline + CShort(2)) As Double
+
         For i As Short = 1 To Nline + CShort(2)
 
-            tmp44his = 0
+            tmphis_2 = 0
+            tmphis = 0
+
             For j As Short = 1 To Nline + CShort(2)
-                If tp_2(j) < (i - 1 + 0.5) And tp_2(j) > (i - 1 - 0.5) Then
-                    tmp44his += 1
+                If tp_2(j) < (i - 0.5) And tp_2(j) > (i - 1.5) Then
+                    tmphis_2 += 1
+                End If
+                If tp(j) < (i - 0.5) And tp(j) > (i - 1.5) Then
+                    tmphis += 1
                 End If
             Next
-            PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime  'PDF_tp44his(i) = tmp44his / (Nline + CShort(2)) / EndTime
+
+            PDF_tp_2(i) = tmphis_2 / (Nline + CShort(2))
+            PDF_tp(i) = tmphis / (Nline + CShort(2))
+
         Next
 
-        Dim PDF_tp4his(Nline + CShort(2)) As Double
-        For i As Short = 1 To Nline + CShort(2)
+        Dim Ft_2(Nline + CShort(2)), Ft(Nline + CShort(2)) As Double
 
-            tmp44his = 0
-            For j As Short = 1 To Nline + CShort(2)
-                If tp(j) < (i - 1 + 0.5) And tp(j) > (i - 1 - 0.5) Then
-                    tmp44his += 1
-                End If
-            Next
-            PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime 'PDF_tp4his(i) = tmp44his / (Nline + CShort(2)) / EndTime
-        Next
-
-        Dim fp_tmp111125his, fp_tmp11125his, Fi_tmp111125his, Fi_tmp11125his As Double
-        Dim Ft111125his(Nline + CShort(2)), Ft11125his(Nline + CShort(2)) As Double
         For itt As Integer = 1 To Nline + CShort(2)
-
             For itp As Integer = 1 To itt
-
-                fp_tmp111125his = PDF_tp44his(itp)
-                fp_tmp11125his = PDF_tp4his(itp)
-
-                If itt = itp Then
-                    Fi_tmp111125his = 0
-                    Fi_tmp11125his = 0
-                Else
-                    Fi_tmp111125his = Pf(itt - itp)
-                    Fi_tmp11125his = Pf(itt - itp)
+                If itt <> itp Then
+                    Ft_2(itt) += PDF_tp_2(itp) * Pf(itt - itp)
+                    Ft(itt) += PDF_tp(itp) * Pf(itt - itp)
                 End If
-
-                Ft111125his(itt) += fp_tmp111125his * Fi_tmp111125his
-                Ft11125his(itt) += fp_tmp11125his * Fi_tmp11125his
-
             Next
-
         Next
 
         For j As Short = 1 To Nline + CShort(2)
 
-            Pcracks(j) = Math.Abs(Pf(j) - Ft111125his(j))
-            Pdelam(j) = Math.Abs(Ft111125his(j) - Ft11125his(j))
-            Pdestruct(j) = Math.Abs(Ft11125his(j))
+            Pini(j) = 1 - Pf(j)
+            Pcracks(j) = Pf(j) - Ft_2(j)  'Pf(j) - Ft_2(j)
+            Pdelam(j) = Ft_2(j) - Ft(j)    'Ft_2(j) - Ft(j)
+            Pdestruct(j) = Ft(j)   'Ft(j)
 
         Next
-
-        'Dim icracks, idelam As Integer
-        'For j As Short = 1 To Nline + CShort(2)
-
-        '    If j < (jcorr + CInt(tp(j) / 2 / dt)) Then
-        '        Pcracks(j) = 0
-        '        Pdelam(j) = 0
-        '    ElseIf j >= (jcorr + CInt(tp(j) / 2 / dt)) And j < (jcorr + CInt(tp(j) / dt)) Then
-        '        Pcracks(j) = Pf(icracks)
-        '        Pdelam(j) = 0
-        '        icracks += 1
-        '    Else
-        '        Pcracks(j) = Pf(icracks)
-        '        Pdelam(j) = Pf(idelam)
-        '        icracks += 1
-        '        idelam += 1
-        '    End If
-
-        'Next
 
     End Sub
 
     Private Sub WritePFFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
-        Dim OT As String
-        Dim Filtre As String
-        Dim Index As Short
-        Dim Directoire As Boolean
-        Dim Titre As String
+        'Dim OT As String
+        'Dim Filtre As String
+        'Dim Index As Short
+        'Dim Directoire As Boolean
+        'Dim Titre As String
+        Dim OFDia As New SaveFileDialog
 
         If Carb = True Then          'approche probabiliste pour la carbonatation
 
-            OT = "PFCa_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la carbonatation
-            Filtre = "txt files (PFCa_*.txt)|PFCa_*.txt|All files (*.*)|*.*"
-            Index = CShort(1)
-            Directoire = True
-            Titre = "Probabilités d'initiation de la corrosion (carb)"
+            'OT = "PFCa_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la carbonatation
+            'Filtre = "txt files (PFCa_*.txt)|PFCa_*.txt|All files (*.*)|*.*"
+            'Index = CShort(1)
+            'Directoire = True
+            'Titre = "Probabilités d'initiation de la corrosion (carb)"
+            OFDia.FileName = "PFCa_" & OutFile
+            OFDia.Filter = "txt files (PFCa_*.txt)|PFCa_*.txt|All files (*.*)|*.*"
+            OFDia.Title = "Probabilités d'initiation de la corrosion (carb)"
 
         Else
 
-            OT = "PFCL_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la présence des ions chlorures
-            Filtre = "txt files (PFCL_*.txt)|PFCL_*.txt|All files (*.*)|*.*"
-            Index = CShort(1)
-            Directoire = True
-            Titre = "Probabilités d'initiation de la corrosion (Cl-)"
+            'OT = "PFCL_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la présence des ions chlorures
+            'Filtre = "txt files (PFCL_*.txt)|PFCL_*.txt|All files (*.*)|*.*"
+            'Index = CShort(1)
+            'Directoire = True
+            'Titre = "Probabilités d'initiation de la corrosion (Cl-)"
+            OFDia.FileName = "PFCL_" & OutFile
+            OFDia.Filter = "txt files (PFCL_*.txt)|PFCL_*.txt|All files (*.*)|*.*"
+            OFDia.Title = "Probabilités d'initiation de la corrosion (Cl-)"
 
         End If
 
-        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() <> DialogResult.OK) Then End
+
+        'SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
 
         CalcProbInit(Carb, PosmX, Pf, LAen, KSen, Canc)
         If Canc = True Then End
 
         Dim nfic As Short = CShort(FreeFile())
-        FileOpen(CInt(nfic), OT, OpenMode.Output)
+        FileOpen(CInt(nfic), OFDia.FileName, OpenMode.Output)
         PrintLine(CInt(nfic), "Probabilité d'initiation de la corrosion due à la présence de ions chlorures,")
         PrintLine(nfic, "temps, temps, Pf,")
         PrintLine(nfic, "années, jours,")
@@ -1787,36 +1806,44 @@ alpha:
 
     Private Sub WriteABCDFile(ByRef Carb As Boolean, ByRef PosmX As Single, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
-        Dim OT As String
-        Dim Filtre As String
-        Dim Index As Short
-        Dim Directoire As Boolean
-        Dim Titre As String
+        'Dim OT As String
+        'Dim Filtre As String
+        'Dim Index As Short
+        'Dim Directoire As Boolean
+        'Dim Titre As String
+        Dim OFDia As New SaveFileDialog
 
-        OT = "PABCD_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la présence des ions chlorures
-        Filtre = "txt files (PABCD_*.txt)|PFCL_*.txt|All files (*.*)|*.*"
-        Index = CShort(1)
-        Directoire = True
-        Titre = "Probabilités d'états A, B, C, D"
+        'OT = "PABCD_" & OutFile        'enregistrement des probabilité d'initiation de la corrosion due à la présence des ions chlorures
+        'Filtre = "txt files (PABCD_*.txt)|PABCD_*.txt|All files (*.*)|*.*"
+        'Index = CShort(1)
+        'Directoire = True
+        'Titre = "Probabilités d'états A, B, C, D"
+        OFDia.FileName = "PABCD_" & OutFile
+        OFDia.Filter = "txt files (PABCD_*.txt)|PABCD_*.txt|All files (*.*)|*.*"
+        OFDia.Title = "Probabilités d'états A, B, C, D"
 
-        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        'SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
 
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() <> DialogResult.OK) Then End
+
+        Dim Pini(Nline + 2) As Double
         Dim Pcracks(Nline + 2) As Double
         Dim Pdelam(Nline + 2) As Double
         Dim Pdestroy(Nline + 2) As Double
 
-        CalcProbCorr(Pf, Pcracks, Pdelam, Pdestroy, LAen, Canc)
+        CalcProbCorr(Pf, Pini, Pcracks, Pdelam, Pdestroy, LAen, Canc)
         If Canc = True Then End
 
         Dim nfic As Short = CShort(FreeFile())
-        FileOpen(CInt(nfic), OT, OpenMode.Output)
+        FileOpen(CInt(nfic), OFDia.FileName, OpenMode.Output)
         PrintLine(CInt(nfic), "Pourcentage d'états A B C D")
         PrintLine(nfic, "temps, temps, A, B, C, D")
         PrintLine(nfic, "années, jours,")
 
         For j As Short = 1 To Nline + CShort(2)
-            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", 1 - Pf(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
+            PrintLine(nfic, Lambda(j, 0, 1), ",", Lambda(j, 1, 1), ",", Pini(j), ",", Pcracks(j), ",", Pdelam(j), ",", Pdestroy(j), ",")
         Next j
 
         FileClose(nfic)
@@ -1825,37 +1852,47 @@ alpha:
 
     Private Sub WriteBCFile(ByRef Carb As Boolean, ByRef Pf() As Double, ByRef LAen(,) As Double, ByRef KSen(,) As Double, ByRef Canc As Boolean)
 
-        Dim OT As String
-        Dim Filtre As String
-        Dim Index As Short
-        Dim Directoire As Boolean
-        Dim Titre As String
+        'Dim OT As String
+        'Dim Filtre As String
+        'Dim Index As Short
+        'Dim Directoire As Boolean
+        'Dim Titre As String
+        Dim OFDia As New SaveFileDialog
 
         If Carb = True Then          'approche probabiliste pour la carbonatation
 
-            OT = "BCa_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
-            Filtre = "txt files (BCa_*.txt)|BCa_*.txt|All files (*.*)|*.*"
-            Index = CShort(1)
-            Directoire = True
-            Titre = "Indice de fiabilité (carb)"
+            'OT = "BCa_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
+            'Filtre = "txt files (BCa_*.txt)|BCa_*.txt|All files (*.*)|*.*"
+            'Index = CShort(1)
+            'Directoire = True
+            'Titre = "Indice de fiabilité (carb)"
+            OFDia.FileName = "BCa_" & OutFile
+            OFDia.Filter = "txt files (BCa_*.txt)|BCa_*.txt|All files (*.*)|*.*"
+            OFDia.Title = "Indice de fiabilité (carb)"
 
         Else
 
-            OT = "BCL_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
-            Filtre = "txt files (BCL_*.txt)|BCL_*.txt|All files (*.*)|*.*"
-            Index = CShort(1)
-            Directoire = True
-            Titre = "Indice de fiabilité (Cl-)"
+            'OT = "BCL_" & OutFile        'enregistrement de l'indice de fiabilité pour la corrosion par les chlorures
+            'Filtre = "txt files (BCL_*.txt)|BCL_*.txt|All files (*.*)|*.*"
+            'Index = CShort(1)
+            'Directoire = True
+            'Titre = "Indice de fiabilité (Cl-)"
+            OFDia.FileName = "BCL_" & OutFile
+            OFDia.Filter = "txt files (BCL_*.txt)|BCL_*.txt|All files (*.*)|*.*"
+            OFDia.Title = "Indice de fiabilité (Cl-)"
 
         End If
 
-        SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
-        If Canc = True Then End
+        If MDIChlor.MainLabel.Text <> "Work Folder ?" Then OFDia.InitialDirectory = MDIChlor.MainLabel.Text
+        If (OFDia.ShowDialog() <> DialogResult.OK) Then End
+
+        'SaveDialog(OT, Canc, Filtre, Index, Directoire, Titre)
+        'If Canc = True Then End
 
         CalcBC(Pf, KSen)
 
         Dim nfic As Short = CShort(FreeFile())
-        FileOpen(CInt(nfic), OT, OpenMode.Output)
+        FileOpen(CInt(nfic), OFDia.FileName, OpenMode.Output)
         PrintLine(CInt(nfic), "Indice de fiabilité pour la corrosion due à la présence de ions chlorures")
         PrintLine(nfic, "temps, temps, Bêta,")
         PrintLine(nfic, "années, jours,")
