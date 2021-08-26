@@ -78,12 +78,12 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem3 = New System.Windows.Forms.MenuItem()
         Me.MenuItem4 = New System.Windows.Forms.MenuItem()
         Me.MenuItem9 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.MenuItem10 = New System.Windows.Forms.MenuItem()
         Me.MenuItem11 = New System.Windows.Forms.MenuItem()
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem16 = New System.Windows.Forms.MenuItem()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -183,6 +183,11 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem9.Index = 1
         Me.MenuItem9.Text = "Graph Pf"
         '
+        'MenuItem16
+        '
+        Me.MenuItem16.Index = 2
+        Me.MenuItem16.Text = "Graph A,B,C,D"
+        '
         'MenuItem10
         '
         Me.MenuItem10.Index = 5
@@ -203,11 +208,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         Me.MenuItem17.Index = -1
         Me.MenuItem17.Text = "2DTransport"
-        '
-        'MenuItem16
-        '
-        Me.MenuItem16.Index = 2
-        Me.MenuItem16.Text = "Graph A,B,C,D"
         '
         'MDIChlor
         '
@@ -460,6 +460,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         frmC.MdiParent = Me
         frmC.Show()
         ProbGraphABCD(frmC)
+
+    End Sub
+
+    Private Sub mnuTop_Click(sender As Object, e As EventArgs) Handles mnuTop.Click
 
     End Sub
 

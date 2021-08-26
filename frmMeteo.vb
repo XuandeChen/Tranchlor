@@ -1409,7 +1409,7 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
         Me.LabelOR.AutoSize = True
         Me.LabelOR.Location = New System.Drawing.Point(771, 590)
         Me.LabelOR.Name = "LabelOR"
-        Me.LabelOR.Size = New System.Drawing.Size(23, 13)
+        Me.LabelOR.Size = New System.Drawing.Size(25, 15)
         Me.LabelOR.TabIndex = 69
         Me.LabelOR.Text = "OR"
         '
@@ -1544,4 +1544,11 @@ Public Class frmMeteo : Inherits System.Windows.Forms.Form
 
     End Sub
 
+    Private Sub NumericUpDown4_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown4.ValueChanged
+
+    End Sub
+
+    Private Sub Label8_Click(sender As Object, e As EventArgs) Handles Label8.Click
+
+    End Sub
 End Class

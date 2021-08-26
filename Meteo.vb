@@ -155,7 +155,7 @@ Module Meteo
             arrMatrice(i).month = Fix((arrDaten(i).datum - 10000 * arrMatrice(i).year1) / 100)
             arrMatrice(i).day = arrDaten(i).datum - arrMatrice(i).year1 * 10000 - arrMatrice(i).month * 100
             arrMatrice(i).hour = arrDaten(i).heure
-            arrMatrice(i).year2 = arrMatrice(i).year1 + arrMatrice(i).month / 12 + arrMatrice(i).day / 365 + arrMatrice(i).hour / (24 * 365)
+            arrMatrice(i).year2 = arrMatrice(i).year1 + arrMatrice(i).month / 12 + arrMatrice(i).day / 366 + arrMatrice(i).hour / (24 * 366)
         Next
 
     End Sub
