@@ -87,13 +87,16 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MenuItem12 = New System.Windows.Forms.MenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
-<<<<<<< HEAD
-=======
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ProgressBar = New System.Windows.Forms.ToolStripProgressBar()
         Me.MainLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StatusStrip1.SuspendLayout()
->>>>>>> a5a55b8ebbd081fd9b02f16e8d365eccb93b8578
+        Me.ProgressBar = New System.Windows.Forms.ToolStripProgressBar()
+        Me.MainLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusStrip1.SuspendLayout()
+        Me.ProgressBar = New System.Windows.Forms.ToolStripProgressBar()
+        Me.MainLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -216,12 +219,10 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         '
         'MenuItem17
         '
-        Me.MenuItem17.Index = -1
-        Me.MenuItem17.Text = "2DTransport"
+        'MenuItem16
         '
-<<<<<<< HEAD
-=======
-        'StatusStrip1
+        Me.MenuItem16.Index = 2
+        Me.MenuItem16.Text = "Graph A,B,C,D"
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ProgressBar, Me.MainLabel})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 423)
@@ -241,7 +242,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
         Me.MainLabel.Size = New System.Drawing.Size(79, 17)
         Me.MainLabel.Text = "Work Folder ?"
         '
->>>>>>> a5a55b8ebbd081fd9b02f16e8d365eccb93b8578
         'MDIChlor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
@@ -500,12 +500,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
     End Sub
 
-<<<<<<< HEAD
-    Private Sub mnuTop_Click(sender As Object, e As EventArgs) Handles mnuTop.Click
-
-    End Sub
-
-=======
     Public Sub ChangeProgressBar(ByRef value As Double)
 
         ProgressBar.Value = value
@@ -537,7 +531,6 @@ Public Class MDIChlor : Inherits System.Windows.Forms.Form
 
 
 
->>>>>>> a5a55b8ebbd081fd9b02f16e8d365eccb93b8578
     'Operation pour calcul diffusion 2D  'Xuande 30/06/2020
     'Private Sub Diff2DToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Diff2D.Click
     '    'check if there is a proper model
