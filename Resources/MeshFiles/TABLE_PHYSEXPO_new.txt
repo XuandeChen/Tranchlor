@@ -1,9 +1,9 @@
 9
-1 D:\Xuande\DevXC\Resources\Exposition\EXPO_Ref_Capillary_Cyclic1.txt
+1 Application.StartupPath\EXPO_Ref_Capillary_Cyclic1.txt
 2 Neumann
-3 D:\Xuande\DevXC\Resources\Exposition\EXPO_Ref_Capillary_Cyclic1.txt
+3 Application.StartupPath\EXPO_Ref_Capillary_Cyclic1.txt
 4 Neumann
-5 D:\Xuande\DevXC\Resources\Exposition\EXPO_Ref_Capillary_Cyclic1.txt
+5 Application.StartupPath\EXPO_Ref_Capillary_Cyclic1.txt
 6 Neumann
 7 Neumann
 8 Neumann
